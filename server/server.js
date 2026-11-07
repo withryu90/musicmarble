@@ -40,7 +40,7 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
      const rel=path.slice(root.length+1);
      if(!path.startsWith(root+sep)||!(rel==='index.html'||rel.startsWith('src'+sep)))throw Error('Not found');
      if(!(await stat(path)).isFile())throw Error('Not found');
-     const content=await readFile(path);res.writeHead(200,{'Content-Type':{'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8'}[extname(path)]||'application/octet-stream','Cache-Control':'no-cache'});res.end(req.method==='HEAD'?undefined:content);
+     const content=await readFile(path);res.writeHead(200,{'Content-Type':{'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg'}[extname(path)]||'application/octet-stream','Cache-Control':'no-cache'});res.end(req.method==='HEAD'?undefined:content);
    }catch(error){if(url.pathname.startsWith('/api/'))json(400,{error:error.message});else{res.writeHead(404);res.end('Not found');}}
  });
  const timer=setInterval(()=>service.cleanup(),60000);timer.unref();server.on('close',()=>clearInterval(timer));return server;

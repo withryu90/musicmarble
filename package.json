@@ -1,0 +1,16 @@
+{
+  "name": "musicmarble",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "음악사와 저작권을 배우는 교실용 보드게임",
+  "scripts": {
+    "dev": "node server/server.js",
+    "start": "node server/server.js",
+    "build": "node scripts/build.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

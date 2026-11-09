@@ -99,3 +99,13 @@ dialog.entrance-help::backdrop{background:#164d7959}
 .character-choice-preview .character-large{display:block;width:88px;height:88px}
 .character-choice-preview strong{font-size:14px;line-height:1.4;margin:3px 0 1px}.character-choice-preview small{font-size:10px;line-height:1.4;color:#6489a4;text-align:center}
 .random-character{display:grid;place-items:center;width:75px;height:75px;border-radius:50%;background:#d4eafa;color:#3985b6;font-size:37px;font-weight:800}
+/* Opaque parchment scroll, matching the reference's warm paper and rolled ends. */
+.lobby-story .adventure-badge{
+ position:relative;justify-content:center;box-sizing:border-box;max-width:100%;min-height:62px;
+ padding:17px 36px;border:0;border-radius:0;
+ background:url('./assets/parchment-banner.svg') center / 100% 100% no-repeat;
+ color:#594329;font-size:11px;line-height:1.6;letter-spacing:.7px;
+ box-shadow:none;backdrop-filter:none;filter:drop-shadow(0 4px 3px #775c3826);
+}
+.adventure-badge>span{color:#a28148;font-size:14px}
+@media(max-width:750px){.lobby-story .adventure-badge{min-height:56px;padding:15px 27px;font-size:9px;letter-spacing:.25px;gap:5px}.adventure-badge>span{font-size:12px}}

@@ -21,22 +21,32 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
-  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,quiz:null,feedback:null,quizUsed:false,purchased:false,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,quiz:null,feedback:null,quizUsed:false,purchased:false,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 function openQuiz(s,kind){
   const pool=s.quizDeck.filter(id=>!kind||QUIZZES.find(q=>q.id===id).kind===kind);
   s.quiz=pool[s.quizCursor%pool.length];s.quizCursor++;s.phase='quiz';s.quizUsed=true;
 }
-export function roll(state,dice){
+export function roll(state,dice,rng=Math.random){
   if(state.phase!=='roll')throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
-  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.feedback=null;s.quizUsed=false;s.purchased=false;
+  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.feedback=null;s.quizUsed=false;s.purchased=false;
   const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;log(s,`${p.name}: 한 바퀴 완주! +200 MC`);if(p.id===0){s.leaderLaps=(s.leaderLaps??0)+1;s.round=Math.min(s.leaderLaps+1,s.maxRounds);log(s,`첫 주자 ${p.name}: ${s.leaderLaps}/${s.maxRounds}바퀴 완주`);}}p.position=next%BOARD.length;
   const cell=BOARD[p.position];log(s,`${p.name}: ${dice}칸 이동 → ${cell.title}`);
   if(cell.type==='work'){
-    const owner=s.ownership[cell.id];if(owner&&owner.player!==p.id){const cost=fee(s,cell),actual=-change(s,p,-cost);s.players[owner.player].coins+=actual;s.lastRent={workId:cell.id,owner:owner.player,amount:actual};log(s,`${p.name} → ${s.players[owner.player].name}: 가상 이용료 ${actual} MC (기준 ${cost} MC)`);}
+    const owner=s.ownership[cell.id];if(owner&&owner.player!==p.id){const cost=fee(s,cell),actual=-change(s,p,-cost);s.players[owner.player].coins+=actual;s.lastRent={workId:cell.id,owner:owner.player,amount:actual,expected:cost};log(s,`${p.name} → ${s.players[owner.player].name}: 가상 이용료 ${actual} MC (기준 ${cost} MC)`);}
   }else if(cell.type==='event'){
     const event=EVENTS[s.eventDeck[s.eventCursor++%EVENTS.length]];const actual=change(s,p,event.amount);s.lastEvent={...event,actual};log(s,`${event.title}: ${p.name} ${actual>=0?'+':''}${actual} MC`);
+  }else if(cell.type==='transfer'){
+    const works=owned(s,p.id);
+    if(!works.length){s.lastAssignment={from:p.id,skipped:true};log(s,`${p.name}: 저작권 양도 — 보유 작품이 없어 통과`);}
+    else{
+      const highest=Math.max(...works.map(w=>w.price)),candidates=works.filter(w=>w.price===highest);
+      const work=candidates[Math.floor(rng()*candidates.length)],recipients=s.players.filter(player=>player.id!==p.id),recipient=recipients[Math.floor(rng()*recipients.length)];
+      s.ownership[work.id].player=recipient.id;
+      s.lastAssignment={from:p.id,to:recipient.id,workId:work.id,price:work.price,skipped:false};
+      log(s,`${p.name} → ${recipient.name}: 최고가 작품 「${work.title}」 가상 저작재산권 무상 양도 (${work.price} MC 기준)`);
+    }
   }else if(cell.type==='quiz'||cell.type==='copyright')openQuiz(s,cell.type==='copyright'?'copyright':null);
   else if(cell.type==='concert'){s.players.forEach(team=>team.coins+=100);log(s,'모두의 음악회: 모든 팀 +100 MC');}
   return s;
@@ -71,7 +81,7 @@ export function nextTurn(state){
   s.round=Math.min((s.leaderLaps??0)+1,s.maxRounds);
   if((s.leaderLaps??0)>=s.maxRounds){s.phase='finished';log(s,`첫 주자 ${s.players[0].name}의 ${s.maxRounds}바퀴 완주로 여행 종료! 자산과 배움을 함께 돌아봅니다.`);}
   else{s.turn=(s.turn+1)%s.players.length;s.phase='roll';}
-  s.lastEvent=null;return s;
+  s.lastEvent=null;s.lastAssignment=null;return s;
 }
 export function finishGame(state){const s=clone(state);s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
@@ -103,6 +113,7 @@ export function isValidSave(s){
     if(['quiz','feedback'].includes(s.phase)&&!QUIZZES.some(q=>q.id===s.quiz))return false;
     if(s.phase==='feedback'&&(!s.feedback||typeof s.feedback.correct!=='boolean'||!Number.isInteger(s.feedback.index)||s.feedback.index<0||s.feedback.index>2))return false;
     if(s.trade&&(!WORKS.some(w=>w.id===s.trade.workId)||s.ownership[s.trade.workId]?.player!==s.trade.from||s.trade.from!==s.turn||!s.players[s.trade.to]||s.trade.to===s.trade.from||!Number.isInteger(s.trade.price)||s.trade.price<1||s.trade.price>10000||s.phase!=='action'))return false;
+    if(s.lastAssignment){const t=s.lastAssignment;if(!Number.isInteger(t.from)||!s.players[t.from]||typeof t.skipped!=='boolean')return false;if(!t.skipped&&(!Number.isInteger(t.to)||!s.players[t.to]||t.to===t.from||!WORKS.some(w=>w.id===t.workId&&w.price===t.price)))return false;}
     if(s.lastEvent&&(!EVENTS.some(e=>e.title===s.lastEvent.title)||typeof s.lastEvent.text!=='string'||typeof s.lastEvent.prompt!=='string'||typeof s.lastEvent.effect!=='string'||!Number.isInteger(s.lastEvent.actual)))return false;
     return Array.isArray(s.log)&&s.log.length<=60&&s.log.every(l=>Number.isInteger(l.round)&&typeof l.text==='string');
   }catch{return false;}

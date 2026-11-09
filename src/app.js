@@ -1,5 +1,6 @@
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES} from './data.js';
 import * as G from './engine.js';
+import {ActivityInbox} from './activities.js';
 import {movementPath} from './movement.js';
 import {nicknameLines} from './nicknames.js';
 import {CHARACTERS,characterFor,characterById} from './characters.js';
@@ -29,6 +30,9 @@ async function request(path,body){
 }
 function remember(){try{localStorage.setItem(key,JSON.stringify(session));}catch{notify('참가 정보를 저장하지 못했어요. 이 창을 유지해 주세요.');}}
 let dicePresentation=null;
+const activityInbox=new ActivityInbox();
+let activeActivity=null,deferredSnapshots=[];
+function resetActivityFlow(){activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
@@ -70,7 +74,7 @@ function animateBoardMovement(p){
   else p.timer=setTimeout(()=>{
    const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
    stopDicePresentation();commitSnapshot(result);pending.forEach(receive);
-   if(!dicePresentation&&snapshot.state?.lastEvent&&snapshot.state.turn===session.playerId&&snapshot.state.phase==='action')eventModal();
+
   },850);
  }
  p.timer=setTimeout(advance,350);
@@ -78,6 +82,7 @@ function animateBoardMovement(p){
 function receive(next){
  if(snapshot&&next.revision<snapshot.revision)return;
  if(dicePresentation){presentDiceResult(next);return;}
+ if(activeActivity||activityInbox.pending.length){if(!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);deferredSnapshots.sort((a,b)=>a.revision-b.revision);return;}
  const before=snapshot?.state,after=next.state;
  if(before?.phase==='roll'&&after&&after.turn===before.turn&&after.turnNumber===before.turnNumber&&['action','quiz'].includes(after.phase)&&after.dice!==null){
   startDicePresentation(before.players[before.turn]);presentDiceResult(next);return;
@@ -86,15 +91,50 @@ function receive(next){
 }
 function commitSnapshot(next){
  if(snapshot&&next.revision<snapshot.revision)return;
- snapshot=next;if(next.state)state=next.state;render();
+ snapshot=next;if(next.state)state=next.state;
+ activityInbox.accept(next.code,next.activities||[]);render();
  if(revealCharacter&&next.state){revealCharacter=false;characterModal(state.players[session.playerId],true);}
- const auto=next.state?`${state.phase}:${state.turn}:${state.quiz}:${state.feedback?.index}:${state.trade?JSON.stringify(state.trade):''}`:'lobby';
- if(auto!==lastAuto){lastAuto=auto;
-  if(state.trade&&snapshot.state)tradeModal();
-  else if(snapshot.state&&['quiz','feedback'].includes(state.phase)&&myTurn())quizModal();
-  else if(snapshot.state&&state.phase==='finished')results();
-  else if($('#modal').open&&$('#modal').dataset.auto==='true')$('#modal').close();
+ continueFlow();
+}
+function statePromptKey(){return snapshot?.state?`${state.phase}:${state.turn}:${state.quiz}:${state.feedback?.index}:${state.trade?JSON.stringify(state.trade):''}`:'lobby';}
+function continueFlow(){
+ if(dicePresentation||activeActivity||!snapshot?.state)return;
+ const d=$('#modal'),auto=statePromptKey();
+ if(d.open){
+  if(d.dataset.auto!=='true'||auto===lastAuto)return;
+  d.close();
  }
+ if(activityInbox.pending.length){showActivity(activityInbox.take());return;}
+ while(deferredSnapshots.length&&deferredSnapshots[0].revision<=snapshot.revision)deferredSnapshots.shift();
+ if(deferredSnapshots.length){receive(deferredSnapshots.shift());return;}
+ if(auto!==lastAuto){lastAuto=auto;
+  if(state.trade)tradeModal();
+  else if(['quiz','feedback'].includes(state.phase)&&myTurn())quizModal();
+  else if(state.phase==='finished')results();
+ }
+}
+function dismissActivity(){activeActivity=null;$('#modal').close();continueFlow();}
+function historyCard(e,actorId){
+ const risk=e.amount<0,category=e.category||e.period||'음악사 사건 카드';
+ const kind=category.includes('음악사')?'industry':risk?'risk':'opportunity';
+ const symbol={industry:'♫',risk:'♭',opportunity:'♪'}[kind];
+ return `<div class="collectible-card card-${kind}"><div class="card-value"><strong>${e.amount>0?'+':''}${e.amount}</strong><small>MC</small></div><div class="card-art art-${kind}"><span class="card-staves" aria-hidden="true">♬</span><span class="card-art-symbol" aria-hidden="true">${symbol}</span><span class="card-art-category">${esc(category)}</span></div><div class="card-ribbon"><h3>${esc(e.title)}</h3></div><div class="card-gem" aria-hidden="true"></div><div class="card-description"><p>${esc(e.text)}</p><strong class="card-effect">${e.amount>=0?'획득':'지급'} ${Math.abs(e.actual??e.amount)} MC</strong>${e.actual!==undefined&&e.actual!==e.amount?`<small>표시 금액 ${Math.abs(e.amount)} MC 중 잔액 한도에서 ${Math.abs(e.actual)} MC를 지급했습니다.</small>`:''}</div><div class="card-owner">${esc(state.players[actorId]?.name||'참가자')}의 사건 카드</div></div>`;
+}
+function showActivity(item){
+ activeActivity=item;
+ const actor=state.players[item.actorId],other=state.players[item.otherId];
+ const footer=`<div class="activity-footer"><small>전체 참가자에게 공개되는 이벤트${activityInbox.pending.length?` · 대기 ${activityInbox.pending.length}건`:''}</small><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
+ if(item.type==='history-event'){
+  showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<p class="card-fiction">카드 내용과 코인 금액은 게임용 가상 시나리오입니다.</p><details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
+ }else{
+  const symbols={purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
+  const ledger=(item.changes||[]).map(c=>`<div><span>${characterSprite(state.players[c.playerId])}<b>${esc(state.players[c.playerId].name)}</b></span><strong class="${c.amount<0?'debit':'credit'}">${c.amount>0?'+':''}${num(c.amount)} <small>MC</small></strong></div>`).join('');
+  const assignment=item.type==='copyright-transfer'?`<div class="activity-assignment"><div>${characterSprite(actor)}<b>${esc(actor.name)}</b><small>양도하는 참가자</small></div><span aria-hidden="true">→</span><div>${characterSprite(other)}<b>${esc(other.name)}</b><small>양도받는 참가자</small></div></div><p class="assignment-price">작품 구입가 ${num(item.amount)} MC 기준 · 무상 양도</p>`:'';
+  const amount=item.type==='trade-offer'?`<div class="activity-proposal">${esc(actor.name)} → ${esc(other.name)}<strong>${num(item.amount)} MC</strong></div>`:'';
+  const limited=item.type==='rent'&&item.expected!==null&&item.amount<item.expected?`<p class="muted">기준 이용료 ${num(item.expected)} MC 중 잔액 한도에서 ${num(item.amount)} MC를 지급했습니다.</p>`:'';
+  showModal(esc(item.title),`<div class="activity-hero"><span class="activity-symbol" aria-hidden="true">${symbols[item.type]||'♫'}</span>${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><p class="activity-description">${esc(item.text)}</p>${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${item.workId?'<p class="muted">게임 안의 가상 음악 이용권에 관한 안내입니다.</p>':''}${footer}`,'activity-modal');
+ }
+ $('#modal').dataset.activity='true';
 }
 function connect(){
  events?.close();events=new EventSource(`/api/events?code=${encodeURIComponent(session.code)}&token=${encodeURIComponent(session.token)}`);
@@ -102,13 +142,13 @@ function connect(){
  events.onerror=()=>{connected=false;render();};
 }
 async function enter(path,nickname,code,characterId){
- try{session=await request(path,{nickname,code,characterId});remember();snapshot=null;lastAuto='';connect();render();}catch(error){notify(error.message);}
+ try{session=await request(path,{nickname,code,characterId});remember();snapshot=null;lastAuto='';resetActivityFlow();connect();render();}catch(error){notify(error.message);}
 }
 async function resume(){if(!session?.code||!session?.token){session=null;render();notify('이 브라우저에 저장된 게임이 없어요. 새 게임을 시작해 주세요.');return;}try{const data=await request('resume',{code:session.code});session.playerId=data.playerId;connected=true;receive(data);connect();}catch(error){session=null;try{localStorage.removeItem(key);}catch{}render();notify(error.message);}}
 const num=n=>n.toLocaleString('ko-KR');
 const era=id=>ERAS.find(e=>e.id===id);
 const work=id=>WORKS.find(w=>w.id===id);
-const icon=t=>({start:'⚑',event:'✦',quiz:'?',copyright:'©',concert:'♬',work:'♪'}[t]);
+const icon=t=>({start:'⚑',event:'✦',quiz:'?',copyright:'©',concert:'♬',transfer:'⇄',work:'♪'}[t]);
 function notify(message){$('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('#toast').classList.remove('show'),3600);}
 async function apply(fn,...args){
  if(!connected){notify('서버에 다시 연결하는 중입니다.');return false;}
@@ -139,9 +179,11 @@ async function redrawCharacter(){
 }
 function tokens(index){const [row,col]=coordinates(index);const x=col===1?-60:col===7?160:50,y=row===1?-60:row===7?160:50;return `<div class="tokens" style="--token-x:${x}%;--token-y:${y}%">${state.players.filter(p=>p.position===index).map(p=>`<span class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${p.color}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터">${characterSprite(p,'board-character')}<span class="character-ground"></span><span class="character-nickname" style="--nickname-length:${Math.max(...nicknameLines(p.name).map(line=>Array.from(line).length),1)}">${nicknameLines(p.name).map(line=>`<span>${esc(line)}</span>`).join('')}</span></span>`).join('')}</div>`;}
 function coordinates(i){if(i<=6)return [1,i+1];if(i<=12)return [i-5,7];if(i<=18)return [7,19-i];return [25-i,1];}
+function startPortal(){return `<span class="start-portal" aria-hidden="true"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gate-gold"><stop stop-color="#f6e0a0"/><stop offset=".5" stop-color="#be9047"/><stop offset="1" stop-color="#ffe7a0"/></linearGradient><linearGradient id="gate-light" x2="0" y2="1"><stop stop-color="#bceeff" stop-opacity=".9"/><stop offset="1" stop-color="#398bc0" stop-opacity=".1"/></linearGradient></defs><path d="M22 105V48a28 28 0 0 1 56 0v57" fill="url(#gate-light)" stroke="#286b98" stroke-width="12"/><path d="M20 106V46a30 30 0 0 1 60 0v60" fill="none" stroke="url(#gate-gold)" stroke-width="6"/><path d="M28 102V48a22 22 0 0 1 44 0v54" fill="none" stroke="#f8e4a4" stroke-width="2"/><path d="M13 54h17v50H13zM70 54h17v50H70z" fill="#397ba3" stroke="#ebcc82" stroke-width="2"/><path d="M10 101h24v9H10zM66 101h24v9H66zM10 48h24v8H10zM66 48h24v8H66z" fill="url(#gate-gold)" stroke="#87643d"/><path d="M6 110h88v7H6z" fill="#f1d58f" stroke="#957640"/><path d="M37 18h26l-3-11H40z" fill="url(#gate-gold)" stroke="#96733f"/><path d="M53 29v28c-12-5-16 12-6 12 5 0 10-3 10-8V38l10-3V25z" fill="#f3db95" stroke="#a17b3e" stroke-width="1"/></svg></span>`;}
 function landmark(type){
  const drawings={
   start:'<path d="M12 30h40v6H12zM17 14h30v5H17z"/><path d="M23 8h18l9 6H14z"/><path d="M20 19h5v11h-5zm10 0h5v11h-5zm10 0h5v11h-5z"/>',
+  transfer:'<rect x="13" y="8" width="30" height="39" rx="4"/><path d="M21 17h14M21 24h14M21 31h7" stroke="white" stroke-width="3"/><path d="M31 46h23l-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="5"/>',
   event:'<path d="M20 6h29v36H20z"/><path d="M13 13h29v36H13z" opacity=".65"/><path d="m31 19 3 7 8 1-6 5 2 8-7-4-7 4 1-8-5-5 8-1z" fill="#fff"/>',
   quiz:'<path d="M19 17c0-14 27-14 27 0 0 10-14 9-14 20h-7c0-15 13-13 13-20 0-6-12-6-12 0z"/><circle cx="29" cy="46" r="4"/>',
   copyright:'<circle cx="32" cy="29" r="23"/><circle cx="32" cy="29" r="17" fill="#fff"/><path d="M39 21c-16-8-23 18-2 17" fill="none" stroke="currentColor" stroke-width="6"/>',
@@ -160,13 +202,13 @@ function boardTitle(cell){
   'chopin-nocturne':['녹턴','Op.9 No.2'],
   'chopin-polonaises':['영웅','폴로네즈'],
   concert:['모두의','음악회'],
- }[cell.id]||({event:['음악사','사건'],copyright:['권리','탐구실']})[cell.type]||[cell.title];
+ }[cell.id]||({event:['음악사','사건'],copyright:['권리','탐구실'],transfer:['저작권','양도']})[cell.type]||[cell.title];
  return lines.map(line=>`<span class="tile-title-line">${esc(line)}</span>`).join('');
 }
 function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?` · 이동 중 ${dicePresentation.step} / ${dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${String(state.round).padStart(2,'0')}<small> / ${String(state.maxRounds).padStart(2,'0')} ROUND</small><small class="lap-progress">첫 주자 완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴</small></b></section><div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
  const [row,col]=coordinates(i),owner=state.ownership[c.id],active=G.current(state).position===i;
  const tile={baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'}[c.era]||'#9cbfd0';
- return `<button class="cell ${c.type} ${active?'current':''} ${owner?'owned':''} ${owner?.level?'upgraded':''}" data-action="cell" data-index="${i}" style="grid-row:${row};grid-column:${col};--era:${c.era?era(c.era).color:'#cbbd99'};--tile:${tile};--owner:${owner?state.players[owner.player].color:'transparent'}" aria-label="${i+1}번 ${esc(c.composer||'')} ${esc(c.title)}${owner?`, ${esc(state.players[owner.player].name)} 보유`:''}"><span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(({start:'+200 MC',quiz:'+80 MC',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈'})[c.type]||c.subtitle)}</span></span>${tokens(i)}${owner?`<span class="ownership-dot" title="${esc(state.players[owner.player].name)} 보유"></span>`:''}${owner?.level?'<span class="project-marker" aria-label="공연 기획 완료">♫</span>':''}</button>`;
+ return `<button class="cell ${c.type} ${active?'current':''} ${owner?'owned':''} ${owner?.level?'upgraded':''}" data-action="cell" data-index="${i}" style="grid-row:${row};grid-column:${col};--era:${c.era?era(c.era).color:'#cbbd99'};--tile:${tile};--owner:${owner?state.players[owner.player].color:'transparent'}" aria-label="${i+1}번 ${esc(c.composer||'')} ${esc(c.title)}${owner?`, ${esc(state.players[owner.player].name)} 보유`:''}"><span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(({start:'출발 · +200 MC',quiz:'+80 MC',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품'})[c.type]||c.subtitle)}</span></span>${c.type==='start'?startPortal():''}${tokens(i)}${owner?`<span class="ownership-dot" title="${esc(state.players[owner.player].name)} 보유"></span>`:''}${owner?.level?'<span class="project-marker" aria-label="공연 기획 완료">♫</span>':''}</button>`;
  }).join('')}<div class="board-center"><div class="garden-water" aria-hidden="true"></div><span class="board-direction">시대의 문에서 출발 · 시계 방향 ↻</span></div></div></div></div><div class="scene-instruction"><span class="live-dot"></span>${boardView==='3d'?'입체 보드 · 작품 타일을 눌러 탐험하세요':'평면 보드 · 작품 타일을 눌러 탐험하세요'}</div></div>`;}
 function diceCube(value){
  const positions={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]}[value];
@@ -181,7 +223,7 @@ function actionPanel(){
  else if(state.phase==='quiz'||state.phase==='feedback')content=`<div class="arrival"><span>배움의 시간</span><h3>${state.phase==='quiz'?'함께 답을 골라 보세요':'답보다 중요한 해설'}</h3><p>퀴즈 정답 시 80 MC와 배움 점수 1점을 얻어요.</p></div><button class="primary full" data-action="quiz-open">${state.phase==='quiz'?'퀴즈 열기':'해설 확인하기'} →</button>`;
  else if(state.trade)content=`<div class="notice">거래 제안을 보냈어요. 상대 참가자의 응답을 기다려 주세요.</div><button class="primary full" data-action="trade-open">거래 제안 확인</button>`;
  else {
-  content=`<div class="arrival"><span>${state.dice}칸 이동 · ${c.composer?esc(c.composer):'도착한 곳'}</span><h3>${esc(c.title)}</h3><p>${c.type==='work'?esc(c.note):c.type==='start'?'다시 새로운 시대를 만나러 가요.':c.type==='concert'?'모든 팀에 음악회 지원금 100 MC가 지급되었어요.':state.lastEvent?esc(state.lastEvent.title):'시대의 이야기를 나눠 보세요.'}</p></div>`;
+  content=`<div class="arrival"><span>${state.dice}칸 이동 · ${c.composer?esc(c.composer):'도착한 곳'}</span><h3>${esc(c.title)}</h3><p>${c.type==='work'?esc(c.note):c.type==='start'?'다시 새로운 시대를 만나러 가요.':c.type==='concert'?'모든 팀에 음악회 지원금 100 MC가 지급되었어요.':c.type==='transfer'?(state.lastAssignment?.skipped?'보유 작품이 없어 양도 없이 통과했어요.':'가장 비싼 작품의 가상 권리를 다른 참가자에게 양도했어요.'):state.lastEvent?esc(state.lastEvent.title):'시대의 이야기를 나눠 보세요.'}</p></div>`;
   if(c.type==='work'&&!o)content+=`<div class="price-row"><span>가상 이용권</span><strong>${num(c.price)} <small>MC</small></strong></div><button class="primary full" data-action="buy" ${p.coins<c.price?'disabled':''}>${p.coins<c.price?'뮤직코인이 부족해요':'이용권 구입하기'} ＋</button>`;
   if(c.type==='work'&&o)content+=`<div class="notice">${o.player===p.id?'나의 컬렉션에 있는 작품이에요.':state.lastRent?.workId===c.id?`${esc(state.players[state.lastRent.owner].name)}에게 ${state.lastRent.amount} MC를 지급했어요.`:`${esc(state.players[o.player].name)}의 이용권입니다.`}<b>기준 이용료 ${G.fee(state,c)} MC</b></div>`;
   if(state.lastEvent)content+=`<button class="secondary full" data-action="event">✦ 사건 카드 다시 보기</button>`;
@@ -199,10 +241,10 @@ function render(){
  $('#app').innerHTML=`<div class="game-shell"><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div>뮤직마블<small>MUSIC MARBLE</small></div></a><nav aria-label="주 메뉴">${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button" data-action="help" aria-label="게임 가이드">?</button><button class="settings-button" data-action="settings">⚙ <span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`라운드 <b>${String(state.round).padStart(2,'0')}</b> / ${String(state.maxRounds).padStart(2,'0')}`}</strong><small>1라운드 = 첫 주자 한 바퀴</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 5명 · ${session.playerId===0?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools"><button data-action="board-view" aria-pressed="${boardView==='3d'}">${boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기'}</button><button data-action="help">진행 방법 ↗</button></div></div>${board()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView():learning()}</div><aside>${actionPanel()}${players()}<div class="copyright-note"><span>©</span><p><strong>이용권은 게임 안에서만 유효해요.</strong>실제 작품이나 음원의 저작권을 얻는 것은 아닙니다.</p></div></aside></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
 }
 function showModal(title,body,cls=''){
- const d=$('#modal');d.dataset.auto='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기">×</button></div><h2 id="modal-title">${title}</h2>${body}`;
+ const d=$('#modal');d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기">×</button></div><h2 id="modal-title">${title}</h2>${body}`;
  if(!d.open)d.showModal();
 }
-function closeModal(){$('#modal').close();}
+function closeModal(){if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
 function quizModal(){const q=QUIZZES.find(q=>q.id===state.quiz);if(!q)return;
  const f=state.feedback;
  showModal(state.phase==='feedback'?(f.correct?'좋은 발견이에요!':'함께 배워 볼까요?'):'생각을 모아, 뮤직 퀴즈',`<div class="quiz-meta">${pill(q.kind==='copyright'?'© 저작권 탐구':'♫ 음악사 탐구')}${pill('정답 +80 MC · 배움 +1')}</div><h3 class="quiz-question">${q.question}</h3><div class="quiz-options">${q.options.map((o,i)=>`<button data-action="answer" data-index="${i}" ${f?'disabled':''} class="${f?(i===q.answer?'correct':i===f.index?'incorrect':''):''}"><span>${i+1}</span>${o}${f&&i===q.answer?' ✓':''}</button>`).join('')}</div>${f?`<div class="quiz-explanation"><strong>${f.correct?'정답 · 80 MC와 배움 1점 획득':'오답 · 코인은 차감되지 않아요'}</strong><p>${q.explanation}</p></div><button class="primary full" data-action="feedback-close">해설 확인하고 계속하기 →</button>`:'<p class="muted">친구들과 이야기한 뒤 답을 하나 골라 주세요.</p>'}`);$('#modal').dataset.auto='true';
@@ -210,7 +252,7 @@ function quizModal(){const q=QUIZZES.find(q=>q.id===state.quiz);if(!q)return;
 function workModal(w){selected=w.id;const o=state.ownership[w.id],p=G.current(state),mine=o?.player===p.id,canAct=state.phase==='action'&&myTurn();
  showModal(esc(w.title),`<div class="work-modal-meta">${pill(era(w.era).name)}<span>${w.composer} · ${w.year}</span></div><div class="work-story" style="--era:${era(w.era).color}"><span>♪</span><p>${w.note}</p></div><div class="stat-grid"><div><span>이용권 가격</span><b>${w.price} <small>MC</small></b></div><div><span>현재 가상 이용료</span><b>${G.fee(state,w)} <small>MC</small></b></div></div><div class="notice">${o?`${esc(state.players[o.player].name)}의 이용권 · ${G.collection(state,w,o.player).name}${o.level?' · 공연 기획 +20 MC':''}`:'아직 보유한 팀이 없어요. 이 칸에 도착하면 구입할 수 있어요.'}</div><p class="muted">같은 작곡가 2곡 ×1.5 · 같은 시대 4곡 ×2 (시대 보너스 우선, 중복 없음). 공연 기획은 작품당 100 MC, 1회만 가능해요.</p>${mine&&canAct?`<div class="modal-action-grid"><button class="primary" data-action="upgrade" ${o.level||p.coins<100?'disabled':''}>${o.level?'공연 기획 완료':'공연 기획 · 100 MC'}</button><button class="secondary" data-action="trade-form">다른 팀에 거래 제안</button><button class="text-button" data-action="sell-confirm">은행에 반납 (+${Math.floor((w.price+o.level*100)/2)} MC)</button></div>`:!o&&p.position===BOARD.indexOf(w)&&canAct?`<button class="primary full" data-action="buy-modal" ${p.coins<w.price?'disabled':''}>${w.price} MC로 구입</button>`:''}<small class="muted">가격은 게임을 위한 수치이며 작품의 예술적 가치 순위가 아닙니다.</small>`);
 }
-function eventModal(){const e=state.lastEvent;if(!e)return;showModal('음악사에서 온 한 장의 카드',`<p class="muted">음악사 사건 카드 24종 · 게임용 가상 시나리오입니다. 문장을 읽고 표시된 뮤직코인을 받거나 지급합니다.</p><div class="event-card"><span class="event-star">✦</span><span class="eyebrow">${esc(e.period)}</span><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p><strong>${esc(e.effect)}</strong>${e.actual<0&&e.actual!==e.amount?'<small>잔액 한도에서 비용을 지급했어요.</small>':''}</div><div class="discussion"><b>함께 생각해요</b><p>${esc(e.prompt)}</p></div><button class="primary full" data-action="close">이야기 나누고 계속하기 →</button>`);}
+function eventModal(){const e=state.lastEvent;if(!e)return;showModal('음악사 사건 카드',`${historyCard(e,state.turn)}<p class="card-fiction">게임용 가상 시나리오 · 다시 보기에는 코인이 추가 정산되지 않습니다.</p><div class="discussion"><b>함께 생각해요</b><p>${esc(e.prompt)}</p></div><button class="primary full" data-action="close">확인</button>`,'event-card-modal');}
 function settingsModal(){showModal('실시간 수업 정보',`<div class="notice">라운드 기준: 첫 주자 ${esc(state.players[0].name)}의 한 바퀴<br>완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴<br>공유 코드 <b>${session.code}</b>같은 서버 주소에 접속한 뒤 이 코드를 입력하면 같은 방에 참가합니다.</div><p class="muted">게임 시작 후 새 참가자는 들어올 수 없습니다. 새로고침하면 시작 화면이 나옵니다. 「이전 게임 이어하기」를 눌러 재접속할 수 있습니다. 서버를 재시작하면 방은 초기화됩니다.</p><div class="settings-bottom"><button class="text-button" data-action="finish-confirm" ${state.phase==='finished'||session.playerId!==0?'disabled':''}>방장: 현재 수업 종료</button><button class="text-button" data-action="export">현재 결과 내려받기 ↗</button></div><button class="secondary full" data-action="copy-code">방 코드 복사</button><button class="text-button" data-action="leave-confirm">이 화면에서 나가기</button>`);}
 function results(){const ranking=[...state.players].sort((a,b)=>G.score(state,b)-G.score(state,a));showModal('여행 끝, 우리에게 남은 것',`<p class="muted">첫 주자 완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴 · ${state.round}라운드의 여정 · 동점은 공동 순위입니다. 점수는 게임 결과이며 음악적 능력을 평가하지 않습니다.</p><div class="results-list">${ranking.map(p=>{const rank=ranking.filter(x=>G.score(state,x)>G.score(state,p)).length+1;return `<div><span class="rank">${rank}</span>${characterSprite(p)}<div><strong>${esc(p.name)}</strong><small>코인 ${num(p.coins)} · 이용권 ${G.owned(state,p.id).length} · 퀴즈 ${p.knowledge}/${p.attempts}</small></div><b>${num(G.score(state,p))}<small>점</small></b></div>`;}).join('')}</div><p class="muted">총점 = 보유 코인 + 이용권 구입가 + 공연 기획비 + 배움 점수 ×50</p><div class="discussion"><b>함께 돌아보기</b><p>① 가장 기억에 남는 작품과 그 이유는?<br>② 음악의 가격과 가치는 어떻게 다를까요?<br>③ 실제 음원 이용 전에 무엇을 확인할까요?</p></div><button class="primary full" data-action="export">학습 결과 내려받기 ↓</button><button class="text-button" data-action="settings">수업 정보 보기 →</button>`);}
 function exportResults(){const text=['뮤직마블 · 수업 결과',`기록 시각: ${new Date().toLocaleString('ko-KR')}`,`${state.round}/${state.maxRounds}라운드 · ${state.phase==='finished'?'종료':'진행 중'}`,`라운드 기준: 첫 주자 ${state.players[0].name}의 한 바퀴 | 완주 ${state.leaderLaps??0}/${state.maxRounds}바퀴`,'총점 = 코인 + 이용권 원가 + 공연 기획비 + 배움 ×50','',...state.players.map(p=>`${p.name}: ${G.score(state,p)}점 | ${p.coins} MC | 배움 ${p.knowledge}/${p.attempts}\n작품: ${G.owned(state,p.id).map(w=>`${w.composer} ${w.title}`).join(', ')||'없음'}`),'','돌아보기','1. 기억에 남는 작품과 이유:','2. 음악의 가격과 가치의 차이:','3. 실제 음원 이용 전에 확인할 것:','','여행 기록',...state.log.slice().reverse().map(l=>`R${l.round} ${l.text}`),'','게임 이용권은 실제 저작권이나 음원 이용허락이 아닙니다.'].join('\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='뮤직마블-수업결과.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -218,8 +260,9 @@ function soloSetup(){
  const nickname=$('#entry-form input[name="nickname"]')?.value||'';
  showModal('봇 친구들과 음악 여행을 떠나요',`<p class="muted">나와 랜덤한 닉네임의 봇들이 함께 플레이해요. 나의 캐릭터를 직접 고르거나 랜덤으로 정하세요. 봇은 나와 겹치지 않게 배정됩니다. 봇은 주사위, 작품 구입, 공연 기획, 퀴즈를 자동으로 진행하고 거래 제안에도 응답해요.</p><form id="solo-form"><label>나의 닉네임<input name="nickname" required maxlength="16" autocomplete="nickname" placeholder="예: 선율 탐험가" value="${esc(nickname)}" /></label>${characterPicker($('#entry-form select[name="characterId"]')?.value||'')}<div class="form-row"><label>함께할 봇 수<select name="bots"><option value="1">봇 1명 · 총 2명</option><option value="2">봇 2명 · 총 3명</option><option value="3" selected>봇 3명 · 총 4명</option><option value="4">봇 4명 · 총 5명</option></select></label><label>게임 길이<select name="rounds"><option value="4">4라운드 · 첫 주자 4바퀴</option><option value="8" selected>8라운드 · 첫 주자 8바퀴</option><option value="12">12라운드 · 첫 주자 12바퀴</option></select></label></div><div class="notice">모두 1,200 MC로 시작해요. 봇도 같은 규칙을 적용받으며, 퀴즈를 틀리거나 거래를 거절할 수 있어요. 화면을 나가면 봇은 기다리고, 「이전 게임 이어하기」로 돌아오면 계속합니다.</div><button type="submit" class="primary full">봇과 게임 시작 →</button></form>`,'entrance-help');
 }
-function help(){showModal('한 차례에 하나씩, 음악을 만나요',`<ol class="guide"><li><b>주사위를 굴리고 이동해요.</b><p>시계 방향으로 음악사를 여행해요. 한 바퀴를 돌면 200 MC를 받습니다.</p></li><li><b>작품의 가상 이용권을 선택해요.</b><p>빈 작품은 도착한 팀이 구입할 수 있어요. 다른 팀의 작품에 도착하면 가상 이용료를 자동 지급합니다. 작품 칸의 작은 점은 소유 팀 색입니다.</p></li><li><b>사건을 경험하고 퀴즈에 도전해요.</b><p>퀴즈 칸은 필수, 다른 칸에서는 차례당 1회 선택 도전해요. 정답은 80 MC와 배움 1점, 오답에는 감점이 없습니다.</p></li><li><b>컬렉션과 공연을 기획해요.</b><p>같은 작곡가 2곡이면 이용료 ×1.5, 같은 시대 4곡이면 ×2로 적용해요. 중복 적용하지 않습니다. 내 작품을 눌러 100 MC로 공연 기획(기본 이용료 +20), 거래 제안, 은행 반납(투자액 50%)을 할 수 있어요.</p></li><li><b>다음 팀에 차례를 넘겨요.</b><p>첫 주자(방장)가 보드를 한 바퀴 돌아 출발점을 통과하거나 도착하면 1라운드를 완주합니다. 다른 참가자의 완주는 라운드에 영향을 주지 않습니다. 첫 주자가 설정한 4·8·12바퀴를 완주한 차례의 활동을 마치면 게임을 종료합니다. 교사는 수업 설정에서 일찍 마칠 수 있어요.</p></li></ol><div class="notice">수업 모드에서는 파산과 탈락이 없어요. 비용은 가진 코인 한도에서 지급하고 부족액은 면제합니다. 거래는 제안을 받은 참가자가 자신의 화면에서 수락해야 완료됩니다.</div><p class="muted">혼자 플레이하려면 첫 화면의 「봇과 혼자 플레이하기」에서 봇 수를 선택하세요. 봇은 자동으로 자기 차례를 진행합니다.</p><p class="muted">공유 코드마다 별도의 방이 만들어집니다. 방마다 최대 5명이 참여하며 여러 방이 동시에 진행됩니다. 참가 정보는 이 브라우저에, 게임 진행은 서버 메모리에 저장됩니다. 서버 재시작 시 초기화됩니다.</p><button class="primary full" data-action="close">여행으로 돌아가기 →</button>`,snapshot?.state?'':'entrance-help');}
+function help(){showModal('한 차례에 하나씩, 음악을 만나요',`<ol class="guide"><li><b>주사위를 굴리고 이동해요.</b><p>시계 방향으로 음악사를 여행해요. 한 바퀴를 돌면 200 MC를 받습니다.</p></li><li><b>작품의 가상 이용권을 선택해요.</b><p>빈 작품은 도착한 팀이 구입할 수 있어요. 다른 팀의 작품에 도착하면 가상 이용료를 자동 지급합니다. 작품 칸의 작은 점은 소유 팀 색입니다.</p></li><li><b>사건을 경험하고 퀴즈에 도전해요.</b><p>퀴즈 칸은 필수, 다른 칸에서는 차례당 1회 선택 도전해요. 정답은 80 MC와 배움 1점, 오답에는 감점이 없습니다. 「저작권 양도」 칸에서는 최고 구입가 작품 한 개를 무작위로 정한 다른 참가자에게 넘깁니다. 보유 작품이 없으면 통과하며, 코인은 변하지 않습니다.</p></li><li><b>컬렉션과 공연을 기획해요.</b><p>같은 작곡가 2곡이면 이용료 ×1.5, 같은 시대 4곡이면 ×2로 적용해요. 중복 적용하지 않습니다. 내 작품을 눌러 100 MC로 공연 기획(기본 이용료 +20), 거래 제안, 은행 반납(투자액 50%)을 할 수 있어요.</p></li><li><b>다음 팀에 차례를 넘겨요.</b><p>첫 주자(방장)가 보드를 한 바퀴 돌아 출발점을 통과하거나 도착하면 1라운드를 완주합니다. 다른 참가자의 완주는 라운드에 영향을 주지 않습니다. 첫 주자가 설정한 4·8·12바퀴를 완주한 차례의 활동을 마치면 게임을 종료합니다. 교사는 수업 설정에서 일찍 마칠 수 있어요.</p></li></ol><div class="notice">수업 모드에서는 파산과 탈락이 없어요. 비용은 가진 코인 한도에서 지급하고 부족액은 면제합니다. 거래는 제안을 받은 참가자가 자신의 화면에서 수락해야 완료됩니다.</div><p class="muted">혼자 플레이하려면 첫 화면의 「봇과 혼자 플레이하기」에서 봇 수를 선택하세요. 봇은 자동으로 자기 차례를 진행합니다.</p><p class="muted">공유 코드마다 별도의 방이 만들어집니다. 방마다 최대 5명이 참여하며 여러 방이 동시에 진행됩니다. 참가 정보는 이 브라우저에, 게임 진행은 서버 메모리에 저장됩니다. 서버 재시작 시 초기화됩니다.</p><button class="primary full" data-action="close">여행으로 돌아가기 →</button>`,snapshot?.state?'':'entrance-help');}
 $('#app').addEventListener('click',handleClick);$('#modal').addEventListener('click',handleClick);
+$('#modal').addEventListener('close',()=>continueFlow());
 $('#modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
 $('#modal').addEventListener('change',e=>{if(e.target.id==='team-count')document.querySelectorAll('[data-team-field]').forEach(el=>el.hidden=Number(el.dataset.teamField)>=Number(e.target.value));});
 $('#modal').addEventListener('submit',async e=>{
@@ -229,13 +272,14 @@ $('#modal').addEventListener('submit',async e=>{
   const button=e.target.querySelector('button[type="submit"]');button.disabled=true;
   try{
    const next=await request('create-solo',{nickname:String(f.get('nickname')),characterId:String(f.get('characterId')),config:{botCount:Number(f.get('bots')),rounds:Number(f.get('rounds')),coins:1200}});
-   events?.close();session=next;remember();snapshot=null;connected=false;lastAuto='';tab='board';revealCharacter=true;$('#modal').close();connect();render();
+   events?.close();session=next;remember();snapshot=null;connected=false;lastAuto='';tab='board';revealCharacter=true;resetActivityFlow();$('#modal').close();connect();render();
   }catch(error){notify(error.message);button.disabled=false;}finally{busy=false;}
  }
- if(e.target.id==='trade-form'){await apply(G.proposeTrade,{workId:selected,to:Number(f.get('to')),price:Number(f.get('price'))});}
+ if(e.target.id==='trade-form'){closeModal();await apply(G.proposeTrade,{workId:selected,to:Number(f.get('to')),price:Number(f.get('price'))});}
 
 });
 async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)return;const a=el.dataset.action;if(el.tagName==='A')e.preventDefault();
+ if(a==='activity-next'){dismissActivity();return;}
  if(busy)return;
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();}
  if(a==='home'){tab='board';render();}
@@ -248,7 +292,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='character-gallery')characterGallery();
  if(a==='redraw-character')await redrawCharacter();
  if(a==='settings')settingsModal();
- if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC와 배움 1점!',concert:'음악을 나누는 축제! 도착하면 모든 팀이 100 MC를 받아요.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
+ if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC와 배움 1점!',concert:'음악을 나누는 축제! 도착하면 모든 팀이 100 MC를 받아요.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
  if(a==='work')workModal(work(el.dataset.id));
  if(a==='roll'){
   if(!myTurn()||state.phase!=='roll')return;
@@ -256,28 +300,28 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
   try{receive(await request('action',{code:session.code,action:'roll',args:[],revision:snapshot.revision}));}
   catch(error){const latest=dicePresentation?.next;stopDicePresentation();if(latest)commitSnapshot(latest);else render();notify(error.message);}
  }
- if(a==='buy'||a==='buy-modal'){if(await apply(G.buy)){if(a==='buy-modal')workModal(work(selected));notify('가상 이용권이 컬렉션에 추가되었어요.');}}
- if(a==='next'){if(await apply(G.nextTurn)&&state.phase==='finished')results();}
- if(a==='quiz'){if(await apply(G.startQuiz))quizModal();}
+ if(a==='buy'||a==='buy-modal'){if(a==='buy-modal')closeModal();await apply(G.buy);}
+ if(a==='next')await apply(G.nextTurn);
+ if(a==='quiz')await apply(G.startQuiz);
  if(a==='quiz-open')quizModal();
- if(a==='answer'){if(await apply(G.answerQuiz,Number(el.dataset.index)))quizModal();}
- if(a==='feedback-close'){if(await apply(G.closeFeedback))$('#modal').close();}
+ if(a==='answer')await apply(G.answerQuiz,Number(el.dataset.index));
+ if(a==='feedback-close'){closeModal();await apply(G.closeFeedback);}
  if(a==='event')eventModal();
- if(a==='upgrade'){if(await apply(G.upgrade,selected))workModal(work(selected));}
+ if(a==='upgrade'){closeModal();await apply(G.upgrade,selected);}
  if(a==='sell-confirm'){const w=work(selected),o=state.ownership[selected];showModal('이용권을 은행에 반납할까요?',`<p>「${w.title}」 이용권과 공연 기획 상태를 반납하고 ${Math.floor((w.price+o.level*100)/2)} MC를 받습니다.</p><button class="primary full" data-action="sell">반납 확정</button><button class="text-button" data-action="work" data-id="${w.id}">돌아가기</button>`);}
- if(a==='sell'){if(await apply(G.sell,selected))$('#modal').close();}
+ if(a==='sell'){closeModal();await apply(G.sell,selected);}
  if(a==='trade-form'){const w=work(selected);showModal('이용권 거래를 제안해요',`<p>판매할 작품: <b>${w.title}</b></p><form id="trade-form"><label>제안을 받을 팀<select name="to">${state.players.filter(p=>p.id!==state.turn).map(p=>`<option value="${p.id}">${esc(p.name)} · ${num(p.coins)} MC</option>`).join('')}</select></label><label>판매 가격 (MC)<input name="price" type="number" required min="1" max="10000" step="1" value="${w.price}" /></label><p class="muted">팀끼리 먼저 가격을 의논하세요. 제안 후 상대 팀의 수락이 필요합니다.</p><button class="primary full" type="submit">거래 제안 보내기 →</button></form>`);}
  if(a==='trade-open')tradeModal();
- if(a==='trade-accept'||a==='trade-reject'){if(await apply(G.resolveTrade,a==='trade-accept')){$('#modal').close();notify(a==='trade-accept'?'거래가 완료되었어요.':'거래를 취소했어요.');}}
+ if(a==='trade-accept'||a==='trade-reject'){closeModal();await apply(G.resolveTrade,a==='trade-accept');}
  if(a==='history')showModal('우리의 음악사 여행 기록',`<div class="history-list">${state.log.map(l=>`<p><span>R${l.round}</span>${esc(l.text)}</p>`).join('')}</div>`);
  if(a==='finish-confirm')showModal('지금 수업을 마칠까요?',`<p>현재 자산과 배움으로 결과를 정리합니다. 결과는 내려받을 수 있어요.</p><button class="primary full" data-action="finish">수업 마치고 결과 보기</button><button class="text-button" data-action="close">계속 플레이</button>`);
- if(a==='finish'){if(await apply(G.finishGame))results();}
+ if(a==='finish'){closeModal();await apply(G.finishGame);}
  if(a==='results')results();
  if(a==='export')exportResults();
  if(a==='copy-code'){try{await navigator.clipboard.writeText(session.code);notify('공유 코드를 복사했어요. 사이트 주소도 함께 보내 주세요.');}catch{notify(`공유 코드: ${session.code}`);}}
  if(a==='leave-confirm')showModal('이 화면에서 나갈까요?',`<p>참가 정보는 이 브라우저에 남습니다. 같은 브라우저에서 「이전 게임 이어하기」를 누르면 돌아올 수 있어요. 방의 참가 슬롯은 유지됩니다.</p><button class="primary full" data-action="leave">첫 화면으로 이동</button><button class="text-button" data-action="close">돌아가기</button>`);
  if(a==='resume'){try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}await resume();}
- if(a==='leave'){events?.close();connected=false;snapshot=null;session=null;$('#modal').close();render();}
+ if(a==='leave'){events?.close();connected=false;snapshot=null;session=null;resetActivityFlow();$('#modal').close();render();}
 
 }
 function tradeModal(){const t=state.trade;if(!t)return;const receiver=session.playerId===t.to,proposer=session.playerId===t.from;

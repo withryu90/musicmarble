@@ -38,3 +38,45 @@ dialog#modal::backdrop{background:#164d7959}
 #modal .history-list span,#modal .results-list small{color:#7294ae}
 #modal .rank,#modal .results-list b{color:#337fac}
 #toast{background:#205f8d;border-color:#6da7d0;color:#fff;box-shadow:0 5px 25px #153f6926}
+
+/* Shared public event notices, presented one at a time in every game client. */
+#modal.activity-modal{width:min(470px,calc(100% - 28px))}
+#modal .activity-hero{display:flex;justify-content:center;align-items:center;gap:10px;padding:13px 0 8px;color:#21557c}
+.activity-symbol{display:grid;place-items:center;width:47px;height:47px;border-radius:14px;background:linear-gradient(145deg,#bfe3ff,#eef9ff);color:#247db2;font-size:29px;font-weight:700;box-shadow:inset 0 0 0 1px #b1d5ee}
+#modal .activity-description{text-align:center;font-size:13px;line-height:1.9;margin:10px 0 19px;word-break:keep-all}
+.activity-ledger{border:1px solid #cde2f1;border-radius:12px;background:#f0f8ff;overflow:hidden}
+.activity-ledger>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid #dbeaf5}
+.activity-ledger>div:last-child{border:0}.activity-ledger>div>span{display:flex;align-items:center;gap:9px;min-width:0}.activity-ledger b{font-size:12px;word-break:keep-all}
+.activity-ledger strong{font-size:19px;white-space:nowrap}.activity-ledger small{font-size:9px}
+#modal .activity-ledger .credit{color:#1677b5}#modal .activity-ledger .debit{color:#526a8b}
+.activity-footer{margin-top:19px}.activity-footer>small{display:block;text-align:center;font-size:9px;line-height:1.7;margin-bottom:10px}
+.activity-proposal{padding:14px;border-radius:9px;background:#e8f4ff;text-align:center;font-size:12px}.activity-proposal strong{display:block;font-size:25px;margin-top:8px;color:#1b6c9e}
+#modal .activity-audience{font-size:11px;text-align:center;margin:-6px 0 15px}
+
+/* Original music trading-card design: bevelled frame, artwork, ribbon and text panel. */
+#modal.event-card-modal{width:min(450px,calc(100% - 24px));background:radial-gradient(ellipse at 50% 30%,#e7f5ff,#f8fcff 70%);padding:22px}
+#modal.event-card-modal>h2{font-size:17px;margin-bottom:16px;text-align:center}
+.collectible-card{position:relative;isolation:isolate;width:min(310px,100%);margin:8px auto 15px;padding:12px 12px 10px;border:3px solid #a78754;border-radius:24px 24px 18px 18px;background:linear-gradient(115deg,#1f3d60,#547796 22%,#243f5d 45%,#16324e 76%,#638da4);box-shadow:0 0 0 2px #2b3e54,0 0 0 5px #c0a574,inset 0 0 0 2px #19354f,0 15px 22px #1d41533b;color:#203e57}
+.collectible-card:before{content:'';position:absolute;inset:5px;border:1px solid #dfc38a;border-radius:16px;pointer-events:none;z-index:4}
+.card-value{position:absolute;z-index:6;left:-14px;top:-14px;width:68px;height:73px;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(130deg,#68c4fc,#2374b0 50%,#154576);border:3px solid #bddfff;clip-path:polygon(23% 0,76% 0,100% 23%,91% 78%,50% 100%,8% 78%,0 23%);filter:drop-shadow(2px 4px 2px #14314b88);color:white;text-shadow:0 2px 1px #103752}
+.card-value strong{font-family:Georgia,serif;font-size:24px;line-height:1.15}#modal .card-value small{color:#d9efff;font-size:9px;font-weight:700;letter-spacing:1px}
+.card-art{position:relative;height:166px;overflow:hidden;border:2px solid #bb9c67;border-radius:12px 12px 40% 40% / 12px 12px 13% 13%;background:radial-gradient(ellipse at 50% 30%,#b1e6fb33,#132b4d 85%),url('./assets/music-world-adventure-cutout.png') center 44% / 150% auto no-repeat,#294e73;box-shadow:inset 0 0 25px #081b48;display:flex;justify-content:center;align-items:center}
+.art-risk{background-color:#303762;background-image:radial-gradient(ellipse at 50% 30%,#7388c644,#172440 85%),url('./assets/music-garden-topdown.png');background-size:auto,cover;background-position:center}
+.art-industry{background-image:radial-gradient(ellipse at 50% 30%,#b3e4ff11,#193a62 90%),url('./assets/composers-trio.png');background-size:auto,cover;background-position:center}
+.card-staves{position:absolute;right:5px;top:0;opacity:.18;color:#b4e8ff;font-size:140px;transform:rotate(-16deg)}
+.card-art-symbol{position:relative;font-family:Georgia,serif;font-size:96px;line-height:1;color:#e3f7ff;text-shadow:0 0 14px #63c9ff,0 4px 2px #143657;transform:rotate(-9deg)}
+.card-art-category{position:absolute;bottom:14px;padding:4px 9px;border:1px solid #b7d6ed8c;border-radius:12px;background:#173b63e6;color:#e1f2ff;font-size:8px;letter-spacing:1px}
+.card-ribbon{position:relative;z-index:5;margin:-5px -15px 0;padding:9px 13px;background:linear-gradient(180deg,#e4cea0,#f3e6c6 46%,#c5a471);border:2px solid #886c43;box-shadow:0 3px 0 #112e4f;border-radius:6px 6px 40% 40% / 5px 5px 13% 13%;text-align:center;transform:rotate(-1deg)}
+#modal .card-ribbon h3{font-size:18px;line-height:1.5;color:#243e55;font-weight:800;letter-spacing:-.7px;text-wrap:balance}
+.card-gem{position:relative;width:15px;height:19px;margin:-2px auto -9px;z-index:6;background:linear-gradient(130deg,#a6dcff,#2675b1 60%,#0e416e);border:2px solid #e9d7b0;border-radius:50%;box-shadow:0 2px 2px #143857}
+.card-description{min-height:143px;padding:23px 15px 15px;border:2px solid #9e8258;border-radius:9px;background:radial-gradient(ellipse at 50% 40%,#f4eddb,#d9cbaa);box-shadow:inset 0 0 0 2px #f7ecd6;text-align:center}
+#modal .card-description p{font-size:12px;line-height:1.8;font-weight:600;color:#2b4258;word-break:keep-all}
+#modal .card-effect{display:block;margin:10px auto 0;padding:5px 10px;width:max-content;max-width:100%;border:1px solid #b4cddd;border-radius:6px;background:#f0f8ff;color:#1d6596;font-size:18px}
+#modal .card-description small{display:block;color:#52697c;font-size:9px;line-height:1.6;margin-top:8px}
+.card-owner{text-align:center;font-size:9px;line-height:1.6;letter-spacing:.3px;padding:8px 6px 0;color:#e2edfa}
+#modal .card-fiction{font-size:9px;text-align:center;line-height:1.6;margin:12px 0 6px;color:#68859d}
+.card-reflection{font-size:10px;padding:10px 12px;background:#edf6fd;border:1px solid #d1e5f4;border-radius:8px;color:#59819d}.card-reflection summary{cursor:pointer;font-weight:700}.card-reflection p{margin-top:8px}
+@media(max-width:560px){#modal.event-card-modal{padding:18px}.collectible-card{width:min(278px,calc(100% - 12px))}.card-art{height:145px}#modal .card-ribbon h3{font-size:16px}.card-description{padding:21px 13px 12px;min-height:130px}.card-value{width:59px;height:65px;left:-11px;top:-11px}.card-value strong{font-size:20px}.activity-ledger>div{padding:12px 10px}.activity-ledger b{font-size:10px}.activity-ledger strong{font-size:16px}}
+@media(prefers-reduced-motion:no-preference){.collectible-card{animation:card-reveal .45s ease-out both}@keyframes card-reveal{from{opacity:0;transform:translateY(12px) rotate(-3deg) scale(.95)}to{opacity:1;transform:none}}}
+.activity-assignment{display:flex;justify-content:center;align-items:center;gap:22px;padding:18px 10px;border:1px solid #cde2f1;border-radius:12px;background:#eef7ff}
+.activity-assignment>div{display:flex;flex-direction:column;align-items:center;gap:7px;max-width:40%;text-align:center}.activity-assignment .character-avatar{width:49px;height:49px}.activity-assignment b{font-size:12px;word-break:keep-all}.activity-assignment>span{font-size:27px;color:#3989bb}.activity-assignment small{font-size:9px}#modal .assignment-price{font-size:10px;text-align:center;margin-top:9px}

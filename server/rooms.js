@@ -1,6 +1,7 @@
 import {randomBytes,randomInt} from 'node:crypto';
 import * as G from '../src/engine.js';
 import {botDecision,applyBotDecision} from './bots.js';
+import {activityChanges} from '../src/activities.js';
 import {drawCharacterIds,characterById} from '../src/characters.js';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {
@@ -46,8 +47,8 @@ export class RoomService {
   close(){for(const timer of this.botTimers.values())clearTimeout(timer);this.botTimers.clear();}
   get(code){const normalized=String(code||'').trim().toUpperCase();const room=this.rooms.get(normalized);if(!room)throw Error('방을 찾을 수 없습니다. 코드를 확인해 주세요.');return room;}
   authenticate(code,token){const room=this.get(code),member=room.members.find(m=>!m.isBot&&typeof token==='string'&&m.token===token);if(!member)throw Error('참가 정보를 확인할 수 없습니다. 같은 브라우저의 이어하기를 이용해 주세요.');return {room,member};}
-  snapshot(room){return {code:room.code,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision};}
-  broadcast(room){room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);}
+  snapshot(room){return {code:room.code,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
+  broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);}
   act(code,token,{action,args=[],revision}={}){
     const {room,member}=this.authenticate(code,token);
     if(revision!==room.revision)throw Error('게임 상태가 갱신되었습니다. 화면을 확인하고 다시 시도해 주세요.');

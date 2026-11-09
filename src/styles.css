@@ -9,23 +9,6 @@
 @media(max-width:1000px){.lobby{grid-template-columns:1fr 390px;gap:5%;padding-left:4%;padding-right:4%}.lobby-story h1{font-size:38px}.lobby-card{padding:28px}.vinyl{width:180px;height:180px;flex-shrink:0}.art-caption{font-size:7px}.lobby-features{gap:17px}}
 @media(max-width:750px){.lobby-header .classroom-label{display:none}.lobby{grid-template-columns:1fr;gap:25px;padding:35px 8% 45px}.lobby-story h1{font-size:33px;line-height:1.6;margin:15px 0}.lobby-story h1 br:nth-child(2){display:none}.lobby-story>p{font-size:11px}.lobby-art{display:none}.lobby-features{margin-top:25px;padding-top:15px;gap:30px}.lobby-card{padding:30px}.room-strip{font-size:8px;padding:10px;gap:5px;flex-wrap:wrap}.room-strip strong{font-size:12px;letter-spacing:1px}.room-strip>span:last-child{display:none}.lobby .eyebrow{font-size:9px}}
 
-/* Music Marble identity and illustrated classroom entrance. */
+/* Shared vector identity. */
 .brand-icon{background:none;border-radius:0;transform:none;overflow:visible;flex-shrink:0}
 .brand-icon img,.brand-icon svg{display:block;width:100%;height:100%;filter:drop-shadow(0 3px 3px #234b4010)}
-.lobby-scene{position:relative;isolation:isolate;min-height:100dvh;background:#f8f7f0;overflow:hidden}
-.composer-backdrop{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#f8f7f0eb 0%,#f8f7f0d4 33%,#f8f7f0ef 70%),url('./assets/composers-trio.png') center bottom / max(1200px,110vw) auto no-repeat;opacity:.62}
-.lobby-scene:after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 10% 30%,#eadfbe26,transparent 48%),radial-gradient(ellipse at 90% 70%,#cad7c23b,transparent 55%)}
-.lobby-header{background:#fcfbf6d9;position:relative}
-.lobby-scene .lobby{position:relative;padding-top:38px;padding-bottom:40px;gap:6%;grid-template-columns:minmax(0,1fr) 430px}
-.lobby-story{min-width:0}
-.lobby-story h1{font-size:44px;margin:16px 0 15px}
-.composer-gallery{margin:4px -25px 18px;position:relative}
-.composer-gallery img{display:block;width:100%;height:270px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 8px 12px #596e4520)}
-.composer-gallery figcaption{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:8px;margin:5px 12px 0;color:#839175;font-size:8px;letter-spacing:1.6px}
-.lobby-scene .lobby-card{position:relative;background:#fffefbf5;box-shadow:0 16px 55px #385b4010}
-.lobby-scene .lobby-features{margin-top:22px}
-@media(max-width:1000px){.lobby-scene .lobby{grid-template-columns:minmax(0,1fr) 380px;gap:5%}.lobby-story h1{font-size:35px}.composer-gallery{margin-left:-15px;margin-right:-15px}.composer-gallery img{height:235px}.composer-gallery figcaption{font-size:6px;letter-spacing:1px}}
-@media(max-width:750px){.lobby-scene .lobby{grid-template-columns:1fr;padding:32px 8% 40px;gap:30px}.lobby-story h1{font-size:33px}.composer-gallery{margin:16px -12px 0}.composer-gallery img{height:220px}.composer-gallery figcaption{font-size:7px;letter-spacing:.7px}.lobby-scene .lobby-features{margin-top:22px}.composer-backdrop{background-size:auto,auto 70%;background-position:center,center bottom}}
-@media(max-width:380px){.composer-gallery img{height:190px}.lobby-story h1{font-size:30px}.composer-gallery figcaption{font-size:6px}}
-
-.lobby-slogan{display:inline-block;white-space:nowrap}

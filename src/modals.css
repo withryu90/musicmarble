@@ -1,0 +1,40 @@
+/* Shared palette for every dialog, independent of the screen that opens it. */
+dialog#modal{
+ --green:#1688c9;--muted:#64839c;--line:#cee2f1;--cream:#edf7ff;
+ color:#214f74;background:linear-gradient(180deg,#eef8ff,#fff 32%);
+ border:2px solid #d7eafa;border-radius:23px;box-shadow:0 24px 80px #135a9138;
+}
+dialog#modal::backdrop{background:#164d7959}
+#modal h2,#modal h3,#modal .discussion b,#modal .quiz-explanation strong{color:#194d78}
+#modal p,#modal .guide li,#modal .guide p{color:#5b7e9a}
+#modal .eyebrow,#modal .guide li::marker{color:#2388c0}
+#modal .guide li>b{color:#225a83}
+#modal .muted,#modal small,#modal .work-modal-meta>span:last-child{color:#6b8aa3}
+#modal .icon-button{color:#2887be;background:#edf8ff;border-color:#cce7f7}
+#modal .primary{background:linear-gradient(180deg,#269cde,#1287cd);color:#fff;border:1px solid #1286c9;border-bottom:3px solid #086aab;border-radius:11px;font-weight:700;box-shadow:0 3px 8px #148bca1a}
+#modal .secondary{background:#edf7ff;color:#326f9b;border-color:#c9e2f4}
+#modal .text-button{color:#377daa}
+#modal .notice,#modal .quiz-explanation,#modal .trade-offer{background:#eaf5ff;color:#416f92;border:1px solid #d1e7f8}
+#modal .pill{background:#e5f3ff;color:#407ca5}
+#modal label{color:#527b9b}
+#modal input,#modal select{background:#f5faff;color:#285b7c;border-color:#cddfed}
+#modal input::placeholder{color:#88a2b8}
+#modal :is(button,a,input,select):focus-visible{outline-color:#269bdf}
+#modal .quiz-options button{color:#325d7f;background:#f3f9ff;border-color:#d1e3f1}
+#modal .quiz-options button span{color:#3e7da9;background:#e0effb}
+#modal .quiz-options .correct{color:#145886;background:#dcefff;border:2px solid #278dcc}
+#modal .quiz-options .incorrect{color:#59728b;background:#edf2f8;border:2px dashed #7f99b1}
+#modal .quiz-options .correct span{background:#b6dffc;color:#125781}
+#modal .quiz-options .incorrect span{background:#dae4ef;color:#526f8b}
+#modal .work-story{background:#eaf5ff}
+#modal .work-story>span,#modal .special-info>span,#modal .event-star{color:#489fd0}
+#modal .stat-grid>div{background:#f7fbff;border-color:#d4e6f3}
+#modal .stat-grid span,#modal .stat-grid small{color:#6f91ad}
+#modal .stat-grid b,#modal .trade-offer strong{color:#235e8b}
+#modal .event-card{background:linear-gradient(155deg,#e5f4ff,#f4faff);border-color:#c6e0f3}
+#modal .event-card strong{color:#2c79a9}
+#modal .event-card small{color:#7195b0}
+#modal .history-list p,#modal .results-list>div{border-color:#dceaf5}
+#modal .history-list span,#modal .results-list small{color:#7294ae}
+#modal .rank,#modal .results-list b{color:#337fac}
+#toast{background:#205f8d;border-color:#6da7d0;color:#fff;box-shadow:0 5px 25px #153f6926}

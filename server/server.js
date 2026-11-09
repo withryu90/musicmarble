@@ -28,8 +28,9 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
        let body='';for await(const chunk of req){body+=chunk;if(body.length>8192)return json(413,{error:'요청이 너무 큽니다.'});}
        let input;try{input=JSON.parse(body);}catch{return json(400,{error:'올바른 JSON 요청이 필요합니다.'});}
        if(!input||typeof input!=='object')throw Error('요청을 확인해 주세요.');
-       if(url.pathname==='/api/create')return json(201,service.create(input.nickname));
-       if(url.pathname==='/api/join')return json(201,service.join(input.code,input.nickname));
+       if(url.pathname==='/api/create-solo')return json(201,service.createSolo(input.nickname,input.config||{},input.characterId));
+       if(url.pathname==='/api/create')return json(201,service.create(input.nickname,input.characterId));
+       if(url.pathname==='/api/join')return json(201,service.join(input.code,input.nickname,input.characterId));
        const token=req.headers.authorization?.replace(/^Bearer /,'');
        if(url.pathname==='/api/resume'){const {room,member}=service.authenticate(input.code,token);return json(200,{...service.snapshot(room),playerId:member.id});}
        if(url.pathname==='/api/action')return json(200,service.act(input.code,token,input));
@@ -43,7 +44,7 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
      const content=await readFile(path);res.writeHead(200,{'Content-Type':{'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg'}[extname(path)]||'application/octet-stream','Cache-Control':'no-cache'});res.end(req.method==='HEAD'?undefined:content);
    }catch(error){if(url.pathname.startsWith('/api/'))json(400,{error:error.message});else{res.writeHead(404);res.end('Not found');}}
  });
- const timer=setInterval(()=>service.cleanup(),60000);timer.unref();server.on('close',()=>clearInterval(timer));return server;
+ const timer=setInterval(()=>service.cleanup(),60000);timer.unref();server.on('close',()=>{clearInterval(timer);service.close();});return server;
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
  const port=Number(process.env.PORT||5173),host=process.env.HOST||'0.0.0.0';

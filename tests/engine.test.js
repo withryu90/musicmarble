@@ -14,4 +14,31 @@ test('quiz rewards once, requires explanation and enforces once per turn',()=>{l
 test('wrong quiz answers cost nothing and copyright tile selects rights question',()=>{let s=game();s.players[0].position=17;s=G.roll(s,1);const q=QUIZZES.find(q=>q.id===s.quiz);assert.equal(q.kind,'copyright');s=G.answerQuiz(s,(q.answer+1)%3);assert.equal(s.players[0].coins,1200);assert.equal(s.players[0].attempts,1);assert.equal(s.players[0].knowledge,0);});
 test('passing start and shared concert rewards',()=>{let s=game();s.players[0].position=23;s=G.roll(s,1);assert.equal(s.players[0].coins,1400);s=game();s.players[0].position=11;s=G.roll(s,1);assert.ok(s.players.every(p=>p.coins===1300));});
 test('events draw one card and apply exactly once',()=>{let s=G.roll(game(),3);assert.equal(s.eventCursor,1);assert.equal(s.players[0].coins,1200+s.lastEvent.actual);assert.throws(()=>G.roll(s,3));});
-test('full five-player game finishes after everyone has equal turns',()=>{let s=game(),turns=0;while(s.phase!=='finished'){s=G.roll(s,turns%6+1);if(s.phase==='quiz'){s=G.answerQuiz(s,0);s=G.closeFeedback(s);}if(BOARD[G.current(s).position].type==='work'&&!s.ownership[BOARD[G.current(s).position].id]&&G.current(s).coins>=BOARD[G.current(s).position].price)s=G.buy(s);assert.ok(G.isValidSave(s));s=G.nextTurn(s);turns++;}assert.equal(turns,20);assert.equal(s.round,4);assert.throws(()=>G.roll(s,1));assert.ok(s.players.every(p=>G.score(s,p)>=p.coins));});
+test('full five-player game finishes after the configured leader laps',()=>{let s=game(),turns=0;while(s.phase!=='finished'){s=G.roll(s,turns%6+1);if(s.phase==='quiz'){s=G.answerQuiz(s,0);s=G.closeFeedback(s);}if(BOARD[G.current(s).position].type==='work'&&!s.ownership[BOARD[G.current(s).position].id]&&G.current(s).coins>=BOARD[G.current(s).position].price)s=G.buy(s);assert.ok(G.isValidSave(s));s=G.nextTurn(s);turns++;}assert.ok(turns>20);assert.equal(s.leaderLaps,4);assert.equal(s.turn,0);assert.equal(s.round,4);assert.throws(()=>G.roll(s,1));assert.ok(s.players.every(p=>G.score(s,p)>=p.coins));});
+
+test('unowned works show their base fee without phantom collection bonuses',()=>{
+ const s=game();assert.deepEqual(G.owned(s,undefined),[]);for(const w of WORKS)assert.equal(G.fee(s,w),w.fee);
+});
+
+test('turn cycles and other players laps do not increment the round',()=>{
+ let s=game();
+ for(let i=0;i<5;i++){if(i===1)s.players[i].position=23;s=G.nextTurn(G.roll(s,1));}
+ assert.equal(s.turn,0);assert.equal(s.round,1);assert.equal(s.leaderLaps,0);assert.equal(s.turnNumber,5);
+});
+test('the leader passing or landing on start increments one round upon crossing start',()=>{
+ for(const [position,dice,landing] of [[23,1,0],[22,6,4]]){
+  let s=game();s.players[0].position=position;s=G.roll(s,dice);
+  assert.equal(s.leaderLaps,1);assert.equal(s.players[0].position,landing);assert.equal(s.round,2);
+  s=G.nextTurn(s);assert.equal(s.round,2);assert.equal(s.turn,1);assert.equal(s.phase,'roll');
+ }
+});
+test('4, 8 and 12 laps end only after the final arrival quiz and activities',()=>{
+ for(const rounds of [4,8,12]){
+  let s=G.createGame({names:['A','B'],rounds});s.leaderLaps=rounds-1;s.round=rounds;s.players[0].position=23;
+  // Cross start and reach a quiz through the normal rules, then finish that turn.
+  s=G.roll(s,6);assert.equal(s.leaderLaps,rounds);assert.equal(s.phase,'action');
+  s=G.startQuiz(s);assert.throws(()=>G.nextTurn(s));
+  s=G.answerQuiz(s,0);assert.throws(()=>G.nextTurn(s));s=G.closeFeedback(s);
+  s=G.nextTurn(s);assert.equal(s.phase,'finished');assert.equal(s.round,rounds);assert.equal(s.turn,0);assert.ok(G.isValidSave(s));
+ }
+});

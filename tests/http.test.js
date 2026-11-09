@@ -30,3 +30,13 @@ test('100 live SSE connections across 20 rooms receive isolated updates',async()
   assert.equal(rooms.reduce((n,r)=>n+r.connections.length,0),100);
  }finally{abort.abort();server.closeAllConnections();await new Promise(r=>server.close(r));}
 });
+
+test('solo endpoint starts a bot game and rejects invalid configuration',async()=>{
+ const server=makeServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
+ const post=async(path,body,token)=>{const res=await fetch(base+'/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:JSON.stringify(body)});return {status:res.status,data:await res.json()};};
+ try{
+  assert.equal((await post('create-solo',{nickname:'나',config:{botCount:9}})).status,400);
+  const created=await post('create-solo',{nickname:'여행자',config:{botCount:3,rounds:4}});assert.equal(created.status,201);
+  const {code,token}=created.data;const resumed=await post('resume',{code},token);assert.equal(resumed.data.mode,'solo');assert.equal(resumed.data.members.length,4);assert.equal(resumed.data.state.turn,0);assert.equal(resumed.data.state.maxRounds,4);
+ }finally{server.closeAllConnections();await new Promise(r=>server.close(r));}
+});

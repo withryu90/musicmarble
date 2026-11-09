@@ -1,8 +1,9 @@
 import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js';
+import {characterById,drawCharacterIds} from './characters.js';
 export const VERSION=1;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
 export const current=s=>s.players[s.turn];
-export const owned=(s,id)=>WORKS.filter(w=>s.ownership[w.id]?.player===id);
+export const owned=(s,id)=>Number.isInteger(id)&&s.players[id]?WORKS.filter(w=>s.ownership[w.id]?.player===id):[];
 export function collection(s,work,player){
   const all=owned(s,player);
   if(all.filter(w=>w.era===work.era).length===4)return {name:'시대 컬렉션',multiplier:2};
@@ -15,10 +16,12 @@ const clone=s=>structuredClone(s);
 function log(s,text){s.log.unshift({round:s.round,text});s.log=s.log.slice(0,60);}
 function change(s,p,amount){const actual=Math.max(-p.coins,amount);p.coins+=actual;if(actual!==amount)log(s,`${p.name}: 잔액 한도에서 ${-actual} MC 지급. 수업 모드에서 부족액은 면제됩니다.`);return actual;}
 const shuffled=(items,rng)=>{const arr=[...items];for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
-export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=1200}={},rng=Math.random){
+export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=1200,characterIds}={},rng=Math.random){
   if(!Array.isArray(names)||names.length<2||names.length>5||!names.every(n=>typeof n==='string'&&n.trim().length>0&&n.length<=16))throw Error('2–5명의 이름을 입력해 주세요.');
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
-  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),color:COLORS[id],coins,position:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,quiz:null,feedback:null,quizUsed:false,purchased:false,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  const assigned=characterIds??drawCharacterIds(names.length,[],rng);
+  if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
+  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,quiz:null,feedback:null,quizUsed:false,purchased:false,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 function openQuiz(s,kind){
   const pool=s.quizDeck.filter(id=>!kind||QUIZZES.find(q=>q.id===id).kind===kind);
@@ -28,7 +31,7 @@ export function roll(state,dice){
   if(state.phase!=='roll')throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
   const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.feedback=null;s.quizUsed=false;s.purchased=false;
-  const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;log(s,`${p.name}: 한 바퀴 완주! +200 MC`);}p.position=next%BOARD.length;
+  const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;log(s,`${p.name}: 한 바퀴 완주! +200 MC`);if(p.id===0){s.leaderLaps=(s.leaderLaps??0)+1;s.round=Math.min(s.leaderLaps+1,s.maxRounds);log(s,`첫 주자 ${p.name}: ${s.leaderLaps}/${s.maxRounds}바퀴 완주`);}}p.position=next%BOARD.length;
   const cell=BOARD[p.position];log(s,`${p.name}: ${dice}칸 이동 → ${cell.title}`);
   if(cell.type==='work'){
     const owner=s.ownership[cell.id];if(owner&&owner.player!==p.id){const cost=fee(s,cell),actual=-change(s,p,-cost);s.players[owner.player].coins+=actual;s.lastRent={workId:cell.id,owner:owner.player,amount:actual};log(s,`${p.name} → ${s.players[owner.player].name}: 가상 이용료 ${actual} MC (기준 ${cost} MC)`);}
@@ -64,10 +67,11 @@ export function answerQuiz(state,index){
 export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);s.phase='action';s.quiz=null;s.feedback=null;return s;}
 export function nextTurn(state){
   if(state.phase!=='action'||state.trade)throw Error('진행 중인 활동을 먼저 마쳐 주세요.');
-  const s=clone(state);s.turn++;
-  if(s.turn>=s.players.length){s.turn=0;s.round++;}
-  if(s.round>s.maxRounds){s.round=s.maxRounds;s.phase='finished';log(s,'여행 종료! 자산과 배움을 함께 돌아봅니다.');}
-  else s.phase='roll';s.lastEvent=null;return s;
+  const s=clone(state);s.turnNumber=(s.turnNumber??0)+1;
+  s.round=Math.min((s.leaderLaps??0)+1,s.maxRounds);
+  if((s.leaderLaps??0)>=s.maxRounds){s.phase='finished';log(s,`첫 주자 ${s.players[0].name}의 ${s.maxRounds}바퀴 완주로 여행 종료! 자산과 배움을 함께 돌아봅니다.`);}
+  else{s.turn=(s.turn+1)%s.players.length;s.phase='roll';}
+  s.lastEvent=null;return s;
 }
 export function finishGame(state){const s=clone(state);s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
@@ -87,7 +91,11 @@ export function isValidSave(s){
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>5)return false;
     if(!['roll','action','quiz','feedback','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
+    if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
+    if(s.turnNumber!==undefined&&(!Number.isInteger(s.turnNumber)||s.turnNumber<0))return false;
     if(!s.players.every((p,i)=>p.id===i&&typeof p.name==='string'&&p.name.length>0&&p.name.length<=16&&p.color===COLORS[i]&&Number.isInteger(p.position)&&p.position>=0&&p.position<24&&Number.isInteger(p.coins)&&p.coins>=0&&Number.isInteger(p.knowledge)&&p.knowledge>=0&&Number.isInteger(p.attempts)&&p.attempts>=p.knowledge))return false;
+    const characterIds=s.players.map(p=>p.characterId).filter(id=>id!==undefined);
+    if(characterIds.length&&(characterIds.length!==s.players.length||new Set(characterIds).size!==characterIds.length||!characterIds.every(characterById)))return false;
     if(!s.ownership||Array.isArray(s.ownership)||!Object.entries(s.ownership).every(([id,o])=>WORKS.some(w=>w.id===id)&&s.players[o.player]&&Number.isInteger(o.player)&&[0,1].includes(o.level)))return false;
     if(!Array.isArray(s.eventDeck)||s.eventDeck.length!==EVENTS.length||new Set(s.eventDeck).size!==EVENTS.length||!s.eventDeck.every(i=>Number.isInteger(i)&&EVENTS[i]))return false;
     if(!Array.isArray(s.quizDeck)||s.quizDeck.length!==QUIZZES.length||new Set(s.quizDeck).size!==QUIZZES.length||!s.quizDeck.every(id=>QUIZZES.some(q=>q.id===id)))return false;

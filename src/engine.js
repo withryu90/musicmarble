@@ -1,5 +1,6 @@
 import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js';
 import {characterById,drawCharacterIds} from './characters.js';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js';
 export const VERSION=1;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
 export const current=s=>s.players[s.turn];
@@ -11,7 +12,7 @@ export function collection(s,work,player){
   return {name:'기본 이용료',multiplier:1};
 }
 export const fee=(s,w)=>Math.round((w.fee+(s.ownership[w.id]?.level||0)*20)*collection(s,w,s.ownership[w.id]?.player).multiplier);
-export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.ownership[w.id].level||0)*100,0)+p.knowledge*50;
+export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.ownership[w.id].level||0)*100,0);
 const clone=s=>structuredClone(s);
 function log(s,text){s.log.unshift({round:s.round,text});s.log=s.log.slice(0,60);}
 function change(s,p,amount){const actual=Math.max(-p.coins,amount);p.coins+=actual;if(actual!==amount)log(s,`${p.name}: 잔액 한도에서 ${-actual} MC 지급. 수업 모드에서 부족액은 면제됩니다.`);return actual;}
@@ -21,7 +22,7 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
-  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,quiz:null,feedback:null,quizUsed:false,purchased:false,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,quiz:null,feedback:null,quizUsed:false,purchased:false,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 function openQuiz(s,kind){
   const pool=s.quizDeck.filter(id=>!kind||QUIZZES.find(q=>q.id===id).kind===kind);
@@ -30,7 +31,7 @@ function openQuiz(s,kind){
 export function roll(state,dice,rng=Math.random){
   if(state.phase!=='roll')throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
-  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.feedback=null;s.quizUsed=false;s.purchased=false;
+  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.purchaseChallenge=null;
   const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;log(s,`${p.name}: 한 바퀴 완주! +200 MC`);if(p.id===0){s.leaderLaps=(s.leaderLaps??0)+1;s.round=Math.min(s.leaderLaps+1,s.maxRounds);log(s,`첫 주자 ${p.name}: ${s.leaderLaps}/${s.maxRounds}바퀴 완주`);}}p.position=next%BOARD.length;
   const cell=BOARD[p.position];log(s,`${p.name}: ${dice}칸 이동 → ${cell.title}`);
   if(cell.type==='work'){
@@ -51,9 +52,29 @@ export function roll(state,dice,rng=Math.random){
   else if(cell.type==='concert'){s.players.forEach(team=>team.coins+=100);log(s,'모두의 음악회: 모든 팀 +100 MC');}
   return s;
 }
+export function startPurchaseQuiz(state,rng=Math.random){
+ const s=clone(state),p=current(s),w=BOARD[p.position];
+ if(s.phase!=='action'||s.trade||w.type!=='work'||s.ownership[w.id])throw Error('도착한 빈 작품 칸에서만 구입 OX 퀴즈를 풀 수 있습니다.');
+ if(s.purchaseChallenge)throw Error('구입 OX 퀴즈는 도착할 때 한 번만 도전할 수 있습니다.');
+ if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
+ const questions=PURCHASE_QUIZZES.filter(q=>q.workId===w.id),q=questions[Math.floor(rng()*questions.length)];
+ s.purchaseChallenge={workId:w.id,questionId:q.id,response:null,correct:null};s.phase='purchase-quiz';return s;
+}
+export function answerPurchaseQuiz(state,response){
+ if(state.phase!=='purchase-quiz'||!state.purchaseChallenge||typeof response!=='boolean')throw Error('O 또는 X를 선택해 주세요.');
+ const s=clone(state),challenge=s.purchaseChallenge,q=purchaseQuizById(challenge.questionId);
+ if(!q||q.workId!==BOARD[current(s).position].id)throw Error('구입 퀴즈 정보를 확인해 주세요.');
+ challenge.response=response;challenge.correct=response===q.answer;s.phase='purchase-feedback';
+ log(s,`${current(s).name}: 구입 OX 퀴즈 ${challenge.correct?'정답 — 이용권 구입 가능':'오답 — 코인 차감 없이 구입 기회 종료'}`);return s;
+}
+export function closePurchaseFeedback(state){
+ if(state.phase!=='purchase-feedback'||typeof state.purchaseChallenge?.correct!=='boolean')throw Error('구입 OX 퀴즈 해설을 먼저 확인해 주세요.');
+ const s=clone(state);s.phase='action';return s.purchaseChallenge.correct?s:nextTurn(s);
+}
 export function buy(state){
   const s=clone(state),p=current(s),w=BOARD[p.position];
   if(s.phase!=='action'||w.type!=='work'||s.ownership[w.id])throw Error('구입할 수 있는 작품이 아닙니다.');
+  if(s.purchaseChallenge?.workId!==w.id||s.purchaseChallenge.correct!==true)throw Error('이용권 구입 OX 퀴즈를 먼저 맞혀야 합니다.');
   if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
   p.coins-=w.price;s.ownership[w.id]={player:p.id,level:0};s.purchased=true;log(s,`${p.name}: ${w.composer} 「${w.title}」 이용권 구입 (${w.price} MC)`);return s;
 }
@@ -72,7 +93,7 @@ export function answerQuiz(state,index){
   if(state.phase!=='quiz')throw Error('진행 중인 퀴즈가 없습니다.');
   const s=clone(state),q=QUIZZES.find(q=>q.id===s.quiz),p=current(s);
   if(!Number.isInteger(index)||index<0||index>=q.options.length)throw Error('답을 선택해 주세요.');
-  p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC, 배움 +1':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
+  p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
 }
 export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);s.phase='action';s.quiz=null;s.feedback=null;return s;}
 export function nextTurn(state){
@@ -81,7 +102,7 @@ export function nextTurn(state){
   s.round=Math.min((s.leaderLaps??0)+1,s.maxRounds);
   if((s.leaderLaps??0)>=s.maxRounds){s.phase='finished';log(s,`첫 주자 ${s.players[0].name}의 ${s.maxRounds}바퀴 완주로 여행 종료! 자산과 배움을 함께 돌아봅니다.`);}
   else{s.turn=(s.turn+1)%s.players.length;s.phase='roll';}
-  s.lastEvent=null;s.lastAssignment=null;return s;
+  s.lastEvent=null;s.lastAssignment=null;s.purchaseChallenge=null;return s;
 }
 export function finishGame(state){const s=clone(state);s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
@@ -99,7 +120,7 @@ export function resolveTrade(state,accepted){
 export function isValidSave(s){
   try{
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>5)return false;
-    if(!['roll','action','quiz','feedback','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
+    if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
     if(s.turnNumber!==undefined&&(!Number.isInteger(s.turnNumber)||s.turnNumber<0))return false;
@@ -113,6 +134,10 @@ export function isValidSave(s){
     if(['quiz','feedback'].includes(s.phase)&&!QUIZZES.some(q=>q.id===s.quiz))return false;
     if(s.phase==='feedback'&&(!s.feedback||typeof s.feedback.correct!=='boolean'||!Number.isInteger(s.feedback.index)||s.feedback.index<0||s.feedback.index>2))return false;
     if(s.trade&&(!WORKS.some(w=>w.id===s.trade.workId)||s.ownership[s.trade.workId]?.player!==s.trade.from||s.trade.from!==s.turn||!s.players[s.trade.to]||s.trade.to===s.trade.from||!Number.isInteger(s.trade.price)||s.trade.price<1||s.trade.price>10000||s.phase!=='action'))return false;
+    if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
+    if(['purchase-quiz','purchase-feedback'].includes(s.phase)&&(!s.purchaseChallenge||s.ownership[s.purchaseChallenge.workId]))return false;
+    if(s.phase==='purchase-quiz'&&s.purchaseChallenge.response!==null)return false;
+    if(s.phase==='purchase-feedback'&&typeof s.purchaseChallenge.correct!=='boolean')return false;
     if(s.lastAssignment){const t=s.lastAssignment;if(!Number.isInteger(t.from)||!s.players[t.from]||typeof t.skipped!=='boolean')return false;if(!t.skipped&&(!Number.isInteger(t.to)||!s.players[t.to]||t.to===t.from||!WORKS.some(w=>w.id===t.workId&&w.price===t.price)))return false;}
     if(s.lastEvent&&(!EVENTS.some(e=>e.title===s.lastEvent.title)||typeof s.lastEvent.text!=='string'||typeof s.lastEvent.prompt!=='string'||typeof s.lastEvent.effect!=='string'||!Number.isInteger(s.lastEvent.actual)))return false;
     return Array.isArray(s.log)&&s.log.length<=60&&s.log.every(l=>Number.isInteger(l.round)&&typeof l.text==='string');

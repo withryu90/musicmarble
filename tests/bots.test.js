@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as G from '../src/engine.js';
+import {buyQualified} from '../test-support/purchases.js';
 import {RoomService} from '../server/rooms.js';
 import {botDecision,applyBotDecision} from '../server/bots.js';
 const setup=options=>{const service=new RoomService(options),session=service.createSolo('나',{botCount:4,rounds:4});return {service,session,room:service.get(session.code)};};
@@ -35,7 +36,7 @@ test('bot quizzes can be wrong and never grant extra rewards',()=>{
  const {service,room}=setup();try{let s=room.state;s.turn=1;s=G.roll(s,6);const d=botDecision(s,{},()=>.99);s=applyBotDecision(s,d,1);assert.equal(s.feedback.correct,false);assert.equal(s.players[1].coins,1200);assert.equal(s.players[1].attempts,1);}finally{service.close();}
 });
 test('bots accept reasonable trade offers and reject overpriced offers',()=>{
- const {service,room}=setup();try{let s=G.buy(G.roll(room.state,1));
+ const {service,room}=setup();try{let s=buyQualified(G.roll(room.state,1));
   s=G.proposeTrade(s,{workId:'bach-air',to:1,price:160});let d=botDecision(s,{},()=>0);assert.deepEqual(d.args,[true]);let accepted=applyBotDecision(s,d,1);assert.equal(accepted.ownership['bach-air'].player,1);assert.equal(accepted.players[1].coins,1040);
   s=G.resolveTrade(s,false);s=G.proposeTrade(s,{workId:'bach-air',to:1,price:1000});d=botDecision(s,{},()=>0);assert.deepEqual(d.args,[false]);assert.equal(applyBotDecision(s,d,1).ownership['bach-air'].player,0);
  }finally{service.close();}
@@ -56,7 +57,7 @@ test('leaving the screen pauses bots; subscribing again resumes without losing a
 });
 test('a bot trade response is automatic even during the human turn',async()=>{
  const {service,session,room}=setup({botDelay:1,random:()=>0});try{
-  room.state=G.buy(G.roll(room.state,1));
+  room.state=buyQualified(G.roll(room.state,1));
   const done=new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(Error('No response')),500);let stop;stop=service.subscribe(session.code,session.token,s=>{if(s.state.ownership['bach-air']?.player===1){clearTimeout(timeout);queueMicrotask(()=>{stop();resolve(s);});}});});
   service.act(session.code,session.token,{action:'proposeTrade',args:[{workId:'bach-air',to:1,price:150}],revision:room.revision});
   const next=await done;assert.equal(next.state.turn,0);assert.equal(next.state.trade,null);assert.equal(next.state.players[1].coins,1050);

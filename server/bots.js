@@ -1,5 +1,6 @@
 import {BOARD,WORKS,QUIZZES} from '../src/data.js';
 import * as G from '../src/engine.js';
+import {purchaseQuizById} from '../src/purchase-quizzes.js';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
 export function botDecision(state,previous={},random=Math.random){
@@ -17,6 +18,8 @@ export function botDecision(state,previous={},random=Math.random){
   }
   const p=G.current(state);if(!p.isBot)return null;
   if(state.phase==='roll')return decide('roll');
+  if(state.phase==='purchase-quiz'){const q=purchaseQuizById(state.purchaseChallenge.questionId);return decide('answerPurchaseQuiz',[random()<.65?q.answer:!q.answer]);}
+  if(state.phase==='purchase-feedback')return decide('closePurchaseFeedback');
   if(state.phase==='quiz'){
     const q=QUIZZES.find(q=>q.id===state.quiz);
     const wrong=q.options.map((_,i)=>i).filter(i=>i!==q.answer);
@@ -26,7 +29,10 @@ export function botDecision(state,previous={},random=Math.random){
   if(state.phase==='feedback')return decide('closeFeedback');
   if(state.phase!=='action')return null;
   const cell=BOARD[p.position];
-  if(!memory.buy){memory.buy=true;if(cell.type==='work'&&!state.ownership[cell.id]&&p.coins>=cell.price+100&&random()<.85)return decide('buy');}
+  if(cell.type==='work'&&!state.ownership[cell.id]){
+    if(state.purchaseChallenge?.correct===true&&!memory.buy&&p.coins>=cell.price){memory.buy=true;return decide('buy');}
+    if(!state.purchaseChallenge&&!memory.purchase){memory.purchase=true;if(p.coins>=cell.price+100&&random()<.85)return decide('startPurchaseQuiz');}
+  }
   if(!memory.upgrade){
     memory.upgrade=true;
     const options=G.owned(state,p.id).filter(w=>!state.ownership[w.id].level);
@@ -39,7 +45,7 @@ export function botDecision(state,previous={},random=Math.random){
 export function applyBotDecision(state,decision,dice){
   if(!decision)return state;
   if(decision.action==='roll')return G.roll(state,dice);
-  const actions={buy:G.buy,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
+  const actions={buy:G.buy,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
   if(!Object.hasOwn(actions,decision.action))throw Error('잘못된 봇 동작입니다.');
   return actions[decision.action](state,...decision.args);
 }

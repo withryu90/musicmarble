@@ -2,11 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {activityChanges,ActivityInbox} from '../src/activities.js';
 import * as G from '../src/engine.js';
+import {buyQualified} from '../test-support/purchases.js';
 import {EVENTS,QUIZZES} from '../src/data.js';
 import {RoomService} from '../server/rooms.js';
+import {purchaseQuizById} from '../src/purchase-quizzes.js';
 const game=()=>G.createGame({names:['하나','둘','셋']});
 test('purchase, project, sale and quiz notices describe exact public coin changes',()=>{
- const arrived=G.roll(game(),1),bought=G.buy(arrived),project=G.upgrade(bought,'bach-air'),sold=G.sell(project,'bach-air');
+ const arrived=G.roll(game(),1),bought=buyQualified(arrived),project=G.upgrade(bought,'bach-air'),sold=G.sell(project,'bach-air');
  assert.deepEqual(activityChanges(arrived,bought).map(n=>[n.type,n.changes]),[['purchase',[{playerId:0,amount:-160}]]]);
  assert.equal(activityChanges(bought,project)[0].type,'upgrade');assert.equal(activityChanges(project,sold)[0].changes[0].amount,130);
  for(const correct of [true,false]){const q=G.startQuiz(arrived),question=QUIZZES.find(x=>x.id===q.quiz),answered=G.answerQuiz(q,correct?question.answer:(question.answer+1)%3);const n=activityChanges(q,answered)[0];assert.equal(n.type,'quiz-result');assert.equal(n.changes[0].amount,correct?80:0);assert.equal(n.correct,correct);}
@@ -24,7 +26,7 @@ test('all 24 cards retain text, amount and category for public trading-card disp
  for(let i=0;i<EVENTS.length;i++){const s=game();s.eventDeck=[i,...s.eventDeck.filter(n=>n!==i)];const n=activityChanges(s,G.roll(s,3))[0];assert.equal(n.card.title,EVENTS[i].title);assert.equal(n.card.text,EVENTS[i].text);assert.equal(n.card.category,EVENTS[i].category);assert.equal(n.changes[0].amount,EVENTS[i].amount);}
 });
 test('trade offer, completion and cancellation are distinguished without phantom transfers',()=>{
- const s=G.buy(G.roll(game(),1)),offer=G.proposeTrade(s,{workId:'bach-air',to:1,price:200});assert.equal(activityChanges(s,offer)[0].type,'trade-offer');
+ const s=buyQualified(G.roll(game(),1)),offer=G.proposeTrade(s,{workId:'bach-air',to:1,price:200});assert.equal(activityChanges(s,offer)[0].type,'trade-offer');
  const accepted=activityChanges(offer,G.resolveTrade(offer,true));assert.equal(accepted.length,1);assert.equal(accepted[0].type,'trade-complete');assert.deepEqual(accepted[0].changes,[{playerId:1,amount:-200},{playerId:0,amount:200}]);
  const declined=activityChanges(offer,G.resolveTrade(offer,false));assert.equal(declined[0].type,'trade-cancelled');assert.deepEqual(declined[0].changes,[]);
 });
@@ -38,9 +40,13 @@ test('room broadcasts include ordered notices for both participants and isolate 
   const offA=service.subscribe(a.code,a.token,s=>messagesA.push(structuredClone(s))),offB=service.subscribe(b.code,b.token,s=>messagesB.push(structuredClone(s)));
   service.act(a.code,a.token,{action:'start',revision:room.revision});
   room.state=G.roll(room.state,1);service.broadcast(room);
+  service.act(a.code,a.token,{action:'startPurchaseQuiz',revision:room.revision});
+  const q=purchaseQuizById(room.state.purchaseChallenge.questionId);
+  service.act(a.code,a.token,{action:'answerPurchaseQuiz',args:[q.answer],revision:room.revision});
+  service.act(a.code,a.token,{action:'closePurchaseFeedback',revision:room.revision});
   service.act(a.code,a.token,{action:'buy',revision:room.revision});
-  const journal=service.snapshot(room).activities;assert.equal(journal.at(-1).type,'purchase');assert.equal(journal.at(-1).id,1);assert.deepEqual(messagesA.at(-1).activities,messagesB.at(-1).activities);
+  const journal=service.snapshot(room).activities;assert.equal(journal.at(-1).type,'purchase');assert.equal(journal.at(-1).id,2);assert.deepEqual(messagesA.at(-1).activities,messagesB.at(-1).activities);
   assert.equal(service.snapshot(service.get(other.code)).activities.length,0);assert.ok(!JSON.stringify(journal).includes(a.token));assert.ok(!JSON.stringify(journal).includes(b.token));
-  service.broadcast(room);assert.equal(service.snapshot(room).activities.length,1);offA();offB();
+  service.broadcast(room);assert.equal(service.snapshot(room).activities.length,2);offA();offB();
  }finally{service.close();}
 });

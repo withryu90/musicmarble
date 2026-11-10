@@ -22,6 +22,7 @@ const groups=[
   ]],
 ];
 export const CHARACTERS=groups.flatMap(([sheet,people])=>people.map(([id,name,fullName],slot)=>({id,name,fullName,sheet,slot,asset:`./src/assets/characters/${sheet}.png`})));
+CHARACTERS.push({id:'teacher-yu-jiyoung',name:'유지영 선생님',fullName:'유지영 선생님',sheet:'teacher-yu-jiyoung',slot:0,layout:'single',asset:'./src/assets/characters/teacher-yu-jiyoung.png'});
 export const characterById=id=>CHARACTERS.find(c=>c.id===id);
 export const characterFor=player=>characterById(player.characterId)||CHARACTERS[(player.id||0)%CHARACTERS.length];
 export function drawCharacterIds(count,used=[],random=Math.random){

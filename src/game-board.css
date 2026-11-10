@@ -318,3 +318,7 @@
 .game-shell .garden-ground{background:radial-gradient(ellipse,#e0edc42e,transparent 72%)}
 .game-shell .scene-decoration{display:none}
 @media(max-width:650px){.game-shell{background-size:auto,auto 100dvh;background-position:center top,center center}}
+
+/* Standalone teacher art uses a close portrait in badges and its full figure as a token. */
+.character-single .character-sprite{background-size:180% auto;background-position:50% 0;transform:none}
+.character-single.character-large .character-sprite,.character-single.board-character .character-sprite{background-size:contain;background-position:center bottom;transform:none}

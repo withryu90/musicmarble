@@ -4,12 +4,12 @@ import {CHARACTERS,characterById,characterFor,drawCharacterIds} from '../src/cha
 import * as G from '../src/engine.js';
 import {RoomService} from '../server/rooms.js';
 const assertUnique=members=>{assert.equal(new Set(members.map(p=>p.characterId)).size,members.length);assert.ok(members.every(p=>characterById(p.characterId)));};
-test('30 named characters have unique IDs and exactly six sprite cells per atlas',()=>{
- assert.equal(CHARACTERS.length,30);assert.equal(new Set(CHARACTERS.map(c=>c.id)).size,30);assert.equal(new Set(CHARACTERS.map(c=>c.name)).size,30);
- for(const sheet of new Set(CHARACTERS.map(c=>c.sheet)))assert.deepEqual(CHARACTERS.filter(c=>c.sheet===sheet).map(c=>c.slot),[0,1,2,3,4,5]);
+test('31 named characters have unique IDs; original atlases and teacher image have distinct layouts',()=>{
+ assert.equal(CHARACTERS.length,31);assert.equal(new Set(CHARACTERS.map(c=>c.id)).size,31);assert.equal(new Set(CHARACTERS.map(c=>c.name)).size,31);
+ for(const sheet of new Set(CHARACTERS.filter(c=>c.layout!=='single').map(c=>c.sheet)))assert.deepEqual(CHARACTERS.filter(c=>c.sheet===sheet).map(c=>c.slot),[0,1,2,3,4,5]);assert.equal(characterById('teacher-yu-jiyoung').name,'유지영 선생님');
 });
 test('drawing characters never repeats a used or newly drawn ID',()=>{
- const first=drawCharacterIds(15,[],()=>.3);assert.equal(new Set(first).size,15);const next=drawCharacterIds(15,first,()=>.7);assert.equal(new Set([...first,...next]).size,30);assert.throws(()=>drawCharacterIds(16,first));assert.throws(()=>drawCharacterIds(-1));
+ const first=drawCharacterIds(15,[],()=>.3);assert.equal(new Set(first).size,15);const next=drawCharacterIds(16,first,()=>.7);assert.equal(new Set([...first,...next]).size,31);assert.throws(()=>drawCharacterIds(17,first));assert.throws(()=>drawCharacterIds(-1));
 });
 test('new games reserve unique characters and reject unknown or duplicate selections',()=>{
  const names=['A','B','C','D'];for(let i=0;i<50;i++)assertUnique(G.createGame({names}).players);
@@ -44,7 +44,7 @@ test('save validation rejects duplicate or unknown character IDs; legacy display
 
 test('every portrait atlas exists and matches the 3 × 2 transparent sprite layout',async()=>{
  const {readFile}=await import('node:fs/promises');
- for(const sheet of new Set(CHARACTERS.map(c=>c.sheet))){
+ for(const sheet of new Set(CHARACTERS.filter(c=>c.layout!=='single').map(c=>c.sheet))){
   const bytes=await readFile(new URL(`../src/assets/characters/${sheet}.png`,import.meta.url));
   assert.equal(bytes.subarray(1,4).toString(),'PNG');const width=bytes.readUInt32BE(16),height=bytes.readUInt32BE(20);
   assert.equal(width/height,1.5);assert.equal(width%3,0);assert.equal(height%2,0);assert.equal(bytes[25],6);
@@ -65,4 +65,9 @@ test('explicit character choices persist across create, join, start and solo bot
   assert.equal(soloRoom.state.players[0].characterId,'beethoven');assertUnique(soloRoom.members);
   const before=service.rooms.size;assert.throws(()=>service.create('잘못된 방','unknown'));assert.equal(service.rooms.size,before);
  }finally{service.close();}
+});
+
+test('teacher character can be selected, stays unique and uses a transparent standalone PNG',async()=>{
+ const c=characterById('teacher-yu-jiyoung');assert.equal(c.layout,'single');const {readFile}=await import('node:fs/promises');const bytes=await readFile(new URL('../'+c.asset.replace('./',''),import.meta.url));assert.equal(bytes.subarray(1,4).toString(),'PNG');assert.equal(bytes[25],6);
+ const service=new RoomService();try{const a=service.createSolo('선생님',{botCount:3},c.id),room=service.get(a.code);assert.equal(room.state.players[0].characterId,c.id);assertUnique(room.state.players);const b=service.create('방장',c.id);assert.throws(()=>service.join(b.code,'중복',c.id));}finally{service.close();}
 });

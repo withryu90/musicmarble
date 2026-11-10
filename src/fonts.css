@@ -1,0 +1,12 @@
+/* Original, locally served fonts. See assets/fonts/ for source notices and OFL licenses. */
+@font-face{font-family:'BM Jua';src:url('./assets/fonts/Jua-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'NanumSquare Neo';src:url('./assets/fonts/NanumSquareNeo-Variable.woff2') format('woff2');font-style:normal;font-weight:300 900;font-display:swap}
+:root{--font-display:'BM Jua',sans-serif;--font-body:'NanumSquare Neo',system-ui,-apple-system,sans-serif;font-family:var(--font-body)}
+body,button,input,select,textarea{font-family:var(--font-body)}
+h1,h2,h3,.brand,.lobby-story h1,.lobby-story .lobby-slogan,.board-summary h2{font-family:var(--font-display);font-weight:400}
+.board,.board .tile-copy,.board .tile-copy *,.board-summary .summary-round{font-family:var(--font-display)}
+.board .tile-copy strong,.board .cell-top,.board .cell-price{font-weight:400}
+.board-player,.board-player-coins b,.board-player-coins b small,.board-player-assets{font-family:var(--font-body)}
+/* Every popup uses Neo, including quiz text, explanations, event cards and headings. */
+#modal,#modal *,dialog.entrance-help,dialog.entrance-help *{font-family:var(--font-body)}
+#modal h2,#modal h3{font-weight:800}

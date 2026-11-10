@@ -47,6 +47,15 @@ export class RoomService {
   close(){for(const timer of this.botTimers.values())clearTimeout(timer);this.botTimers.clear();}
   get(code){const normalized=String(code||'').trim().toUpperCase();const room=this.rooms.get(normalized);if(!room)throw Error('방을 찾을 수 없습니다. 코드를 확인해 주세요.');return room;}
   authenticate(code,token){const room=this.get(code),member=room.members.find(m=>!m.isBot&&typeof token==='string'&&m.token===token);if(!member)throw Error('참가 정보를 확인할 수 없습니다. 같은 브라우저의 이어하기를 이용해 주세요.');return {room,member};}
+  chat(code,token,message){
+    const {room,member}=this.authenticate(code,token);
+    if(typeof message!=='string'||!message.trim()||message.trim().length>200||/[\x00-\x08\x0b-\x1f\x7f]/.test(message))throw Error('채팅은 1–200자로 입력해 주세요.');
+    const now=Date.now();if(member.lastChatAt!==undefined&&now-member.lastChatAt<800)throw Error('잠시 후 다시 보내 주세요.');
+    member.lastChatAt=now;room.chatSeq=(room.chatSeq??0)+1;
+    room.messages=[...(room.messages??[]),{id:room.chatSeq,playerId:member.id,name:member.name,characterId:member.characterId,text:message.trim(),sentAt:now}].slice(-100);
+    room.updatedAt=now;const payload={code:room.code,messages:room.messages};room.chatListeners?.forEach(fn=>fn(payload));return payload;
+  }
+  subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn({code:room.code,messages:room.messages??[]});return ()=>room.chatListeners.delete(fn);}
   snapshot(room){return {code:room.code,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
   broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);}
   act(code,token,{action,args=[],revision}={}){
@@ -73,7 +82,7 @@ export class RoomService {
       }else{
         if(member.id!==state.turn)throw Error('지금은 다른 참가자의 차례입니다.');
         if(state.trade)throw Error('거래 응답을 먼저 기다려 주세요.');
-        const allowed={roll:s=>G.roll(s,randomInt(1,7)),buy:G.buy,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
+        const allowed={roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
         if(!Object.hasOwn(allowed,action))throw Error('지원하지 않는 동작입니다.');
         room.state=allowed[action](state,...args);
       }

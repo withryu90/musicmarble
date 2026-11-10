@@ -286,3 +286,35 @@
 /* Up to two figures stay side by side; three or four share a two-row formation. */
 .is-3d .tokens.token-stack,.is-flat .tokens.token-stack{display:grid;grid-template-columns:repeat(2,max-content);grid-auto-flow:row;align-items:end;justify-items:center;column-gap:4px;row-gap:8px}
 @media(max-width:560px){.is-3d .tokens.token-stack,.is-flat .tokens.token-stack{column-gap:2px;row-gap:5px}}
+
+/* Smaller figures, with the starting queue anchored to the clear upper-right
+   triangle of the scene rather than the transformed START tile. */
+.is-3d .tokens,.is-flat .tokens{--figure-width:34px;--figure-height:38px;--character-slot:44px}
+.start-waiting{position:absolute;left:74%;top:23%;width:max-content;transform:translate(-50%,-50%);z-index:5;pointer-events:none}
+.is-3d .start-waiting .tokens{position:relative;left:auto;top:auto;width:max-content;transform:none;--figure-width:32px;--figure-height:36px;--character-slot:38px;--nickname-space:0px}
+@media(max-width:1100px){.is-3d .tokens,.is-flat .tokens{--figure-width:28px;--figure-height:32px;--character-slot:36px}.is-3d .start-waiting .tokens{--figure-width:27px;--figure-height:31px;--character-slot:33px}}
+@media(max-width:560px){.is-3d .tokens,.is-flat .tokens{--figure-width:17px;--figure-height:20px;--character-slot:23px}.start-waiting{left:75%;top:25%}.is-3d .start-waiting .tokens{--figure-width:17px;--figure-height:20px;--character-slot:23px}}
+
+/* Keep the entire waiting formation above the board's upper-right diagonal. */
+.start-waiting{top:13%}
+@media(max-width:560px){.start-waiting{top:13%}}
+.room-chat{border:1px solid #c2dceb;border-radius:16px;padding:18px;background:linear-gradient(145deg,#fff,#f0f8ff);box-shadow:0 4px 0 #b3cedb2b;color:#2b5472;min-width:0}
+.room-chat .section-heading{margin-bottom:12px;gap:7px}.room-chat h3{font-size:17px}.room-chat .section-heading>span{font-size:9px;color:#7898ae}.chat-messages{height:220px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:5px 3px 10px;scrollbar-width:thin}.chat-empty{font-size:11px;color:#7a98ab;text-align:center;padding:45px 12px}.chat-message{max-width:94%;align-self:flex-start}.chat-message.mine{align-self:flex-end}.chat-message-meta{display:flex;gap:8px;align-items:baseline;margin:0 3px 4px}.chat-message-meta strong{font-size:10px}.chat-message time{font-size:8px;color:#8ba1b2}.chat-message p{margin:0;padding:9px 11px;border:1px solid #d6e7f3;border-radius:3px 11px 11px;background:#f5faff;font-size:11px;line-height:1.7;white-space:pre-wrap;max-width:100%;overflow-x:auto}.chat-message.mine p{background:#e0f0ff;border-color:#bad8ef;border-radius:11px 3px 11px 11px}.room-chat form{border-top:1px solid #dcebf4;margin-top:10px;padding-top:12px}.room-chat label{font-size:10px;display:block;margin-bottom:6px}.chat-compose{display:flex;gap:6px}.chat-compose input{min-width:0;width:100%;border:1px solid #c2daeb;border-radius:8px;background:white;color:#244f72;padding:11px 9px;font-size:11px}.chat-compose .primary{font-size:11px;padding:10px;white-space:nowrap}.room-chat form>small{display:block;font-size:8px;color:#89a1b3;margin-top:7px}
+@media(max-width:850px){.game-shell aside .room-chat{grid-column:1/-1}.chat-messages{height:180px}}
+.room-chat .chat-compose .primary{background:linear-gradient(135deg,#3695d3,#1b72ae);color:#fff;border:1px solid #237fb8;box-shadow:0 2px 0 #176496}
+
+/* A quiet musical meadow surrounds the playable board and opaque UI cards. */
+.game-shell{
+ background-color:#deefcd;
+ background-image:linear-gradient(180deg,#f2faffed 0,#f3fbf5c9 180px,#f3fbf536 420px,#f5fbef14 100%),url('./assets/music-meadow-background.png');
+ background-position:center top,center center;
+ background-size:cover,cover;
+ background-repeat:no-repeat;
+ background-attachment:fixed;
+}
+.game-shell .room-strip{background:#edf8f4ed}
+.game-shell .board-summary{background:#fffef2f2}
+.game-shell .activity{background:#fafff5eb}
+.game-shell .garden-ground{background:radial-gradient(ellipse,#e0edc42e,transparent 72%)}
+.game-shell .scene-decoration{display:none}
+@media(max-width:650px){.game-shell{background-size:auto,auto 100dvh;background-position:center top,center center}}

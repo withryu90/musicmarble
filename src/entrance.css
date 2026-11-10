@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@900&display=swap');
 
 /* A bright, playful entrance to the Music Marble world. */
 .lobby-scene{
@@ -109,3 +108,10 @@ dialog.entrance-help::backdrop{background:#164d7959}
 }
 .adventure-badge>span{color:#a28148;font-size:14px}
 @media(max-width:750px){.lobby-story .adventure-badge{min-height:56px;padding:15px 27px;font-size:9px;letter-spacing:.25px;gap:5px}.adventure-badge>span{font-size:12px}}
+
+/* The English wordmark defines the width; spread the Korean title to its edges. */
+.lobby-header .brand-copy{display:inline-grid;grid-template-columns:auto;align-items:start}
+.lobby-header .brand-title{display:flex;justify-content:space-between;width:0;min-width:100%;line-height:1.2;letter-spacing:0;white-space:nowrap}
+.lobby-header .brand-title>span{flex:0 0 auto}
+.lobby-header .brand-copy small{width:max-content;white-space:nowrap}
+.lobby-header .brand-copy .brand-english-end{letter-spacing:0}

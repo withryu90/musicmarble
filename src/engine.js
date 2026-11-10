@@ -93,6 +93,9 @@ export function buy(state){
   if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
   p.coins-=w.price;s.ownership[w.id]={player:p.id,level:0};s.purchased=true;log(s,`${p.name}: ${w.composer} 「${w.title}」 이용권 구입 (${w.price} MC)`);return s;
 }
+// Production purchase commits the payment, ownership and turn advance atomically.
+export function purchaseAndNext(state){return nextTurn(buy(state.phase==='purchase-feedback'?closePurchaseFeedback(state):state));}
+export function skipPurchase(state){if(state.phase!=='purchase-feedback'||state.purchaseChallenge?.correct!==true)throw Error('구입 선택을 확인해 주세요.');return nextTurn(closePurchaseFeedback(state));}
 export function upgrade(state,id){
   const s=clone(state),p=current(s),owner=s.ownership[id];
   if(s.phase!=='action'||!owner||owner.player!==p.id||owner.level!==0||p.coins<100)throw Error('공연 기획을 할 수 없습니다. (내 이용권, 100 MC 필요, 작품당 1회)');

@@ -1,0 +1,8 @@
+Jua Regular / BM JUA — Woowahan Brothers
+https://github.com/google/fonts/tree/main/ofl/jua
+Original Jua-Regular.ttf; license: Jua-OFL.txt
+
+NanumSquare Neo Variable — NAVER / Sandoll
+https://campaign.naver.com/nanumsquare_neo/
+Original WOFF2 extracted from the official NaverNanumSquareNeo.zip package.
+License: NanumSquareNeo-OFL.txt

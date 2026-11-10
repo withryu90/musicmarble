@@ -19,8 +19,9 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
          const room=service.get(code);if(room.listeners.size>=30)throw Error('연결이 너무 많습니다. 다른 탭을 닫아 주세요.');
          res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-cache, no-transform','Connection':'keep-alive','X-Accel-Buffering':'no'});
          const unsubscribe=service.subscribe(code,token,snapshot=>res.write(`data: ${JSON.stringify(snapshot)}\n\n`));
+         const unsubscribeChat=service.subscribeChat(code,token,payload=>res.write(`event: chat\ndata: ${JSON.stringify(payload)}\n\n`));
          const heartbeat=setInterval(()=>res.write(': heartbeat\n\n'),15000);
-         res.on('close',()=>{clearInterval(heartbeat);unsubscribe();});return;
+         res.on('close',()=>{clearInterval(heartbeat);unsubscribe();unsubscribeChat();});return;
        }
        if(req.method!=='POST')return json(404,{error:'경로를 찾을 수 없습니다.'});
        const ip=req.socket.remoteAddress,now=Date.now(),bucket=rate.get(ip)||{time:now,count:0};if(now-bucket.time>60000){bucket.time=now;bucket.count=0;}bucket.count++;rate.set(ip,bucket);if(bucket.count>1200)return json(429,{error:'요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.'});
@@ -33,6 +34,7 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
        if(url.pathname==='/api/join')return json(201,service.join(input.code,input.nickname,input.characterId));
        const token=req.headers.authorization?.replace(/^Bearer /,'');
        if(url.pathname==='/api/resume'){const {room,member}=service.authenticate(input.code,token);return json(200,{...service.snapshot(room),playerId:member.id});}
+       if(url.pathname==='/api/chat')return json(200,service.chat(input.code,token,input.message));
        if(url.pathname==='/api/action')return json(200,service.act(input.code,token,input));
        return json(404,{error:'경로를 찾을 수 없습니다.'});
      }

@@ -46,7 +46,7 @@ export function botDecision(state,previous={},random=Math.random){
 export function applyBotDecision(state,decision,dice){
   if(!decision)return state;
   if(decision.action==='roll')return G.roll(state,dice);
-  const actions={buy:G.buy,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
+  const actions={buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
   if(!Object.hasOwn(actions,decision.action))throw Error('잘못된 봇 동작입니다.');
   return actions[decision.action](state,...decision.args);
 }

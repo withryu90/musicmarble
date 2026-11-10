@@ -18,6 +18,7 @@ export function botDecision(state,previous={},random=Math.random){
   }
   const p=G.current(state);if(!p.isBot)return null;
   if(state.phase==='roll')return decide('roll');
+  if(state.phase==='jailed')return decide('nextTurn');
   if(state.phase==='purchase-quiz'){const q=purchaseQuizById(state.purchaseChallenge.questionId);return decide('answerPurchaseQuiz',[random()<.65?q.answer:!q.answer]);}
   if(state.phase==='purchase-feedback')return decide('closePurchaseFeedback');
   if(state.phase==='quiz'){

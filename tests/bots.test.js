@@ -4,19 +4,19 @@ import * as G from '../src/engine.js';
 import {buyQualified} from '../test-support/purchases.js';
 import {RoomService} from '../server/rooms.js';
 import {botDecision,applyBotDecision} from '../server/bots.js';
-const setup=options=>{const service=new RoomService(options),session=service.createSolo('나',{botCount:4,rounds:4});return {service,session,room:service.get(session.code)};};
+const setup=options=>{const service=new RoomService(options),session=service.createSolo('나',{botCount:3,rounds:4});return {service,session,room:service.get(session.code)};};
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function waitForHuman(service,session,room){return new Promise((resolve,reject)=>{let stop;const timeout=setTimeout(()=>{stop?.();reject(Error('Bots did not complete their turns'));},1500);stop=service.subscribe(session.code,session.token,s=>{if(s.state.turn===0&&s.state.turnNumber>=5){clearTimeout(timeout);queueMicrotask(()=>{stop();resolve(s);});}});});}
-test('solo creates one human and 1–4 unique randomly named bots without public credentials',()=>{
+function waitForHuman(service,session,room){return new Promise((resolve,reject)=>{let stop;const timeout=setTimeout(()=>{stop?.();reject(Error('Bots did not complete their turns'));},1500);stop=service.subscribe(session.code,session.token,s=>{if(s.state.turn===0&&s.state.turnNumber>=4){clearTimeout(timeout);queueMicrotask(()=>{stop();resolve(s);});}});});}
+test('solo creates one human and 1–3 unique randomly named bots without public credentials',()=>{
  const {service,session,room}=setup();try{
-  assert.ok(room.members.slice(1).every(m=>!m.name.includes('봇')&&m.name.length<=16));assert.equal(room.members.length,5);assert.equal(new Set(room.members.map(m=>m.name)).size,5);assert.equal(room.mode,'solo');assert.equal(room.state.phase,'roll');assert.equal(room.state.players[0].isBot,false);assert.ok(room.state.players.slice(1).every(p=>p.isBot&&p.coins===1200));
+  assert.ok(room.members.slice(1).every(m=>!m.name.includes('봇')&&m.name.length<=16));assert.equal(room.members.length,4);assert.equal(new Set(room.members.map(m=>m.name)).size,4);assert.equal(room.mode,'solo');assert.equal(room.state.phase,'roll');assert.equal(room.state.players[0].isBot,false);assert.ok(room.state.players.slice(1).every(p=>p.isBot&&p.coins===1200));
   const publicData=service.snapshot(room);assert.ok(!JSON.stringify(publicData).includes(session.token));assert.ok(publicData.members.slice(1).every(m=>m.isBot&&!m.token));
   assert.throws(()=>service.authenticate(session.code,undefined));assert.throws(()=>service.join(session.code,'손님'));
-  assert.throws(()=>service.createSolo('나',{botCount:0}));assert.throws(()=>service.createSolo('나',{botCount:5}));assert.throws(()=>service.createSolo('나',{rounds:1}));
+  assert.throws(()=>service.createSolo('나',{botCount:0}));assert.throws(()=>service.createSolo('나',{botCount:4}));assert.throws(()=>service.createSolo('나',{rounds:1}));
   const two=service.createSolo('나',{botCount:1});assert.equal(service.get(two.code).state.players.length,2);
  }finally{service.close();}
 });
-test('bots complete a full five-player game with the same rules and bounded decisions',()=>{
+test('bots complete a full four-player game with the same rules and bounded decisions',()=>{
  const {service,room}=setup();try{let s=room.state,memory={},steps=0;
   while(s.phase!=='finished'&&steps<4000){
    if(G.current(s).isBot){const decision=botDecision(s,memory,()=>.1);assert.ok(decision);memory=decision.memory;s=applyBotDecision(s,decision,steps%6+1);}
@@ -52,7 +52,7 @@ test('leaving the screen pauses bots; subscribing again resumes without losing a
   room.state=G.nextTurn(G.roll(room.state,1));const revision=room.revision;
   service.scheduleBot(room);await wait(15);assert.equal(room.revision,revision);assert.equal(room.state.turn,1);
   const stop=service.subscribe(session.code,session.token,()=>{});stop();assert.equal(service.botTimers.size,0);
-  await waitForHuman(service,session,room);assert.equal(room.members.length,5);assert.equal(service.authenticate(session.code,session.token).member.id,0);
+  await waitForHuman(service,session,room);assert.equal(room.members.length,4);assert.equal(service.authenticate(session.code,session.token).member.id,0);
  }finally{service.close();}
 });
 test('a bot trade response is automatic even during the human turn',async()=>{

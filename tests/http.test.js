@@ -15,14 +15,14 @@ test('HTTP room APIs, authorization, SSE, and private-file restrictions',async()
  }finally{server.closeAllConnections();await new Promise(r=>server.close(r));}
 });
 
-test('100 live SSE connections across 20 rooms receive isolated updates',async()=>{
+test('100 live SSE connections across 25 rooms receive isolated updates',async()=>{
  const server=makeServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`,abort=new AbortController();
  const post=async(path,body,token)=>{const response=await fetch(base+'/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:JSON.stringify(body)});assert.ok(response.ok);return response.json();};
  const read=async reader=>{const {value}=await reader.read();return new TextDecoder().decode(value);};
  try{
-  const rooms=await Promise.all(Array.from({length:20},async(_,i)=>{
+  const rooms=await Promise.all(Array.from({length:25},async(_,i)=>{
    const host=await post('create',{nickname:`host${i}`}),members=[host];
-   for(let p=1;p<5;p++)members.push(await post('join',{code:host.code,nickname:`guest${p}`}));
+   for(let p=1;p<4;p++)members.push(await post('join',{code:host.code,nickname:`guest${p}`}));
    const connections=await Promise.all(members.map(async member=>{const response=await fetch(`${base}/api/events?code=${host.code}&token=${member.token}`,{signal:abort.signal});const reader=response.body.getReader();const initial=await read(reader);assert.ok(initial.includes(`"code":"${host.code}"`));return reader;}));
    const snapshot=await post('resume',{code:host.code},host.token);return {host,connections,revision:snapshot.revision};
   }));
@@ -35,7 +35,7 @@ test('solo endpoint starts a bot game and rejects invalid configuration',async()
  const server=makeServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
  const post=async(path,body,token)=>{const res=await fetch(base+'/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:JSON.stringify(body)});return {status:res.status,data:await res.json()};};
  try{
-  assert.equal((await post('create-solo',{nickname:'나',config:{botCount:9}})).status,400);
+  assert.equal((await post('create-solo',{nickname:'나',config:{botCount:4}})).status,400);
   const created=await post('create-solo',{nickname:'여행자',config:{botCount:3,rounds:4}});assert.equal(created.status,201);
   const {code,token}=created.data;const resumed=await post('resume',{code},token);assert.equal(resumed.data.mode,'solo');assert.equal(resumed.data.members.length,4);assert.equal(resumed.data.state.turn,0);assert.equal(resumed.data.state.maxRounds,4);
  }finally{server.closeAllConnections();await new Promise(r=>server.close(r));}

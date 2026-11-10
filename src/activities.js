@@ -1,4 +1,4 @@
-import {BOARD,WORKS} from './data.js';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -14,6 +14,9 @@ export function activityChanges(before,after){
    if(t.skipped)add('copyright-transfer-skipped','양도할 작품 없음',{actorId:t.from,changes:[],text:'보유한 작품이 없어 저작권 양도 없이 이 칸을 통과했습니다.'});
    else{const w=WORKS.find(w=>w.id===t.workId);add('copyright-transfer','저작권 양도',{actorId:t.from,otherId:t.to,workId:t.workId,amount:t.price,changes:[],text:`${after.players[t.from].name} 님의 최고가 작품 ${w.composer} 「${w.title}」의 게임 속 가상 저작재산권을 ${after.players[t.to].name} 님에게 무상 양도했습니다.`,assignment:{...t}});}
   }
+  if(after.lastPrisonTransfer)add('prison-transfer','감옥으로 이동',{changes:[],text:'「감옥으로 가기」 칸에 도착하여 불법 스트리밍 감옥으로 이동합니다. 다음 두 번의 자기 차례에 주사위 6으로 탈출에 도전합니다.'});
+  if(after.lastPrisonRoll){const r=after.lastPrisonRoll;add('prison-roll',r.escaped?'감옥 탈출 성공!':r.remaining?'감옥 탈출 실패':'감옥 대기 종료',{changes:[],escaped:r.escaped,text:r.escaped?'주사위 6! 감옥에서 즉시 탈출하여 6칸 이동합니다.':r.remaining?`주사위 ${r.dice}. 감옥에 머뭅니다. 다음 자기 차례에 한 번 더 도전할 수 있습니다.`:`주사위 ${r.dice}. 두 번의 도전을 마쳤습니다. 이번 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다.`});}
+  if(!after.lastPrisonRoll&&BOARD[after.players[actor].position].type==='prison')add('prison-entry','불법 스트리밍 감옥',{changes:[],text:PRISON_MESSAGE});
   if(after.lastEvent)add('history-event',after.lastEvent.title,{card:{...after.lastEvent},changes:[coin(actor,after.lastEvent.actual)],text:after.lastEvent.text});
   if(BOARD[after.players[actor].position].type==='concert')add('concert','모두의 음악회 지원금',{changes:after.players.map(p=>coin(p.id,100)),text:'모든 참가자가 음악회 지원금 100 MC를 받았습니다.'});
  }

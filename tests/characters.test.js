@@ -12,13 +12,13 @@ test('drawing characters never repeats a used or newly drawn ID',()=>{
  const first=drawCharacterIds(15,[],()=>.3);assert.equal(new Set(first).size,15);const next=drawCharacterIds(15,first,()=>.7);assert.equal(new Set([...first,...next]).size,30);assert.throws(()=>drawCharacterIds(16,first));assert.throws(()=>drawCharacterIds(-1));
 });
 test('new games reserve unique characters and reject unknown or duplicate selections',()=>{
- const names=['A','B','C','D','E'];for(let i=0;i<50;i++)assertUnique(G.createGame({names}).players);
- const ids=CHARACTERS.slice(0,5).map(c=>c.id);assert.deepEqual(G.createGame({names,characterIds:ids}).players.map(p=>p.characterId),ids);
- assert.throws(()=>G.createGame({names,characterIds:Array(5).fill('bach')}));assert.throws(()=>G.createGame({names,characterIds:['fake',...ids.slice(1)]}));assert.throws(()=>G.createGame({names,characterIds:ids.slice(1)}));
+ const names=['A','B','C','D'];for(let i=0;i<50;i++)assertUnique(G.createGame({names}).players);
+ const ids=CHARACTERS.slice(0,4).map(c=>c.id);assert.deepEqual(G.createGame({names,characterIds:ids}).players.map(p=>p.characterId),ids);
+ assert.throws(()=>G.createGame({names,characterIds:Array(4).fill('bach')}));assert.throws(()=>G.createGame({names,characterIds:['fake',...ids.slice(1)]}));assert.throws(()=>G.createGame({names,characterIds:ids.slice(1)}));
 });
 test('joining and repeated redraws reserve character slots atomically',()=>{
- const service=new RoomService();try{const sessions=[service.create('A')];for(const name of ['B','C','D','E'])sessions.push(service.join(sessions[0].code,name));const room=service.get(sessions[0].code);assertUnique(room.members);
-  for(let n=0;n<100;n++){const actor=sessions[n%5],before=room.members.map(m=>m.characterId);service.act(actor.code,actor.token,{action:'rerollCharacter',args:[],revision:room.revision});assertUnique(room.members);assert.notEqual(room.members[actor.playerId].characterId,before[actor.playerId]);room.members.forEach((m,i)=>{if(i!==actor.playerId)assert.equal(m.characterId,before[i]);});}
+ const service=new RoomService();try{const sessions=[service.create('A')];for(const name of ['B','C','D'])sessions.push(service.join(sessions[0].code,name));const room=service.get(sessions[0].code);assertUnique(room.members);
+  for(let n=0;n<100;n++){const actor=sessions[n%4],before=room.members.map(m=>m.characterId);service.act(actor.code,actor.token,{action:'rerollCharacter',args:[],revision:room.revision});assertUnique(room.members);assert.notEqual(room.members[actor.playerId].characterId,before[actor.playerId]);room.members.forEach((m,i)=>{if(i!==actor.playerId)assert.equal(m.characterId,before[i]);});}
  }finally{service.close();}
 });
 test('game start preserves lobby characters and reconnecting preserves the same character',()=>{
@@ -29,8 +29,8 @@ test('game start preserves lobby characters and reconnecting preserves the same 
 test('a stale redraw request cannot overwrite another assignment',()=>{
  const service=new RoomService();try{const a=service.create('A'),b=service.join(a.code,'B'),room=service.get(a.code),revision=room.revision;service.act(a.code,a.token,{action:'rerollCharacter',revision});assert.throws(()=>service.act(b.code,b.token,{action:'rerollCharacter',revision}));assertUnique(room.members);}finally{service.close();}
 });
-test('solo mode shares a unique character pool with all four bots and allows redraw before rolling',()=>{
- const service=new RoomService();try{const a=service.createSolo('A',{botCount:4}),room=service.get(a.code);assertUnique(room.members);assertUnique(room.state.players);const bots=room.state.players.slice(1).map(p=>p.characterId),old=room.state.players[0].characterId;
+test('solo mode shares a unique character pool with all three bots and allows redraw before rolling',()=>{
+ const service=new RoomService();try{const a=service.createSolo('A',{botCount:3}),room=service.get(a.code);assertUnique(room.members);assertUnique(room.state.players);const bots=room.state.players.slice(1).map(p=>p.characterId),old=room.state.players[0].characterId;
   service.act(a.code,a.token,{action:'rerollCharacter',revision:room.revision});assert.notEqual(room.state.players[0].characterId,old);assertUnique(room.state.players);assert.deepEqual(room.state.players.slice(1).map(p=>p.characterId),bots);assert.equal(room.state.players[0].coins,1200);
   service.act(a.code,a.token,{action:'roll',revision:room.revision});assert.throws(()=>service.act(a.code,a.token,{action:'rerollCharacter',revision:room.revision}));
  }finally{service.close();}
@@ -61,7 +61,7 @@ test('explicit character choices persist across create, join, start and solo bot
   service.join(a.code,'친구','bach');
   service.act(a.code,a.token,{action:'start',revision:room.revision});
   assert.deepEqual(room.state.players.map(p=>p.characterId),['mozart','bach']);
-  const solo=service.createSolo('혼자',{botCount:4},'beethoven'),soloRoom=service.get(solo.code);
+  const solo=service.createSolo('혼자',{botCount:3},'beethoven'),soloRoom=service.get(solo.code);
   assert.equal(soloRoom.state.players[0].characterId,'beethoven');assertUnique(soloRoom.members);
   const before=service.rooms.size;assert.throws(()=>service.create('잘못된 방','unknown'));assert.equal(service.rooms.size,before);
  }finally{service.close();}

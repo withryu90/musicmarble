@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import {BOARD} from '../src/data.js';
 import * as G from '../src/engine.js';
 import {activityChanges} from '../src/activities.js';
-const game=()=>G.createGame({names:['A','B','C','D','E']});
+const game=()=>G.createGame({names:['A','B','C','D']});
 const beforeTile=()=>{const s=game();s.players[0].position=20;return s;};
 test('only the last history tile is replaced and board remains 24 spaces',()=>{
- assert.equal(BOARD.length,24);assert.equal(BOARD[0].type,'start');assert.equal(BOARD[21].type,'transfer');assert.equal(BOARD[21].title,'저작권 양도');assert.equal(BOARD.filter(c=>c.type==='event').length,3);
+ assert.equal(BOARD.length,24);assert.equal(BOARD[0].type,'start');assert.equal(BOARD[21].type,'transfer');assert.equal(BOARD[21].title,'저작권 양도');assert.equal(BOARD.filter(c=>c.type==='event').length,2);
 });
 test('the highest base-price work is assigned with project level and no coin changes',()=>{
  const s=beforeTile();s.ownership={'bach-air':{player:0,level:1},'beethoven-9':{player:0,level:0},'stravinsky-spring':{player:0,level:1},'debussy-sea':{player:2,level:1}};
@@ -21,8 +21,8 @@ test('a cheaper upgraded work never outranks a more expensive base work',()=>{
 });
 test('ties and recipients use the random draw and never assign back to the actor',()=>{
  const s=beforeTile();s.ownership={'beethoven-5':{player:0,level:0},'chopin-polonaises':{player:0,level:1}};
- const low=G.roll(s,1,()=>0),high=G.roll(s,1,()=>.999999);assert.equal(low.lastAssignment.workId,'beethoven-5');assert.equal(high.lastAssignment.workId,'chopin-polonaises');assert.equal(low.lastAssignment.to,1);assert.equal(high.lastAssignment.to,4);
- for(let turn=0;turn<5;turn++){const s=game();s.turn=turn;s.players[turn].position=20;s.ownership['bach-air']={player:turn,level:0};for(const rng of [()=>0,()=>.999])assert.notEqual(G.roll(s,1,rng).lastAssignment.to,turn);}
+ const low=G.roll(s,1,()=>0),high=G.roll(s,1,()=>.999999);assert.equal(low.lastAssignment.workId,'beethoven-5');assert.equal(high.lastAssignment.workId,'chopin-polonaises');assert.equal(low.lastAssignment.to,1);assert.equal(high.lastAssignment.to,3);
+ for(let turn=0;turn<4;turn++){const s=game();s.turn=turn;s.players[turn].position=20;s.ownership['bach-air']={player:turn,level:0};for(const rng of [()=>0,()=>.999])assert.notEqual(G.roll(s,1,rng).lastAssignment.to,turn);}
 });
 test('players without works pass the tile without losing coins or drawing an event',()=>{
  const s=beforeTile(),next=G.roll(s,1);assert.deepEqual(next.ownership,{});assert.deepEqual(next.players.map(p=>p.coins),s.players.map(p=>p.coins));assert.equal(next.eventCursor,0);assert.equal(next.quiz,null);assert.deepEqual(next.lastAssignment,{from:0,skipped:true});assert.equal(activityChanges(s,next)[0].type,'copyright-transfer-skipped');assert.ok(G.isValidSave(next));

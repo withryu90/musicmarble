@@ -1,3 +1,4 @@
+export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 두 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 두 번 모두 6이 나오지 않으면 그 두 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
   {id:'classical', name:'고전주의', years:'약 1750–1820', color:'#729b91', detail:'균형과 명료한 형식, 교향곡과 소나타가 꽃핀 시대'},
@@ -15,7 +16,7 @@ export const BOARD = [
   {id:'quiz-1',type:'quiz',title:'뮤직 퀴즈',subtitle:'생각하고 +80 MC'},
   w('mozart-serenade','모차르트','작은 밤의 음악','1787','classical',220,45,'아이네 클라이네 나흐트무지크. 명료한 선율과 균형 잡힌 구성이 돋보입니다.'),
   w('mozart-flute','모차르트','마술피리','1791','classical',240,50,'대사와 노래가 함께하는 징슈필. 다양한 인물의 성격을 음악으로 표현합니다.'),
-  {id:'event-2',type:'event',title:'음악사 사건',subtitle:'변화의 순간'},
+  {id:'streaming-prison',type:'prison',title:'불법 스트리밍 감옥',subtitle:'6으로 탈출 · 기회 2번'},
   w('beethoven-5','베토벤','교향곡 제5번','1808 초연','classical',280,55,'짧은 네 음의 동기가 작품 전체를 이끕니다. 베토벤은 고전과 낭만을 잇는 작곡가입니다.'),
   w('beethoven-9','베토벤','교향곡 제9번','1824 초연','classical',300,60,'마지막 악장에 독창과 합창을 더해 교향곡의 표현 범위를 넓혔습니다.'),
   {id:'concert',type:'concert',title:'모두의 음악회',subtitle:'함께 +100 MC'},
@@ -24,7 +25,7 @@ export const BOARD = [
   {id:'event-3',type:'event',title:'음악사 사건',subtitle:'새로운 청중'},
   w('chopin-nocturne','쇼팽','녹턴 Op.9 No.2','1832 출판','romantic',260,50,'노래하는 듯한 오른손 선율과 반주가 어우러지는 피아노 소품입니다.'),
   w('chopin-polonaises','쇼팽','영웅 폴로네즈','1842','romantic',280,55,'폴란드 춤 리듬에 강렬한 피아노 표현을 결합한 작품입니다.'),
-  {id:'copyright',type:'copyright',title:'권리 탐구실',subtitle:'이용 전에 확인!'},
+  {id:'go-to-prison',type:'go-to-prison',title:'감옥으로 가기',subtitle:'불법 스트리밍 감옥행'},
   w('debussy-moon','드뷔시','달빛','1905 출판','modern',280,55,'베르가마스크 모음곡의 한 곡. 화성과 음색이 만드는 분위기에 귀 기울여 보세요.'),
   w('debussy-sea','드뷔시','바다','1905 초연','modern',300,60,'관현악의 다채로운 색채로 바다의 움직임과 빛을 표현합니다.'),
   {id:'copyright-transfer',type:'transfer',title:'저작권 양도',subtitle:'최고가 작품 양도'},

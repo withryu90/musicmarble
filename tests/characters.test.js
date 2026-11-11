@@ -73,7 +73,7 @@ test('teacher character can be selected, stays unique and uses a transparent sta
 });
 
 test('Lee Hwayoung is selectable as a unique bust character in solo and shared rooms',async()=>{
- const c=characterById('teacher-lee-hwayoung');assert.equal(c.name,'이화영 선생님');assert.equal(c.fullName,'Korean Language Teacher');assert.equal(c.portrait,true);
+ const c=characterById('teacher-lee-hwayoung');assert.equal(c.name,'이화영 선생님');assert.equal(c.fullName,'Korean Teacher');assert.equal(c.portrait,true);
  const {readFile}=await import('node:fs/promises'),bytes=await readFile(new URL('../'+c.asset.replace('./',''),import.meta.url));assert.equal(bytes.subarray(1,4).toString(),'PNG');assert.equal(bytes[25],6);
  const service=new RoomService();try{const a=service.createSolo('새 선생님',{botCount:3},c.id),room=service.get(a.code);assert.equal(room.state.players[0].characterId,c.id);assertUnique(room.state.players);const b=service.create('방장',c.id);assert.throws(()=>service.join(b.code,'중복',c.id));}finally{service.close();}
 });

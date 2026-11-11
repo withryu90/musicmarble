@@ -2,7 +2,9 @@ import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js';
 import * as G from './engine.js';
 import {ActivityInbox} from './activities.js';
 import {purchaseQuizById} from './purchase-quizzes.js';
-import {movementPath} from './movement.js';
+import {BOARD_SIDE,boardCoordinates} from './board-layout.js';
+import {movementPath,boardTokenVisible} from './movement.js';
+import {diceCube} from './dice.js';
 import {CHARACTERS,characterFor,characterById} from './characters.js';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
@@ -31,10 +33,10 @@ async function request(path,body){
 function remember(){try{localStorage.setItem(key,JSON.stringify(session));}catch{notify('참가 정보를 저장하지 못했어요. 이 창을 유지해 주세요.');}}
 let dicePresentation=null;
 const activityInbox=new ActivityInbox();
-let activeActivity=null,deferredSnapshots=[];
+let activeActivity=null,deferredSnapshots=[],participantIntroPending=false;
 let autoPurchaseKey=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
-function resetActivityFlow(){activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
@@ -86,6 +88,7 @@ function animateBoardMovement(p){
  p.timer=setTimeout(advance,350);
 }
 function receive(next){
+ if(participantIntroPending&&snapshot?.state){if(next.revision>snapshot.revision&&!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);return;}
  if(snapshot&&next.revision<snapshot.revision)return;
  if(dicePresentation){presentDiceResult(next);return;}
  if(activeActivity||activityInbox.pending.length){if(!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);deferredSnapshots.sort((a,b)=>a.revision-b.revision);return;}
@@ -97,9 +100,11 @@ function receive(next){
 }
 function commitSnapshot(next){
  if(snapshot&&next.revision<snapshot.revision)return;
+ const introduce=!snapshot?.state&&next.state&&(next.state.turnNumber??0)===0&&next.state.dice===null;
+ if(introduce)participantIntroPending=true;
  snapshot=next;if(next.state)state=next.state;
  activityInbox.accept(next.code,next.activities||[]);render();
- if(revealCharacter&&next.state){revealCharacter=false;characterModal(state.players[session.playerId],true);}
+ if(introduce){revealCharacter=false;participantIntroModal();}
  continueFlow();
 }
 function statePromptKey(){return snapshot?.state?`${state.phase}:${state.turn}:${state.quiz}:${state.feedback?.index}:${state.purchaseChallenge?.questionId}:${state.purchaseChallenge?.response}:${state.trade?JSON.stringify(state.trade):''}`:'lobby';}
@@ -127,7 +132,7 @@ function historyCard(e,actorId){
  const risk=e.amount<0,category=e.category||e.period||'음악사 사건 카드';
  const kind=category.includes('음악사')?'industry':risk?'risk':'opportunity';
  const symbol={industry:'♫',risk:'♭',opportunity:'♪'}[kind];
- return `<div class="collectible-card card-${kind}"><div class="card-value"><strong>${e.amount>0?'+':''}${e.amount}</strong><small>MC</small></div><div class="card-art art-${kind}"><span class="card-staves" aria-hidden="true">♬</span><span class="card-art-symbol" aria-hidden="true">${symbol}</span><span class="card-art-category">${esc(category)}</span></div><div class="card-ribbon"><h3>${esc(e.title)}</h3></div><div class="card-gem" aria-hidden="true"></div><div class="card-description"><p>${esc(e.text)}</p><strong class="card-effect">${e.amount>=0?'획득':'지급'} ${Math.abs(e.actual??e.amount)} MC</strong>${e.actual!==undefined&&e.actual!==e.amount?`<small>표시 금액 ${Math.abs(e.amount)} MC 중 잔액 한도에서 ${Math.abs(e.actual)} MC를 지급했습니다.</small>`:''}</div><div class="card-owner">${esc(state.players[actorId]?.name||'참가자')}의 사건 카드</div></div>`;
+ return `<div class="collectible-card card-${kind}"><div class="card-value"><strong>${e.amount>0?'+':''}${e.amount}</strong><small>MC</small></div><div class="card-art art-${kind}"><span class="card-staves" aria-hidden="true">♬</span><span class="card-art-symbol" aria-hidden="true">${symbol}</span><span class="card-art-category">${esc(category)}</span></div><div class="card-ribbon"><h3>${esc(e.title)}</h3></div><div class="card-gem" aria-hidden="true"></div><div class="card-description"><p>${esc(e.text)}</p><strong class="card-effect">${e.amount>=0?'획득':'차감'} ${Math.abs(e.actual??e.amount)} MC</strong>${e.actual!==undefined&&e.actual!==e.amount?`<small>표시 금액 ${Math.abs(e.amount)} MC 중 잔액 한도에서 ${Math.abs(e.actual)} MC를 차감했습니다.</small>`:''}</div><div class="card-owner">${esc(state.players[actorId]?.name||'참가자')}의 사건 카드</div></div>`;
 }
 function showActivity(item){
  activeActivity=item;
@@ -178,6 +183,10 @@ function characterChoicePreview(id){const c=characterById(id);return c?`${charac
 function updateCharacterChoice(e){if(e.target.name==='characterId'){const picker=e.target.closest('.character-picker');picker.querySelector('.character-choice-preview').innerHTML=characterChoicePreview(e.target.value);}}
 $('#app').addEventListener('change',updateCharacterChoice);
 $('#modal').addEventListener('change',updateCharacterChoice);
+function participantIntroModal(){
+ const participants=state.players.map((person,index)=>`<li class="participant-intro-card" style="--team:${person.color}"><span class="participant-order">${index+1}번 주자</span>${characterSprite(person,'character-large')}<strong class="participant-nickname">${esc(person.name)}</strong><span class="participant-character">${esc(characterFor(person).name)}</span>${person.id===session.playerId?'<span class="participant-self">나</span>':''}</li>`).join('');
+ showModal('오늘 함께할 음악 여행자',`<p class="participant-intro-description">오늘 게임에 참여하는 친구들이에요.<br>아래 순서대로 주사위를 굴리며 음악 여행을 떠나요!</p><ol class="participant-intro-list" aria-label="게임 진행 순서">${participants}</ol><p class="participant-intro-note">각자의 캐릭터말은 첫 주사위를 굴려 이동할 때 등장해요.</p><button class="primary full" data-action="close">참가자 확인하고 보드로 →</button>`,'participant-intro-modal');
+}
 function characterModal(person,starting=false){
  const c=characterFor(person);
  const redraw=starting&&snapshot.mode==='solo'&&state.round===1&&state.phase==='roll'&&state.dice===null;
@@ -189,8 +198,9 @@ function characterGallery(){
 async function redrawCharacter(){
  try{const next=await request('action',{code:session.code,action:'rerollCharacter',args:[],revision:snapshot.revision});receive(next);if(next.state)characterModal(state.players[session.playerId],true);else notify(`새 캐릭터: ${characterFor(next.members[session.playerId]).name}`);}catch(error){notify(error.message);}
 }
-function tokens(index){const occupants=state.players.filter(p=>p.position===index);const [row,col]=coordinates(index);const x=col===1?-60:col===7?160:50,y=row===1?-60:row===7?160:50;return `<div class="tokens ${occupants.length>=3?'token-stack':''}" style="--token-x:${x}%;--token-y:${y}%">${occupants.map(p=>`<span class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${p.color}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터">${characterSprite(p,'board-character')}<span class="character-ground"></span></span>`).join('')}</div>`;}
-function coordinates(i){if(i<=6)return [1,i+1];if(i<=12)return [i-5,7];if(i<=18)return [7,19-i];return [25-i,1];}
+function tokenVisible(player){return boardTokenVisible(state,player,dicePresentation?.moving?dicePresentation.playerId:null);}
+function tokens(index){const occupants=state.players.filter(p=>p.position===index&&tokenVisible(p));const [row,col]=coordinates(index);const x=col===1?-60:col===BOARD_SIDE?160:50,y=row===1?-60:row===BOARD_SIDE?160:50;return `<div class="tokens ${occupants.length>=3?'token-stack':''}" style="--token-x:${x}%;--token-y:${y}%">${occupants.map(p=>`<span class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${p.color}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터">${characterSprite(p,'board-character')}<span class="character-ground"></span></span>`).join('')}</div>`;}
+const coordinates=boardCoordinates;
 function startPortal(){return `<span class="start-portal" aria-hidden="true"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gate-gold"><stop stop-color="#f6e0a0"/><stop offset=".5" stop-color="#be9047"/><stop offset="1" stop-color="#ffe7a0"/></linearGradient><linearGradient id="gate-light" x2="0" y2="1"><stop stop-color="#bceeff" stop-opacity=".9"/><stop offset="1" stop-color="#398bc0" stop-opacity=".1"/></linearGradient></defs><path d="M22 105V48a28 28 0 0 1 56 0v57" fill="url(#gate-light)" stroke="#286b98" stroke-width="12"/><path d="M20 106V46a30 30 0 0 1 60 0v60" fill="none" stroke="url(#gate-gold)" stroke-width="6"/><path d="M28 102V48a22 22 0 0 1 44 0v54" fill="none" stroke="#f8e4a4" stroke-width="2"/><path d="M13 54h17v50H13zM70 54h17v50H70z" fill="#397ba3" stroke="#ebcc82" stroke-width="2"/><path d="M10 101h24v9H10zM66 101h24v9H66zM10 48h24v8H10zM66 48h24v8H66z" fill="url(#gate-gold)" stroke="#87643d"/><path d="M6 110h88v7H6z" fill="#f1d58f" stroke="#957640"/><path d="M37 18h26l-3-11H40z" fill="url(#gate-gold)" stroke="#96733f"/><path d="M53 29v28c-12-5-16 12-6 12 5 0 10-3 10-8V38l10-3V25z" fill="#f3db95" stroke="#a17b3e" stroke-width="1"/></svg></span>`;}
 function landmark(type){
  const drawings={
@@ -209,6 +219,9 @@ function boardTitle(cell){
  const lines={
   'go-to-prison':['감옥으로','가기'],
   'streaming-prison':['불법 스트리밍','감옥'],
+  'handel-water':['수상','음악'],
+  'haydn-surprise':['놀람','교향곡'],
+  'brahms-hungarian-5':['헝가리 무곡','제5번'],
   'bach-air':['G선상의','아리아'],
   'bach-brandenburg':['브란덴부르크','협주곡'],
   'mozart-serenade':['작은 밤의','음악'],
@@ -221,15 +234,12 @@ function boardTitle(cell){
  }[cell.id]||({event:['음악사','사건'],copyright:['권리','탐구실'],transfer:['저작권','양도']})[cell.type]||[cell.title];
  return lines.map(line=>`<span class="tile-title-line">${esc(line)}</span>`).join('');
 }
-function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?` · 이동 중 ${dicePresentation.step} / ${dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${String(state.round).padStart(2,'0')}<small> / ${String(state.maxRounds).padStart(2,'0')} ROUND</small><small class="lap-progress">첫 주자 완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴</small></b></section><div class="board-surround">${players()}<div class="board-scene"><div class="garden-ground" aria-hidden="true"></div>${boardView==='3d'&&state.players.some(p=>p.position===0)?`<div class="start-waiting" aria-label="출발 대기 중인 캐릭터">${tokens(0)}</div>`:''}<div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
+function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?` · 이동 중 ${dicePresentation.step} / ${dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${String(state.round).padStart(2,'0')}<small> / ${String(state.maxRounds).padStart(2,'0')} ROUND</small><small class="lap-progress">첫 주자 완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴</small></b></section><div class="board-surround">${players()}<div class="board-scene"><div class="garden-ground" aria-hidden="true"></div>${boardView==='3d'&&state.players.some(p=>p.position===0&&tokenVisible(p))?`<div class="start-waiting" aria-label="출발 대기 중인 캐릭터">${tokens(0)}</div>`:''}<div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
  const [row,col]=coordinates(i),owner=state.ownership[c.id],active=G.current(state).position===i;
  const tile={baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'}[c.era]||'#9cbfd0';
  return `<button class="cell ${c.type} ${active?'current':''} ${owner?'owned':''} ${owner?.level?'upgraded':''}" data-action="cell" data-index="${i}" style="grid-row:${row};grid-column:${col};--era:${c.era?era(c.era).color:'#cbbd99'};--tile:${tile};--owner:${owner?state.players[owner.player].color:'transparent'}" aria-label="${i+1}번 ${esc(c.composer||'')} ${esc(c.title)}${owner?`, ${esc(state.players[owner.player].name)} 보유`:''}"><span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(({start:'출발 · +200 MC',quiz:'+80 MC',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번','go-to-prison':'불법 스트리밍 감옥행'})[c.type]||c.subtitle)}</span></span>${c.type==='start'?startPortal():''}${i===0&&boardView==='3d'?'':tokens(i)}${owner?`<span class="ownership-dot" title="${esc(state.players[owner.player].name)} 보유"></span>`:''}${owner?.level?'<span class="project-marker" aria-label="공연 기획 완료">♫</span>':''}</button>`;
  }).join('')}<div class="board-center"><div class="garden-water" aria-hidden="true"></div></div></div></div></div><div class="scene-instruction"><span class="live-dot"></span>${boardView==='3d'?'입체 보드 · 작품 타일을 눌러 탐험하세요':'평면 보드 · 작품 타일을 눌러 탐험하세요'}</div></div></div>`;}
-function diceCube(value){
- const positions={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]}[value];
- return `<div class="dice dice-cube" aria-label="주사위 눈 ${value}"><span class="dice-pips">${positions.map(n=>`<i style="grid-area:${Math.ceil(n/3)} / ${(n-1)%3+1}"></i>`).join('')}</span></div>`;
-}
+
 function actionPanel(){
  const p=G.current(state),c=BOARD[p.position],o=state.ownership[c.id];
  if(state.phase==='finished')return `<div class="turn-card"><span class="eyebrow">FINALE</span><h2>멋진 여행이었어요!</h2><p>얼마나 모았는지, 무엇을 배웠는지<br>우리의 여정을 돌아보세요.</p><button class="primary full" data-action="results">수업 결과 보기 ↗</button></div>`;
@@ -262,6 +272,7 @@ function chatPanel(){return `<section class="room-chat" aria-labelledby="chat-ti
 function acceptChat(payload){if(payload.code!==session?.code||!Array.isArray(payload.messages))return;if((payload.messages.at(-1)?.id??0)<(chatMessages.at(-1)?.id??0))return;chatMessages=payload.messages;const log=$('#chat-messages');if(log){const atBottom=log.scrollHeight-log.scrollTop-log.clientHeight<45;log.innerHTML=chatRows();if(atBottom)log.scrollTop=log.scrollHeight;}}
 async function sendChat(){if(chatSending||!chatDraft.trim())return;const sent=chatDraft;chatSending=true;const button=$('#chat-form button');if(button)button.disabled=true;try{const payload=await request('chat',{code:session.code,message:sent});acceptChat(payload);if(chatDraft===sent){chatDraft='';if($('#chat-input'))$('#chat-input').value='';}}catch(error){notify(error.message);}finally{chatSending=false;if($('#chat-form button'))$('#chat-form button').disabled=!connected;}}
 function render(){
+ if(participantIntroPending){$('#app').innerHTML='<div class="participant-intro-backdrop" aria-hidden="true"></div>';return;}
  if(!snapshot?.state){renderLobby();return;}
  const chatFocused=document.activeElement?.id==='chat-input',selection=chatFocused?document.activeElement.selectionStart:null;
  const nav=[['board','게임 보드'],['collection','작품 컬렉션'],['learning','배움 노트']];
@@ -273,7 +284,7 @@ function showModal(title,body,cls=''){
  const d=$('#modal');d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기">×</button></div><h2 id="modal-title">${title}</h2>${body}`;
  if(!d.open)d.showModal();
 }
-function closeModal(){if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
+function closeModal(){if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
 function purchaseQuizModal(){
  const challenge=state.purchaseChallenge,q=purchaseQuizById(challenge?.questionId);if(!q)return;
  const answered=state.phase==='purchase-feedback',w=work(challenge.workId);

@@ -8,7 +8,7 @@ const arrival=()=>G.roll(G.createGame({names:['가온','나래'],coins:1200}),1)
 const challenge=()=>G.startPurchaseQuiz(arrival(),()=>0);
 const answer=(s,correct=true)=>G.answerPurchaseQuiz(s,correct?purchaseQuizById(s.purchaseChallenge.questionId).answer:!purchaseQuizById(s.purchaseChallenge.questionId).answer);
 test('every purchasable work has both O and X questions with explanations',()=>{
- assert.equal(PURCHASE_QUIZZES.length,32);assert.equal(new Set(PURCHASE_QUIZZES.map(q=>q.id)).size,32);
+ assert.equal(PURCHASE_QUIZZES.length,40);assert.equal(new Set(PURCHASE_QUIZZES.map(q=>q.id)).size,40);
  for(const w of WORKS){const qs=PURCHASE_QUIZZES.filter(q=>q.workId===w.id);assert.deepEqual(qs.map(q=>q.answer),[true,false]);assert.ok(qs.every(q=>q.question&&q.explanation));}
 });
 test('purchase is rejected until a correct OX answer has been acknowledged',()=>{

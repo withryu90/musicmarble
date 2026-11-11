@@ -6,30 +6,30 @@ import {activityChanges} from '../src/activities.js';
 import {RoomService} from '../server/rooms.js';
 import {botDecision,applyBotDecision} from '../server/bots.js';
 const game=()=>G.createGame({names:['A','B']});
-const arrive=(via=false)=>{const s=game();s.players[0].position=via?17:8;return G.roll(s,1);};
+const arrive=(via=false)=>{const s=game();s.players[0].position=via?20:9;return G.roll(s,1);};
 const backToA=s=>{s=G.nextTurn(s);assert.equal(s.turn,1);s=G.roll(s,1);return G.nextTurn(s);};
 test('prison and go-to-prison preserve board size, arrive with two opportunities and show shared rules',()=>{
- assert.equal(BOARD[9].type,'prison');assert.equal(BOARD[18].type,'go-to-prison');assert.equal(BOARD.length,24);
- for(const via of [false,true]){const s=arrive(via);assert.equal(s.phase,'jailed');assert.equal(s.players[0].position,9);assert.equal(s.players[0].skipTurns,2);assert.equal(s.quizCursor,0);assert.equal(s.eventCursor,0);assert.equal(s.players[0].coins,1200);assert.ok(G.isValidSave(s));const before=game();before.players[0].position=via?17:8;assert.equal(activityChanges(before,s).at(-1).text,PRISON_MESSAGE);}
+ assert.equal(BOARD[10].type,'prison');assert.equal(BOARD[21].type,'go-to-prison');assert.equal(BOARD.length,28);
+ for(const via of [false,true]){const s=arrive(via);assert.equal(s.phase,'jailed');assert.equal(s.players[0].position,10);assert.equal(s.players[0].skipTurns,2);assert.equal(s.quizCursor,0);assert.equal(s.eventCursor,0);assert.equal(s.players[0].coins,1200);assert.ok(G.isValidSave(s));const before=game();before.players[0].position=via?20:9;assert.equal(activityChanges(before,s).at(-1).text,PRISON_MESSAGE);}
 });
 test('first failed escape stays on the tile, spends one chance and does not allow another roll or actions',()=>{
- let s=backToA(arrive());assert.equal(s.turn,0);assert.equal(s.phase,'roll');assert.equal(s.players[0].skipTurns,2);const before=s;s=G.roll(s,5);assert.equal(s.phase,'jailed');assert.equal(s.players[0].position,9);assert.equal(s.players[0].skipTurns,1);assert.equal(s.players[0].coins,1200);assert.equal(s.eventCursor,0);assert.equal(s.leaderLaps,0);assert.ok(G.isValidSave(s));assert.equal(activityChanges(before,s).at(-1).title,'감옥 탈출 실패');assert.throws(()=>G.roll(s,6));assert.throws(()=>G.startQuiz(s));assert.throws(()=>G.startPurchaseQuiz(s));assert.throws(()=>G.buy(s));
+ let s=backToA(arrive());assert.equal(s.turn,0);assert.equal(s.phase,'roll');assert.equal(s.players[0].skipTurns,2);const before=s;s=G.roll(s,5);assert.equal(s.phase,'jailed');assert.equal(s.players[0].position,10);assert.equal(s.players[0].skipTurns,1);assert.equal(s.players[0].coins,1200);assert.equal(s.eventCursor,0);assert.equal(s.leaderLaps,0);assert.ok(G.isValidSave(s));assert.equal(activityChanges(before,s).at(-1).title,'감옥 탈출 실패');assert.throws(()=>G.roll(s,6));assert.throws(()=>G.startQuiz(s));assert.throws(()=>G.startPurchaseQuiz(s));assert.throws(()=>G.buy(s));
 });
 test('two failed attempts release for the next turn without moving on the failed turn',()=>{
- let s=G.roll(backToA(arrive()),1);s=backToA(s);assert.equal(s.players[0].skipTurns,1);s=G.roll(s,4);assert.equal(s.players[0].skipTurns,0);assert.equal(s.players[0].position,9);assert.equal(s.phase,'jailed');assert.ok(G.isValidSave(s));s=backToA(s);s=G.roll(s,1);assert.equal(s.players[0].position,10);assert.equal(s.phase,'action');assert.equal(s.lastPrisonRoll,null);
+ let s=G.roll(backToA(arrive()),1);s=backToA(s);assert.equal(s.players[0].skipTurns,1);s=G.roll(s,4);assert.equal(s.players[0].skipTurns,0);assert.equal(s.players[0].position,10);assert.equal(s.phase,'jailed');assert.ok(G.isValidSave(s));s=backToA(s);s=G.roll(s,1);assert.equal(s.players[0].position,11);assert.equal(s.phase,'action');assert.equal(s.lastPrisonRoll,null);
 });
 test('six escapes immediately on either opportunity and resolves the destination once',()=>{
- for(const second of [false,true]){let s=backToA(arrive(true));if(second)s=backToA(G.roll(s,2));const before=s;s=G.roll(s,6);assert.equal(s.lastPrisonRoll.escaped,true);assert.equal(s.players[0].skipTurns,0);assert.equal(s.players[0].position,15);assert.equal(s.phase,'action');assert.equal(s.eventCursor,1);assert.ok(G.isValidSave(s));assert.deepEqual(activityChanges(before,s).map(n=>n.type),['prison-roll','history-event']);assert.throws(()=>G.roll(s,6));s=G.nextTurn(s);assert.equal(s.lastPrisonRoll,null);}
+ for(const second of [false,true]){let s=backToA(arrive(true));if(second)s=backToA(G.roll(s,2));const before=s;s=G.roll(s,6);assert.equal(s.lastPrisonRoll.escaped,true);assert.equal(s.players[0].skipTurns,0);assert.equal(s.players[0].position,16);assert.equal(s.phase,'action');assert.equal(s.eventCursor,0);assert.ok(G.isValidSave(s));assert.deepEqual(activityChanges(before,s).map(n=>n.type),['prison-roll']);assert.throws(()=>G.roll(s,6));s=G.nextTurn(s);assert.equal(s.lastPrisonRoll,null);}
 });
 test('bots receive the same dice chances and cannot skip the escape roll',()=>{
- let s=backToA(arrive());s.players[0].isBot=true;let d=botDecision(s);assert.equal(d.action,'roll');s=applyBotDecision(s,d,3);assert.equal(s.players[0].position,9);d=botDecision(s);assert.equal(d.action,'nextTurn');s=backToA(s);d=botDecision(s);s=applyBotDecision(s,d,6);assert.equal(s.players[0].position,15);assert.equal(s.players[0].skipTurns,0);
+ let s=backToA(arrive());s.players[0].isBot=true;let d=botDecision(s);assert.equal(d.action,'roll');s=applyBotDecision(s,d,3);assert.equal(s.players[0].position,10);d=botDecision(s);assert.equal(d.action,'nextTurn');s=backToA(s);d=botDecision(s);s=applyBotDecision(s,d,6);assert.equal(s.players[0].position,16);assert.equal(s.players[0].skipTurns,0);
 });
 test('all jailed players retain their own roll turns instead of automatically skipping',()=>{
- let s=game();s.phase='jailed';for(const p of s.players){p.position=9;p.skipTurns=2;}s=G.nextTurn(s);assert.equal(s.turn,1);assert.equal(s.players[1].skipTurns,2);s=G.roll(s,2);s=G.nextTurn(s);assert.equal(s.turn,0);assert.equal(s.players[0].skipTurns,2);assert.equal(s.players[1].skipTurns,1);assert.ok(G.isValidSave(s));
+ let s=game();s.phase='jailed';for(const p of s.players){p.position=10;p.skipTurns=2;}s=G.nextTurn(s);assert.equal(s.turn,1);assert.equal(s.players[1].skipTurns,2);s=G.roll(s,2);s=G.nextTurn(s);assert.equal(s.turn,0);assert.equal(s.players[0].skipTurns,2);assert.equal(s.players[1].skipTurns,1);assert.ok(G.isValidSave(s));
 });
 test('passing either danger tile does not imprison; forced transfer adds no lap, bonus, rent or quiz',()=>{
- for(const position of [8,17]){const s=game();s.players[0].position=position;const next=G.roll(s,2);assert.equal(next.players[0].skipTurns,0);assert.equal(next.lastPrisonTransfer,null);}
- const s=arrive(true);assert.deepEqual(s.lastPrisonTransfer,{from:18,to:9});assert.equal(s.leaderLaps,0);assert.equal(s.players[0].coins,1200);assert.equal(s.lastRent,null);assert.equal(s.quiz,null);assert.equal(G.nextTurn(s).lastPrisonTransfer,null);
+ for(const position of [9,20]){const s=game();s.players[0].position=position;const next=G.roll(s,2);assert.equal(next.players[0].skipTurns,0);assert.equal(next.lastPrisonTransfer,null);}
+ const s=arrive(true);assert.deepEqual(s.lastPrisonTransfer,{from:21,to:10});assert.equal(s.leaderLaps,0);assert.equal(s.players[0].coins,1200);assert.equal(s.lastRent,null);assert.equal(s.quiz,null);assert.equal(G.nextTurn(s).lastPrisonTransfer,null);
 });
 test('legacy saves default to no prison and invalid attempts or locations are rejected',()=>{
  const s=game();for(const p of s.players)delete p.skipTurns;assert.ok(G.isValidSave(s));assert.equal(G.roll(s,1).phase,'action');s.players[0].skipTurns=3;assert.equal(G.isValidSave(s),false);s.players[0].skipTurns=1;assert.equal(G.isValidSave(s),false);assert.throws(()=>G.roll(s,1));

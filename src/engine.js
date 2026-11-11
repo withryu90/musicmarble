@@ -1,14 +1,14 @@
 import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js';
 import {characterById,drawCharacterIds} from './characters.js';
 import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js';
-export const VERSION=1;
+export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
 export const current=s=>s.players[s.turn];
 export const owned=(s,id)=>Number.isInteger(id)&&s.players[id]?WORKS.filter(w=>s.ownership[w.id]?.player===id):[];
 export function collection(s,work,player){
   const all=owned(s,player);
-  if(all.filter(w=>w.era===work.era).length===4)return {name:'시대 컬렉션',multiplier:2};
+  if(all.filter(w=>w.era===work.era).length>=4)return {name:'시대 컬렉션',multiplier:2};
   if(all.filter(w=>w.composer===work.composer).length===2)return {name:`${work.composer} 컬렉션`,multiplier:1.5};
   return {name:'기본 이용료',multiplier:1};
 }
@@ -145,7 +145,7 @@ export function isValidSave(s){
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
     if(s.turnNumber!==undefined&&(!Number.isInteger(s.turnNumber)||s.turnNumber<0))return false;
-    if(!s.players.every((p,i)=>p.id===i&&typeof p.name==='string'&&p.name.length>0&&p.name.length<=16&&p.color===COLORS[i]&&Number.isInteger(p.position)&&p.position>=0&&p.position<24&&Number.isInteger(p.coins)&&p.coins>=0&&Number.isInteger(p.knowledge)&&p.knowledge>=0&&Number.isInteger(p.attempts)&&p.attempts>=p.knowledge))return false;
+    if(!s.players.every((p,i)=>p.id===i&&typeof p.name==='string'&&p.name.length>0&&p.name.length<=16&&p.color===COLORS[i]&&Number.isInteger(p.position)&&p.position>=0&&p.position<BOARD.length&&Number.isInteger(p.coins)&&p.coins>=0&&Number.isInteger(p.knowledge)&&p.knowledge>=0&&Number.isInteger(p.attempts)&&p.attempts>=p.knowledge))return false;
     const characterIds=s.players.map(p=>p.characterId).filter(id=>id!==undefined);
     if(characterIds.length&&(characterIds.length!==s.players.length||new Set(characterIds).size!==characterIds.length||!characterIds.every(characterById)))return false;
     if(!s.ownership||Array.isArray(s.ownership)||!Object.entries(s.ownership).every(([id,o])=>WORKS.some(w=>w.id===id)&&s.players[o.player]&&Number.isInteger(o.player)&&[0,1].includes(o.level)))return false;

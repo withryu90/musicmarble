@@ -10,6 +10,7 @@ import {needsLandscape} from './orientation.js';
 import {createBgm} from './bgm.js';
 import {PeerTransport} from './peer-transport.js';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
+import {canOfferTurnHandoff} from './turn-handoff.js';
 import {CHARACTERS,characterFor,characterById} from './characters.js';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
@@ -63,10 +64,10 @@ function remember(){try{localStorage.setItem(key,JSON.stringify(session));}catch
 let dicePresentation=null;
 const activityInbox=new ActivityInbox();
 let activeActivity=null,deferredSnapshots=[],participantIntroPending=false;
-let autoPurchaseKey=null;
+let autoPurchaseKey=null,lastHandoffKey=null;
 let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
-function resetActivityFlow(){participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
@@ -156,6 +157,13 @@ function continueFlow(){
   else if(['quiz','feedback'].includes(state.phase)&&myTurn())quizModal();
   else if(state.phase==='finished')results();
  }
+ const handoffKey=`${session?.code}:${state.turnNumber}:${state.turn}:${snapshot.revision}`;
+ if(myTurn()&&canOfferTurnHandoff(state,session.playerId)&&!d.open&&lastHandoffKey!==handoffKey){lastHandoffKey=handoffKey;turnHandoffModal();}
+}
+function turnHandoffModal(){
+ const next=state.players[(state.turn+1)%state.players.length],finishing=(state.leaderLaps??0)>=state.maxRounds;
+ showModal(finishing?'여행을 마무리해요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'버튼을 누르면 최종 결과를 확인할 수 있어요.':'이번 차례의 안내를 모두 확인했어요. 버튼을 누르면 다음 참가자가 주사위를 굴릴 수 있어요.'}</p><button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
+ $('#modal').dataset.auto='true';
 }
 function dismissActivity(){activeActivity=null;$('#modal').close();continueFlow();}
 function historyCard(e,actorId){
@@ -382,6 +390,8 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;if(bgmEnabled)await lobbyBgm.play();else lobbyBgm.pause();updateBgmControls();return;}
  if(a==='activity-next'){dismissActivity();return;}
  if(busy)return;
+ if(a==='handoff-next'){busy=true;el.disabled=true;const passed=await apply(G.nextTurn);busy=false;if(!passed)el.disabled=false;return;}
+ if(a==='handoff-quiz'){$('#modal').close();await apply(G.startQuiz);return;}
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();}
  if(a==='home'){tab='board';render();}
  if(a==='tab'){tab=el.dataset.tab;render();}

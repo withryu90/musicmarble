@@ -33,7 +33,8 @@ try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}
 let bgmVolume=.25;
 try{const saved=localStorage.getItem('musicmarble.bgm.volume');if(saved!==null&&Number.isFinite(Number(saved)))bgmVolume=Math.min(1,Math.max(0,Number(saved)));}catch{}
 let bgmEnabled=true;
-try{bgmEnabled=localStorage.getItem('musicmarble.bgm.enabled')!=='false';}catch{}
+// A fresh visit always starts with music enabled, even after a previous mute.
+if(bgmVolume===0)bgmVolume=.25;
 const lobbyBgm=createBgm({volume:bgmVolume,onChange:updateBgmControls});
 function bgmBell(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4M11 2V1h2v1"/><path class="bell-slash" d="M3 3 21 21"/></svg>`;}
 function updateBgmControls(){
@@ -51,6 +52,8 @@ function unlockLobbyMusic(e){
  if(bgmEnabled&&!lobbyBgm.status().playing)startLobbyMusic(true);
 }
 document.addEventListener('pointerdown',unlockLobbyMusic,{capture:true});
+document.addEventListener('touchend',unlockLobbyMusic,{capture:true,passive:true});
+document.addEventListener('click',unlockLobbyMusic,{capture:true});
 document.addEventListener('keydown',e=>{if(!['Shift','Control','Alt','Meta','Escape'].includes(e.key))unlockLobbyMusic(e);},{capture:true});
 const myTurn=()=>connected&&session?.playerId===state.turn;
 async function request(path,body){return peerTransport.request(path,body,session);}
@@ -368,7 +371,7 @@ $('#modal').addEventListener('submit',async e=>{
 
 });
 async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)return;const a=el.dataset.action;if(el.tagName==='A')e.preventDefault();
- if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;try{localStorage.setItem('musicmarble.bgm.enabled',String(bgmEnabled));}catch{}if(bgmEnabled)await lobbyBgm.play();else lobbyBgm.pause();updateBgmControls();return;}
+ if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;if(bgmEnabled)await lobbyBgm.play();else lobbyBgm.pause();updateBgmControls();return;}
  if(a==='activity-next'){dismissActivity();return;}
  if(busy)return;
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();}

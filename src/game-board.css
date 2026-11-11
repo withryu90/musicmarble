@@ -217,10 +217,7 @@
 .is-3d .cell.transfer .landmark{color:#527eae}
 .is-flat .start-portal{position:absolute;left:50%;top:4px;width:42px;height:48px;transform:translateX(-50%);opacity:.2;z-index:0}
 .is-flat .start-portal svg{width:100%;height:100%}.is-flat .cell.start .tile-copy:before{content:'START ↻';grid-row:1;font-size:9px;font-weight:900;color:#946d29}.is-flat .cell.start .landmark{display:none}
-/* Keep the starting row of figures beside the portal, clear of its arch. */
-.is-3d .cell.start .tokens{transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateX(calc(50% + 50cqw)) translateY(-8px) translateZ(26px)}
 .is-flat .cell.start{color:#174e76}.is-flat .cell.start .cell-top{display:none}.is-flat .cell.start .cell-price{color:#315e7c}
-@media(max-width:560px){.is-3d .cell.start .tokens{--character-slot:32px;transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateX(calc(50% + 30cqw)) translateY(-4px) translateZ(20px)}}
 
 /* Blue barred prison tile, with the same bounded title layout as other spaces. */
 .is-3d .cell.prison,.is-flat .cell.prison{background:linear-gradient(135deg,#d5e7fa,#9eb9dd);border-color:#edf6ff}
@@ -287,17 +284,11 @@
 .is-3d .tokens.token-stack,.is-flat .tokens.token-stack{display:grid;grid-template-columns:repeat(2,max-content);grid-auto-flow:row;align-items:end;justify-items:center;column-gap:4px;row-gap:8px}
 @media(max-width:560px){.is-3d .tokens.token-stack,.is-flat .tokens.token-stack{column-gap:2px;row-gap:5px}}
 
-/* Smaller figures, with the starting queue anchored to the clear upper-right
-   triangle of the scene rather than the transformed START tile. */
+/* Compact figures retain the same size at START and along the path. */
 .is-3d .tokens,.is-flat .tokens{--figure-width:34px;--figure-height:38px;--character-slot:44px}
-.start-waiting{position:absolute;left:74%;top:23%;width:max-content;transform:translate(-50%,-50%);z-index:5;pointer-events:none}
-.is-3d .start-waiting .tokens{position:relative;left:auto;top:auto;width:max-content;transform:none;--figure-width:32px;--figure-height:36px;--character-slot:38px;--nickname-space:0px}
-@media(max-width:1100px){.is-3d .tokens,.is-flat .tokens{--figure-width:28px;--figure-height:32px;--character-slot:36px}.is-3d .start-waiting .tokens{--figure-width:27px;--figure-height:31px;--character-slot:33px}}
-@media(max-width:560px){.is-3d .tokens,.is-flat .tokens{--figure-width:17px;--figure-height:20px;--character-slot:23px}.start-waiting{left:75%;top:25%}.is-3d .start-waiting .tokens{--figure-width:17px;--figure-height:20px;--character-slot:23px}}
+@media(max-width:1100px){.is-3d .tokens,.is-flat .tokens{--figure-width:28px;--figure-height:32px;--character-slot:36px}}
+@media(max-width:560px){.is-3d .tokens,.is-flat .tokens{--figure-width:17px;--figure-height:20px;--character-slot:23px}}
 
-/* Keep the entire waiting formation above the board's upper-right diagonal. */
-.start-waiting{top:13%}
-@media(max-width:560px){.start-waiting{top:13%}}
 .room-chat{border:1px solid #c2dceb;border-radius:16px;padding:18px;background:linear-gradient(145deg,#fff,#f0f8ff);box-shadow:0 4px 0 #b3cedb2b;color:#2b5472;min-width:0}
 .room-chat .section-heading{margin-bottom:12px;gap:7px}.room-chat h3{font-size:17px}.room-chat .section-heading>span{font-size:9px;color:#7898ae}.chat-messages{height:220px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:5px 3px 10px;scrollbar-width:thin}.chat-empty{font-size:11px;color:#7a98ab;text-align:center;padding:45px 12px}.chat-message{max-width:94%;align-self:flex-start}.chat-message.mine{align-self:flex-end}.chat-message-meta{display:flex;gap:8px;align-items:baseline;margin:0 3px 4px}.chat-message-meta strong{font-size:10px}.chat-message time{font-size:8px;color:#8ba1b2}.chat-message p{margin:0;padding:9px 11px;border:1px solid #d6e7f3;border-radius:3px 11px 11px;background:#f5faff;font-size:11px;line-height:1.7;white-space:pre-wrap;max-width:100%;overflow-x:auto}.chat-message.mine p{background:#e0f0ff;border-color:#bad8ef;border-radius:11px 3px 11px 11px}.room-chat form{border-top:1px solid #dcebf4;margin-top:10px;padding-top:12px}.room-chat label{font-size:10px;display:block;margin-bottom:6px}.chat-compose{display:flex;gap:6px}.chat-compose input{min-width:0;width:100%;border:1px solid #c2daeb;border-radius:8px;background:white;color:#244f72;padding:11px 9px;font-size:11px}.chat-compose .primary{font-size:11px;padding:10px;white-space:nowrap}.room-chat form>small{display:block;font-size:8px;color:#89a1b3;margin-top:7px}
 @media(max-width:850px){.game-shell aside .room-chat{grid-column:1/-1}.chat-messages{height:180px}}
@@ -377,4 +368,6 @@
 .is-flat .cell.prison .cell-price,.is-flat .cell.go-to-prison .cell-price{font-size:8px;color:#f3f6ff}
 
 /* First appearances and later returns share the actual START tile anchor. */
-.is-3d .cell.start>.tokens{left:50%;top:50%;transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateY(-8px) translateZ(26px)}
+.is-3d .cell.start>.tokens-at-start{left:50%;top:50%;transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateZ(26px)}
+.is-flat .cell.start>.tokens-at-start{position:absolute;left:50%;top:50%;min-height:0;transform:translate(-50%,-50%);z-index:5}
+.tokens-at-start .token-moving .board-character{animation:none}

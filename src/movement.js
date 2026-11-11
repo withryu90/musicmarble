@@ -9,3 +9,9 @@ export function boardTokenVisible(state,player,movingPlayerId=null){
  return player.id===movingPlayerId||player.position!==0||(state.turnNumber??0)>player.id||
   (state.turn===player.id&&state.phase!=='roll'&&state.dice!==null);
 }
+
+// START is an on-tile entrance; other figures stand beside their edge tile.
+export function boardTokenAnchor(row,col,side){
+ if(row===1&&col===1)return {x:50,y:50};
+ return {x:col===1?-60:col===side?160:50,y:row===1?-60:row===side?160:50};
+}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {movementPath,boardTokenVisible} from '../src/movement.js';
+import {movementPath,boardTokenVisible,boardTokenAnchor} from '../src/movement.js';
 test('dice movement visits each intermediate tile in order',()=>{
  for(let start=0;start<28;start++)for(let dice=1;dice<=6;dice++){
   const path=movementPath(start,dice,28);assert.equal(path.length,dice);
@@ -25,4 +25,12 @@ test('tokens appear only as each player starts moving and remain visible on retu
   assert.deepEqual(visible(state,turn),Array.from({length:turn+1},(_,i)=>i));
  }
  assert.deepEqual(visible({...initial,turnNumber:4,dice:3}),[0,1,2,3]);
+});
+
+test('START uses the centre of its own tile rather than the outer left-edge anchor',()=>{
+ assert.deepEqual(boardTokenAnchor(1,1,8),{x:50,y:50});
+ assert.deepEqual(boardTokenAnchor(1,2,8),{x:50,y:-60});
+ assert.deepEqual(boardTokenAnchor(2,1,8),{x:-60,y:50});
+ assert.deepEqual(boardTokenAnchor(2,8,8),{x:160,y:50});
+ assert.deepEqual(boardTokenAnchor(8,2,8),{x:50,y:160});
 });

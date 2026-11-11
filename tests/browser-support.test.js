@@ -10,7 +10,7 @@ function boot({ie=false,dialog=true,clone=true}={}){
  vm.runInNewContext(source,{document,window});
  return {app,address,scripts};
 }
-test('supported browsers load the game module once',()=>{const {app,scripts}=boot();assert.equal(app.innerHTML,'');assert.equal(scripts.length,1);assert.equal(scripts[0].type,'module');assert.equal(scripts[0].src,'./src/app.js');});
+test('supported browsers load the game module once',()=>{const {app,scripts}=boot();assert.equal(app.innerHTML,'');assert.equal(scripts.length,1);assert.equal(scripts[0].type,'module');assert.equal(scripts[0].src,'./src/app.js?v=gate-entry-2');});
 test('IE and old Safari get a readable address without attempting the game module',()=>{
  for(const options of [{ie:true},{dialog:false},{clone:false}]){
   const {app,address,scripts}=boot(options);assert.equal(scripts.length,0);assert.match(app.innerHTML,/Microsoft Edge/);assert.match(app.innerHTML,/Safari/);assert.equal(address.value,'http://192.168.0.10:5190/');

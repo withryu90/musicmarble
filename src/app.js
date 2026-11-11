@@ -3,7 +3,7 @@ import * as G from './engine.js';
 import {ActivityInbox} from './activities.js';
 import {purchaseQuizById} from './purchase-quizzes.js';
 import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
-import {movementPath,boardTokenVisible} from './movement.js';
+import {movementPath,boardTokenVisible,boardTokenAnchor} from './movement.js?v=gate-entry-2';
 import {diceCube} from './dice.js';
 import {CHARACTER_BIOS} from './character-bios.js';
 import {needsLandscape} from './orientation.js';
@@ -109,14 +109,14 @@ function animateBoardMovement(p){
  if(!path.length){p.timer=setTimeout(()=>{const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);stopDicePresentation();commitSnapshot(result);pending.forEach(receive);},850);return;}
  function advance(){
   state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);render();
-  if(pathIndex<path.length)p.timer=setTimeout(advance,650);
+  if(pathIndex<path.length)p.timer=setTimeout(advance,900);
   else p.timer=setTimeout(()=>{
    const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
    stopDicePresentation();commitSnapshot(result);pending.forEach(receive);
 
   },850);
  }
- p.timer=setTimeout(advance,650);
+ p.timer=setTimeout(advance,900);
 }
 function receive(next){
  if(participantIntroPending&&snapshot?.state){if(next.revision>snapshot.revision&&!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);return;}
@@ -247,7 +247,7 @@ async function redrawCharacter(){
  try{const next=await request('action',{code:session.code,action:'rerollCharacter',args:[],revision:snapshot.revision});receive(next);if(next.state)characterModal(state.players[session.playerId],true);else notify(`새 캐릭터: ${characterFor(next.members[session.playerId]).name}`);}catch(error){notify(error.message);}
 }
 function tokenVisible(player){return boardTokenVisible(state,player,dicePresentation?.moving?dicePresentation.playerId:null);}
-function tokens(index){const occupants=state.players.filter(p=>p.position===index&&tokenVisible(p));const [row,col]=coordinates(index);const x=col===1?-60:col===BOARD_SIDE?160:50,y=row===1?-60:row===BOARD_SIDE?160:50;return `<div class="tokens ${occupants.length>=3?'token-stack':''}" style="--token-x:${x}%;--token-y:${y}%">${occupants.map(p=>`<span class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${p.color}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터">${characterSprite(p,'board-character')}<span class="character-ground"></span></span>`).join('')}</div>`;}
+function tokens(index){const occupants=state.players.filter(p=>p.position===index&&tokenVisible(p));const [row,col]=coordinates(index);const {x,y}=boardTokenAnchor(row,col,BOARD_SIDE);return `<div class="tokens ${index===0?'tokens-at-start':''} ${occupants.length>=3?'token-stack':''}" style="--token-x:${x}%;--token-y:${y}%">${occupants.map(p=>`<span class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${p.color}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터">${characterSprite(p,'board-character')}<span class="character-ground"></span></span>`).join('')}</div>`;}
 const coordinates=boardCoordinates;
 function startPortal(){return `<span class="start-portal" aria-hidden="true"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gate-gold"><stop stop-color="#f6e0a0"/><stop offset=".5" stop-color="#be9047"/><stop offset="1" stop-color="#ffe7a0"/></linearGradient><linearGradient id="gate-light" x2="0" y2="1"><stop stop-color="#bceeff" stop-opacity=".9"/><stop offset="1" stop-color="#398bc0" stop-opacity=".1"/></linearGradient></defs><path d="M22 105V48a28 28 0 0 1 56 0v57" fill="url(#gate-light)" stroke="#286b98" stroke-width="12"/><path d="M20 106V46a30 30 0 0 1 60 0v60" fill="none" stroke="url(#gate-gold)" stroke-width="6"/><path d="M28 102V48a22 22 0 0 1 44 0v54" fill="none" stroke="#f8e4a4" stroke-width="2"/><path d="M13 54h17v50H13zM70 54h17v50H70z" fill="#397ba3" stroke="#ebcc82" stroke-width="2"/><path d="M10 101h24v9H10zM66 101h24v9H66zM10 48h24v8H10zM66 48h24v8H66z" fill="url(#gate-gold)" stroke="#87643d"/><path d="M6 110h88v7H6z" fill="#f1d58f" stroke="#957640"/><path d="M37 18h26l-3-11H40z" fill="url(#gate-gold)" stroke="#96733f"/><path d="M53 29v28c-12-5-16 12-6 12 5 0 10-3 10-8V38l10-3V25z" fill="#f3db95" stroke="#a17b3e" stroke-width="1"/></svg></span>`;}
 function landmark(type){

@@ -175,3 +175,12 @@ body.portrait-game{overflow:hidden}
  .game-shell .site-header{gap:5px}
  .game-shell .site-header nav button{font-size:10px;padding:6px}
 }
+
+/* Quiet, compact sound switch beside Help; the slash denotes the saved mute choice. */
+.lobby-header-actions{display:flex;align-items:center;gap:10px}
+.lobby-header-actions .icon-button{display:grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;color:#2c6f9e;background:#edf8ffb8;border:1px solid #bfdcec;border-radius:50%}
+.bgm-bell svg{display:block;width:23px;height:23px}
+.bgm-bell .bell-slash{display:none;stroke:#2c6f9e;stroke-width:2.4;filter:drop-shadow(0 1px 0 #edf8ff)}
+.bgm-bell.is-muted .bell-slash{display:block}
+.bgm-bell.is-muted{color:#6c8ba2}
+@media(max-width:380px){.lobby-header-actions{gap:6px}.lobby-header-actions .icon-button{width:44px;height:44px}}

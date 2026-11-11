@@ -1,0 +1,12 @@
+Music Marble — Eine kleine Nachtmusik chiptune arrangement
+Composition: Wolfgang Amadeus Mozart, Eine kleine Nachtmusik, K.525, I. Allegro (1787).
+Score/MIDI source: Mutopia Project, Mutopia-2007/01/01-900.
+https://www.ibiblio.org/mutopia/cgibin/piece-info.cgi?id=900
+https://www.ibiblio.org/mutopia/ftp/MozartWA/KV525/eine-kleine-nachtmusik-mvt1/eine-kleine-nachtmusik-mvt1.mid
+Mutopia lists the source score as Public Domain.
+
+Performance: newly synthesized for Music Marble using scripts/render-chiptune.py.
+Pulse-wave melody and harmony, triangle accompaniment and bass, seeded noise percussion.
+Tempo: source timing accelerated by a factor of 1.12; bass shifted down one octave.
+Encoding: stereo AAC, from 32 kHz PCM synthesis.
+No orchestra recording, third-party performance samples, or soundfont is used.

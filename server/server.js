@@ -1,4 +1,5 @@
 import {createServer} from 'node:http';
+import {createReadStream} from 'node:fs';
 import {readFile,stat} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -42,8 +43,22 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
      const pathName=decodeURIComponent(url.pathname),path=resolve(root,`.${pathName==='/'?'/index.html':pathName}`);
      const rel=path.slice(root.length+1);
      if(!path.startsWith(root+sep)||!(rel==='index.html'||rel.startsWith('src'+sep)))throw Error('Not found');
-     if(!(await stat(path)).isFile())throw Error('Not found');
-     const content=await readFile(path);res.writeHead(200,{'Content-Type':{'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg'}[extname(path)]||'application/octet-stream','Cache-Control':'no-cache'});res.end(req.method==='HEAD'?undefined:content);
+     const file=await stat(path);if(!file.isFile())throw Error('Not found');
+     const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg','.txt':'text/plain; charset=utf-8'}[extname(path)]||'application/octet-stream';
+     const headers={'Content-Type':mime,'Cache-Control':'no-cache','Content-Length':file.size};
+     if(mime.startsWith('audio/')){
+       headers['Accept-Ranges']='bytes';
+       if(req.method==='GET'&&req.headers.range){
+         const range=/^bytes=(\d*)-(\d*)$/.exec(req.headers.range);
+         let start=range?.[1]?Number(range[1]):0,end=range?.[2]?Number(range[2]):file.size-1;
+         if(range&&!range[1]&&range[2]){start=Math.max(0,file.size-Number(range[2]));end=file.size-1;}
+         if(!range||(!range[1]&&!range[2])||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>end||start>=file.size){res.writeHead(416,{'Content-Range':`bytes */${file.size}`});return res.end();}
+         end=Math.min(end,file.size-1);res.writeHead(206,{...headers,'Content-Length':end-start+1,'Content-Range':`bytes ${start}-${end}/${file.size}`});return createReadStream(path,{start,end}).on('error',()=>res.destroy()).pipe(res);
+       }
+     }
+     res.writeHead(200,headers);if(req.method==='HEAD')return res.end();
+     if(mime.startsWith('audio/'))return createReadStream(path).on('error',()=>res.destroy()).pipe(res);
+     res.end(await readFile(path));
    }catch(error){if(url.pathname.startsWith('/api/'))json(400,{error:error.message});else{res.writeHead(404);res.end('Not found');}}
  });
  const timer=setInterval(()=>service.cleanup(),60000);timer.unref();server.on('close',()=>{clearInterval(timer);service.close();});return server;

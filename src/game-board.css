@@ -356,8 +356,8 @@
 .board-area .cell.work.owned{background:linear-gradient(to var(--owner-inward),var(--owner) 0%,var(--owner) 50%,transparent 50%,transparent 100%),var(--tile-surface,linear-gradient(#fffefa,#fffefa))}
 .board-area .cell.work.owned .ownership-dot{display:none}
 /* The player colour itself is the HUD background, with dark readable details. */
-.board-player,.board-player.active{background:var(--player-color);border-color:#ffffffb3;color:#07111a}
-.board-player-character,.board-player-coins>span,.board-player-coins b,.board-player-assets,.board-player-assets b,.board-player-prison{color:#07111a}
+.board-player,.board-player.active{background:var(--player-color);border-color:#ffffffb3;color:var(--player-ink,#07111a)}
+.board-player-character,.board-player-coins>span,.board-player-coins b,.board-player-assets,.board-player-assets b,.board-player-prison{color:var(--player-ink,#07111a)}
 .board-player.active{outline:3px solid #ffe6a1;outline-offset:2px;box-shadow:0 5px 0 #253f5c33,0 9px 22px #20486f22}
 .board-player .bot-badge,.board-player .seat-badge{background:#ffffffdf;color:#173d59}
 .is-3d .cell.start .tile-copy{grid-template-rows:20cqw 24cqw 10cqw}

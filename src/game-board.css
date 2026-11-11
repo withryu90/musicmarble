@@ -319,9 +319,9 @@
 .game-shell .scene-decoration{display:none}
 @media(max-width:650px){.game-shell{background-size:auto,auto 100dvh;background-position:center top,center center}}
 
-/* Standalone teacher art uses a close portrait in badges and its full figure as a token. */
+/* Match the teacher to the portrait framing of the composer characters. */
 .character-single .character-sprite{background-size:180% auto;background-position:50% 0;transform:none}
-.character-single.character-large .character-sprite,.character-single.board-character .character-sprite{background-size:contain;background-position:center bottom;transform:none}
+.character-single.character-large .character-sprite,.character-single.board-character .character-sprite{background-size:auto 210%;background-position:center top;transform:none}
 
 /* Copyright assignment has a distinct red tile in both board views. */
 .is-3d .cell.transfer,.is-flat .cell.transfer{background:linear-gradient(135deg,#ffd8d3,#e77d79);border-color:#fff0ec;box-shadow:inset 0 2px 0 #ffe6df,0 4px 0 #b35457,0 7px 0 #743d48}

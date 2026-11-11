@@ -160,3 +160,16 @@ node server/server.js --dist
 
 보드판은 8×8 격자의 테두리 28칸(명곡 20칸 + 특수 8칸)입니다. 각 변에 8칸이 보이고 모서리는 공유합니다. 헨델 「수상 음악」, 하이든 「놀람 교향곡」, 브람스 「헝가리 무곡 제5번」, 라벨 「볼레로」와 작품별 구입 OX 8문항을 추가했습니다.
 새 작품 학습 자료: https://www.laphil.com/works/water-music-suite-no-3-in-g , https://www.laphil.com/works/symphony-no-94-surprise , https://www.laphil.com/works/three-hungarian-dances-no-1-in-g-minor-no-6-in-d-major-no-5-in-g-minor , https://www.laphil.com/works/bolero
+
+## 브라우저와 모바일
+
+- Safari/iOS Safari 15.4 이상, 최신 Chrome·Edge에서 이용합니다. 컨테이너 쿼리를 지원하지 않는 브라우저에서는 평면 보드로 시작합니다.
+- 모바일 평면 보드는 작품 글자를 읽을 수 있도록 가로로 스크롤합니다. 입체 보기로 바꿀 수도 있습니다. 팝업은 화면 높이 안에서 스크롤하며 입력창은 iOS 자동 확대를 피하도록 조정했습니다.
+- Internet Explorer 및 Edge IE 모드에서는 게임을 지원하지 않으며, 브라우저 변경 안내와 복사할 게임 주소를 보여 줍니다.
+- 휴대폰에서 `127.0.0.1`은 그 휴대폰 자신을 가리킵니다. 같은 Wi-Fi에서 서버 컴퓨터의 LAN IP와 포트(예: `http://192.168.0.10:5190`)로 접속합니다.
+
+### 휴대폰 가로 플레이
+
+게임 참가·캐릭터 선택은 세로로도 할 수 있으며, 보드로 들어가면 휴대폰을 가로로 돌리라는 안내가 나옵니다. 가로 회전 시 안내가 사라지고 보드 옆에 주사위·차례 조작부가 배치됩니다. iOS Safari에서도 사용할 수 있도록 전체 화면/화면 방향 잠금 API에 의존하지 않습니다. 기기의 화면 회전 잠금은 사용자가 해제해야 합니다.
+
+검증 범위: 로컬 인앱 브라우저의 모바일·태블릿·PC 크기 및 Node 테스트. Safari·Chrome·Edge·Firefox의 실제 기기별 실행을 모두 검증한 것은 아닙니다.

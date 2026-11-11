@@ -85,3 +85,16 @@ dialog#modal::backdrop{background:#164d7959}
 .purchase-ox-options button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 10px;background:linear-gradient(150deg,#f6fbff,#e4f2ff);border:2px solid #bedbec;border-radius:14px;color:#246c9c}
 .purchase-ox-options button strong{font:800 48px/1.1 system-ui,sans-serif}.purchase-ox-options button span{font-size:12px}.purchase-ox-options button.correct{background:#d8eeff;border-color:#2189c5;color:#115d90}.purchase-ox-options button.incorrect{background:#edf2f8;border-style:dashed;border-color:#859bb4;color:#62768c}.purchase-ox-options button:disabled{opacity:1}
 .purchase-pass-note{margin:10px 0;padding:10px;border-radius:8px;background:#e2f3ff;color:#2b7fac;font-size:10px;font-weight:700;text-align:center}
+
+/* Both the portrait and the name open an accessible character biography. */
+.character-gallery>button{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-width:0;padding:10px 5px;border:1px solid #d6e8f5;border-radius:12px;background:#f2f8fe;text-align:center}
+.character-gallery>button:hover{background:#e0effd;border-color:#89b8d8}
+.character-gallery>button .character-avatar{flex-shrink:0}
+.character-gallery>button strong{font-size:11px;line-height:1.6;color:#295b80}
+.character-bio-modal .character-bio-portrait{padding-bottom:15px}
+.character-bio-modal .character-large{width:155px;height:155px}
+#modal .character-lifespan{font-size:12px;color:#7892a7;margin-top:6px;line-height:1.5}
+.character-achievement{padding:18px;border:1px solid #cee2f2;border-radius:12px;background:#f4faff;margin-bottom:22px}
+#modal .character-achievement h3{font-size:14px;margin:0 0 10px}
+#modal .character-achievement p{font-size:14px;line-height:1.9;margin:0}
+@media(max-width:560px){.character-gallery{gap:10px 7px}.character-gallery>button{padding:9px 4px}.character-gallery>button .character-avatar{width:68px;height:68px}.character-gallery>button strong{font-size:10px}}

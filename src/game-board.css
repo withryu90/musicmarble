@@ -349,3 +349,28 @@
 .participant-self{display:inline-block;font-size:11px;border-radius:20px;padding:3px 10px;color:#fff;background:#2e7db2;margin-top:8px}
 .participant-intro-note{font-size:12px;margin-bottom:20px}
 @media(max-width:600px){.participant-intro-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.participant-intro-card{padding:12px 8px}.participant-intro-card .character-large{width:95px;height:95px;margin:10px 0}.participant-nickname{font-size:15px}}
+
+/* Large upright labels stay inside the diamond; ownership fills its outer half. */
+.is-3d .cell .tile-copy,.is-3d .cell:not(.work) .tile-copy{width:78cqw;height:56cqw;grid-template-rows:10cqw 34cqw 10cqw;row-gap:1cqw}
+.is-3d .cell strong,.is-3d .cell:not(.work) strong{font-size:15cqw;color:#102e48;letter-spacing:-.025em;line-height:1.12}
+.is-3d .cell strong.long-title{font-size:12.5cqw}
+.is-3d .cell .cell-top,.is-3d .cell .cell-price,.is-3d .cell:not(.work) .cell-price{font-size:9cqw;font-weight:800;color:#193c57}
+.is-3d .cell .tile-copy,.is-flat .cell .tile-copy{position:relative;z-index:1}
+.is-3d .cell .tile-copy{position:absolute}
+.is-3d .cell.work strong,.is-flat .cell.work strong{-webkit-text-stroke:1.4px #fffffff2;paint-order:stroke fill;text-shadow:0 1px 0 #fff}
+.is-3d .cell.work .cell-top,.is-3d .cell.work .cell-price,.is-flat .cell.work .cell-top,.is-flat .cell.work .cell-price{text-shadow:0 0 2px #fff,0 0 3px #fff,0 1px 1px #fff}
+.is-flat .cell .tile-copy strong{font-size:14px;color:#102e48}
+.is-flat .cell .cell-top,.is-flat .cell .cell-price{font-size:10px;color:#193c57;font-weight:800}
+.board-area .cell.work.owned{background:linear-gradient(to var(--owner-inward),var(--owner) 0%,var(--owner) 50%,#f3f8fc 50%,#f3f8fc 100%)}
+.board-area .cell.work.owned .ownership-dot{display:none}
+/* The player colour itself is the HUD background, with dark readable details. */
+.board-player,.board-player.active{background:var(--player-color);border-color:#ffffffb3;color:#07111a}
+.board-player-character,.board-player-coins>span,.board-player-coins b,.board-player-assets,.board-player-assets b,.board-player-prison{color:#07111a}
+.board-player.active{outline:3px solid #ffe6a1;outline-offset:2px;box-shadow:0 5px 0 #253f5c33,0 9px 22px #20486f22}
+.board-player .bot-badge,.board-player .seat-badge{background:#ffffffdf;color:#173d59}
+.is-3d .cell.start .tile-copy{grid-template-rows:20cqw 24cqw 10cqw}
+.is-3d .cell.prison .tile-copy,.is-3d .cell.go-to-prison .tile-copy{grid-template-rows:17cqw 28cqw 7cqw}
+.is-3d .cell.prison strong,.is-3d .cell.go-to-prison strong{font-size:12cqw;color:#fff1a1}
+.is-3d .cell.prison .cell-price,.is-3d .cell.go-to-prison .cell-price{font-size:6.5cqw;color:#f3f6ff}
+.is-flat .cell.prison strong,.is-flat .cell.go-to-prison strong{color:#fff1a1}
+.is-flat .cell.prison .cell-price,.is-flat .cell.go-to-prison .cell-price{font-size:8px;color:#f3f6ff}

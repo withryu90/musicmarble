@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {BOARD_SIDE,BOARD_SPACES,boardCoordinates} from '../src/board-layout.js';
+import {BOARD_SIDE,BOARD_SPACES,boardCoordinates,ownershipDirection} from '../src/board-layout.js';
 import {BOARD,WORKS} from '../src/data.js';
 import {PURCHASE_QUIZZES} from '../src/purchase-quizzes.js';
 import * as G from '../src/engine.js';
@@ -15,4 +15,10 @@ test('all four era edges have five works and new works have valid purchase quizz
 });
 test('owning a fifth work retains the four-work era collection bonus',()=>{
  const s=G.createGame({names:['A','B']}),works=WORKS.filter(w=>w.era==='baroque');for(const w of works)s.ownership[w.id]={player:0,level:0};assert.equal(G.collection(s,works[0],0).multiplier,2);assert.ok(G.isValidSave(s));s.players[0].position=27;assert.ok(G.isValidSave(s));s.players[0].position=28;assert.equal(G.isValidSave(s),false);
+});
+
+test('ownership colour fills the outward half on all four board edges',()=>{
+ for(const [indices,direction] of [[[1,3,6],'bottom'],[[8,10,13],'left'],[[15,17,20],'top'],[[22,24,27],'right']])
+  for(const index of indices)assert.equal(ownershipDirection(index),direction);
+ assert.throws(()=>ownershipDirection(28));
 });

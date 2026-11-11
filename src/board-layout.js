@@ -9,3 +9,9 @@ export function boardCoordinates(index){
  if(index<=edge*3)return [BOARD_SIDE,edge*3+1-index];
  return [BOARD_SPACES+1-index,1];
 }
+
+// A gradient travels inward, leaving its first half on the outside edge.
+export function ownershipDirection(index){
+ const [row,col]=boardCoordinates(index);
+ return row===1?'bottom':col===BOARD_SIDE?'left':row===BOARD_SIDE?'top':'right';
+}

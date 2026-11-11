@@ -185,8 +185,8 @@ body.portrait-game{overflow:hidden}
 .bgm-bell.is-muted{color:#6c8ba2}
 @media(max-width:380px){.lobby-header-actions{gap:6px}.lobby-header-actions .icon-button{width:44px;height:44px}}
 
-/* Compact dialogs for phone widths and short landscape viewports. */
-@media(max-width:650px),(max-height:500px) and (orientation:landscape){
+/* Compact dialogs on all touch devices, plus narrow and short browser windows. */
+@media(max-width:650px),(max-height:500px) and (orientation:landscape),(any-pointer:coarse){
  #modal,#modal.entrance-help,#modal.activity-modal,#modal.event-card-modal,#modal.character-bio-modal{width:min(480px,calc(100vw - 24px));max-width:calc(100vw - 24px);padding:14px 16px;border-radius:16px;font-size:12px}
  #modal>h2,#modal.participant-intro-modal>h2{font-size:18px;line-height:1.45;margin:0 0 12px;letter-spacing:-.3px}
  #modal .modal-header{margin-bottom:6px;padding:0}
@@ -195,6 +195,7 @@ body.portrait-game{overflow:hidden}
  #modal .notice,#modal .quiz-explanation,#modal .discussion,#modal .purchase-quiz-rule{padding:10px 12px;font-size:11px;line-height:1.7;margin-top:10px}
  #modal button{font-size:12px;line-height:1.5}
  #modal .primary,#modal .secondary{min-height:44px;padding:10px 12px}
+ #modal input,#modal select,#modal textarea{font-size:16px}
  #modal .quiz-question{font-size:16px;line-height:1.65;margin:12px 0}
  #modal .quiz-options{gap:7px}
  #modal .quiz-options button{padding:9px 10px;min-height:44px;font-size:12px;line-height:1.6}

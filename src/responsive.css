@@ -258,3 +258,6 @@ body.portrait-game{overflow:hidden}
  .dice-stage .rolling-die{margin:7px auto}
  .dice-stage .dice-result{font-size:23px}
 }
+
+.fullscreen-button{font-size:23px;line-height:1;min-width:44px;min-height:44px}.fullscreen-button[aria-pressed="true"]{background:#d9edff;color:#155e93}#modal .fullscreen-instructions{font-size:12px;line-height:1.8}#modal .fullscreen-instructions ol{padding-left:22px;margin:16px 0}#modal .fullscreen-instructions li{margin:9px 0;line-height:1.8}
+@media(display-mode:standalone),(display-mode:fullscreen){body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}

@@ -44,7 +44,7 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
      const rel=path.slice(root.length+1);
      if(!path.startsWith(root+sep)||!(rel==='index.html'||rel.startsWith('src'+sep)))throw Error('Not found');
      const file=await stat(path);if(!file.isFile())throw Error('Not found');
-     const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg','.txt':'text/plain; charset=utf-8'}[extname(path)]||'application/octet-stream';
+     const mime={'.html':'text/html; charset=utf-8','.webmanifest':'application/manifest+json','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg','.txt':'text/plain; charset=utf-8'}[extname(path)]||'application/octet-stream';
      const headers={'Content-Type':mime,'Cache-Control':'no-cache','Content-Length':file.size};
      if(mime.startsWith('audio/')){
        headers['Accept-Ranges']='bytes';

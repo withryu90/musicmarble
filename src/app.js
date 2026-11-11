@@ -308,7 +308,7 @@ function chatPanel(){return `<section class="room-chat" aria-labelledby="chat-ti
 function acceptChat(payload){if(payload.code!==session?.code||!Array.isArray(payload.messages))return;if((payload.messages.at(-1)?.id??0)<(chatMessages.at(-1)?.id??0))return;chatMessages=payload.messages;const log=$('#chat-messages');if(log){const atBottom=log.scrollHeight-log.scrollTop-log.clientHeight<45;log.innerHTML=chatRows();if(atBottom)log.scrollTop=log.scrollHeight;}}
 async function sendChat(){if(chatSending||!chatDraft.trim())return;const sent=chatDraft;chatSending=true;const button=$('#chat-form button');if(button)button.disabled=true;try{const payload=await request('chat',{code:session.code,message:sent});acceptChat(payload);if(chatDraft===sent){chatDraft='';if($('#chat-input'))$('#chat-input').value='';}}catch(error){notify(error.message);}finally{chatSending=false;if($('#chat-form button'))$('#chat-form button').disabled=!connected;}}
 function syncGameOrientation(){
- document.body.classList.toggle('portrait-game',needsLandscape(window.innerWidth,window.innerHeight,Boolean(snapshot?.state&&!participantIntroPending)));
+ document.body.classList.toggle('portrait-game',needsLandscape(window.innerWidth,window.innerHeight,Boolean(snapshot?.state&&!participantIntroPending),navigator.maxTouchPoints>0||matchMedia('(any-pointer:coarse)').matches));
 }
 window.addEventListener('resize',syncGameOrientation);
 function render(){

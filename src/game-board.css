@@ -374,3 +374,6 @@
 .is-3d .cell.prison .cell-price,.is-3d .cell.go-to-prison .cell-price{font-size:6.5cqw;color:#f3f6ff}
 .is-flat .cell.prison strong,.is-flat .cell.go-to-prison strong{color:#fff1a1}
 .is-flat .cell.prison .cell-price,.is-flat .cell.go-to-prison .cell-price{font-size:8px;color:#f3f6ff}
+
+/* First appearances and later returns share the actual START tile anchor. */
+.is-3d .cell.start>.tokens{left:50%;top:50%;transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateY(-8px) translateZ(26px)}

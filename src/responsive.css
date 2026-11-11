@@ -184,3 +184,76 @@ body.portrait-game{overflow:hidden}
 .bgm-bell.is-muted .bell-slash{display:block}
 .bgm-bell.is-muted{color:#6c8ba2}
 @media(max-width:380px){.lobby-header-actions{gap:6px}.lobby-header-actions .icon-button{width:44px;height:44px}}
+
+/* Compact dialogs for phone widths and short landscape viewports. */
+@media(max-width:650px),(max-height:500px) and (orientation:landscape){
+ #modal,#modal.entrance-help,#modal.activity-modal,#modal.event-card-modal,#modal.character-bio-modal{width:min(480px,calc(100vw - 24px));max-width:calc(100vw - 24px);padding:14px 16px;border-radius:16px;font-size:12px}
+ #modal>h2,#modal.participant-intro-modal>h2{font-size:18px;line-height:1.45;margin:0 0 12px;letter-spacing:-.3px}
+ #modal .modal-header{margin-bottom:6px;padding:0}
+ #modal .modal-header .eyebrow{font-size:8px;letter-spacing:1.2px}
+ #modal p,#modal .guide li,#modal .guide p{font-size:12px;line-height:1.7}
+ #modal .notice,#modal .quiz-explanation,#modal .discussion,#modal .purchase-quiz-rule{padding:10px 12px;font-size:11px;line-height:1.7;margin-top:10px}
+ #modal button{font-size:12px;line-height:1.5}
+ #modal .primary,#modal .secondary{min-height:44px;padding:10px 12px}
+ #modal .quiz-question{font-size:16px;line-height:1.65;margin:12px 0}
+ #modal .quiz-options{gap:7px}
+ #modal .quiz-options button{padding:9px 10px;min-height:44px;font-size:12px;line-height:1.6}
+ #modal .purchase-ox-options{gap:10px;margin:12px 0}
+ #modal .purchase-ox-options button{padding:10px;gap:3px}
+ #modal .purchase-ox-options button strong{font-size:32px}
+ #modal .purchase-ox-options button span{font-size:11px}
+ #modal .character-reveal{padding:4px 0 12px}
+ #modal .character-reveal .character-large{width:110px;height:110px}
+ #modal .character-reveal h3{font-size:20px;margin:7px 0 4px}
+ #modal .character-achievement{padding:12px}
+ #modal .character-achievement p,#modal .character-achievement h3{font-size:12px;line-height:1.75}
+ #modal .character-lifespan{font-size:11px}
+ #modal .activity-hero{padding:5px 0;gap:8px;font-size:13px}
+ #modal .activity-symbol{width:34px;height:34px;font-size:23px;border-radius:10px}
+ #modal .activity-description{font-size:12px;line-height:1.75;margin:9px 0 12px}
+ #modal .activity-ledger>div{padding:9px 10px}
+ #modal .activity-ledger strong{font-size:17px}
+ #modal .activity-ledger b{font-size:11px}
+ #modal .activity-footer{margin-top:12px}
+ #modal .activity-footer>small{margin-bottom:7px;font-size:8px}
+ #modal .collectible-card{width:min(238px,calc(100% - 16px));padding:9px;margin:10px auto 12px}
+ #modal .card-art{height:112px}
+ #modal .card-art-symbol{font-size:68px}
+ #modal .card-ribbon h3{font-size:14px;line-height:1.4}
+ #modal .card-description{min-height:105px;padding:18px 10px 10px}
+ #modal .card-description p{font-size:11px;line-height:1.65}
+ #modal .card-effect{font-size:15px;margin-top:8px;padding:4px 8px}
+ #modal .card-value{width:68px;height:65px;padding:9px 6px 12px}
+ #modal .card-value strong{font-size:21px}
+ #modal .participant-intro-description{font-size:11px;line-height:1.6}
+ #modal .participant-intro-list{gap:8px;margin:12px 0}
+ #modal .participant-intro-card{padding:10px 6px;border-radius:12px}
+ #modal .participant-intro-card .character-large{width:68px;height:68px;margin:6px 0}
+ #modal .participant-order{font-size:11px}
+ #modal .participant-nickname{font-size:12px}
+ #modal .participant-character{font-size:10px;margin-top:4px}
+ #modal .participant-self{font-size:9px;padding:2px 7px;margin-top:4px}
+ #modal .participant-intro-note{font-size:10px;line-height:1.6;margin-bottom:12px}
+ .dice-stage{width:min(280px,calc(100vw - 32px));padding:18px 16px;border-radius:18px}
+ .dice-stage h2{font-size:16px;line-height:1.5}
+ .dice-stage .eyebrow{font-size:8px}
+ .dice-stage .rolling-die{margin:12px auto}
+ .rolling-die .dice-cube.red-dice{width:82px;height:82px}
+ .dice-stage .dice-result{font-size:25px;line-height:1.4}
+ .dice-stage p{font-size:11px;line-height:1.7}
+}
+@media(max-height:450px) and (min-width:601px) and (orientation:landscape){
+ #modal.participant-intro-modal{width:min(660px,calc(100vw - 24px));padding:10px 14px}
+ #modal .participant-intro-list{grid-template-columns:repeat(4,minmax(0,1fr));margin:8px 0}
+ #modal .participant-intro-card{padding:6px 5px}
+ #modal .participant-intro-card .character-large{width:58px;height:58px;margin:3px 0}
+ #modal .participant-intro-note{margin-bottom:8px;font-size:9px}
+ #modal .character-reveal .character-large{width:76px;height:76px}
+ #modal .character-reveal{padding:0 0 8px}
+ #modal .character-achievement{padding:10px}
+ #modal .card-art{height:85px}
+ .dice-stage{padding:12px 14px}
+ .rolling-die .dice-cube.red-dice{width:70px;height:70px}
+ .dice-stage .rolling-die{margin:7px auto}
+ .dice-stage .dice-result{font-size:23px}
+}

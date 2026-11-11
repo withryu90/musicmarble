@@ -371,3 +371,6 @@
 .is-3d .cell.start>.tokens-at-start{left:50%;top:50%;transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateZ(26px)}
 .is-flat .cell.start>.tokens-at-start{position:absolute;left:50%;top:50%;min-height:0;transform:translate(-50%,-50%);z-index:5}
 .tokens-at-start .token-moving .board-character{animation:none}
+
+/* Native bust art already matches the portrait frame; do not crop it like full-body art. */
+.character-single.character-bust .character-sprite{background-size:100% 100%;background-position:center;transform:none}

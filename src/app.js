@@ -1,17 +1,17 @@
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js';
-import * as G from './engine.js';
+import * as G from './engine.js?v=teacher-lee-1';
 import {ActivityInbox} from './activities.js';
 import {purchaseQuizById} from './purchase-quizzes.js';
 import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
 import {movementPath,boardTokenVisible,boardTokenAnchor} from './movement.js?v=gate-entry-2';
 import {diceCube} from './dice.js';
-import {CHARACTER_BIOS} from './character-bios.js';
+import {CHARACTER_BIOS} from './character-bios.js?v=teacher-lee-1';
 import {needsLandscape} from './orientation.js';
 import {createBgm} from './bgm.js';
-import {PeerTransport} from './peer-transport.js';
+import {PeerTransport} from './peer-transport.js?v=teacher-lee-1';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
 import {canOfferTurnHandoff} from './turn-handoff.js';
-import {CHARACTERS,characterFor,characterById} from './characters.js';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=teacher-lee-1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -214,7 +214,7 @@ async function apply(fn,...args){
 function pill(text,cls=''){return `<span class="pill ${cls}">${text}</span>`;}
 function characterSprite(person,extra=''){
  const c=characterFor(person),color=playerColor(person);
- return `<span class="character-avatar ${extra} ${c.layout==='single'?'character-single':''}" style="--team:${color};--character-image:url('${new URL(c.asset,document.baseURI).href}');--character-x:${(c.slot%3)*50}%;--character-y:${Math.floor(c.slot/3)*100}%" role="img" aria-label="${esc(c.name)} 캐릭터"><span class="character-sprite"></span></span>`;
+ return `<span class="character-avatar ${extra} ${c.layout==='single'?'character-single':''} ${c.portrait?'character-bust':''}" style="--team:${color};--character-image:url('${new URL(c.asset,document.baseURI).href}');--character-x:${(c.slot%3)*50}%;--character-y:${Math.floor(c.slot/3)*100}%" role="img" aria-label="${esc(c.name)} 캐릭터"><span class="character-sprite"></span></span>`;
 }
 function characterPicker(selected=''){
  return `<div class="character-picker"><label>나의 캐릭터<select name="characterId" aria-label="나의 캐릭터"><option value="">랜덤으로 정하기</option>${CHARACTERS.map(c=>`<option value="${c.id}" ${selected===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><div class="character-choice-preview" aria-live="polite">${characterChoicePreview(selected)}</div><small>${CHARACTERS.length}명 중 직접 고르거나 랜덤으로 정할 수 있어요. 같은 방에서는 중복되지 않아요.</small></div>`;

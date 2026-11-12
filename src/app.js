@@ -51,10 +51,10 @@ function updateBgmControls(){
  const status=lobbyBgm.status();button.classList.toggle('is-muted',!bgmEnabled);
  button.setAttribute('aria-pressed',String(bgmEnabled));
  button.setAttribute('aria-label',bgmEnabled?'소리 끄기':'소리 켜기');
- button.title=bgmEnabled?(status.blocked?'음악 켜짐 · 화면을 터치하면 재생됩니다':status.error?'음악을 불러오지 못했어요 · 다시 켜 주세요':'음악·효과음 켜짐 · 누르면 끄기'):'음악·효과음 꺼짐 · 누르면 켜기';
+ button.title=snapshot?.state?`효과음 ${bgmEnabled?'켜짐 · 누르면 끄기':'꺼짐 · 누르면 켜기'}`:bgmEnabled?(status.blocked?'음악 켜짐 · 화면을 터치하면 재생됩니다':status.error?'음악을 불러오지 못했어요 · 다시 켜 주세요':'음악·효과음 켜짐 · 누르면 끄기'):'음악·효과음 꺼짐 · 누르면 켜기';
 }
-function bgmButton(){return `<button type="button" class="icon-button bgm-bell ${bgmEnabled?'':'is-muted'}" data-action="bgm-toggle" aria-label="${bgmEnabled?'소리 끄기':'소리 켜기'}" aria-pressed="${bgmEnabled}" title="${bgmEnabled?'음악·효과음 켜짐 · 누르면 끄기':'음악·효과음 꺼짐 · 누르면 켜기'}">${bgmBell()}</button>`;}
-function startBackgroundMusic(gesture=false){if(bgmEnabled&&!document.hidden)void lobbyBgm.play({gesture});}
+function bgmButton(){return `<button type="button" class="icon-button bgm-bell ${bgmEnabled?'':'is-muted'}" data-action="bgm-toggle" aria-label="${bgmEnabled?'소리 끄기':'소리 켜기'}" aria-pressed="${bgmEnabled}" title="${snapshot?.state?`효과음 ${bgmEnabled?'켜짐 · 누르면 끄기':'꺼짐 · 누르면 켜기'}`:bgmEnabled?'음악·효과음 켜짐 · 누르면 끄기':'음악·효과음 꺼짐 · 누르면 켜기'}">${bgmBell()}</button>`;}
+function startBackgroundMusic(gesture=false){if(bgmEnabled&&!snapshot?.state&&!document.hidden)void lobbyBgm.play({gesture});}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){lobbyBgm.pause();soundEffects.stop();}else startBackgroundMusic();});
 function unlockLobbyMusic(e){
  if(bgmEnabled)soundEffects.unlock();
@@ -397,6 +397,7 @@ function queueBoardTypeFit(){cancelAnimationFrame(boardTypeFrame);boardTypeFrame
 window.addEventListener('resize',queueBoardTypeFit);
 document.fonts?.ready.then(queueBoardTypeFit);
 function render(){
+ if(snapshot?.state)lobbyBgm.pause();
  syncGameOrientation();
  if(participantIntroPending){$('#app').innerHTML='<div class="participant-intro-backdrop" aria-hidden="true"></div>';return;}
  if(!snapshot?.state){renderLobby();return;}

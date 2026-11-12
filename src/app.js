@@ -1,24 +1,24 @@
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=9f1ab1c947b7';
-import {WORK_ARTWORK} from './work-artwork.js?v=9f1ab1c947b7';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=9f1ab1c947b7';
-import {RankingClient} from './ranking.js?v=9f1ab1c947b7';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=9f1ab1c947b7';
-import {HandoffCountdown} from './handoff-countdown.js?v=9f1ab1c947b7';
-import {fitBoardTitles} from './board-type.js?v=9f1ab1c947b7';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=9f1ab1c947b7';
-import * as G from './engine.js?v=9f1ab1c947b7';
-import {ActivityInbox} from './activities.js?v=9f1ab1c947b7';
-import {purchaseQuizById} from './purchase-quizzes.js?v=9f1ab1c947b7';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9f1ab1c947b7';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9f1ab1c947b7';
-import {diceCube} from './dice.js?v=9f1ab1c947b7';
-import {CHARACTER_BIOS} from './character-bios.js?v=9f1ab1c947b7';
-import {needsLandscape} from './orientation.js?v=9f1ab1c947b7';
-import {createBgm} from './bgm.js?v=9f1ab1c947b7';
-import {PeerTransport} from './peer-transport.js?v=9f1ab1c947b7';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=9f1ab1c947b7';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=9f1ab1c947b7';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=9f1ab1c947b7';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=66deeb1bb443';
+import {WORK_ARTWORK} from './work-artwork.js?v=66deeb1bb443';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=66deeb1bb443';
+import {RankingClient} from './ranking.js?v=66deeb1bb443';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=66deeb1bb443';
+import {HandoffCountdown} from './handoff-countdown.js?v=66deeb1bb443';
+import {fitBoardTitles} from './board-type.js?v=66deeb1bb443';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=66deeb1bb443';
+import * as G from './engine.js?v=66deeb1bb443';
+import {ActivityInbox} from './activities.js?v=66deeb1bb443';
+import {purchaseQuizById} from './purchase-quizzes.js?v=66deeb1bb443';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=66deeb1bb443';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=66deeb1bb443';
+import {diceCube} from './dice.js?v=66deeb1bb443';
+import {CHARACTER_BIOS} from './character-bios.js?v=66deeb1bb443';
+import {needsLandscape} from './orientation.js?v=66deeb1bb443';
+import {createBgm} from './bgm.js?v=66deeb1bb443';
+import {PeerTransport} from './peer-transport.js?v=66deeb1bb443';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=66deeb1bb443';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=66deeb1bb443';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=66deeb1bb443';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -229,18 +229,19 @@ function showActivity(item){
  activeActivity=item;
  const effect=activitySound(item);if(effect)void soundEffects.play(effect,`${session.code}:${effect==='prison'?`prison:${state.turnNumber}:${item.actorId}`:`event:${item.id}`}`);
  const actor=state.players[item.actorId],other=state.players[item.otherId];
- const footer=item.type==='backward-entry'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><small>전체 참가자에게 공개되는 이벤트${activityInbox.pending.length?` · 대기 ${activityInbox.pending.length}건`:''}</small><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
+ const footer=item.type==='backward-entry'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
  if(item.type==='history-event'){
   showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<p class="card-fiction">카드 내용과 코인 금액은 게임용 가상 시나리오입니다.</p><details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
-  const symbols={'backward-entry':'⚄','first-finish':'⚑',bankruptcy:'⚑','backward-move':'↶',purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','purchase-quiz-result':'OX','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
+  const purchaseResult=item.type==='purchase-quiz-result';
+  const symbols={'backward-entry':'⚄','first-finish':'⚑',bankruptcy:'⚑','backward-move':'↶',purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
   const ledger=(item.changes||[]).map(c=>`<div><span>${characterSprite(state.players[c.playerId])}<b>${esc(state.players[c.playerId].name)}</b></span><strong class="${c.amount<0?'debit':'credit'}">${c.amount>0?'+':''}${num(c.amount)} <small>MC</small></strong></div>`).join('');
   const assignment=item.type==='copyright-transfer'?`<div class="activity-assignment"><div>${characterSprite(actor)}<b>${esc(actor.name)}</b><small>양도하는 참가자</small></div><span aria-hidden="true">→</span><div>${characterSprite(other)}<b>${esc(other.name)}</b><small>양도받는 참가자</small></div></div><p class="assignment-price">작품 구입가 ${num(item.amount)} MC 기준 · 무상 양도</p>`:'';
   const amount=item.type==='trade-offer'?`<div class="activity-proposal">${esc(actor.name)} → ${esc(other.name)}<strong>${num(item.amount)} MC</strong></div>`:'';
   const ownPurchaseQuestion=item.type==='purchase-quiz-result'&&item.actorId===session.playerId&&state.purchaseChallenge?.workId===item.workId?purchaseQuizById(state.purchaseChallenge.questionId):null;
  const verdict=item.type==='purchase-quiz-result'?quizVerdict(item.correct,null,ownPurchaseQuestion?(ownPurchaseQuestion.answer?'O · 맞다':'X · 아니다'):null):item.type==='quiz-result'?quizVerdict(item.correct):'';
  const limited=item.type==='rent'&&item.expected!==null&&item.amount<item.expected?`<p class="muted">기준 이용료 ${num(item.expected)} MC 중 잔액 한도에서 ${num(item.amount)} MC를 지급했습니다.</p>`:'';
-  showModal(esc(item.title),`<div class="activity-hero">${item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}<p class="activity-description">${esc(item.type==='prison-entry'?PRISON_MESSAGE:item.text)}</p>${item.type.startsWith('prison-')?'<p class="muted">게임용 가상 상황이며 실제 법적 처벌을 뜻하지 않습니다.</p>':''}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${item.workId&&item.type!=='purchase-quiz-result'?'<p class="muted">게임 안의 가상 음악 이용권에 관한 안내입니다.</p>':''}${footer}`,'activity-modal');
+  showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult?'':`<p class="activity-description">${esc(item.type==='prison-entry'?PRISON_MESSAGE:item.text)}</p>`}${item.type.startsWith('prison-')?'<p class="muted">게임용 가상 상황이며 실제 법적 처벌을 뜻하지 않습니다.</p>':''}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${item.workId&&item.type!=='purchase-quiz-result'?'<p class="muted">게임 안의 가상 음악 이용권에 관한 안내입니다.</p>':''}${footer}`,purchaseResult?'activity-modal quiz-result-notice':'activity-modal');
  }
  $('#modal').dataset.activity='true';
 }
@@ -465,7 +466,7 @@ let modalFitFrame;
 new MutationObserver(()=>{cancelAnimationFrame(modalFitFrame);modalFitFrame=requestAnimationFrame(()=>fitViewportDialog(document));}).observe($('#modal'),{childList:true,subtree:true,characterData:true});
 function showModal(title,body,cls=''){
  handoffCountdown.stop();
- const d=$('#modal');d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="m3.5 3.5 17 17m0-17-17 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div><h2 id="modal-title">${title}</h2><div class="modal-body">${body}</div>`;
+ const d=$('#modal');d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="m3.5 3.5 17 17m0-17-17 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div><h2 id="modal-title"${cls.includes('quiz-result-notice')?' class="visually-hidden"':''}>${title}</h2><div class="modal-body">${body}</div>`;
  d.classList.toggle('quiz-wrong-result',Boolean(d.querySelector('.quiz-verdict.is-incorrect')));
  if(!d.open)d.showModal();
  syncModalHeader();

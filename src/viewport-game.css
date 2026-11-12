@@ -152,3 +152,14 @@ dialog#modal{position:fixed;inset:auto;left:50%;top:50%;margin:0;transform:trans
 .game-shell[data-tab="board"] .seat-badge{flex:none}
 .game-shell[data-tab="board"] .board-area.is-flat .board-seat{transform:translateX(var(--flat-seat-inset,0px))}
 dialog#modal{top:var(--modal-center-y,50%);max-width:calc(100vw - 20px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}
+/* OX result notices show one verdict, with the participant centred above it. */
+#modal.quiz-result-notice .activity-hero{flex-direction:column;justify-content:center;gap:8px;text-align:center;margin:4px 0 12px;padding:6px 0}
+#modal.quiz-result-notice .activity-hero .character-avatar{width:56px;height:56px}
+#modal.quiz-result-notice .activity-hero>strong{font-size:18px;line-height:1.4}
+#modal.quiz-result-notice .quiz-verdict{margin:0 0 12px}
+#modal.quiz-result-notice .activity-footer{margin-top:12px}
+@media(max-height:500px){
+ #modal.quiz-result-notice .activity-hero{gap:5px;margin:0 0 8px;padding:3px 0}
+ #modal.quiz-result-notice .activity-hero .character-avatar{width:42px;height:42px}
+ #modal.quiz-result-notice .activity-hero>strong{font-size:16px}
+}

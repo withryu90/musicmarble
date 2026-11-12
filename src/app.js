@@ -423,11 +423,18 @@ function render(){
  const log=$('#chat-messages');if(log)log.scrollTop=log.scrollHeight;
  if(chatFocused&&$('#chat-input')){$('#chat-input').focus();$('#chat-input').setSelectionRange(selection,selection);}
 }
+function syncModalHeader(){
+ const d=$('#modal');if(!d?.open)return;
+ const style=getComputedStyle(d);
+ for(const side of ['top','left','right'])d.style.setProperty(`--dialog-pad-${side}`,style.getPropertyValue(`padding-${side}`));
+}
+window.addEventListener('resize',syncModalHeader);
 function showModal(title,body,cls=''){
  handoffCountdown.stop();
  const d=$('#modal');d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="m3.5 3.5 17 17m0-17-17 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div><h2 id="modal-title">${title}</h2>${body}`;
  d.classList.toggle('quiz-wrong-result',Boolean(d.querySelector('.quiz-verdict.is-incorrect')));
  if(!d.open)d.showModal();
+ syncModalHeader();
 }
 function closeModal(){handoffCountdown.stop();if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
 function quizVerdict(correct,chosen,answer){

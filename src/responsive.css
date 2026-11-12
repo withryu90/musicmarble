@@ -275,3 +275,13 @@ body.portrait-game{overflow:hidden}
 .lobby-header-actions .bgm-bell.is-muted,.game-shell .header-actions .bgm-bell.is-muted{color:#6c8ba2}
 
 .nickname-error{margin:-8px 0 16px;color:#b42438;font-size:12px;font-weight:700;line-height:1.6}#modal .nickname-error{color:#b42438;font-size:12px}input[aria-invalid="true"]{border-color:#cf3d50}
+
+/* Cover the dialog padding too, so scrolled content cannot appear above the header. */
+#modal .modal-header{
+ top:calc(-1 * var(--dialog-pad-top,28px));
+ margin-top:calc(-1 * var(--dialog-pad-top,28px));
+ margin-left:calc(-1 * var(--dialog-pad-left,28px));
+ margin-right:calc(-1 * var(--dialog-pad-right,28px));
+ padding:10px var(--dialog-pad-right,28px) 10px var(--dialog-pad-left,28px);
+ border-radius:0;background:#eef8ff;box-shadow:0 1px 0 #d7eafa;
+}

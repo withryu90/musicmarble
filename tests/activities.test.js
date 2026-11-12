@@ -8,9 +8,9 @@ import {RoomService} from '../server/rooms.js';
 import {purchaseQuizById} from '../src/purchase-quizzes.js';
 const game=()=>G.createGame({names:['하나','둘','셋']});
 test('purchase, project, sale and quiz notices describe exact public coin changes',()=>{
- const arrived=G.roll(game(),1),bought=buyQualified(arrived),project=G.upgrade(bought,'bach-air'),sold=G.sell(project,'bach-air');
+ const arrived=G.roll(game(),1),bought=buyQualified(arrived),returned=G.roll({...bought,phase:'roll',players:bought.players.map(p=>({...p,position:0}))},1),project=G.upgrade(returned,'bach-air'),sold=G.sell(project,'bach-air');
  assert.deepEqual(activityChanges(arrived,bought).map(n=>[n.type,n.changes]),[['purchase',[{playerId:0,amount:-160}]]]);
- assert.equal(activityChanges(bought,project)[0].type,'upgrade');assert.equal(activityChanges(project,sold)[0].changes[0].amount,130);
+ assert.equal(activityChanges(returned,project)[0].type,'upgrade');assert.equal(activityChanges(project,sold)[0].changes[0].amount,130);
  for(const correct of [true,false]){const q=G.startQuiz(arrived),question=QUIZZES.find(x=>x.id===q.quiz),answered=G.answerQuiz(q,correct?question.answer:(question.answer+1)%3);const n=activityChanges(q,answered)[0];assert.equal(n.type,'quiz-result');assert.equal(n.changes[0].amount,correct?80:0);assert.equal(n.correct,correct);}
 });
 test('rent reports the payer, owner, actual amount and waived shortfall',()=>{

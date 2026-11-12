@@ -1,5 +1,5 @@
 import {BOARD,WORKS,QUIZZES} from './data.js?v=back-three-1';
-import * as G from './engine.js?v=all-finish-1';
+import * as G from './engine.js?v=concert-return-1';
 import {purchaseQuizById} from './purchase-quizzes.js';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
@@ -36,7 +36,7 @@ export function botDecision(state,previous={},random=Math.random){
   }
   if(!memory.upgrade){
     memory.upgrade=true;
-    const options=G.owned(state,p.id).filter(w=>!state.ownership[w.id].level);
+    const options=WORKS.filter(w=>G.canUpgrade(state,w.id));
     if(options.length&&p.coins>=350&&random()<.35)return decide('upgrade',[options[Math.floor(random()*options.length)].id]);
   }
   if(!memory.quiz){memory.quiz=true;if(!state.quizUsed&&random()<.8)return decide('startQuiz');}

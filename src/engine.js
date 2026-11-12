@@ -32,7 +32,7 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
-  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,quiz:null,feedback:null,quizUsed:false,purchased:false,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 function openQuiz(s,kind){
   const pool=s.quizDeck.filter(id=>!kind||QUIZZES.find(q=>q.id===id).kind===kind);
@@ -41,7 +41,7 @@ function openQuiz(s,kind){
 export function roll(state,dice,rng=Math.random){
   if(state.phase!=='roll'||hasFinished(state,current(state)))throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
-  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.purchaseChallenge=null;
+  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
   if((p.skipTurns??0)>0){
     if(BOARD[p.position].type!=='prison')throw Error('감옥 위치를 확인해 주세요.');
     const escaped=dice===6;p.skipTurns=escaped?0:p.skipTurns-1;
@@ -56,7 +56,7 @@ export function roll(state,dice,rng=Math.random){
     log(s,`${p.name}: 뒤로 3칸 이동 → ${cell.title}`);
   }
   if(cell.type==='work'){
-    const owner=s.ownership[cell.id];if(owner&&owner.player!==p.id){const cost=fee(s,cell),actual=-change(s,p,-cost);s.players[owner.player].coins+=actual;s.lastRent={workId:cell.id,owner:owner.player,amount:actual,expected:cost};log(s,`${p.name} → ${s.players[owner.player].name}: 가상 이용료 ${actual} MC (기준 ${cost} MC)`);}
+    const owner=s.ownership[cell.id];if(owner?.player===p.id&&owner.level===0)s.concertWorkId=cell.id;if(owner&&owner.player!==p.id){const cost=fee(s,cell),actual=-change(s,p,-cost);s.players[owner.player].coins+=actual;s.lastRent={workId:cell.id,owner:owner.player,amount:actual,expected:cost};log(s,`${p.name} → ${s.players[owner.player].name}: 가상 이용료 ${actual} MC (기준 ${cost} MC)`);}
   }else if(cell.type==='event'){
     const event=EVENTS[s.eventDeck[s.eventCursor++%EVENTS.length]];const actual=change(s,p,event.amount);s.lastEvent={...event,actual};log(s,`${event.title}: ${p.name} ${actual>=0?'+':''}${actual} MC`);
   }else if(cell.type==='prison'||cell.type==='go-to-prison'){
@@ -109,9 +109,15 @@ export function buy(state){
 // Production purchase commits the payment, ownership and turn advance atomically.
 export function purchaseAndNext(state){return nextTurn(buy(state.phase==='purchase-feedback'?closePurchaseFeedback(state):state));}
 export function skipPurchase(state){if(state.phase!=='purchase-feedback'||state.purchaseChallenge?.correct!==true)throw Error('구입 선택을 확인해 주세요.');return nextTurn(closePurchaseFeedback(state));}
+export function concertWork(state){
+  if(state.phase!=='action'||state.trade||state.purchased)return null;
+  const p=current(state),w=BOARD[p.position],owner=state.ownership[w.id];
+  return w.type==='work'&&state.concertWorkId===w.id&&owner?.player===p.id&&owner.level===0?w:null;
+}
+export function canUpgrade(state,id){const w=concertWork(state);return !!w&&w.id===id&&current(state).coins>=100;}
 export function upgrade(state,id){
   const s=clone(state),p=current(s),owner=s.ownership[id];
-  if(s.phase!=='action'||!owner||owner.player!==p.id||owner.level!==0||p.coins<100)throw Error('공연 기획을 할 수 없습니다. (내 이용권, 100 MC 필요, 작품당 1회)');
+  if(!canUpgrade(s,id))throw Error('이전에 구입한 내 작품 칸에 다시 도착해야 공연을 기획할 수 있습니다. (100 MC, 작품당 1회)');
   p.coins-=100;owner.level=1;log(s,`${p.name}: 「${WORKS.find(w=>w.id===id).title}」 공연 기획, 기본 이용료 +20 MC`);return s;
 }
 export function sell(state,id){
@@ -136,7 +142,7 @@ export function nextTurn(state){
     s.turn=nextPlayerIndex(s);
     s.phase='roll';
   }
-  s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.purchaseChallenge=null;return s;
+  s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
 }
 export function finishGame(state){const s=clone(state);s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
@@ -174,6 +180,7 @@ export function isValidSave(s){
     if(s.lastPrisonTransfer&&(!Number.isInteger(s.lastPrisonTransfer.from)||BOARD[s.lastPrisonTransfer.from]?.type!=='go-to-prison'||BOARD[s.lastPrisonTransfer.to]?.type!=='prison'||current(s).position!==s.lastPrisonTransfer.to))return false;
     if(s.phase==='jailed'&&(BOARD[current(s).position].type!=='prison'||(!s.lastPrisonRoll&&current(s).skipTurns!==2)))return false;
     if(s.players.some(p=>(p.skipTurns??0)>0&&BOARD[p.position].type!=='prison'))return false;
+    if(s.concertWorkId!=null&&(!WORKS.some(w=>w.id===s.concertWorkId)||BOARD[current(s).position].id!==s.concertWorkId))return false;
     if(s.lastBackwardMove){const m=s.lastBackwardMove;if(m.from!==7||m.to!==4||m.steps!==3||BOARD[m.from].type!=='back-three')return false;}
     if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>1||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
     if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}

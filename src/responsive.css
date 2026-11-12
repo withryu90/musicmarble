@@ -299,3 +299,29 @@ body.portrait-game{overflow:hidden}
 
 /* Preserve the close button hit area while hiding its circular border. */
 #modal .modal-header .icon-button{border-color:transparent;box-shadow:none}
+
+/* Use the same five rows for every traveller, including bonus characters. */
+#modal .participant-intro-list{--intro-portrait-size:120px}
+#modal .participant-intro-card{
+ display:grid;grid-template-rows:20px 14px var(--intro-portrait-size) 24px 20px;
+ align-content:start;align-items:center;justify-items:center;gap:4px;
+}
+#modal .participant-bonus-slot{height:14px;line-height:14px;min-width:0}
+#modal .participant-bonus-slot .bonus-character-label{margin:0;font-size:9px;line-height:14px;white-space:nowrap}
+#modal .participant-intro-card .character-large{width:var(--intro-portrait-size);height:var(--intro-portrait-size);margin:0}
+#modal .participant-intro-card .participant-nickname{display:block;width:100%;margin:0;line-height:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#modal .participant-intro-card .participant-character{margin:0;line-height:20px;white-space:nowrap}
+#modal .participant-intro-card .participant-self{position:absolute;top:6px;right:6px;margin:0;padding:2px 6px;font-size:9px;line-height:14px}
+@media(max-width:650px),(max-height:500px) and (orientation:landscape),(any-pointer:coarse){
+ #modal .participant-intro-list{--intro-portrait-size:68px}
+ #modal .participant-intro-card{grid-template-rows:16px 12px var(--intro-portrait-size) 20px 16px;gap:3px}
+ #modal .participant-bonus-slot{height:12px;line-height:12px}
+ #modal .participant-bonus-slot .bonus-character-label{font-size:8px;line-height:12px}
+ #modal .participant-intro-card .participant-nickname{line-height:20px}
+ #modal .participant-intro-card .participant-character{line-height:16px}
+ #modal .participant-intro-card .participant-self{top:4px;right:4px;padding:1px 4px;font-size:8px;line-height:12px}
+}
+@media(max-height:450px) and (min-width:601px) and (orientation:landscape){
+ #modal .participant-intro-list{--intro-portrait-size:58px}
+ #modal .participant-intro-card{gap:2px}
+}

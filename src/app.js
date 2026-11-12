@@ -1,24 +1,24 @@
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=66deeb1bb443';
-import {WORK_ARTWORK} from './work-artwork.js?v=66deeb1bb443';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=66deeb1bb443';
-import {RankingClient} from './ranking.js?v=66deeb1bb443';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=66deeb1bb443';
-import {HandoffCountdown} from './handoff-countdown.js?v=66deeb1bb443';
-import {fitBoardTitles} from './board-type.js?v=66deeb1bb443';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=66deeb1bb443';
-import * as G from './engine.js?v=66deeb1bb443';
-import {ActivityInbox} from './activities.js?v=66deeb1bb443';
-import {purchaseQuizById} from './purchase-quizzes.js?v=66deeb1bb443';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=66deeb1bb443';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=66deeb1bb443';
-import {diceCube} from './dice.js?v=66deeb1bb443';
-import {CHARACTER_BIOS} from './character-bios.js?v=66deeb1bb443';
-import {needsLandscape} from './orientation.js?v=66deeb1bb443';
-import {createBgm} from './bgm.js?v=66deeb1bb443';
-import {PeerTransport} from './peer-transport.js?v=66deeb1bb443';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=66deeb1bb443';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=66deeb1bb443';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=66deeb1bb443';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a74a08e9e1e5';
+import {WORK_ARTWORK} from './work-artwork.js?v=a74a08e9e1e5';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=a74a08e9e1e5';
+import {RankingClient} from './ranking.js?v=a74a08e9e1e5';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a74a08e9e1e5';
+import {HandoffCountdown} from './handoff-countdown.js?v=a74a08e9e1e5';
+import {fitBoardTitles} from './board-type.js?v=a74a08e9e1e5';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=a74a08e9e1e5';
+import * as G from './engine.js?v=a74a08e9e1e5';
+import {ActivityInbox} from './activities.js?v=a74a08e9e1e5';
+import {purchaseQuizById} from './purchase-quizzes.js?v=a74a08e9e1e5';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a74a08e9e1e5';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a74a08e9e1e5';
+import {diceCube} from './dice.js?v=a74a08e9e1e5';
+import {CHARACTER_BIOS} from './character-bios.js?v=a74a08e9e1e5';
+import {needsLandscape} from './orientation.js?v=a74a08e9e1e5';
+import {createBgm} from './bgm.js?v=a74a08e9e1e5';
+import {PeerTransport} from './peer-transport.js?v=a74a08e9e1e5';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=a74a08e9e1e5';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=a74a08e9e1e5';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=a74a08e9e1e5';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -197,7 +197,7 @@ function concertPlanningButton(){
 function concertPlanningModal(){
  const w=currentConcertWork();if(!w){notify('현재 도착한 내 작품 칸에서만 공연을 기획할 수 있어요.');return;}
  selected=w.id;
- showModal('도착한 작품으로 공연을 기획할까요?',`<div class="notice"><small>현재 도착한 작품</small><h3>${esc(w.composer)} · 「${esc(w.title)}」</h3></div><p class="concert-planning-intro">이 작품에 100 MC로 공연을 기획합니다. 기본 이용료가 20 MC 올라가고, 현재 칸에 작은 공연장이 세워져요. 작품마다 한 번만 가능합니다.</p><button class="concert-cta full" data-action="upgrade" ${!G.canUpgrade(state,w.id)?'disabled':''}>${concertPlanningIcon()}<span><strong>100 MC로 공연 기획하기</strong><small>현재 도착한 작품에 적용</small></span></button><button class="text-button full" data-action="close">취소하고 보드로 돌아가기</button>`,'concert-planning-modal');
+ showModal('도착한 작품으로 공연을 기획할까요?',`<div class="notice"><small>현재 도착한 작품</small><h3>${esc(w.composer)} · 「${esc(w.title)}」</h3></div><p class="concert-planning-intro">이 작품에 100 MC로 공연을 기획합니다. 기본 이용료가 20 MC 올라가고, 현재 칸에 작은 공연장이 세워져요. 작품마다 한 번만 가능합니다.</p><button class="concert-cta full" data-action="upgrade" ${!G.canUpgrade(state,w.id)?'disabled':''}>${concertPlanningIcon()}<span><strong>100 MC로 공연 기획하기</strong><small>현재 도착한 작품에 적용</small></span></button><button class="secondary full" data-action="next">공연하지 않고 차례 넘기기 →</button><button class="text-button full" data-action="close">취소하고 보드로 돌아가기</button>`,'concert-planning-modal');
 }
 function concertHall(){return `<span class="concert-hall" role="img" aria-label="공연 기획 완료 · 작은 공연장"><svg viewBox="0 0 80 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 59 53 68 75 55 30 47Z" fill="#3e6581"/><path d="M16 27 51 35 51 59 16 51Z" fill="#f8e7bb"/><path d="M51 35 68 25 68 49 51 59Z" fill="#c99b50"/><path d="M9 26 45 7 74 23 51 37Z" fill="#436d99"/><path d="M9 26 45 7 51 16 20 30Z" fill="#638fb6"/><path d="M22 34 27 35 27 52 22 51ZM42 38 47 39 47 56 42 55Z" fill="#fff9e9"/><path d="M30 40Q35 31 40 42V55L30 53Z" fill="#29537d"/><path d="M34 41H38V53H34Z" fill="#91cce6"/><path d="M54 38 59 35V43L54 46ZM62 33 66 31V39L62 42Z" fill="#fff1b6"/><path d="M11 54 50 63 71 51V56L51 68 11 59Z" fill="#e3c17e"/><path d="M47 15V25C41 23 39 29 44 30 48 30 50 28 50 25V18L57 16V12Z" fill="#ffdf78"/></svg></span>`;}
 function turnHandoffModal(){
@@ -400,7 +400,8 @@ function seatControls(){
  if(!myTurn())return state.trade?'<button class="primary full" data-action="trade-open">거래 확인</button>':'';
  const p=G.current(state);
  const main=state.phase==='roll'?['roll',p.skipTurns?'탈출 주사위':'주사위 굴리기']:state.phase==='backward-roll'?['roll-backward','뒤로가기 주사위']:['purchase-quiz','purchase-feedback'].includes(state.phase)?['purchase-quiz-open','OX 퀴즈 확인']:['quiz','feedback'].includes(state.phase)?['quiz-open','배움 퀴즈 확인']:currentConcertWork()?['plan-concert','♫ 공연 기획하기']:['turn-actions','차례 진행하기'];
- return `<button class="primary" data-action="${main[0]}" ${busy?'disabled':''}>${busy?'이동 중…':main[1]}</button><button class="seat-more" data-action="turn-actions" aria-label="내 차례의 추가 행동">⋯</button>`;
+ const rollIcon=['roll','roll-backward'].includes(main[0])?`<span class="seat-dice-icon" aria-hidden="true">${diceCube(5).replace('<div','<span').replace('</div>','</span>')}</span>`:'';
+ return `<button class="primary" data-action="${main[0]}" ${busy?'disabled':''}>${rollIcon}<span>${busy?'이동 중…':main[1]}</span></button>`;
 }
 function players(row){
  const seats=['top-left','top-right','bottom-left','bottom-right'];
@@ -563,7 +564,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='purchase-confirm'){closeModal();await apply(G.purchaseAndNext);}
  if(a==='purchase-decline'){closeModal();await apply(G.skipPurchase);}
  if(a==='buy'||a==='buy-modal'){if(a==='buy-modal')closeModal();await apply(G.purchaseAndNext);}
- if(a==='next')await apply(G.nextTurn);
+ if(a==='next'){handoffCountdown.stop();$('#modal').close();await apply(G.nextTurn);}
  if(a==='quiz')await apply(G.startQuiz);
  if(a==='quiz-open')quizModal();
  if(a==='answer')await apply(G.answerQuiz,Number(el.dataset.index));

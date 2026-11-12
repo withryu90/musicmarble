@@ -1,24 +1,24 @@
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=965af324c4d6';
-import {WORK_ARTWORK} from './work-artwork.js?v=965af324c4d6';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=965af324c4d6';
-import {RankingClient} from './ranking.js?v=965af324c4d6';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=965af324c4d6';
-import {HandoffCountdown} from './handoff-countdown.js?v=965af324c4d6';
-import {fitBoardTitles} from './board-type.js?v=965af324c4d6';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=965af324c4d6';
-import * as G from './engine.js?v=965af324c4d6';
-import {ActivityInbox} from './activities.js?v=965af324c4d6';
-import {purchaseQuizById} from './purchase-quizzes.js?v=965af324c4d6';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=965af324c4d6';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=965af324c4d6';
-import {diceCube} from './dice.js?v=965af324c4d6';
-import {CHARACTER_BIOS} from './character-bios.js?v=965af324c4d6';
-import {needsLandscape} from './orientation.js?v=965af324c4d6';
-import {createBgm} from './bgm.js?v=965af324c4d6';
-import {PeerTransport} from './peer-transport.js?v=965af324c4d6';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=965af324c4d6';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=965af324c4d6';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=965af324c4d6';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5166add302e1';
+import {WORK_ARTWORK} from './work-artwork.js?v=5166add302e1';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=5166add302e1';
+import {RankingClient} from './ranking.js?v=5166add302e1';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5166add302e1';
+import {HandoffCountdown} from './handoff-countdown.js?v=5166add302e1';
+import {fitBoardTitles} from './board-type.js?v=5166add302e1';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=5166add302e1';
+import * as G from './engine.js?v=5166add302e1';
+import {ActivityInbox} from './activities.js?v=5166add302e1';
+import {purchaseQuizById} from './purchase-quizzes.js?v=5166add302e1';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5166add302e1';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5166add302e1';
+import {diceCube} from './dice.js?v=5166add302e1';
+import {CHARACTER_BIOS} from './character-bios.js?v=5166add302e1';
+import {needsLandscape} from './orientation.js?v=5166add302e1';
+import {createBgm} from './bgm.js?v=5166add302e1';
+import {PeerTransport} from './peer-transport.js?v=5166add302e1';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=5166add302e1';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=5166add302e1';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=5166add302e1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -231,7 +231,7 @@ function showActivity(item){
  const actor=state.players[item.actorId],other=state.players[item.otherId];
  const footer=item.type==='backward-entry'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
  if(item.type==='history-event'){
-  showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<p class="card-fiction">카드 내용과 코인 금액은 게임용 가상 시나리오입니다.</p><details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
+  showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
   const purchaseResult=item.type==='purchase-quiz-result';
   const symbols={'backward-entry':'⚄','first-finish':'⚑',bankruptcy:'⚑','backward-move':'↶',purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};

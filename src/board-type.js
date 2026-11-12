@@ -22,6 +22,11 @@ function fitTitle(title,surface){
  const size=surface?fittedDiamondTitleSize(font,title.clientWidth,title.clientHeight,widths,heights,surface.width,surface.height):fittedTitleSize(font,title.clientWidth,title.clientHeight,widths,heights);
  if(size<font)title.style.setProperty('--fit-title-size',`${size}px`);
 }
+// Project a board anchor, while keeping the portrait in an untransformed layer.
+export function projectedPawnAnchor(rect,width,height,x,y){
+ const dx=(x-50)/100*width,dy=(y-50)/100*height,diagonal=Math.SQRT1_2;
+ return {x:rect.left+rect.width/2+(dx-dy)*diagonal,y:rect.top+rect.height/2+(dx+dy)*diagonal*Math.cos(40*Math.PI/180)};
+}
 export function fitBoardTitles(root=document){
  const layer=root.querySelector('.board-labels');
  if(layer){
@@ -42,6 +47,16 @@ export function fitBoardTitles(root=document){
    }
   }
   layer.dataset.ready='true';
+ }
+ const pawns=root.querySelector('.board-pawns');
+ if(pawns){
+  const origin=pawns.getBoundingClientRect();
+  for(const group of pawns.querySelectorAll('.board-pawn-group')){
+   const cell=root.querySelector(`.board>.cell[data-index="${group.dataset.pawnIndex}"]`);if(!cell)continue;
+   const anchor=projectedPawnAnchor(cell.getBoundingClientRect(),cell.offsetWidth,cell.offsetHeight,Number(group.dataset.anchorX),Number(group.dataset.anchorY));
+   group.style.left=`${anchor.x-origin.left}px`;group.style.top=`${anchor.y-origin.top}px`;
+  }
+  pawns.dataset.ready='true';
  }
  for(const title of root.querySelectorAll('.board-area.is-flat .board .tile-copy strong'))fitTitle(title);
 }

@@ -11,3 +11,11 @@ test('projected titles also fit inside the sloping edges of a visible diamond',a
   for(let i=0;i<widths.length;i++){const outer=Math.max(Math.abs(y),Math.abs(y+heights[i]));assert.ok((widths[i]/100+2*outer/76)*scale<=.94+.001);y+=heights[i];}
  }
 });
+
+test('upright pawn anchors follow the projected tile centre and outward edges',async()=>{
+ const {projectedPawnAnchor}=await import('../src/board-type.js'),rect={left:20,top:30,width:100,height:76};
+ assert.deepEqual(projectedPawnAnchor(rect,70,70,50,50),{x:70,y:68});
+ const left=projectedPawnAnchor(rect,70,70,-60,50),right=projectedPawnAnchor(rect,70,70,160,50);
+ assert.ok(left.x<70&&left.y<68);assert.ok(right.x>70&&right.y>68);
+ assert.ok(Math.abs(left.x+right.x-140)<.001);assert.ok(Math.abs(left.y+right.y-136)<.001);
+});

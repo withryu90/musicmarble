@@ -201,3 +201,11 @@
 .board-area.is-3d .board-label:is(.prison,.go-to-prison) .landmark{color:#cbd2db}
 .board-area.is-3d .board-label:is(.transfer,.prison,.go-to-prison,.start) .cell-top,
 .board-area.is-3d .board-label:is(.transfer,.prison,.go-to-prison,.start) .cell-price{text-shadow:none}
+
+/* Portraits stay upright in screen space; only their anchors follow the 3D board. */
+.board-area.is-3d .board>.cell>.tokens{visibility:hidden}
+.board-pawns{position:absolute;inset:0;z-index:7;pointer-events:none;visibility:hidden}
+.board-pawns[data-ready="true"]{visibility:visible}
+.board-pawn-group{position:absolute;width:0;height:0;pointer-events:none}
+.board-area.is-3d .board-pawns .tokens{position:absolute;left:0;top:0;transform:translate(-50%,-100%);transform-style:flat;min-height:0}
+.board-area.is-3d .board-pawns .character-token{transform:none;transform-style:flat}

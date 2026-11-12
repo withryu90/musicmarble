@@ -83,3 +83,7 @@ test('Shin Songi is selectable as a unique bust character in solo and shared roo
  const {readFile}=await import('node:fs/promises'),bytes=await readFile(new URL('../'+c.asset.replace('./',''),import.meta.url));assert.equal(bytes.subarray(1,4).toString(),'PNG');assert.equal(bytes[25],6);
  const service=new RoomService();try{const a=service.createSolo('새 선생님',{botCount:3},c.id),room=service.get(a.code);assert.equal(room.state.players[0].characterId,c.id);assertUnique(room.state.players);const b=service.create('방장',c.id);assert.throws(()=>service.join(b.code,'중복',c.id));}finally{service.close();}
 });
+
+test('only the three teacher characters are labelled as bonus characters',()=>{
+ assert.deepEqual(CHARACTERS.filter(c=>c.bonus).map(c=>c.id).sort(),['teacher-lee-hwayoung','teacher-shin-songi','teacher-yu-jiyoung']);
+});

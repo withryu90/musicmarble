@@ -1,17 +1,17 @@
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js';
-import * as G from './engine.js?v=teacher-shin-1';
+import * as G from './engine.js?v=bonus-characters-1';
 import {ActivityInbox} from './activities.js';
 import {purchaseQuizById} from './purchase-quizzes.js';
 import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
 import {movementPath,boardTokenVisible,boardTokenAnchor} from './movement.js?v=gate-entry-2';
 import {diceCube} from './dice.js';
-import {CHARACTER_BIOS} from './character-bios.js?v=teacher-shin-1';
+import {CHARACTER_BIOS} from './character-bios.js?v=bonus-characters-1';
 import {needsLandscape} from './orientation.js';
 import {createBgm} from './bgm.js';
-import {PeerTransport} from './peer-transport.js?v=teacher-shin-1';
+import {PeerTransport} from './peer-transport.js?v=bonus-characters-1';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
 import {canOfferTurnHandoff} from './turn-handoff.js';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=teacher-shin-1';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=bonus-characters-1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -216,31 +216,32 @@ function characterSprite(person,extra=''){
  const c=characterFor(person),color=playerColor(person);
  return `<span class="character-avatar ${extra} ${c.layout==='single'?'character-single':''} ${c.portrait?'character-bust':''}" style="--team:${color};--character-image:url('${new URL(c.asset,document.baseURI).href}');--character-x:${(c.slot%3)*50}%;--character-y:${Math.floor(c.slot/3)*100}%" role="img" aria-label="${esc(c.name)} 캐릭터"><span class="character-sprite"></span></span>`;
 }
+function bonusCharacterLabel(character){return character.bonus?'<span class="bonus-character-label">*보너스 캐릭터</span>':'';}
 function characterPicker(selected=''){
  return `<div class="character-picker"><label>나의 캐릭터<select name="characterId" aria-label="나의 캐릭터"><option value="">랜덤으로 정하기</option>${CHARACTERS.map(c=>`<option value="${c.id}" ${selected===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><div class="character-choice-preview" aria-live="polite">${characterChoicePreview(selected)}</div><small>${CHARACTERS.length}명 중 직접 고르거나 랜덤으로 정할 수 있어요. 같은 방에서는 중복되지 않아요.</small></div>`;
 }
-function characterChoicePreview(id){const c=characterById(id);return c?`${characterSprite({id:0,characterId:id},'character-large')}<strong>${esc(c.name)}</strong><small>${esc(c.fullName)}</small>`:'<span class="random-character">?</span><strong>어떤 음악가를 만나게 될까요?</strong><small>다른 참가자와 겹치지 않게 배정해요.</small>';}
+function characterChoicePreview(id){const c=characterById(id);return c?`${bonusCharacterLabel(c)}${characterSprite({id:0,characterId:id},'character-large')}<strong>${esc(c.name)}</strong><small>${esc(c.fullName)}</small>`:'<span class="random-character">?</span><strong>어떤 음악가를 만나게 될까요?</strong><small>다른 참가자와 겹치지 않게 배정해요.</small>';}
 function updateCharacterChoice(e){if(e.target.name==='characterId'){const picker=e.target.closest('.character-picker');picker.querySelector('.character-choice-preview').innerHTML=characterChoicePreview(e.target.value);}}
 $('#app').addEventListener('change',updateCharacterChoice);
 $('#modal').addEventListener('change',updateCharacterChoice);
 function participantIntroModal(){
- const participants=state.players.map((person,index)=>`<li class="participant-intro-card" style="--team:${playerColor(person)}"><span class="participant-order">${index+1}번 주자</span>${characterSprite(person,'character-large')}<strong class="participant-nickname">${esc(person.name)}</strong><span class="participant-character">${esc(characterFor(person).name)}</span>${person.id===session.playerId?'<span class="participant-self">나</span>':''}</li>`).join('');
+ const participants=state.players.map((person,index)=>`<li class="participant-intro-card" style="--team:${playerColor(person)}"><span class="participant-order">${index+1}번 주자</span>${bonusCharacterLabel(characterFor(person))}${characterSprite(person,'character-large')}<strong class="participant-nickname">${esc(person.name)}</strong><span class="participant-character">${esc(characterFor(person).name)}</span>${person.id===session.playerId?'<span class="participant-self">나</span>':''}</li>`).join('');
  showModal('오늘 함께할 음악 여행자',`<p class="participant-intro-description">오늘 게임에 참여하는 친구들이에요.<br>아래 순서대로 주사위를 굴리며 음악 여행을 떠나요!</p><ol class="participant-intro-list" aria-label="게임 진행 순서">${participants}</ol><p class="participant-intro-note">각자의 캐릭터말은 첫 주사위를 굴려 이동할 때 등장해요.</p><button class="primary full" data-action="enter-board">참가자 확인하고 보드로 →</button>`,'participant-intro-modal');
 }
 function characterModal(person,starting=false){
  const c=characterFor(person);
  const redraw=starting&&snapshot.mode==='solo'&&state.round===1&&state.phase==='roll'&&state.dice===null;
- showModal(starting?'나의 캐릭터가 정해졌어요':`${esc(person.name)}의 캐릭터`, `<div class="character-reveal">${characterSprite(person,'character-large')}<span class="character-kicker">MUSIC HISTORY CHARACTER</span><h3>${esc(c.name)}</h3><p>${esc(c.fullName)}</p></div><div class="notice">직접 고르거나 랜덤으로 정한 나의 캐릭터예요. 같은 방의 플레이어와 봇은 모두 다른 캐릭터를 사용합니다. 보드에서는 팀 색상의 받침으로 나의 말을 구분할 수 있어요.</div><button class="primary full" data-action="close">${starting?'이 캐릭터로 시작하기 →':'확인'}</button>${redraw?'<button class="text-button" data-action="redraw-character">다른 캐릭터 무작위로 뽑기 ↻</button>':''}`,starting?'entrance-help':'');
+ showModal(starting?'나의 캐릭터가 정해졌어요':`${esc(person.name)}의 캐릭터`, `<div class="character-reveal">${bonusCharacterLabel(c)}${characterSprite(person,'character-large')}<span class="character-kicker">MUSIC HISTORY CHARACTER</span><h3>${esc(c.name)}</h3><p>${esc(c.fullName)}</p></div><div class="notice">직접 고르거나 랜덤으로 정한 나의 캐릭터예요. 같은 방의 플레이어와 봇은 모두 다른 캐릭터를 사용합니다. 보드에서는 팀 색상의 받침으로 나의 말을 구분할 수 있어요.</div><button class="primary full" data-action="close">${starting?'이 캐릭터로 시작하기 →':'확인'}</button>${redraw?'<button class="text-button" data-action="redraw-character">다른 캐릭터 무작위로 뽑기 ↻</button>':''}`,starting?'entrance-help':'');
 }
 function characterGallery(){
- showModal(`캐릭터 ${CHARACTERS.length}종`,`<p class="muted">캐릭터 사진이나 이름을 누르면 생몰 연도와 음악사적 업적을 볼 수 있어요.</p><div class="character-gallery">${CHARACTERS.map((c,id)=>`<button type="button" data-action="character-bio" data-id="${c.id}" aria-label="${esc(c.name)} 소개 보기">${characterSprite({id:id%5,characterId:c.id})}<strong>${esc(c.name)}</strong></button>`).join('')}</div>`,'entrance-help character-gallery-modal');
+ showModal(`캐릭터 ${CHARACTERS.length}종`,`<p class="muted">캐릭터 사진이나 이름을 누르면 생몰 연도와 음악사적 업적을 볼 수 있어요.</p><div class="character-gallery">${CHARACTERS.map((c,id)=>`<button type="button" data-action="character-bio" data-id="${c.id}" aria-label="${esc(c.name)} 소개 보기">${bonusCharacterLabel(c)}${characterSprite({id:id%5,characterId:c.id})}<strong>${esc(c.name)}</strong></button>`).join('')}</div>`,'entrance-help character-gallery-modal');
  if(galleryReturnCharacter){$('#modal').querySelector(`[data-id="${galleryReturnCharacter}"]`)?.focus();galleryReturnCharacter=null;}
 }
 function characterBio(id){
  const c=characterById(id),bio=CHARACTER_BIOS[id];if(!c||!bio)return;
  galleryReturnCharacter=id;
  const lifespan=bio.birth!==null&&bio.death!==null?`${bio.birth} ~ ${bio.death}`:'비밀';
- showModal(`${esc(c.name)} 알아보기`,`<div class="character-reveal character-bio-portrait">${characterSprite({id:0,characterId:id},'character-large')}<p>${esc(c.fullName)}</p><p class="character-lifespan">${esc(lifespan)}</p></div><div class="character-achievement"><h3>캐릭터 소개</h3><p>${esc(bio.achievement)}</p></div>`,'entrance-help character-bio-modal');
+ showModal(`${esc(c.name)} 알아보기`,`<div class="character-reveal character-bio-portrait">${bonusCharacterLabel(c)}${characterSprite({id:0,characterId:id},'character-large')}<p>${esc(c.fullName)}</p><p class="character-lifespan">${esc(lifespan)}</p></div><div class="character-achievement"><h3>캐릭터 소개</h3><p>${esc(bio.achievement)}</p></div>`,'entrance-help character-bio-modal');
 }
 
 async function redrawCharacter(){

@@ -374,3 +374,8 @@
 
 /* Native bust art already matches the portrait frame; do not crop it like full-body art. */
 .character-single.character-bust .character-sprite{background-size:100% 100%;background-position:center;transform:none}
+
+.bonus-character-label{display:block;width:max-content;max-width:100%;margin:3px auto 7px;padding:3px 7px;border:1px solid #b6d6f2;border-radius:6px;background:#e7f3ff;color:#225f99;font-size:10px;font-weight:800;line-height:1.5;text-align:center;letter-spacing:0;white-space:nowrap}
+.character-gallery>button{position:relative}
+.character-gallery>button .bonus-character-label{font-size:9px;padding:2px 4px}
+.participant-intro-card .bonus-character-label{font-size:9px;margin-bottom:0}

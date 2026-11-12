@@ -1,5 +1,5 @@
-import {RoomService} from './room-service.js?v=bonus-characters-1';
-import * as G from './engine.js?v=bonus-characters-1';
+import {RoomService} from './room-service.js?v=concert-planning-1';
+import * as G from './engine.js?v=concert-planning-1';
 export const PEER_PREFIX='musicmarble-rtc-v1-';
 const STORE='musicmarble.peer.host.v1';
 export function roomPeerId(code){if(typeof code!=='string'||!/^[A-HJ-NP-Z2-9]{6}$/.test(code))throw Error('공유 코드는 영문과 숫자 6자리로 입력해 주세요.');return PEER_PREFIX+code;}

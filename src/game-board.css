@@ -379,3 +379,20 @@
 .character-gallery>button{position:relative}
 .character-gallery>button .bonus-character-label{font-size:9px;padding:2px 4px}
 .participant-intro-card .bonus-character-label{font-size:9px;margin-bottom:0}
+
+/* Concert projects appear as small buildings on the tile, clear of the central label. */
+.concert-hall{position:absolute;right:2%;bottom:2%;width:30%;aspect-ratio:80/72;z-index:3;pointer-events:none;filter:drop-shadow(1px 2px 1px #183b5640)}
+.concert-hall svg{display:block;width:100%;height:100%}
+.is-3d .concert-hall{right:8%;bottom:8%;width:27cqw;height:25cqw;transform:rotateZ(-45deg) rotateX(-40deg) translateZ(9px);transform-origin:center bottom}
+.game-shell .turn-card button.concert-cta,#modal button.concert-cta{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 12px;margin:12px 0;border:1px solid #e4a324;border-bottom:3px solid #bd7c18;border-radius:12px;background:linear-gradient(135deg,#ffe7a1,#ffc951);color:#533708;box-shadow:0 4px 12px #d5a13b26;text-align:left;min-height:66px;white-space:normal}
+.concert-cta>span:not(.concert-cta-icon){flex:1;min-width:0}
+.concert-cta strong{display:block;font-size:16px;line-height:1.4}
+.concert-cta small{display:block;font-size:11px;line-height:1.65;margin-top:3px}
+.concert-cta-icon{font-size:27px;line-height:1;flex-shrink:0}
+.modal-action-grid>.concert-cta{grid-column:1/-1}
+.concert-planning-intro{font-size:13px;line-height:1.8;color:#375f7f;margin-bottom:16px}
+.concert-work-list{display:grid;gap:10px}
+.concert-work-list>button{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid #c2dcee;border-radius:10px;background:#eff7ff;text-align:left;color:#254f71;min-height:60px}
+.concert-work-list small,.concert-work-list strong{display:block;line-height:1.6}
+.concert-work-list small{font-size:10px}.concert-work-list strong{font-size:14px}.concert-work-list b{font-size:11px;white-space:nowrap}
+@media(max-width:650px),(max-height:500px) and (orientation:landscape){.game-shell .turn-card button.concert-cta,#modal button.concert-cta{min-height:52px;padding:9px;gap:7px}.concert-cta strong{font-size:13px}.concert-cta small{font-size:10px}.concert-cta-icon{font-size:22px}}

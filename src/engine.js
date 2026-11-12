@@ -1,5 +1,5 @@
 import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js';
-import {characterById,drawCharacterIds} from './characters.js?v=bonus-characters-1';
+import {characterById,drawCharacterIds} from './characters.js?v=concert-planning-1';
 import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js';
 export const VERSION=2;
 export const MAX_PLAYERS=4;

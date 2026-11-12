@@ -1,5 +1,6 @@
 import {RankingClient} from './ranking.js?v=global-ranking-live-1';
 import {animateFlatStep} from './pawn-motion.js';
+import {HandoffCountdown} from './handoff-countdown.js';
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=back-three-1';
 import * as G from './engine.js?v=duel-bankruptcy-1';
 import {ActivityInbox} from './activities.js?v=duel-bankruptcy-1';
@@ -68,9 +69,10 @@ let dicePresentation=null;
 const activityInbox=new ActivityInbox();
 let activeActivity=null,deferredSnapshots=[],participantIntroPending=false;
 let autoPurchaseKey=null,lastHandoffKey=null;
+const handoffCountdown=new HandoffCountdown();
 let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
-function resetActivityFlow(){lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
@@ -183,8 +185,21 @@ function concertPlanningModal(){
 function concertHall(){return `<span class="concert-hall" role="img" aria-label="공연 기획 완료 · 작은 공연장"><svg viewBox="0 0 80 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 59 53 68 75 55 30 47Z" fill="#3e6581"/><path d="M16 27 51 35 51 59 16 51Z" fill="#f8e7bb"/><path d="M51 35 68 25 68 49 51 59Z" fill="#c99b50"/><path d="M9 26 45 7 74 23 51 37Z" fill="#436d99"/><path d="M9 26 45 7 51 16 20 30Z" fill="#638fb6"/><path d="M22 34 27 35 27 52 22 51ZM42 38 47 39 47 56 42 55Z" fill="#fff9e9"/><path d="M30 40Q35 31 40 42V55L30 53Z" fill="#29537d"/><path d="M34 41H38V53H34Z" fill="#91cce6"/><path d="M54 38 59 35V43L54 46ZM62 33 66 31V39L62 42Z" fill="#fff1b6"/><path d="M11 54 50 63 71 51V56L51 68 11 59Z" fill="#e3c17e"/><path d="M47 15V25C41 23 39 29 44 30 48 30 50 28 50 25V18L57 16V12Z" fill="#ffdf78"/></svg></span>`;}
 function turnHandoffModal(){
  const next=state.players[G.nextPlayerIndex(state)],finishing=G.allFinished(state),continuing=!finishing&&next.id===state.turn;
- showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'버튼을 누르면 최종 결과를 확인할 수 있어요.':continuing?'다른 참가자들은 모두 완주했어요. 버튼을 누르면 나의 다음 주사위 차례를 이어갑니다.':'이번 차례의 안내를 모두 확인했어요. 버튼을 누르면 다음 참가자가 주사위를 굴릴 수 있어요.'}</p>${finishing?'':concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
+ showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'버튼을 누르면 최종 결과를 확인할 수 있어요.':continuing?'다른 참가자들은 모두 완주했어요. 5초 후 나의 다음 차례로 자동으로 넘어갑니다. 버튼을 누르면 바로 이어갈 수 있어요.':'5초 후 다음 참가자에게 자동으로 차례를 넘깁니다. 버튼을 누르면 바로 넘길 수 있어요.'}</p>${finishing?'':concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
  $('#modal').dataset.auto='true';
+ if(!finishing){
+  const code=session.code,turn=state.turn,turnNumber=state.turnNumber;
+  handoffCountdown.start({
+   canContinue:()=>session?.code===code&&state.turn===turn&&state.turnNumber===turnNumber&&myTurn()&&canOfferTurnHandoff(state,session.playerId)&&$('#modal').open&&$('#modal').classList.contains('turn-handoff-modal'),
+   onTick:seconds=>{const button=$('#modal [data-action="handoff-next"]');if(button)button.textContent=`${continuing?'나의 다음 차례 계속하기':'다음 참가자에게 차례 넘기기'} · ${seconds}초 후 자동 넘기기`;},
+   onFinish:()=>{void passHandoff();}
+  });
+ }
+}
+async function passHandoff(){
+ handoffCountdown.stop();if(busy||!myTurn()||!canOfferTurnHandoff(state,session.playerId))return;
+ const button=$('#modal [data-action="handoff-next"]');busy=true;if(button)button.disabled=true;
+ try{const passed=await apply(G.nextTurn);if(!passed&&button){button.disabled=false;button.textContent='다시 차례 넘기기 →';}}finally{busy=false;}
 }
 function dismissActivity(){activeActivity=null;$('#modal').close();continueFlow();}
 function historyCard(e,actorId){
@@ -376,10 +391,11 @@ function render(){
  if(chatFocused&&$('#chat-input')){$('#chat-input').focus();$('#chat-input').setSelectionRange(selection,selection);}
 }
 function showModal(title,body,cls=''){
+ handoffCountdown.stop();
  const d=$('#modal');d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기">×</button></div><h2 id="modal-title">${title}</h2>${body}`;
  if(!d.open)d.showModal();
 }
-function closeModal(){if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
+function closeModal(){handoffCountdown.stop();if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
 function purchaseQuizModal(){
  const challenge=state.purchaseChallenge,q=purchaseQuizById(challenge?.questionId);if(!q)return;
  const answered=state.phase==='purchase-feedback',w=work(challenge.workId);
@@ -429,8 +445,8 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='ranking-jump'){$('.entrance-ranking')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});void rankingClient.refresh();return;}
  if(a==='ranking-refresh'){void rankingClient.refresh(true);return;}
  if(busy)return;
- if(a==='handoff-next'){busy=true;el.disabled=true;const passed=await apply(G.nextTurn);busy=false;if(!passed)el.disabled=false;return;}
- if(a==='handoff-quiz'){$('#modal').close();await apply(G.startQuiz);return;}
+ if(a==='handoff-next'){await passHandoff();return;}
+ if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();}
  if(a==='home'){tab='board';render();}
  if(a==='tab'){tab=el.dataset.tab;render();}

@@ -159,3 +159,45 @@
  overflow:hidden;font-size:var(--fit-title-size,19cqw);line-height:1.05;
 }
 .board-area.is-flat .cell .tile-copy .cell-top{font-size:10cqw}
+
+/* Screen-space labels avoid browser-specific 3D text flattening. Their anchor
+   comes from each rendered tile's visible diamond, not the rotated CSS grid. */
+.board-area.is-3d .board>.cell>.tile-copy{visibility:hidden}
+.board-area.is-3d .cell:hover,.board-area.is-3d .cell:focus-visible{transform:none}
+.board-labels{position:absolute;inset:0;z-index:5;pointer-events:none;visibility:hidden}
+.board-labels[data-ready="true"]{visibility:visible}
+.board-area.is-3d .board-label{position:absolute;width:0;height:0;pointer-events:none}
+.board-area.is-3d .board-label .tile-copy{
+ position:absolute;inset:0;width:0;height:0;display:block;padding:0;margin:0;transform:none;
+ font-family:var(--font-display);text-shadow:none;
+}
+.board-area.is-3d .board-label .tile-copy strong{
+ position:absolute;left:0;top:0;width:calc(var(--label-width)*.9);height:calc(var(--label-height)*.48);
+ transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;
+ font-size:var(--fit-title-size,var(--title-base));font-family:var(--font-display);font-weight:400;
+ line-height:1.05;letter-spacing:-.02em;text-align:center;padding:0;margin:0;overflow:hidden;
+ color:#102e48;-webkit-text-stroke:.65px #fffffff0;paint-order:stroke fill;
+}
+.board-area.is-3d .board-label .cell-top,.board-area.is-3d .board-label .cell-price{
+ position:absolute;left:0;top:calc(var(--label-height)*-.3);width:max-content;max-width:none;height:auto;
+ transform:translate(-50%,-50%);display:block;font-family:var(--font-display);font-weight:400;
+ font-size:calc(var(--label-height)*.1);line-height:1.05;white-space:nowrap;color:#193c57;
+ text-shadow:0 0 2px #fff;letter-spacing:0;margin:0;padding:0;
+}
+.board-area.is-3d .board-label .cell-price{top:calc(var(--label-height)*.3)}
+.board-area.is-3d .board-label:not(.work) .cell-top{display:none}
+.board-area.is-3d .board-label .landmark{
+ position:absolute;left:0;top:calc(var(--label-height)*-.3);width:calc(var(--label-height)*.16);height:calc(var(--label-height)*.14);
+ transform:translate(-50%,-50%);display:block;filter:none;margin:0;padding:0;color:#386a86;
+}
+.board-area.is-3d .board-label.start .landmark{display:none}
+.board-area.is-3d .board-label.start .tile-copy::before{
+ content:'START';position:absolute;left:0;top:calc(var(--label-height)*-.3);transform:translate(-50%,-50%);
+ width:max-content;font-family:var(--font-display);font-size:calc(var(--label-height)*.14);line-height:1;
+ background:#fff1b8;color:#123f70;border:1px solid #b58b3d;border-radius:2px;padding:1px 3px;box-shadow:none;
+}
+.board-area.is-3d .board-label:is(.prison,.go-to-prison) strong{color:#fff1a1;-webkit-text-stroke:0}
+.board-area.is-3d .board-label:is(.prison,.go-to-prison) .cell-price{color:#f3f6ff;text-shadow:none}
+.board-area.is-3d .board-label:is(.prison,.go-to-prison) .landmark{color:#cbd2db}
+.board-area.is-3d .board-label:is(.transfer,.prison,.go-to-prison,.start) .cell-top,
+.board-area.is-3d .board-label:is(.transfer,.prison,.go-to-prison,.start) .cell-price{text-shadow:none}

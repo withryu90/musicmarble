@@ -4,12 +4,44 @@ export function fittedTitleSize(fontSize,width,height,lineWidths,lineHeights){
  const ratio=Math.min(1,width/widest,height/tallest);
  return ratio<1?Math.floor(fontSize*ratio*.96*100)/100:fontSize;
 }
-export function fitBoardTitles(root=document){
- for(const title of root.querySelectorAll('.board .tile-copy strong')){
-  title.style.removeProperty('--fit-title-size');
-  const lines=[...title.querySelectorAll('.tile-title-line')];if(!lines.length||!title.clientWidth||!title.clientHeight)continue;
-  const font=parseFloat(getComputedStyle(title).fontSize);
-  const size=fittedTitleSize(font,title.clientWidth,title.clientHeight,lines.map(l=>l.scrollWidth),lines.map(l=>l.scrollHeight));
-  if(size<font)title.style.setProperty('--fit-title-size',`${size}px`);
+export function fittedDiamondTitleSize(fontSize,width,height,lineWidths,lineHeights,surfaceWidth,surfaceHeight){
+ let ratio=fittedTitleSize(fontSize,width,height,lineWidths,lineHeights)/fontSize;
+ let y=-lineHeights.reduce((sum,h)=>sum+h,0)/2;
+ for(let i=0;i<lineWidths.length;i++){
+  const h=lineHeights[i],outerY=Math.max(Math.abs(y),Math.abs(y+h));
+  const extent=lineWidths[i]/surfaceWidth+2*outerY/surfaceHeight;
+  if(extent>.94)ratio=Math.min(ratio,.94/extent*.97);
+  y+=h;
  }
+ return Math.floor(fontSize*ratio*100)/100;
+}
+function fitTitle(title,surface){
+ title.style.removeProperty('--fit-title-size');
+ const lines=[...title.querySelectorAll('.tile-title-line')];if(!lines.length||!title.clientWidth||!title.clientHeight)return;
+ const font=parseFloat(getComputedStyle(title).fontSize),widths=lines.map(l=>l.scrollWidth),heights=lines.map(l=>l.scrollHeight);
+ const size=surface?fittedDiamondTitleSize(font,title.clientWidth,title.clientHeight,widths,heights,surface.width,surface.height):fittedTitleSize(font,title.clientWidth,title.clientHeight,widths,heights);
+ if(size<font)title.style.setProperty('--fit-title-size',`${size}px`);
+}
+export function fitBoardTitles(root=document){
+ const layer=root.querySelector('.board-labels');
+ if(layer){
+  const origin=layer.getBoundingClientRect();
+  for(const label of layer.querySelectorAll('.board-label')){
+   const cell=root.querySelector(`.board>.cell[data-index="${label.dataset.labelIndex}"]`);if(!cell)continue;
+   const r=cell.getBoundingClientRect(),title=label.querySelector('strong'),lines=title.querySelectorAll('.tile-title-line');
+   label.style.left=`${r.left+r.width/2-origin.left}px`;label.style.top=`${r.top+r.height/2-origin.top}px`;
+   label.style.setProperty('--label-width',`${r.width}px`);label.style.setProperty('--label-height',`${r.height}px`);
+   label.style.setProperty('--title-base',`${r.height*(lines.length===1?.28:.22)}px`);
+   fitTitle(title,r);
+   for(const meta of label.querySelectorAll('.cell-top,.cell-price')){
+    meta.style.fontSize='';const font=parseFloat(getComputedStyle(meta).fontSize),textWidth=meta.scrollWidth;
+    const maxWidth=r.width*.7;let ratio=Math.min(1,maxWidth/Math.max(1,textWidth));
+    // Metadata sits 30% above/below the title, within the same visible diamond.
+    ratio=Math.min(ratio,.35/Math.max(.001,textWidth/r.width+meta.scrollHeight/r.height));
+    if(ratio<1)meta.style.fontSize=`${font*ratio*.97}px`;
+   }
+  }
+  layer.dataset.ready='true';
+ }
+ for(const title of root.querySelectorAll('.board-area.is-flat .board .tile-copy strong'))fitTitle(title);
 }

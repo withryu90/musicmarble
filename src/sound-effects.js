@@ -4,7 +4,7 @@ export const EFFECTS=['dice','gain','loss','applause','prison'];
 export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args)}={}){
  let context=null,enabled=true,generation=0;const nodes=new Set(),seen=new Set(),buffers=new Map();
  function prepare(){if(!enabled)return null;try{context??=createContext();return context;}catch{return null;}}
- function unlock(){const ctx=prepare();if(!ctx)return;if(ctx.state==='suspended')void ctx.resume().catch(()=>{});for(const name of Object.keys(RECORDED_EFFECTS))void loadRecording(ctx,name).catch(()=>{});}
+ function unlock(){const ctx=prepare();if(!ctx)return;if(['suspended','interrupted'].includes(ctx.state))void ctx.resume().catch(()=>{});for(const name of Object.keys(RECORDED_EFFECTS))void loadRecording(ctx,name).catch(()=>{});}
  function loadRecording(ctx,name){if(!buffers.has(name)){const pending=(async()=>{const response=await fetchAudio(RECORDED_EFFECTS[name]);if(!response.ok)throw Error('Sound unavailable');return ctx.decodeAudioData(await response.arrayBuffer());})();buffers.set(name,pending);pending.catch(()=>buffers.delete(name));}return buffers.get(name);}
  function stop(){generation++;for(const node of nodes){try{node.stop();node.disconnect();}catch{}}nodes.clear();}
  function track(node,end,chain=[]){nodes.add(node);node.onended=()=>{nodes.delete(node);node.disconnect();chain.forEach(n=>n.disconnect());};node.stop(end);}
@@ -33,7 +33,7 @@ export function createSoundEffects({createContext=()=>{const C=globalThis.AudioC
   if(!EFFECTS.includes(name)||!enabled||!isVisible()||(key&&seen.has(key)))return false;
   const ctx=prepare();if(!ctx)return false;const stamp=generation;
   try{
-   if(ctx.state==='suspended')await ctx.resume();
+   if(['suspended','interrupted'].includes(ctx.state))await ctx.resume();
    const recording=RECORDED_EFFECTS[name]?await loadRecording(ctx,name):null;
    if(ctx.state!=='running'||!enabled||!isVisible()||stamp!==generation||(key&&seen.has(key)))return false;
    if(key){seen.add(key);if(seen.size>200)seen.delete(seen.values().next().value);}

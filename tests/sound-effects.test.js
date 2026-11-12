@@ -67,3 +67,8 @@ test('real prison excerpt contains both opening motifs in the requested pitch or
   scores.sort((a,b)=>b[1]-a[1]);assert.equal(scores[0][0],expected,`pitch at ${time}s`);
  }
 });
+
+test('interrupted mobile sound effects recover when the user returns and interacts',async()=>{
+ const ctx=context('interrupted'),sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});
+ assert.equal(await sfx.play('dice'),true);assert.equal(ctx.resumeCount,1);ctx.state='interrupted';sfx.unlock();assert.equal(ctx.resumeCount,2);
+});

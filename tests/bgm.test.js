@@ -43,3 +43,8 @@ test('muting while playback is loading cannot start sound later',async()=>{
  class SlowAudio extends FakeAudio{async play(){await new Promise(r=>{ready=r;});return super.play();}}
  const bgm=createBgm({AudioClass:SlowAudio,createContext:()=>null});const loading=bgm.play({gesture:false});bgm.pause();ready();await loading;assert.equal(bgm.status().playing,false);
 });
+
+test('interrupted mobile audio is not reported as playing and resumes on the next gesture',async()=>{
+ const gain={gain:{value:1},connect(){}},ctx={state:'running',destination:{},createGain:()=>gain,createMediaElementSource:()=>({connect(){}}),resumes:0,async resume(){this.resumes++;this.state='running';}};
+ const bgm=createBgm({AudioClass:FakeAudio,createContext:()=>ctx});await bgm.play();ctx.state='interrupted';assert.equal(bgm.status().playing,false);await bgm.play();assert.equal(ctx.resumes,1);assert.equal(bgm.status().playing,true);
+});

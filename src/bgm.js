@@ -1,7 +1,7 @@
 export const BGM_SOURCE='./src/assets/audio/mozart-k525-chiptune.m4a';
 export function createBgm({AudioClass=Audio,createContext=()=>{const C=window.AudioContext||window.webkitAudioContext;return C?new C():null;},onChange=()=>{},volume=.25}={}){
  let audio=null,context=null,gain=null,currentVolume=Math.min(1,Math.max(0,volume)),error=false,blocked=false,wanted=false;
- const status=()=>({playing:Boolean(audio&&!audio.paused&&!error&&context?.state!=='suspended'),volume:currentVolume,error,blocked});
+ const status=()=>({playing:Boolean(audio&&!audio.paused&&!error&&(!context||context.state==='running')),volume:currentVolume,error,blocked});
  const update=()=>onChange(status());
  function prepare(){
   if(audio)return;
@@ -20,7 +20,7 @@ export function createBgm({AudioClass=Audio,createContext=()=>{const C=window.Au
   if(gesture)prepareContext();
   try{
    // Invoke both APIs inside the user gesture, before awaiting either promise.
-   const resume=context?.state==='suspended'?context.resume():Promise.resolve();
+   const resume=['suspended','interrupted'].includes(context?.state)?context.resume():Promise.resolve();
    await Promise.all([resume,audio.play()]);
    if(!wanted)audio.pause();
    update();return wanted;

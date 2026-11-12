@@ -1,4 +1,4 @@
-import {createSoundEffects,activitySound} from './sound-effects.js?v=orchestra-two-phrases-1';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=mobile-audio-resume-1';
 import {RankingClient} from './ranking.js?v=global-ranking-live-1';
 import {animateFlatStep} from './pawn-motion.js';
 import {HandoffCountdown} from './handoff-countdown.js?v=ten-second-handoff-1';
@@ -12,7 +12,7 @@ import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './mo
 import {diceCube} from './dice.js';
 import {CHARACTER_BIOS} from './character-bios.js?v=back-three-1';
 import {needsLandscape} from './orientation.js';
-import {createBgm} from './bgm.js';
+import {createBgm} from './bgm.js?v=mobile-audio-resume-1';
 import {PeerTransport} from './peer-transport.js?v=all-private-quiz-results-1';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
 import {canOfferTurnHandoff} from './turn-handoff.js';

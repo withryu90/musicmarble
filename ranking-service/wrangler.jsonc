@@ -7,7 +7,7 @@
     {
       "binding": "DB",
       "database_name": "musicmarble-ranking",
-      "database_id": "00000000-0000-4000-8000-000000000000",
+      "database_id": "f2a6dfd4-a399-45c5-b5c0-4abde5f9de03",
       "migrations_dir": "migrations"
     }
   ]

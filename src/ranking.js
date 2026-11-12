@@ -1,5 +1,5 @@
-// Set to the public Worker origin after account authorisation and deployment.
-export const RANKING_ORIGIN='';
+// Shared Cloudflare Worker backed by the production D1 database.
+export const RANKING_ORIGIN='https://musicmarble-ranking.musicmarble-withryu90.workers.dev';
 const KEY='musicmarble.global-ranking.v1';
 function defaultStorage(){try{return globalThis.localStorage||null;}catch{return null;}}
 const makeSecret=()=>[...crypto.getRandomValues(new Uint8Array(32))].map(x=>x.toString(16).padStart(2,'0')).join('');

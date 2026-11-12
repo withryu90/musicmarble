@@ -1,4 +1,4 @@
-import {RankingClient} from './ranking.js';
+import {RankingClient} from './ranking.js?v=global-ranking-live-1';
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=back-three-1';
 import * as G from './engine.js?v=back-three-1';
 import {ActivityInbox} from './activities.js?v=back-three-1';

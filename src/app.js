@@ -1,22 +1,22 @@
-import {createSoundEffects,activitySound} from './sound-effects.js?v=quiz-outcome-sounds-1';
-import {RankingClient} from './ranking.js?v=unique-ranking-names-1';
-import {animateFlatStep} from './pawn-motion.js';
-import {HandoffCountdown} from './handoff-countdown.js?v=ten-second-handoff-1';
-import {fitBoardTitles} from './board-type.js?v=upright-pawns-1';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=backward-reroll-1';
-import * as G from './engine.js?v=backward-reroll-1';
-import {ActivityInbox} from './activities.js?v=all-private-quiz-results-1';
-import {purchaseQuizById} from './purchase-quizzes.js';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=back-three-1';
-import {diceCube} from './dice.js';
-import {CHARACTER_BIOS} from './character-bios.js?v=back-three-1';
-import {needsLandscape} from './orientation.js';
-import {createBgm} from './bgm.js?v=mobile-audio-resume-1';
-import {PeerTransport} from './peer-transport.js?v=all-private-quiz-results-1';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
-import {canOfferTurnHandoff} from './turn-handoff.js';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=back-three-1';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=f7a9be7f4f69';
+import {RankingClient} from './ranking.js?v=f7a9be7f4f69';
+import {animateFlatStep} from './pawn-motion.js?v=f7a9be7f4f69';
+import {HandoffCountdown} from './handoff-countdown.js?v=f7a9be7f4f69';
+import {fitBoardTitles} from './board-type.js?v=f7a9be7f4f69';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=f7a9be7f4f69';
+import * as G from './engine.js?v=f7a9be7f4f69';
+import {ActivityInbox} from './activities.js?v=f7a9be7f4f69';
+import {purchaseQuizById} from './purchase-quizzes.js?v=f7a9be7f4f69';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=f7a9be7f4f69';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=f7a9be7f4f69';
+import {diceCube} from './dice.js?v=f7a9be7f4f69';
+import {CHARACTER_BIOS} from './character-bios.js?v=f7a9be7f4f69';
+import {needsLandscape} from './orientation.js?v=f7a9be7f4f69';
+import {createBgm} from './bgm.js?v=f7a9be7f4f69';
+import {PeerTransport} from './peer-transport.js?v=f7a9be7f4f69';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=f7a9be7f4f69';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=f7a9be7f4f69';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=f7a9be7f4f69';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -491,7 +491,7 @@ $('#modal').addEventListener('submit',async e=>{
 
 });
 async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)return;const a=el.dataset.action;if(el.tagName==='A')e.preventDefault();
- if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;soundEffects.setEnabled(bgmEnabled);if(bgmEnabled){soundEffects.unlock();startBackgroundMusic(true);}else lobbyBgm.pause();updateBgmControls();return;}
+ if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;soundEffects.setEnabled(bgmEnabled);if(bgmEnabled){soundEffects.unlock();if(snapshot?.state)void soundEffects.play('gain');startBackgroundMusic(true);}else lobbyBgm.pause();updateBgmControls();return;}
  if(a==='activity-next'){dismissActivity();return;}
  if(a==='ranking-jump'){rankingModal();return;}
  if(a==='ranking-refresh'){void rankingClient.refresh(true);return;}

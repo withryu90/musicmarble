@@ -80,3 +80,9 @@ test('both learning and purchase OX quiz outcomes select positive or negative ef
   assert.equal(activitySound({type}),null);
  }
 });
+test('Safari unlock selects playback audio and starts a one-frame source within the gesture',()=>{
+ const ctx=context(),lengths=[],original=ctx.createBuffer;ctx.createBuffer=(channels,length,rate)=>{lengths.push(length);return original(channels,length,rate);};let configured=0;
+ const sfx=createSoundEffects({createContext:()=>ctx,fetchAudio,configureSession:()=>configured++});
+ sfx.unlock();assert.equal(configured,1);assert.ok(lengths.includes(1));assert.equal(ctx.voices[0].startAt,0);assert.ok(ctx.voices[0].endAt>ctx.currentTime);
+ const count=ctx.voices.length;sfx.unlock();assert.equal(ctx.voices.length,count);
+});

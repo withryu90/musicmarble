@@ -1,5 +1,5 @@
-import {RoomService} from './room-service.js?v=all-private-quiz-results-1';
-import * as G from './engine.js?v=backward-reroll-1';
+import {RoomService} from './room-service.js?v=f7a9be7f4f69';
+import * as G from './engine.js?v=f7a9be7f4f69';
 export const PEER_PREFIX='musicmarble-rtc-v1-';
 const STORE='musicmarble.peer.host.v1';
 export function roomPeerId(code){if(typeof code!=='string'||!/^[A-HJ-NP-Z2-9]{6}$/.test(code))throw Error('공유 코드는 영문과 숫자 6자리로 입력해 주세요.');return PEER_PREFIX+code;}
@@ -15,7 +15,7 @@ let sdkPromise;
 async function loadPeer(){
  if(globalThis.Peer)return globalThis.Peer;
  if(!sdkPromise)sdkPromise=new Promise((resolve,reject)=>{
-  const script=document.createElement('script');script.src=new URL('./vendor/peerjs-1.5.5.min.js',import.meta.url).href;
+  const script=document.createElement('script');script.src=new URL('./vendor/peerjs-1.5.5.min.js?v=f7a9be7f4f69',import.meta.url).href;
   script.onload=()=>globalThis.Peer?resolve(globalThis.Peer):reject(Error('연결 도구를 불러오지 못했어요.'));
   script.onerror=()=>reject(Error('연결 도구를 불러오지 못했어요. 네트워크를 확인해 주세요.'));document.head.appendChild(script);
  }).catch(e=>{sdkPromise=null;throw e;});

@@ -1,4 +1,4 @@
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=backward-reroll-1';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=f7a9be7f4f69';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){

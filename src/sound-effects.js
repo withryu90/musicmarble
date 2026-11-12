@@ -1,10 +1,16 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=orchestra-two-phrases-1',import.meta.url).href};
+export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=f7a9be7f4f69',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=f7a9be7f4f69',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison'];
-export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args)}={}){
- let context=null,enabled=true,generation=0;const nodes=new Set(),seen=new Set(),buffers=new Map();
- function prepare(){if(!enabled)return null;try{context??=createContext();return context;}catch{return null;}}
- function unlock(){const ctx=prepare();if(!ctx)return;if(['suspended','interrupted'].includes(ctx.state))void ctx.resume().catch(()=>{});for(const name of Object.keys(RECORDED_EFFECTS))void loadRecording(ctx,name).catch(()=>{});}
+export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
+ let context=null,enabled=true,generation=0,primed=false;const nodes=new Set(),seen=new Set(),buffers=new Map();
+ function prepare(){if(!enabled)return null;try{configureSession();context??=createContext();return context;}catch{return null;}}
+ function unlock(){
+  const ctx=prepare();if(!ctx)return;
+  if(['suspended','interrupted'].includes(ctx.state)){primed=false;void ctx.resume().catch(()=>{});}
+  // iOS Safari needs a source started inside the gesture, not resume() alone.
+  if(!primed){try{const source=ctx.createBufferSource();source.buffer=ctx.createBuffer(1,1,ctx.sampleRate);source.connect(ctx.destination);source.start(0);track(source,ctx.currentTime+.02);primed=true;}catch{}}
+  for(const name of Object.keys(RECORDED_EFFECTS))void loadRecording(ctx,name).catch(()=>{});
+ }
  function loadRecording(ctx,name){if(!buffers.has(name)){const pending=(async()=>{const response=await fetchAudio(RECORDED_EFFECTS[name]);if(!response.ok)throw Error('Sound unavailable');return ctx.decodeAudioData(await response.arrayBuffer());})();buffers.set(name,pending);pending.catch(()=>buffers.delete(name));}return buffers.get(name);}
  function stop(){generation++;for(const node of nodes){try{node.stop();node.disconnect();}catch{}}nodes.clear();}
  function track(node,end,chain=[]){nodes.add(node);node.onended=()=>{nodes.delete(node);node.disconnect();chain.forEach(n=>n.disconnect());};node.stop(end);}

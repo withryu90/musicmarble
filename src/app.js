@@ -284,7 +284,7 @@ function landmark(type){
 function boardTitle(cell){
  const lines={
   'go-to-prison':['감옥으로','가기'],
-  'streaming-prison':['불법 스트리밍','감옥'],
+  'streaming-prison':boardView==='flat'?['불법','스트리밍','감옥']:['불법 스트리밍','감옥'],
   'handel-water':['수상','음악'],
   'haydn-surprise':['놀람','교향곡'],
   'brahms-hungarian-5':['헝가리 무곡','제5번'],

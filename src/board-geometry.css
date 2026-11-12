@@ -32,7 +32,7 @@
 .board-area .board>.cell{min-width:0;min-height:0;width:auto;height:auto;align-self:stretch;justify-self:stretch}
 .board-area .board>.board-center{min-width:0;min-height:0}
 .board-area.is-flat .board-wrap{width:100%;margin-bottom:0;overflow-x:auto}
-.board-area.is-flat .board-grid-frame{min-width:640px}
+.board-area.is-flat .board-grid-frame{min-width:0}
 .board-area.is-flat .board-scene{aspect-ratio:auto;min-height:0}
 @media(max-width:650px){
  .board-area .board-surround{gap:20px;padding-top:12px}
@@ -61,3 +61,42 @@
 .board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .tile-copy,
 .board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .tile-copy>*{text-shadow:none}
 .board-area .cell.start .tile-copy::before{box-shadow:none;text-shadow:none}
+
+/* Flat boards scale as one square, including their type and pawns. */
+.board-area.is-flat .board-wrap{padding:clamp(4px,.9vw,12px);overflow:visible}
+.board-area.is-flat .board{gap:clamp(2px,.4vw,5px)}
+.board-area.is-flat .board-scroll-hint{display:none}
+.board-area.is-flat .board>.cell{container-type:inline-size;padding:0;border-top-width:clamp(2px,.3vw,5px)}
+.board-area.is-flat .cell .tile-copy{
+ position:absolute;inset:4%;width:auto;height:auto;min-height:0;margin:0;padding:0;
+ display:grid;grid-template-rows:18% 60% 18%;row-gap:2%;align-items:center;justify-items:center;
+}
+.board-area.is-flat .cell .tile-copy strong{font-size:15cqw;line-height:1.1;letter-spacing:-.02em;padding:0}
+.board-area.is-flat .cell .tile-copy strong.long-title{font-size:12cqw}
+.board-area.is-flat .cell .tile-copy .cell-top{font-size:12cqw;line-height:1.1}
+.board-area.is-flat .cell .tile-copy .cell-price{font-size:10cqw;line-height:1.1;letter-spacing:0}
+.board-area.is-flat .cell.start .tile-copy::before{font-size:17cqw;line-height:1;padding:2cqw 4cqw}
+.board-area.is-flat .cell.start .start-portal{width:60%;height:65%}
+.board-area.is-flat .cell.prison .tile-copy{grid-template-rows:76% 20%;row-gap:4%}
+.board-area.is-flat .cell.prison .tile-copy strong{font-size:17cqw;line-height:1.05}
+.board-area.is-flat .cell.prison .tile-copy .cell-price{font-size:9cqw}
+.board-area.is-flat .cell>.tokens{
+ --figure-width:min(34cqw,34px);--figure-height:min(38cqw,38px);--character-slot:min(36cqw,36px);
+}
+/* Use the same symmetric text frame on every projected tile. Special symbols
+   occupy the top row; the work/tile title stays on the tile's exact centre. */
+.board-area.is-3d .cell .tile-copy,.board-area.is-3d .cell:not(.work) .tile-copy{
+ position:absolute;inset:auto;left:50%;top:50%;width:78cqw;height:56cqw;margin:0;padding:0;
+ display:grid;grid-template-rows:10cqw 34cqw 10cqw;row-gap:1cqw;
+ align-items:center;justify-items:center;transform-origin:50% 50%;
+ transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateZ(15px);
+}
+.board-area.is-3d .cell .tile-copy strong{
+ grid-row:2;align-self:center;justify-self:center;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;width:100%;height:100%;margin:0;padding:0;
+ text-align:center;line-height:1.1;
+}
+.board-area.is-3d .cell .tile-copy .cell-top{grid-row:1;margin:0;padding:0;align-self:center}
+.board-area.is-3d .cell .tile-copy .cell-price{grid-row:3;margin:0;padding:0;align-self:center}
+.board-area.is-3d .cell.start .tile-copy::before{grid-row:1;font-size:13cqw;line-height:1;padding:0 3cqw}
+.board-area.is-3d .cell .tile-copy .landmark{grid-row:1;position:static;margin:0;align-self:center;justify-self:center}

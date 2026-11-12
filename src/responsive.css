@@ -273,3 +273,5 @@ body.portrait-game{overflow:hidden}
  display:block;width:23px;height:23px;margin:0;pointer-events:none;
 }
 .lobby-header-actions .bgm-bell.is-muted,.game-shell .header-actions .bgm-bell.is-muted{color:#6c8ba2}
+
+.nickname-error{margin:-8px 0 16px;color:#b42438;font-size:12px;font-weight:700;line-height:1.6}#modal .nickname-error{color:#b42438;font-size:12px}input[aria-invalid="true"]{border-color:#cf3d50}

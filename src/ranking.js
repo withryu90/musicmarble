@@ -11,7 +11,16 @@ export class RankingClient{
  save(){try{const values=Object.values(this.records).sort((a,b)=>b.createdAt-a.createdAt);const keep=values.filter(r=>!r.done).concat(values.filter(r=>r.done).slice(0,100));this.storage?.setItem(KEY,JSON.stringify(Object.fromEntries(keep.map(r=>[r.gameId,r]))));}catch{}}
  async request(path,body,secret){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10000);
-  try{const response=await this.fetchFn(this.origin+'/api/ranking/'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json',...(secret?{Authorization:'Bearer '+secret}:{})}:{},body:body?JSON.stringify(body):undefined,signal:controller.signal,cache:'no-store',credentials:'omit'});if(!response.ok)throw Error('랭킹 서버에 연결하지 못했어요.');return await response.json();}finally{clearTimeout(timer);}
+  try{const response=await this.fetchFn(this.origin+'/api/ranking/'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json',...(secret?{Authorization:'Bearer '+secret}:{})}:{},body:body?JSON.stringify(body):undefined,signal:controller.signal,cache:'no-store',credentials:'omit'});const data=await response.json();if(!response.ok)throw Object.assign(Error(response.status===409&&data?.error==='이미 등록된 닉네임입니다.'?data.error:'랭킹 서버에 연결하지 못했어요.'),{status:response.status});return data;}finally{clearTimeout(timer);}
+ }
+ async assertNicknameAvailable(value){
+  const nickname=typeof value==='string'?value.normalize('NFC').trim():'';
+  if(!nickname||nickname.length>16||/[\u0000-\u001f\u007f]/.test(nickname))throw Error('닉네임은 1–16자로 입력해 주세요.');
+  if(!this.origin)throw Error('닉네임 중복 확인에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.');
+  let data;try{data=await this.request('nickname',{nickname});}catch{throw Error('닉네임 중복 확인에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.');}
+  if(data?.available===false)throw Error('이미 등록된 닉네임입니다.');
+  if(data?.available!==true)throw Error('닉네임 중복 확인에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.');
+  return nickname;
  }
  async refresh(force=false){
   if(!this.origin){this.error='전체 랭킹을 준비하고 있어요.';this.onChange();return;}
@@ -27,10 +36,10 @@ export class RankingClient{
  }
  async flush(record){
   if(!this.origin)return;
-  if(this.pending.has(record.gameId)||record.done)return;this.pending.add(record.gameId);
+  if(this.pending.has(record.gameId)||record.done||record.blocked)return;this.pending.add(record.gameId);
   try{if(!record.registered){await this.request('register',{gameId:record.gameId,secret:record.secret,players:record.players});record.registered=true;this.save();}if(record.scores){await this.request('submit',{gameId:record.gameId,scores:record.scores},record.secret);record.done=true;record.error='';this.save();void this.refresh(true);}}
-  catch{record.error='전체 랭킹 기록을 재시도할 예정이에요.';this.save();}finally{this.pending.delete(record.gameId);this.onChange();}
+  catch(error){record.blocked=error.status===409;record.error=record.blocked?error.message:'전체 랭킹 기록을 재시도할 예정이에요.';this.save();}finally{this.pending.delete(record.gameId);this.onChange();}
  }
  retryPending(){return Promise.all(Object.values(this.records).filter(r=>r.scores&&!r.done).map(r=>this.flush(r)));}
- status(id){const r=this.records[id];return r?.done?'전체 랭킹에 점수를 기록했어요.':r?.scores?r.error||'전체 랭킹에 점수를 기록하고 있어요.':'게임이 끝나면 최종 점수를 전체 랭킹에 기록해요.';}
+ status(id){const r=this.records[id];return r?.blocked?r.error:r?.done?'전체 랭킹에 점수를 기록했어요.':r?.scores?r.error||'전체 랭킹에 점수를 기록하고 있어요.':'게임이 끝나면 최종 점수를 전체 랭킹에 기록해요.';}
 }

@@ -1,5 +1,5 @@
 import {createSoundEffects,activitySound} from './sound-effects.js?v=quiz-outcome-sounds-1';
-import {RankingClient} from './ranking.js?v=global-ranking-live-1';
+import {RankingClient} from './ranking.js?v=unique-ranking-names-1';
 import {animateFlatStep} from './pawn-motion.js';
 import {HandoffCountdown} from './handoff-countdown.js?v=ten-second-handoff-1';
 import {fitBoardTitles} from './board-type.js?v=upright-pawns-1';
@@ -66,7 +66,11 @@ document.addEventListener('touchend',unlockLobbyMusic,{capture:true,passive:true
 document.addEventListener('click',unlockLobbyMusic,{capture:true});
 document.addEventListener('keydown',e=>{if(!['Shift','Control','Alt','Meta','Escape'].includes(e.key))unlockLobbyMusic(e);},{capture:true});
 const myTurn=()=>connected&&session?.playerId===state.turn;
-async function request(path,body){return peerTransport.request(path,body,session);}
+async function request(path,body){
+ if(['create','join','create-solo'].includes(path))body={...body,nickname:await rankingClient.assertNicknameAvailable(body.nickname)};
+ if(path==='action'&&body.action==='start'&&!snapshot?.state)await Promise.all(snapshot.members.filter(p=>!p.isBot).map(p=>rankingClient.assertNicknameAvailable(p.name)));
+ return peerTransport.request(path,body,session);
+}
 
 function remember(){try{localStorage.setItem(key,JSON.stringify(session));}catch{notify('참가 정보를 저장하지 못했어요. 이 창을 유지해 주세요.');}}
 let dicePresentation=null;
@@ -244,9 +248,17 @@ function connect(){
   onDisconnect:message=>{connected=false;render();if(message)notify(message);}
  });
 }
+function nicknameError(form,message){
+ if(!form)return;form.querySelector('.nickname-error')?.remove();
+ const input=form.querySelector('input[name="nickname"]');if(!input)return;
+ input.removeAttribute('aria-invalid');input.removeAttribute('aria-describedby');
+ if(!message||!/(닉네임|이미 등록)/.test(message))return;
+ const note=document.createElement('p');note.className='nickname-error';note.id=`${form.id}-nickname-error`;note.setAttribute('role','alert');note.textContent=message;
+ input.setAttribute('aria-invalid','true');input.setAttribute('aria-describedby',note.id);input.closest('label').after(note);
+}
 async function enter(path,nickname,code,characterId){
- if(busy)return;busy=true;
- try{session=await request(path,{nickname,code,characterId});remember();snapshot=null;lastAuto='';resetActivityFlow();connect();render();}catch(error){notify(error.message);}finally{busy=false;}
+ if(busy)return;busy=true;nicknameError($('#entry-form'));
+ try{session=await request(path,{nickname,code,characterId});remember();snapshot=null;lastAuto='';resetActivityFlow();connect();render();}catch(error){nicknameError($('#entry-form'),error.message);notify(error.message);}finally{busy=false;}
 }
 async function resume(){if(!session?.code||!session?.token){session=null;render();notify('이 브라우저에 저장된 게임이 없어요. 새 게임을 시작해 주세요.');return;}try{const data=await request('resume',{code:session.code});session.playerId=data.playerId;connected=true;receive(data);connect();}catch(error){session=null;try{localStorage.removeItem(key);}catch{}render();notify(error.message);}}
 const num=n=>n.toLocaleString('ko-KR');
@@ -270,7 +282,7 @@ function rankingRows(){
  if(!rankingClient.entries.length)return `<p class="ranking-empty">${rankingClient.loading?'전체 랭킹을 불러오고 있어요…':'아직 등록된 기록이 없어요.<br>첫 번째 음악 투자자의 주인공이 되어 보세요!'}</p>`;
  return `<ol class="ranking-list">${rankingClient.entries.map((p,i)=>`<li class="ranking-place-${i+1}"><span class="ranking-place" aria-label="${i+1}위">${i<3?`<span role="img" aria-label="${['금','은','동'][i]}메달">${['🥇','🥈','🥉'][i]}</span>`:i+1}</span><strong>${esc(p.nickname)}</strong><span class="ranking-score">${num(p.score)} <small>점</small></span></li>`).join('')}</ol>`;
 }
-function rankingPanel(){return `<section class="entrance-ranking" aria-labelledby="ranking-title"><div class="ranking-intro"><span class="eyebrow">MUSIC MARBLE TOP 10</span><h2 id="ranking-title">우리들의 누적 랭킹</h2><p>명곡과 함께 쌓아 가는<br>음악 투자자의 기록</p><small>종료한 게임의 총자산을 점수로 누적해요.<br>봇 제외 · 같은 닉네임은 합산</small><button type="button" class="ranking-refresh" data-action="ranking-refresh" ${rankingClient.loading?'disabled':''}>${rankingClient.loading?'불러오는 중…':'랭킹 새로고침 ↻'}</button></div><div id="ranking-board-content" aria-live="polite">${rankingRows()}</div></section>`;}
+function rankingPanel(){return `<section class="entrance-ranking" aria-labelledby="ranking-title"><div class="ranking-intro"><span class="eyebrow">MUSIC MARBLE TOP 10</span><h2 id="ranking-title">우리들의 누적 랭킹</h2><p>명곡과 함께 쌓아 가는<br>음악 투자자의 기록</p><small>종료한 게임의 총자산으로 순위를 정해요.<br>봇 제외 · 등록된 닉네임은 중복 사용 불가</small><button type="button" class="ranking-refresh" data-action="ranking-refresh" ${rankingClient.loading?'disabled':''}>${rankingClient.loading?'불러오는 중…':'랭킹 새로고침 ↻'}</button></div><div id="ranking-board-content" aria-live="polite">${rankingRows()}</div></section>`;}
 function updateRankingBoard(){const panel=$('#ranking-board-content');if(panel)panel.innerHTML=rankingRows();const button=$('[data-action="ranking-refresh"]');if(button){button.disabled=rankingClient.loading;button.textContent=rankingClient.loading?'불러오는 중…':'랭킹 새로고침 ↻';}const status=$('#ranking-save-status');if(status)status.textContent=session?.playerId===0?rankingClient.status(snapshot?.gameId):'최종 점수는 방장 화면에서 전체 랭킹에 기록됩니다.';}
 function characterPicker(selected=''){
  return `<div class="character-picker"><label>나의 캐릭터<select name="characterId" aria-label="나의 캐릭터"><option value="">랜덤으로 정하기</option>${CHARACTERS.map(c=>`<option value="${c.id}" ${selected===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><div class="character-choice-preview" aria-live="polite">${characterChoicePreview(selected)}</div><small>${CHARACTERS.length}명 중 직접 고르거나 랜덤으로 정할 수 있어요. 같은 방에서는 중복되지 않아요.</small></div>`;
@@ -459,11 +471,11 @@ $('#modal').addEventListener('submit',async e=>{
  e.preventDefault();const f=new FormData(e.target);
  if(e.target.id==='solo-form'){
   if(busy)return;busy=true;
-  const button=e.target.querySelector('button[type="submit"]');button.disabled=true;
+  const button=e.target.querySelector('button[type="submit"]');button.disabled=true;nicknameError(e.target);
   try{
    const next=await request('create-solo',{nickname:String(f.get('nickname')),characterId:String(f.get('characterId')),config:{botCount:Number(f.get('bots')),rounds:Number(f.get('rounds')),coins:1200}});
    events?.close();session=next;remember();snapshot=null;connected=false;lastAuto='';tab='board';revealCharacter=true;resetActivityFlow();$('#modal').close();connect();render();
-  }catch(error){notify(error.message);button.disabled=false;}finally{busy=false;}
+  }catch(error){nicknameError(e.target,error.message);notify(error.message);button.disabled=false;}finally{busy=false;}
  }
  if(e.target.id==='trade-form'){closeModal();await apply(G.proposeTrade,{workId:selected,to:Number(f.get('to')),price:Number(f.get('price'))});}
 

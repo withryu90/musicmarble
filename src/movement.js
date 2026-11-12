@@ -10,10 +10,9 @@ export function boardTokenVisible(state,player,movingPlayerId=null){
   (state.turn===player.id&&state.phase!=='roll'&&state.dice!==null);
 }
 
-// START is an on-tile entrance; other figures stand beside their edge tile.
+// Every upright figure stands on its tile, including START and all four edges.
 export function boardTokenAnchor(row,col,side){
- if(row===1&&col===1)return {x:50,y:50};
- return {x:col===1?-60:col===side?160:50,y:row===1?-60:row===side?160:50};
+ return {x:50,y:50};
 }
 
 export function backwardPath(start,steps,size){

@@ -1,24 +1,24 @@
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=336a4c4cb138';
-import {WORK_ARTWORK} from './work-artwork.js?v=336a4c4cb138';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=336a4c4cb138';
-import {RankingClient} from './ranking.js?v=336a4c4cb138';
-import {animateFlatStep} from './pawn-motion.js?v=336a4c4cb138';
-import {HandoffCountdown} from './handoff-countdown.js?v=336a4c4cb138';
-import {fitBoardTitles} from './board-type.js?v=336a4c4cb138';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=336a4c4cb138';
-import * as G from './engine.js?v=336a4c4cb138';
-import {ActivityInbox} from './activities.js?v=336a4c4cb138';
-import {purchaseQuizById} from './purchase-quizzes.js?v=336a4c4cb138';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=336a4c4cb138';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=336a4c4cb138';
-import {diceCube} from './dice.js?v=336a4c4cb138';
-import {CHARACTER_BIOS} from './character-bios.js?v=336a4c4cb138';
-import {needsLandscape} from './orientation.js?v=336a4c4cb138';
-import {createBgm} from './bgm.js?v=336a4c4cb138';
-import {PeerTransport} from './peer-transport.js?v=336a4c4cb138';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=336a4c4cb138';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=336a4c4cb138';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=336a4c4cb138';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=9f1ab1c947b7';
+import {WORK_ARTWORK} from './work-artwork.js?v=9f1ab1c947b7';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=9f1ab1c947b7';
+import {RankingClient} from './ranking.js?v=9f1ab1c947b7';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=9f1ab1c947b7';
+import {HandoffCountdown} from './handoff-countdown.js?v=9f1ab1c947b7';
+import {fitBoardTitles} from './board-type.js?v=9f1ab1c947b7';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=9f1ab1c947b7';
+import * as G from './engine.js?v=9f1ab1c947b7';
+import {ActivityInbox} from './activities.js?v=9f1ab1c947b7';
+import {purchaseQuizById} from './purchase-quizzes.js?v=9f1ab1c947b7';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9f1ab1c947b7';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9f1ab1c947b7';
+import {diceCube} from './dice.js?v=9f1ab1c947b7';
+import {CHARACTER_BIOS} from './character-bios.js?v=9f1ab1c947b7';
+import {needsLandscape} from './orientation.js?v=9f1ab1c947b7';
+import {createBgm} from './bgm.js?v=9f1ab1c947b7';
+import {PeerTransport} from './peer-transport.js?v=9f1ab1c947b7';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=9f1ab1c947b7';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=9f1ab1c947b7';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=9f1ab1c947b7';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -133,6 +133,7 @@ function animateBoardMovement(p){
   const previousPosition=state.players[p.playerId].position;
   state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);p.backward=!!backward&&pathIndex>forwardSteps;p.backwardStep=pathIndex-forwardSteps;render();
   if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
+  else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});});
   if(pathIndex<path.length)p.timer=setTimeout(advance,900);
   else p.timer=setTimeout(()=>{
    const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);

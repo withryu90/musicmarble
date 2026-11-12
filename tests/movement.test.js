@@ -27,10 +27,8 @@ test('tokens appear only as each player starts moving and remain visible on retu
  assert.deepEqual(visible({...initial,turnNumber:4,dice:3}),[0,1,2,3]);
 });
 
-test('START uses the centre of its own tile rather than the outer left-edge anchor',()=>{
- assert.deepEqual(boardTokenAnchor(1,1,8),{x:50,y:50});
- assert.deepEqual(boardTokenAnchor(1,2,8),{x:50,y:-60});
- assert.deepEqual(boardTokenAnchor(2,1,8),{x:-60,y:50});
- assert.deepEqual(boardTokenAnchor(2,8,8),{x:160,y:50});
- assert.deepEqual(boardTokenAnchor(8,2,8),{x:50,y:160});
+test('every board edge and corner anchors its pawn on the tile centre',()=>{
+ for(let row=1;row<=8;row++)for(let col=1;col<=8;col++)if(row===1||row===8||col===1||col===8){
+  assert.deepEqual(boardTokenAnchor(row,col,8),{x:50,y:50});
+ }
 });

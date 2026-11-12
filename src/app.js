@@ -1,17 +1,17 @@
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js';
-import * as G from './engine.js?v=teacher-lee-1';
+import * as G from './engine.js?v=teacher-shin-1';
 import {ActivityInbox} from './activities.js';
 import {purchaseQuizById} from './purchase-quizzes.js';
 import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
 import {movementPath,boardTokenVisible,boardTokenAnchor} from './movement.js?v=gate-entry-2';
 import {diceCube} from './dice.js';
-import {CHARACTER_BIOS} from './character-bios.js?v=teacher-lee-1';
+import {CHARACTER_BIOS} from './character-bios.js?v=teacher-shin-1';
 import {needsLandscape} from './orientation.js';
 import {createBgm} from './bgm.js';
-import {PeerTransport} from './peer-transport.js?v=teacher-lee-1';
+import {PeerTransport} from './peer-transport.js?v=teacher-shin-1';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
 import {canOfferTurnHandoff} from './turn-handoff.js';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=teacher-lee-1';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=teacher-shin-1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>

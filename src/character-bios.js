@@ -36,4 +36,5 @@ export const CHARACTER_BIOS={
  gershwin:{birth:1898,death:1937,achievement:'「랩소디 인 블루」 등에서 재즈의 리듬과 어법을 클래식 음악과 결합했습니다.'},
  'teacher-yu-jiyoung':{birth:null,death:null,achievement:'뮤직마블 속 음악사와 창작의 권리를 알려주는 대한민국 음악 교사'},
  'teacher-lee-hwayoung':{birth:null,death:null,achievement:'평소 드럼 연주를 즐기며 누구보다 음악을 사랑하는 대한민국 대표 음악 교사'},
+ 'teacher-shin-songi':{birth:null,death:null,achievement:'사람에게는 온기를, 일상에는 활기와 음악을 더하는 매력적인 국어 선생님!'},
 };

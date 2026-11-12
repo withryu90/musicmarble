@@ -4,12 +4,12 @@ import {CHARACTERS,characterById,characterFor,drawCharacterIds} from '../src/cha
 import * as G from '../src/engine.js';
 import {RoomService} from '../server/rooms.js';
 const assertUnique=members=>{assert.equal(new Set(members.map(p=>p.characterId)).size,members.length);assert.ok(members.every(p=>characterById(p.characterId)));};
-test('32 named characters have unique IDs; original atlases and teacher image have distinct layouts',()=>{
- assert.equal(CHARACTERS.length,32);assert.equal(new Set(CHARACTERS.map(c=>c.id)).size,32);assert.equal(new Set(CHARACTERS.map(c=>c.name)).size,32);
+test('33 named characters have unique IDs; original atlases and teacher image have distinct layouts',()=>{
+ assert.equal(CHARACTERS.length,33);assert.equal(new Set(CHARACTERS.map(c=>c.id)).size,33);assert.equal(new Set(CHARACTERS.map(c=>c.name)).size,33);
  for(const sheet of new Set(CHARACTERS.filter(c=>c.layout!=='single').map(c=>c.sheet)))assert.deepEqual(CHARACTERS.filter(c=>c.sheet===sheet).map(c=>c.slot),[0,1,2,3,4,5]);assert.equal(characterById('teacher-yu-jiyoung').name,'유지영 선생님');
 });
 test('drawing characters never repeats a used or newly drawn ID',()=>{
- const first=drawCharacterIds(15,[],()=>.3);assert.equal(new Set(first).size,15);const next=drawCharacterIds(17,first,()=>.7);assert.equal(new Set([...first,...next]).size,32);assert.throws(()=>drawCharacterIds(18,first));assert.throws(()=>drawCharacterIds(-1));
+ const first=drawCharacterIds(15,[],()=>.3);assert.equal(new Set(first).size,15);const next=drawCharacterIds(18,first,()=>.7);assert.equal(new Set([...first,...next]).size,33);assert.throws(()=>drawCharacterIds(19,first));assert.throws(()=>drawCharacterIds(-1));
 });
 test('new games reserve unique characters and reject unknown or duplicate selections',()=>{
  const names=['A','B','C','D'];for(let i=0;i<50;i++)assertUnique(G.createGame({names}).players);
@@ -74,6 +74,12 @@ test('teacher character can be selected, stays unique and uses a transparent sta
 
 test('Lee Hwayoung is selectable as a unique bust character in solo and shared rooms',async()=>{
  const c=characterById('teacher-lee-hwayoung');assert.equal(c.name,'이화영 선생님');assert.equal(c.fullName,'Korean Teacher');assert.equal(c.portrait,true);
+ const {readFile}=await import('node:fs/promises'),bytes=await readFile(new URL('../'+c.asset.replace('./',''),import.meta.url));assert.equal(bytes.subarray(1,4).toString(),'PNG');assert.equal(bytes[25],6);
+ const service=new RoomService();try{const a=service.createSolo('새 선생님',{botCount:3},c.id),room=service.get(a.code);assert.equal(room.state.players[0].characterId,c.id);assertUnique(room.state.players);const b=service.create('방장',c.id);assert.throws(()=>service.join(b.code,'중복',c.id));}finally{service.close();}
+});
+
+test('Shin Songi is selectable as a unique bust character in solo and shared rooms',async()=>{
+ const c=characterById('teacher-shin-songi');assert.equal(c.name,'신송이 선생님');assert.equal(c.fullName,'Korean Teacher');assert.equal(c.portrait,true);
  const {readFile}=await import('node:fs/promises'),bytes=await readFile(new URL('../'+c.asset.replace('./',''),import.meta.url));assert.equal(bytes.subarray(1,4).toString(),'PNG');assert.equal(bytes[25],6);
  const service=new RoomService();try{const a=service.createSolo('새 선생님',{botCount:3},c.id),room=service.get(a.code);assert.equal(room.state.players[0].characterId,c.id);assertUnique(room.state.players);const b=service.create('방장',c.id);assert.throws(()=>service.join(b.code,'중복',c.id));}finally{service.close();}
 });

@@ -15,3 +15,7 @@ test('distinct Mendelssohn and Schumann biographies retain their own years',()=>
 test('Lee Hwayoung biography uses the requested private birth year and exact introduction',()=>{
  assert.deepEqual(CHARACTER_BIOS['teacher-lee-hwayoung'],{birth:null,death:null,achievement:'평소 드럼 연주를 즐기며 누구보다 음악을 사랑하는 대한민국 대표 음악 교사'});
 });
+
+test('Shin Songi biography keeps the requested private birth year and exact introduction',()=>{
+ assert.deepEqual(CHARACTER_BIOS['teacher-shin-songi'],{birth:null,death:null,achievement:'사람에게는 온기를, 일상에는 활기와 음악을 더하는 매력적인 국어 선생님!'});
+});

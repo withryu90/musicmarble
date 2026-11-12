@@ -133,7 +133,7 @@ dialog#modal::backdrop{background:#164d7959}
  display:grid;place-items:center;width:32px;height:32px;min-width:32px;min-height:32px;
  padding:0;line-height:1;border-radius:50%;color:#23658d;
 }
-#modal .modal-header .icon-button svg{display:block;width:26px;height:26px;pointer-events:none}
+#modal .modal-header .icon-button svg{display:block;width:13px;height:13px;pointer-events:none}
 
 /* Make the purchase decision the focus after the OX result. */
 #modal .purchase-work-summary{margin:18px 0 24px;padding:24px 20px;text-align:center;border:1px solid #b7d5ee;border-radius:18px;background:linear-gradient(145deg,#f3faff,#e1effd)}

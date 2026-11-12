@@ -295,4 +295,7 @@ body.portrait-game{overflow:hidden}
 #modal.character-bio-modal .modal-header .icon-button{width:24px;height:24px;min-width:24px;min-height:24px}
 #modal.entrance-help .modal-header .icon-button svg,
 #modal.ranking-modal .modal-header .icon-button svg,
-#modal.character-bio-modal .modal-header .icon-button svg{width:20px;height:20px}
+#modal.character-bio-modal .modal-header .icon-button svg{width:10px;height:10px}
+
+/* Preserve the close button hit area while hiding its circular border. */
+#modal .modal-header .icon-button{border-color:transparent;box-shadow:none}

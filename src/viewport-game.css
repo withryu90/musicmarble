@@ -175,4 +175,8 @@ dialog#modal .modal-header .icon-button[data-action="close"],
 dialog#modal .modal-header .icon-button[data-action="close"]:hover,
 dialog#modal .modal-header .icon-button[data-action="close"]:active{border:0;border-radius:0;background:transparent;box-shadow:none;padding:0}
 dialog#modal .modal-header .icon-button[data-action="close"] svg{width:8px;height:8px;display:block}
+/* Dialog autofocus must not draw a box around the bare close icon. */
+dialog#modal .modal-header .icon-button[data-action="close"]:focus,
+dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible{outline:none;outline-offset:0;box-shadow:none}
+dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{color:#1264a0;filter:drop-shadow(0 0 2px #269bdf80)}
 .game-shell[data-tab="board"] .board-area .players-bottom{align-items:flex-end}

@@ -372,7 +372,7 @@ function actionPanel(){
   if(!state.quizUsed)content+=`<button class="secondary full" data-action="quiz">? 배움 퀴즈 도전 <span>+80 MC</span></button>`;
   content+=`<button class="${c.type==='work'&&!o?'text-button':'primary full'}" data-action="next">${c.type==='work'&&!o?'구입하지 않고 차례 마치기':'다음 팀에게 넘기기'} →</button>`;
  }
- return `<div class="turn-card"><div class="turn-heading"><span class="eyebrow">YOUR TURN</span>${pill(`완주 ${lapProgressText(p)}`)}</div><h2>${characterSprite(p)}${esc(p.name)}</h2><button class="my-character-button" data-action="my-character">${characterSprite(p)}<span>나의 캐릭터 <b>${esc(characterFor(p).name)}</b></span><i>↗</i></button><div class="balance"><span>사용 가능한 뮤직코인</span><strong>${num(p.coins)}<small> MC</small></strong></div>${concertPlanningButton()}${content}</div>`;
+ return `<div class="turn-card"><div class="turn-heading"><span class="eyebrow">YOUR TURN</span>${pill(`완주 ${lapProgressText(p)}`)}</div><div class="turn-identity"><button class="turn-portrait" data-action="my-character" aria-label="나의 캐릭터 ${esc(characterFor(p).name)} 알아보기">${characterSprite(p)}</button><div class="turn-identity-copy"><h2 title="${esc(p.name)}">${esc(p.name)}</h2><button class="turn-character-name" data-action="my-character">나의 캐릭터 <b>${esc(characterFor(p).name)}</b></button></div></div><div class="balance"><span>사용 가능한 뮤직코인</span><strong>${num(p.coins)}<small> MC</small></strong></div>${concertPlanningButton()}${content}</div>`;
 }
 function players(row){
  const seats=['top-left','top-right','bottom-left','bottom-right'];

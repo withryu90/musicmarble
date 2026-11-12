@@ -14,7 +14,7 @@ export const BOARD = [
   w('vivaldi-spring','비발디','사계: 봄','1725 출판','baroque',200,40,'새소리와 폭풍을 떠올리게 하는 바이올린 협주곡. 음악이 장면을 묘사합니다.'),
   w('vivaldi-winter','비발디','사계: 겨울','1725 출판','baroque',200,40,'떨리는 듯한 리듬과 대비되는 느린 악장에서 겨울의 풍경을 상상해 보세요.'),
   w('handel-water','헨델','수상 음악','1717','baroque',210,40,'바로크 시대의 관현악 모음곡. 춤곡의 리듬과 다채로운 악기 소리를 만나요.'),
-  {id:'back-three',type:'back-three',title:'뒤로 3칸',subtitle:'왔던 길로 세 칸 이동'},
+  {id:'back-three',type:'back-three',title:'뒤로가기',subtitle:'추가 주사위만큼 뒤로'},
   w('mozart-serenade','모차르트','작은 밤의 음악','1787','classical',220,45,'아이네 클라이네 나흐트무지크. 명료한 선율과 균형 잡힌 구성이 돋보입니다.'),
   w('mozart-flute','모차르트','마술피리','1791','classical',240,50,'대사와 노래가 함께하는 징슈필. 다양한 인물의 성격을 음악으로 표현합니다.'),
   {id:'streaming-prison',type:'prison',title:'불법 스트리밍 감옥',subtitle:'6으로 탈출 · 기회 2번'},

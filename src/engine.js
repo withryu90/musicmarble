@@ -1,4 +1,4 @@
-import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=back-three-1';
+import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=backward-reroll-1';
 import {characterById,drawCharacterIds} from './characters.js?v=back-three-1';
 import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js';
 export const VERSION=2;
@@ -51,6 +51,7 @@ function openQuiz(s,kind){
   s.quiz=pool[s.quizCursor%pool.length];s.quizCursor++;s.phase='quiz';s.quizUsed=true;
 }
 export function roll(state,dice,rng=Math.random){
+  if(state.phase==='backward-roll')return rollBackward(state,dice,rng);
   if(state.phase!=='roll'||hasFinished(state,current(state)))throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
   const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
@@ -62,10 +63,20 @@ export function roll(state,dice,rng=Math.random){
     if(!escaped){s.phase='jailed';return s;}
   }
   const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;p.laps=completedLaps(s,p)+1;updateProgress(s);log(s,`${p.name}: 한 바퀴 완주! +200 MC (${p.laps}/${s.maxRounds}바퀴)`);if(hasFinished(s,p)){const moveSteps=BOARD.length-p.position;p.position=0;return finishByLaps(s,p,moveSteps);}}p.position=next%BOARD.length;
-  let cell=BOARD[p.position];log(s,`${p.name}: ${dice}칸 이동 → ${cell.title}`);
+  return resolveArrival(s,p,rng);
+}
+export function rollBackward(state,dice,rng=Math.random){
+ if(state.phase!=='backward-roll'||BOARD[current(state).position].type!=='back-three')throw Error('뒤로가기 칸에서 추가 주사위를 굴려 주세요.');
+ if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
+ const s=clone(state),p=current(s),from=p.position;s.dice=dice;s.phase='action';
+ s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
+ p.position=(from-dice+BOARD.length)%BOARD.length;s.lastBackwardMove={from,to:p.position,steps:dice};
+ return resolveArrival(s,p,rng);
+}
+function resolveArrival(s,p,rng){
+  const cell=BOARD[p.position];log(s,`${p.name}: ${s.lastBackwardMove?'뒤로 ':''}${s.dice}칸 이동 → ${cell.title}`);
   if(cell.type==='back-three'){
-    const from=p.position;p.position=(from-3+BOARD.length)%BOARD.length;s.lastBackwardMove={from,to:p.position,steps:3};cell=BOARD[p.position];
-    log(s,`${p.name}: 뒤로 3칸 이동 → ${cell.title}`);
+    s.phase='backward-roll';log(s,`${p.name}: 뒤로가기 — 주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다.`);return s;
   }
   if(cell.type==='work'){
     const owner=s.ownership[cell.id];if(owner?.player===p.id&&owner.level===0)s.concertWorkId=cell.id;if(owner&&owner.player!==p.id){const cost=fee(s,cell),actual=-change(s,p,-cost);s.players[owner.player].coins+=actual;s.lastRent={workId:cell.id,owner:owner.player,amount:actual,expected:cost};log(s,`${p.name} → ${s.players[owner.player].name}: 가상 이용료 ${actual} MC (기준 ${cost} MC)`);}
@@ -172,7 +183,7 @@ export function resolveTrade(state,accepted){
 export function isValidSave(s){
   try{
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>MAX_PLAYERS)return false;
-    if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
+    if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','backward-roll','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
     if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
@@ -194,7 +205,8 @@ export function isValidSave(s){
     if(s.phase==='jailed'&&(BOARD[current(s).position].type!=='prison'||(!s.lastPrisonRoll&&current(s).skipTurns!==2)))return false;
     if(s.players.some(p=>(p.skipTurns??0)>0&&BOARD[p.position].type!=='prison'))return false;
     if(s.concertWorkId!=null&&(!WORKS.some(w=>w.id===s.concertWorkId)||BOARD[current(s).position].id!==s.concertWorkId))return false;
-    if(s.lastBackwardMove){const m=s.lastBackwardMove;if(m.from!==7||m.to!==4||m.steps!==3||BOARD[m.from].type!=='back-three')return false;}
+    if(s.lastBackwardMove){const m=s.lastBackwardMove;if(m.from!==7||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}
+    if(s.phase==='backward-roll'&&(BOARD[current(s).position].type!=='back-three'||s.lastBackwardMove||s.trade))return false;
     if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>1||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
     if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
     if(['purchase-quiz','purchase-feedback'].includes(s.phase)&&(!s.purchaseChallenge||s.ownership[s.purchaseChallenge.workId]))return false;

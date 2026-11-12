@@ -1,5 +1,5 @@
-import {BOARD,WORKS,QUIZZES} from './data.js?v=back-three-1';
-import * as G from './engine.js?v=first-finisher-1';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=backward-reroll-1';
+import * as G from './engine.js?v=backward-reroll-1';
 import {purchaseQuizById} from './purchase-quizzes.js';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
@@ -17,7 +17,7 @@ export function botDecision(state,previous={},random=Math.random){
     return decide('resolveTrade',[accepted]);
   }
   const p=G.current(state);if(!p.isBot)return null;
-  if(state.phase==='roll')return decide('roll');
+  if(['roll','backward-roll'].includes(state.phase))return decide('roll');
   if(state.phase==='jailed')return decide('nextTurn');
   if(state.phase==='purchase-quiz'){const q=purchaseQuizById(state.purchaseChallenge.questionId);return decide('answerPurchaseQuiz',[random()<.65?q.answer:!q.answer]);}
   if(state.phase==='purchase-feedback')return decide('closePurchaseFeedback');

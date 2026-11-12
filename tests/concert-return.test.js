@@ -26,7 +26,7 @@ test('acquiring a work after arrival does not create a concert opportunity',()=>
  s.ownership['bach-air'].player=0;assert.equal(G.concertWork(s),null);assert.throws(()=>G.upgrade(s,'bach-air'));
 });
 test('a backward move onto an already owned work offers only that work and bots follow the same condition',()=>{
- let s=game();s.players[0].isBot=true;s.players[0].position=6;s.ownership['vivaldi-spring']={player:0,level:0};s=G.roll(s,1);
+ let s=game();s.players[0].isBot=true;s.players[0].position=6;s.ownership['vivaldi-spring']={player:0,level:0};s=G.roll(G.roll(s,1),3);
  assert.equal(s.lastBackwardMove.to,4);assert.equal(G.concertWork(s)?.id,'vivaldi-spring');
  assert.equal(botDecision(s,{},()=>.1).action,'upgrade');
  s.ownership['vivaldi-spring'].player=1;const decision=botDecision(s,{},()=>.1);assert.notEqual(decision.action,'upgrade');

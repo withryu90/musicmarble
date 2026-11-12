@@ -1,7 +1,7 @@
 import {randomInt,randomToken} from './random.js';
-import * as G from './engine.js?v=first-finisher-1';
-import {botDecision,applyBotDecision} from './bots.js?v=first-finisher-1';
-import {activityChanges} from './activities.js?v=clear-quiz-verdict-1';
+import * as G from './engine.js?v=backward-reroll-1';
+import {botDecision,applyBotDecision} from './bots.js?v=backward-reroll-1';
+import {activityChanges} from './activities.js?v=backward-reroll-1';
 import {drawCharacterIds,characterById} from './characters.js?v=back-three-1';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {

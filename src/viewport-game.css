@@ -175,3 +175,4 @@ dialog#modal .modal-header .icon-button[data-action="close"],
 dialog#modal .modal-header .icon-button[data-action="close"]:hover,
 dialog#modal .modal-header .icon-button[data-action="close"]:active{border:0;border-radius:0;background:transparent;box-shadow:none;padding:0}
 dialog#modal .modal-header .icon-button[data-action="close"] svg{width:8px;height:8px;display:block}
+.game-shell[data-tab="board"] .board-area .players-bottom{align-items:flex-end}

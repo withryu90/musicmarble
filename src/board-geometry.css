@@ -215,7 +215,6 @@
 .board-area .board-seat.seat-top-right,.board-area .board-seat.seat-bottom-right{margin-left:auto}
 .board-area .board-seat .board-player[class*="seat-"]{flex:none;width:100%;max-width:100%;margin:0;flex-wrap:wrap}
 .player-chat-slot{height:52px;padding:6px 0;min-width:0;pointer-events:none}
-.players-bottom .player-chat-slot{order:-1}
 .player-chat-bubble{position:relative;border:1px solid #aacde5;background:#fff;color:#244b6a;border-radius:12px;padding:5px 9px;box-shadow:0 3px 8px #23507115;font-size:11px;line-height:16px;pointer-events:auto}
 .player-chat-bubble::before{content:'';position:absolute;top:-5px;left:22px;width:8px;height:8px;transform:rotate(45deg);background:white;border-top:1px solid #aacde5;border-left:1px solid #aacde5}
 .players-bottom .player-chat-bubble::before{top:auto;bottom:-5px;transform:rotate(225deg)}
@@ -264,3 +263,10 @@
 .player-chat-slot{padding:4px 0}
 
 .board-area.is-3d .board-seat{transform:translateX(var(--seat-inset,0px))}
+
+/* Top seats speak below their card; bottom seats speak above it, on every device. */
+.board-area .players-top .board-seat{flex-direction:column}
+.board-area .players-bottom .board-seat{flex-direction:column-reverse}
+.board-area .players-bottom .player-chat-slot{order:0}
+.board-area .players-top .player-chat-bubble::before{top:-5px;bottom:auto;transform:rotate(45deg)}
+.board-area .players-bottom .player-chat-bubble::before{top:auto;bottom:-5px;transform:rotate(225deg)}

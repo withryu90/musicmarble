@@ -1,4 +1,4 @@
-import {createSoundEffects,activitySound} from './sound-effects.js?v=mobile-audio-resume-1';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=quiz-outcome-sounds-1';
 import {RankingClient} from './ranking.js?v=global-ranking-live-1';
 import {animateFlatStep} from './pawn-motion.js';
 import {HandoffCountdown} from './handoff-countdown.js?v=ten-second-handoff-1';

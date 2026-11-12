@@ -45,6 +45,7 @@ export function createSoundEffects({createContext=()=>{const C=globalThis.AudioC
  return {play,unlock,stop,setEnabled};
 }
 export function activitySound(item){
+ if(['quiz-result','purchase-quiz-result'].includes(item.type)&&typeof item.correct==='boolean')return item.correct?'gain':'loss';
  if(item.type==='history-event')return item.card.amount>=0?'gain':'loss';
  if(['prison-entry','prison-transfer'].includes(item.type))return 'prison';
  return null;

@@ -72,3 +72,11 @@ test('interrupted mobile sound effects recover when the user returns and interac
  const ctx=context('interrupted'),sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});
  assert.equal(await sfx.play('dice'),true);assert.equal(ctx.resumeCount,1);ctx.state='interrupted';sfx.unlock();assert.equal(ctx.resumeCount,2);
 });
+
+test('both learning and purchase OX quiz outcomes select positive or negative effects',()=>{
+ for(const type of ['quiz-result','purchase-quiz-result']){
+  assert.equal(activitySound({type,correct:true}),'gain');
+  assert.equal(activitySound({type,correct:false}),'loss');
+  assert.equal(activitySound({type}),null);
+ }
+});

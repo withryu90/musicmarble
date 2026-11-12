@@ -1,7 +1,5 @@
 import {BOARD,WORKS,QUIZZES,PRISON_MESSAGE} from './data.js?v=backward-reroll-1';
 
-import {purchaseQuizById} from './purchase-quizzes.js';
-
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
  if(!before||!after)return [];
@@ -31,7 +29,7 @@ export function activityChanges(before,after){
   else if(previous&&next&&previous.player!==next.player){if(rolled&&after.lastAssignment?.workId===w.id)continue;const price=before.trade?.price??0;add('trade-complete','이용권 거래 성사',{actorId:next.player,otherId:previous.player,workId:w.id,changes:[coin(next.player,-price),coin(previous.player,price)],text:`「${w.title}」 이용권이 새로운 참가자에게 이전되었습니다.`});}
   else if(previous&&next&&next.level>previous.level)add('upgrade','공연 프로젝트 완성',{actorId:next.player,workId:w.id,changes:[coin(next.player,-100)],text:`「${w.title}」 공연을 기획했습니다. 기본 이용료가 20 MC 높아집니다.`});
  }
- if(before.phase==='purchase-quiz'&&after.phase==='purchase-feedback'){const q=purchaseQuizById(after.purchaseChallenge.questionId);add('purchase-quiz-result',after.purchaseChallenge.correct?'구입 OX 퀴즈 정답':'구입 OX 퀴즈 오답',{correct:after.purchaseChallenge.correct,selectedAnswer:after.purchaseChallenge.response?'O · 맞다':'X · 아니다',correctAnswer:q.answer?'O · 맞다':'X · 아니다',workId:after.purchaseChallenge.workId,changes:[],text:after.purchaseChallenge.correct?'이용권을 뮤직코인으로 구입할 자격을 얻었습니다. 아직 구입 대금은 차감되지 않았습니다.':'뮤직코인은 차감되지 않습니다. 해설을 확인하면 구입 없이 다음 참가자의 차례로 넘어갑니다.'});}
+ if(before.phase==='purchase-quiz'&&after.phase==='purchase-feedback')add('purchase-quiz-result',after.purchaseChallenge.correct?'구입 OX 퀴즈 정답':'구입 OX 퀴즈 오답',{correct:after.purchaseChallenge.correct,workId:after.purchaseChallenge.workId,changes:[],text:after.purchaseChallenge.correct?'구입 OX 퀴즈를 맞혔습니다.':'구입 OX 퀴즈를 틀렸습니다.'});
  if(before.phase==='quiz'&&after.phase==='feedback'){const q=QUIZZES.find(q=>q.id===after.quiz);add('quiz-result',after.feedback.correct?'퀴즈 정답입니다!':'퀴즈 오답입니다!',{correct:after.feedback.correct,selectedAnswer:`${after.feedback.index+1}. ${q.options[after.feedback.index]}`,correctAnswer:`${q.answer+1}. ${q.options[q.answer]}`,changes:[coin(after.turn,after.feedback.correct?80:0)],text:after.feedback.correct?'정답으로 80 MC를 얻었습니다.':'이번 문제는 오답입니다. 코인은 차감되지 않습니다.'});}
  if(!before.trade&&after.trade){const t=after.trade;add('trade-offer','이용권 거래 제안',{actorId:t.from,otherId:t.to,workId:t.workId,amount:t.price,changes:[],text:`「${WORKS.find(w=>w.id===t.workId).title}」 이용권의 거래 가격 ${t.price} MC를 제안했습니다.`});}
  if(before.trade&&!after.trade&&!notices.some(n=>n.type==='trade-complete'))add('trade-cancelled','거래 거절 또는 취소',{actorId:before.trade.from,otherId:before.trade.to,workId:before.trade.workId,changes:[],text:'거래가 성사되지 않아 이용권과 코인은 이전되지 않았습니다.'});

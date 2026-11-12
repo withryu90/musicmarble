@@ -4,7 +4,7 @@ import {HandoffCountdown} from './handoff-countdown.js';
 import {fitBoardTitles} from './board-type.js?v=projected-titles-1';
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=backward-reroll-1';
 import * as G from './engine.js?v=backward-reroll-1';
-import {ActivityInbox} from './activities.js?v=backward-reroll-1';
+import {ActivityInbox} from './activities.js?v=purchase-private-result-1';
 import {purchaseQuizById} from './purchase-quizzes.js';
 import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
 import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=back-three-1';
@@ -12,7 +12,7 @@ import {diceCube} from './dice.js';
 import {CHARACTER_BIOS} from './character-bios.js?v=back-three-1';
 import {needsLandscape} from './orientation.js';
 import {createBgm} from './bgm.js';
-import {PeerTransport} from './peer-transport.js?v=backward-reroll-1';
+import {PeerTransport} from './peer-transport.js?v=purchase-private-result-1';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
 import {canOfferTurnHandoff} from './turn-handoff.js';
 import {CHARACTERS,characterFor,characterById} from './characters.js?v=back-three-1';
@@ -223,8 +223,10 @@ function showActivity(item){
   const ledger=(item.changes||[]).map(c=>`<div><span>${characterSprite(state.players[c.playerId])}<b>${esc(state.players[c.playerId].name)}</b></span><strong class="${c.amount<0?'debit':'credit'}">${c.amount>0?'+':''}${num(c.amount)} <small>MC</small></strong></div>`).join('');
   const assignment=item.type==='copyright-transfer'?`<div class="activity-assignment"><div>${characterSprite(actor)}<b>${esc(actor.name)}</b><small>양도하는 참가자</small></div><span aria-hidden="true">→</span><div>${characterSprite(other)}<b>${esc(other.name)}</b><small>양도받는 참가자</small></div></div><p class="assignment-price">작품 구입가 ${num(item.amount)} MC 기준 · 무상 양도</p>`:'';
   const amount=item.type==='trade-offer'?`<div class="activity-proposal">${esc(actor.name)} → ${esc(other.name)}<strong>${num(item.amount)} MC</strong></div>`:'';
-  const limited=item.type==='rent'&&item.expected!==null&&item.amount<item.expected?`<p class="muted">기준 이용료 ${num(item.expected)} MC 중 잔액 한도에서 ${num(item.amount)} MC를 지급했습니다.</p>`:'';
-  showModal(esc(item.title),`<div class="activity-hero">${item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${['quiz-result','purchase-quiz-result'].includes(item.type)?quizVerdict(item.correct,item.selectedAnswer,item.correctAnswer):''}<p class="activity-description">${esc(item.type==='prison-entry'?PRISON_MESSAGE:item.text)}</p>${item.type.startsWith('prison-')?'<p class="muted">게임용 가상 상황이며 실제 법적 처벌을 뜻하지 않습니다.</p>':''}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${item.workId?'<p class="muted">게임 안의 가상 음악 이용권에 관한 안내입니다.</p>':''}${footer}`,'activity-modal');
+  const ownPurchaseQuestion=item.type==='purchase-quiz-result'&&item.actorId===session.playerId&&state.purchaseChallenge?.workId===item.workId?purchaseQuizById(state.purchaseChallenge.questionId):null;
+ const verdict=item.type==='purchase-quiz-result'?quizVerdict(item.correct,null,ownPurchaseQuestion?(ownPurchaseQuestion.answer?'O · 맞다':'X · 아니다'):null):item.type==='quiz-result'?quizVerdict(item.correct,item.selectedAnswer,item.correctAnswer):'';
+ const limited=item.type==='rent'&&item.expected!==null&&item.amount<item.expected?`<p class="muted">기준 이용료 ${num(item.expected)} MC 중 잔액 한도에서 ${num(item.amount)} MC를 지급했습니다.</p>`:'';
+  showModal(esc(item.title),`<div class="activity-hero">${item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}<p class="activity-description">${esc(item.type==='prison-entry'?PRISON_MESSAGE:item.text)}</p>${item.type.startsWith('prison-')?'<p class="muted">게임용 가상 상황이며 실제 법적 처벌을 뜻하지 않습니다.</p>':''}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${item.workId&&item.type!=='purchase-quiz-result'?'<p class="muted">게임 안의 가상 음악 이용권에 관한 안내입니다.</p>':''}${footer}`,'activity-modal');
  }
  $('#modal').dataset.activity='true';
 }
@@ -411,7 +413,7 @@ function showModal(title,body,cls=''){
 }
 function closeModal(){handoffCountdown.stop();if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
 function quizVerdict(correct,chosen,answer){
- return `<section class="quiz-verdict ${correct?'is-correct':'is-incorrect'}" role="status"><div class="quiz-verdict-heading"><span aria-hidden="true">${correct?'✓':'✕'}</span><strong>${correct?'정답입니다!':'오답입니다!'}</strong></div>${chosen&&answer?`<div class="quiz-verdict-answers"><p><b>선택한 답</b><span>${esc(chosen)}</span></p><p><b>정답</b><span>${esc(answer)}</span></p></div>`:''}</section>`;
+ return `<section class="quiz-verdict ${correct?'is-correct':'is-incorrect'}" role="status"><div class="quiz-verdict-heading"><span aria-hidden="true">${correct?'✓':'✕'}</span><strong>${correct?'정답입니다!':'오답입니다!'}</strong></div>${answer?`<div class="quiz-verdict-answers">${chosen?`<p><b>선택한 답</b><span>${esc(chosen)}</span></p>`:''}<p><b>정답</b><span>${esc(answer)}</span></p></div>`:''}</section>`;
 }
 function purchaseQuizModal(){
  const challenge=state.purchaseChallenge,q=purchaseQuizById(challenge?.questionId);if(!q)return;

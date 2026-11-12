@@ -1,4 +1,4 @@
-import {RoomService} from './room-service.js?v=backward-reroll-1';
+import {RoomService} from './room-service.js?v=purchase-private-result-1';
 import * as G from './engine.js?v=backward-reroll-1';
 export const PEER_PREFIX='musicmarble-rtc-v1-';
 const STORE='musicmarble.peer.host.v1';

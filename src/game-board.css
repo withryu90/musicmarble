@@ -411,3 +411,31 @@
 .is-3d .cell.back-three,.is-flat .cell.back-three{background:linear-gradient(135deg,#edf5ff,#b9d1f4);border-color:#d5e7ff}
 .is-3d .cell.back-three .landmark{color:#3865ae;width:16cqw;height:16cqw}
 .is-3d .cell.back-three .tile-copy{grid-template-rows:16cqw 28cqw 8cqw}
+
+/* Animate light on the water, keeping the garden and fountain sculpture still. */
+.garden-water{overflow:hidden;isolation:isolate;pointer-events:none}
+.pond-water-effects{position:absolute;inset:6%;overflow:hidden;border-radius:16%;pointer-events:none;
+ -webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 0 25%,#000 28% 60%,transparent 72%);
+ mask-image:radial-gradient(circle at 50% 50%,transparent 0 25%,#000 28% 60%,transparent 72%)}
+.water-caustics,.water-glints{position:absolute;inset:-8%;pointer-events:none}
+.water-caustics{opacity:.32;background:
+ repeating-radial-gradient(ellipse at 24% 32%,transparent 0 16px,#c2fbff70 17px,transparent 19px 34px),
+ repeating-radial-gradient(ellipse at 74% 68%,transparent 0 22px,#e3ffff60 23px,transparent 25px 46px);
+ background-size:127px 101px,173px 139px;mix-blend-mode:screen;animation:water-drift 9s ease-in-out infinite alternate}
+.water-glints{opacity:.3;background:
+ radial-gradient(ellipse at 21% 25%,#fff 0 .4%,transparent 1.1%),
+ radial-gradient(ellipse at 68% 17%,#e1ffff 0 .5%,transparent 1.3%),
+ radial-gradient(ellipse at 83% 55%,#fff 0 .3%,transparent 1%),
+ radial-gradient(ellipse at 32% 78%,#fff 0 .5%,transparent 1.3%),
+ radial-gradient(ellipse at 73% 84%,#d6ffff 0 .4%,transparent 1.1%);
+ background-size:53% 47%,67% 63%,79% 71%,61% 83%,89% 57%;mix-blend-mode:screen;animation:water-twinkle 4.8s ease-in-out infinite alternate}
+.water-ripple{position:absolute;left:50%;top:50%;width:54%;height:54%;border:1px solid #c7ffff99;border-radius:50%;box-shadow:0 0 5px #a8f6ff55,inset 0 0 5px #b5faff44;opacity:0;animation:fountain-ripple 7.5s ease-out infinite;transform:translate(-50%,-50%) scale(1)}
+.ripple-two{animation-delay:-2.5s}.ripple-three{animation-delay:-5s}
+.fountain-shimmer{position:absolute;inset:35%;border-radius:50%;pointer-events:none;background:repeating-radial-gradient(ellipse at 50% 50%,transparent 0 8px,#d6ffff90 9px,transparent 11px 19px);mix-blend-mode:screen;opacity:.2;
+ -webkit-mask-image:radial-gradient(circle,transparent 0 32%,#000 39% 58%,transparent 68%);
+ mask-image:radial-gradient(circle,transparent 0 32%,#000 39% 58%,transparent 68%);animation:fountain-shimmer 3.8s ease-in-out infinite alternate}
+@keyframes water-drift{from{transform:translate(-1.2%,-.8%) scale(1);opacity:.18}to{transform:translate(1.2%,.8%) scale(1.04);opacity:.36}}
+@keyframes water-twinkle{0%{transform:translate(-.5%,.4%);opacity:.12}50%{opacity:.44}100%{transform:translate(.7%,-.5%);opacity:.22}}
+@keyframes fountain-ripple{0%{transform:translate(-50%,-50%) scale(.9);opacity:0}16%{opacity:.46}100%{transform:translate(-50%,-50%) scale(1.85);opacity:0}}
+@keyframes fountain-shimmer{from{transform:scale(.97) rotate(-5deg);opacity:.12}to{transform:scale(1.04) rotate(5deg);opacity:.36}}
+@media(prefers-reduced-motion:reduce){.water-caustics,.water-glints,.water-ripple,.fountain-shimmer{animation:none}.water-caustics{opacity:.12}.water-glints{opacity:.14}.water-ripple{display:none}.fountain-shimmer{opacity:.12}}

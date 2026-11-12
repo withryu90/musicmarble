@@ -1,6 +1,6 @@
 import {randomInt,randomToken} from './random.js';
-import * as G from './engine.js?v=back-three-1';
-import {botDecision,applyBotDecision} from './bots.js?v=back-three-1';
+import * as G from './engine.js?v=all-finish-1';
+import {botDecision,applyBotDecision} from './bots.js?v=all-finish-1';
 import {activityChanges} from './activities.js?v=back-three-1';
 import {drawCharacterIds,characterById} from './characters.js?v=back-three-1';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';

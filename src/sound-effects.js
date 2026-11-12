@@ -1,5 +1,5 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav',import.meta.url).href};
+export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=orchestra-two-phrases-1',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison'];
 export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args)}={}){
  let context=null,enabled=true,generation=0;const nodes=new Set(),seen=new Set(),buffers=new Map();

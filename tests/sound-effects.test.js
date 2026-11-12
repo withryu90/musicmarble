@@ -54,3 +54,16 @@ test('bundled crowd applause and fate motif are valid short stereo recordings',a
  const {readFile}=await import('node:fs/promises');
  for(const url of Object.values(RECORDED_EFFECTS)){const data=await readFile(new URL(url));assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WAVE');assert.equal(data.readUInt16LE(22),2);assert.ok(data.length>100000);}
 });
+test('real prison excerpt contains both opening motifs in the requested pitch order',async()=>{
+ const {readFile}=await import('node:fs/promises'),data=await readFile(new URL(RECORDED_EFFECTS.prison));
+ const rate=data.readUInt32LE(24),frames=(data.length-44)/4;
+ assert.ok(frames/rate>6.9&&frames/rate<7.1);
+ const pitches={G:392,Eb:311.127,F:349.228,D:293.665};
+ // Inspect sustained pitches after each attack, across three orchestral octaves.
+ const phrases=[[.11,'G'],[.26,'G'],[.42,'G'],[1.18,'Eb'],[3.56,'F'],[3.72,'F'],[3.88,'F'],[4.68,'D']];
+ for(const [time,expected] of phrases){
+  const samples=[];for(let frame=Math.round(time*rate);frame<Math.round((time+.09)*rate);frame+=5)samples.push((data.readInt16LE(44+frame*4)+data.readInt16LE(46+frame*4))/65536);
+  const scores=Object.entries(pitches).map(([name,hz])=>{let energy=0;for(const octave of [.5,1,2]){let re=0,im=0;for(let i=0;i<samples.length;i++){const phase=2*Math.PI*hz*octave*i/(rate/5);re+=samples[i]*Math.cos(phase);im+=samples[i]*Math.sin(phase);}energy+=re*re+im*im;}return [name,energy];});
+  scores.sort((a,b)=>b[1]-a[1]);assert.equal(scores[0][0],expected,`pitch at ${time}s`);
+ }
+});

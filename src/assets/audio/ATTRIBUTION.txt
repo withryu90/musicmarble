@@ -20,8 +20,16 @@ Real crowd applause and cheers recorded at a staged TV show, December 19, 2024.
 Edit: 0.2–5.0 seconds, normalized and faded at both ends; stereo PCM WAV.
 
 Prison: beethoven-fate-prison.wav
-Composition motif: Ludwig van Beethoven, Symphony No. 5, G–G–G–E-flat (public domain).
-New performance synthesized for Music Marble with layered brass/string harmonics,
-low octave reinforcement, final low percussion and stereo hall reflections.
-No third-party recording, performance sample or soundfont is used.
-Renderer: scripts/render-dramatic-effects.py. Duration: 3.8 seconds, stereo PCM WAV.
+Composition: Ludwig van Beethoven, Symphony No. 5 in C minor, Op. 67,
+I. Allegro con brio. Opening two phrases: G–G–G–E-flat / F–F–F–D.
+Performer: Skidmore College Orchestra (real orchestral recording).
+Recording source: Musopen, mirrored on Wikimedia Commons:
+https://commons.wikimedia.org/wiki/File:Ludwig_van_Beethoven_-_symphony_no._5_in_c_minor,_op._67_-_i._allegro_con_brio.ogg
+Recording rights: released worldwide into the public domain by Skidmore College
+Orchestra; source additionally permits all uses with attribution. Attribution is
+preserved here. Composition is also public domain.
+Downloaded Wikimedia MP3 transcode of the original Ogg recording.
+Edit: original 0.82–7.80 seconds, normalized to 82% peak, 25 ms fade-in,
+350 ms fade-out; 6.98 seconds, stereo 44.1 kHz 16-bit PCM WAV.
+No synthesis, pitch change, tempo change, added instruments or added reverb.
+Editor: scripts/render-dramatic-effects.py (also prepares the CC0 crowd clip).

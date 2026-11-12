@@ -169,17 +169,16 @@ function continueFlow(){
  const handoffKey=`${session?.code}:${state.turnNumber}:${state.turn}:${snapshot.revision}`;
  if(myTurn()&&canOfferTurnHandoff(state,session.playerId)&&!d.open&&lastHandoffKey!==handoffKey){lastHandoffKey=handoffKey;turnHandoffModal();}
 }
-function concertWorks(){
- const w=myTurn()?G.concertWork(state):null;return w?[w]:[];
-}
+function currentConcertWork(){return myTurn()?G.concertWork(state):null;}
 function concertPlanningIcon(){return `<span class="concert-cta-icon" aria-hidden="true"><span class="concert-note">♫</span>${concertHall()}</span>`;}
 function concertPlanningButton(){
- const works=concertWorks();if(!works.length)return '';
- return `<button class="concert-cta full" data-action="plan-concert" aria-label="공연 기획하기" ${G.current(state).coins<100?'disabled':''}>${concertPlanningIcon()}<span><strong>공연 기획하기</strong><small>100 MC · 기본 이용료 +20 MC<br>다시 도착한 내 작품 · ${esc(works[0].title)}</small></span><b aria-hidden="true">→</b></button>`;
+ const w=currentConcertWork();if(!w)return '';
+ return `<button class="concert-cta full" data-action="plan-concert" aria-label="공연 기획하기" ${G.current(state).coins<100?'disabled':''}>${concertPlanningIcon()}<span><strong>공연 기획하기</strong><small>100 MC · 기본 이용료 +20 MC<br>다시 도착한 내 작품 · ${esc(w.title)}</small></span><b aria-hidden="true">→</b></button>`;
 }
 function concertPlanningModal(){
- const works=concertWorks();if(!works.length){notify('지금 공연 기획을 할 수 있는 작품이 없어요.');return;}
- showModal('나의 작품으로 공연 기획하기',`<p class="concert-planning-intro">다시 도착한 내 작품 칸에서 100 MC로 공연을 기획하세요. 기본 이용료가 20 MC 올라가고, 칸에 작은 공연장이 세워져요. 작품마다 한 번 기획할 수 있어요.</p><div class="concert-work-list">${works.map(w=>`<button data-action="work" data-id="${w.id}" ${G.current(state).coins<100?'disabled':''}><span><small>${esc(w.composer)}</small><strong>${esc(w.title)}</strong></span><b>100 MC →</b></button>`).join('')}</div>`,'concert-planning-modal');
+ const w=currentConcertWork();if(!w){notify('현재 도착한 내 작품 칸에서만 공연을 기획할 수 있어요.');return;}
+ selected=w.id;
+ showModal('도착한 작품으로 공연을 기획할까요?',`<div class="notice"><small>현재 도착한 작품</small><h3>${esc(w.composer)} · 「${esc(w.title)}」</h3></div><p class="concert-planning-intro">이 작품에 100 MC로 공연을 기획합니다. 기본 이용료가 20 MC 올라가고, 현재 칸에 작은 공연장이 세워져요. 작품마다 한 번만 가능합니다.</p><button class="concert-cta full" data-action="upgrade" ${!G.canUpgrade(state,w.id)?'disabled':''}>${concertPlanningIcon()}<span><strong>100 MC로 공연 기획하기</strong><small>현재 도착한 작품에 적용</small></span></button><button class="text-button full" data-action="close">취소하고 보드로 돌아가기</button>`,'concert-planning-modal');
 }
 function concertHall(){return `<span class="concert-hall" role="img" aria-label="공연 기획 완료 · 작은 공연장"><svg viewBox="0 0 80 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 59 53 68 75 55 30 47Z" fill="#3e6581"/><path d="M16 27 51 35 51 59 16 51Z" fill="#f8e7bb"/><path d="M51 35 68 25 68 49 51 59Z" fill="#c99b50"/><path d="M9 26 45 7 74 23 51 37Z" fill="#436d99"/><path d="M9 26 45 7 51 16 20 30Z" fill="#638fb6"/><path d="M22 34 27 35 27 52 22 51ZM42 38 47 39 47 56 42 55Z" fill="#fff9e9"/><path d="M30 40Q35 31 40 42V55L30 53Z" fill="#29537d"/><path d="M34 41H38V53H34Z" fill="#91cce6"/><path d="M54 38 59 35V43L54 46ZM62 33 66 31V39L62 42Z" fill="#fff1b6"/><path d="M11 54 50 63 71 51V56L51 68 11 59Z" fill="#e3c17e"/><path d="M47 15V25C41 23 39 29 44 30 48 30 50 28 50 25V18L57 16V12Z" fill="#ffdf78"/></svg></span>`;}
 function turnHandoffModal(){

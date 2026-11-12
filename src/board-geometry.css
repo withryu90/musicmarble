@@ -270,3 +270,12 @@
 .board-area .players-bottom .player-chat-slot{order:0}
 .board-area .players-top .player-chat-bubble::before{top:-5px;bottom:auto;transform:rotate(45deg)}
 .board-area .players-bottom .player-chat-bubble::before{top:auto;bottom:-5px;transform:rotate(225deg)}
+
+/* Lift completed halls into screen space so the diamond cannot flatten them. */
+.board-area.is-3d .cell>.concert-hall{display:none}
+.board-area.is-3d .board-label>.concert-hall{
+ display:block;position:absolute;left:0;right:auto;top:auto;
+ bottom:calc(var(--label-height)*.16);width:calc(var(--label-width)*.54);
+ height:auto;aspect-ratio:80/72;transform:translateX(-50%);transform-origin:center bottom;
+ z-index:3;filter:drop-shadow(0 2px 1px #173e7280) drop-shadow(0 0 4px #ffe59cb0);
+}

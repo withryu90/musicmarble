@@ -1,26 +1,26 @@
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=b97f01463d7e';
-import {formatModalSentences} from './modal-sentences.js?v=b97f01463d7e';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=b97f01463d7e';
-import {WORK_ARTWORK} from './work-artwork.js?v=b97f01463d7e';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=b97f01463d7e';
-import {RankingClient} from './ranking.js?v=b97f01463d7e';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=b97f01463d7e';
-import {HandoffCountdown} from './handoff-countdown.js?v=b97f01463d7e';
-import {fitBoardTitles} from './board-type.js?v=b97f01463d7e';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=b97f01463d7e';
-import * as G from './engine.js?v=b97f01463d7e';
-import {ActivityInbox} from './activities.js?v=b97f01463d7e';
-import {purchaseQuizById} from './purchase-quizzes.js?v=b97f01463d7e';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=b97f01463d7e';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=b97f01463d7e';
-import {diceCube} from './dice.js?v=b97f01463d7e';
-import {CHARACTER_BIOS} from './character-bios.js?v=b97f01463d7e';
-import {needsLandscape} from './orientation.js?v=b97f01463d7e';
-import {createBgm} from './bgm.js?v=b97f01463d7e';
-import {PeerTransport} from './peer-transport.js?v=b97f01463d7e';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=b97f01463d7e';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=b97f01463d7e';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=b97f01463d7e';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=d286a5360200';
+import {formatModalSentences} from './modal-sentences.js?v=d286a5360200';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=d286a5360200';
+import {WORK_ARTWORK} from './work-artwork.js?v=d286a5360200';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=d286a5360200';
+import {RankingClient} from './ranking.js?v=d286a5360200';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=d286a5360200';
+import {HandoffCountdown} from './handoff-countdown.js?v=d286a5360200';
+import {fitBoardTitles} from './board-type.js?v=d286a5360200';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=d286a5360200';
+import * as G from './engine.js?v=d286a5360200';
+import {ActivityInbox} from './activities.js?v=d286a5360200';
+import {purchaseQuizById} from './purchase-quizzes.js?v=d286a5360200';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=d286a5360200';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=d286a5360200';
+import {diceCube} from './dice.js?v=d286a5360200';
+import {CHARACTER_BIOS} from './character-bios.js?v=d286a5360200';
+import {needsLandscape} from './orientation.js?v=d286a5360200';
+import {createBgm} from './bgm.js?v=d286a5360200';
+import {PeerTransport} from './peer-transport.js?v=d286a5360200';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=d286a5360200';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=d286a5360200';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=d286a5360200';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -373,7 +373,7 @@ function boardTitle(cell){
  return lines.map(line=>`<span class="tile-title-line">${esc(line)}</span>`).join('');
 }
 function tileCopy(c){return `<span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(c.type==='go-to-prison'?'':({start:'출발 · +200 MC',quiz:'+80 MC','back-three':'추가 주사위',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번'})[c.type]||c.subtitle)}</span></span>`;}
-function boardLabelLayer(){return `<div class="board-labels" aria-hidden="true">${BOARD.map((c,i)=>`<div class="board-label ${c.type}" data-label-index="${i}">${tileCopy(c)}</div>`).join('')}</div>`;}
+function boardLabelLayer(){return `<div class="board-labels" aria-hidden="true">${BOARD.map((c,i)=>`<div class="board-label ${c.type}" data-label-index="${i}">${tileCopy(c)}${state.ownership[c.id]?.level?concertHall():''}</div>`).join('')}</div>`;}
 function boardPawnLayer(){return `<div class="board-pawns">${BOARD.map((c,i)=>{if(!state.players.some(p=>p.position===i&&tokenVisible(p)))return '';const [row,col]=coordinates(i),anchor=boardTokenAnchor(row,col,BOARD_SIDE);return `<div class="board-pawn-group" data-pawn-index="${i}" data-anchor-x="${anchor.x}" data-anchor-y="${anchor.y}">${tokens(i)}</div>`;}).join('')}</div>`;}
 function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?dicePresentation.backward?` · 뒤로 이동 중 ${dicePresentation.backwardStep} / ${dicePresentation.resultSnapshot.state.lastBackwardMove?.steps??dicePresentation.result}칸`:` · 이동 중 ${dicePresentation.step} / ${dicePresentation.totalSteps??dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${lapProgressText(G.current(state))}<small> ROUND · 완주</small><small class="lap-progress">${esc(G.current(state).name)} 기준 · 전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명</small></b></section><div class="board-surround">${players('top')}<div class="board-scroll-hint">↔ 보드를 좌우로 밀어 작품을 살펴보세요.</div><div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board-grid-frame"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
  const [row,col]=coordinates(i),owner=state.ownership[c.id],active=G.current(state).position===i;
@@ -542,13 +542,14 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='activity-next'){dismissActivity();return;}
  if(a==='ranking-jump'){rankingModal();return;}
  if(a==='ranking-refresh'){void rankingClient.refresh(true);return;}
+ // Changing the local camera is safe even while a turn or pawn is in motion.
+ if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();return;}
  if(busy)return;
  if(a==='handoff-next'){await passHandoff();return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
  if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoom(1.25);return;}
  if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoom(.8);return;}
  if(mobileGame&&a==='board-zoom-reset'){mobileCamera.reset();return;}
- if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();}
  if(a==='home'){tab='board';render();}
  if(a==='tab'){tab=el.dataset.tab;render();}
  if(a==='filter'){filter=el.dataset.id;render();}

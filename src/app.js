@@ -1,22 +1,22 @@
-import {createSoundEffects,activitySound} from './sound-effects.js?v=a122ec67e3f6';
-import {RankingClient} from './ranking.js?v=a122ec67e3f6';
-import {animateFlatStep} from './pawn-motion.js?v=a122ec67e3f6';
-import {HandoffCountdown} from './handoff-countdown.js?v=a122ec67e3f6';
-import {fitBoardTitles} from './board-type.js?v=a122ec67e3f6';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=a122ec67e3f6';
-import * as G from './engine.js?v=a122ec67e3f6';
-import {ActivityInbox} from './activities.js?v=a122ec67e3f6';
-import {purchaseQuizById} from './purchase-quizzes.js?v=a122ec67e3f6';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a122ec67e3f6';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a122ec67e3f6';
-import {diceCube} from './dice.js?v=a122ec67e3f6';
-import {CHARACTER_BIOS} from './character-bios.js?v=a122ec67e3f6';
-import {needsLandscape} from './orientation.js?v=a122ec67e3f6';
-import {createBgm} from './bgm.js?v=a122ec67e3f6';
-import {PeerTransport} from './peer-transport.js?v=a122ec67e3f6';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=a122ec67e3f6';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=a122ec67e3f6';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=a122ec67e3f6';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=9efca2acbd6a';
+import {RankingClient} from './ranking.js?v=9efca2acbd6a';
+import {animateFlatStep} from './pawn-motion.js?v=9efca2acbd6a';
+import {HandoffCountdown} from './handoff-countdown.js?v=9efca2acbd6a';
+import {fitBoardTitles} from './board-type.js?v=9efca2acbd6a';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=9efca2acbd6a';
+import * as G from './engine.js?v=9efca2acbd6a';
+import {ActivityInbox} from './activities.js?v=9efca2acbd6a';
+import {purchaseQuizById} from './purchase-quizzes.js?v=9efca2acbd6a';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9efca2acbd6a';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9efca2acbd6a';
+import {diceCube} from './dice.js?v=9efca2acbd6a';
+import {CHARACTER_BIOS} from './character-bios.js?v=9efca2acbd6a';
+import {needsLandscape} from './orientation.js?v=9efca2acbd6a';
+import {createBgm} from './bgm.js?v=9efca2acbd6a';
+import {PeerTransport} from './peer-transport.js?v=9efca2acbd6a';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=9efca2acbd6a';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=9efca2acbd6a';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=9efca2acbd6a';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -296,7 +296,7 @@ $('#app').addEventListener('change',updateCharacterChoice);
 $('#modal').addEventListener('change',updateCharacterChoice);
 function participantIntroModal(){
  const participants=state.players.map((person,index)=>`<li class="participant-intro-card" style="--team:${playerColor(person)}"><span class="participant-order">${index+1}번 주자</span><span class="participant-bonus-slot">${bonusCharacterLabel(characterFor(person))}</span>${characterSprite(person,'character-large')}<strong class="participant-nickname" title="${esc(person.name)}">${esc(person.name)}</strong><span class="participant-character">${esc(characterFor(person).name)}</span>${person.id===session.playerId?'<span class="participant-self">나</span>':''}</li>`).join('');
- showModal('오늘 함께할 음악 여행자',`<p class="participant-intro-description">오늘 게임에 참여하는 친구들이에요.<br>아래 순서대로 주사위를 굴리며 음악 여행을 떠나요!</p><ol class="participant-intro-list" aria-label="게임 진행 순서">${participants}</ol><p class="participant-intro-note">각자의 캐릭터말은 첫 주사위를 굴려 이동할 때 등장해요.</p><button class="primary full" data-action="enter-board">참가자 확인하고 보드로 →</button>`,'participant-intro-modal');
+ showModal('오늘 함께할 음악 여행자',`<p class="participant-intro-description">오늘 게임에 참여하는 친구들이에요.<br>아래 순서대로 주사위를 굴리며 음악 여행을 떠나요!</p><ol class="participant-intro-list" aria-label="게임 진행 순서">${participants}</ol><button class="primary full" data-action="enter-board">참가자 확인하고 보드로 →</button>`,'participant-intro-modal');
 }
 function characterModal(person,starting=false){
  const c=characterFor(person);

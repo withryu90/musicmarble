@@ -12,7 +12,7 @@ test('a failed final write survives reload and retries with the same game ID and
 test('old completed games are never backfilled when the feature is first loaded',()=>{const server=fakeServer(),client=new RankingClient({origin:'https://ranking.test',fetchFn:server.fetchFn,storage:storage()});client.observe(snapshot('finished'),{playerId:0},score);assert.equal(server.calls.length,0);assert.equal(Object.keys(client.records).length,0);});
 test('a public leaderboard refresh reads shared server data and reports failed reads without invented rankings',async()=>{let fail=false;const client=new RankingClient({origin:'https://ranking.test',storage:storage(),fetchFn:async()=>{if(fail)throw Error('offline');return {ok:true,json:async()=>({entries:[{nickname:'첫 기록',score:3000}]})};}});await client.refresh(true);assert.deepEqual(client.entries,[{nickname:'첫 기록',score:3000,rank:1}]);fail=true;await client.refresh(true);assert.ok(client.error);assert.equal(client.entries[0].score,3000);});
 
-test('new nicknames are checked against the server, independently of the visible top ten',async()=>{
+test('new nicknames use the server availability policy',async()=>{
  const calls=[],client=new RankingClient({origin:'https://ranking.test',storage:null,fetchFn:async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({available:JSON.parse(options.body).nickname!=='이미있음'})};}});
  assert.equal(await client.assertNicknameAvailable(' 새이름 '),'새이름');assert.equal(calls[0].body.nickname,'새이름');assert.match(calls[0].url,/nickname$/);
  await assert.rejects(client.assertNicknameAvailable('이미있음'),/이미 등록된 닉네임입니다/);

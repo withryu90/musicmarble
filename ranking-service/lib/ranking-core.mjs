@@ -17,17 +17,21 @@ export function normalizeNickname(value){
  if(!name||name.length>16||/[\u0000-\u001f\u007f]/.test(name))throw Error('닉네임은 1–16자로 입력해 주세요.');
  return name;
 }
+const TOP_RANKING_SQL='SELECT nickname,score,1 AS games FROM (SELECT *,ROW_NUMBER() OVER (PARTITION BY nickname ORDER BY score DESC,completed_at ASC,game_id ASC,player_id ASC) AS position FROM ranking_scores) WHERE position=1 ORDER BY score DESC,completed_at ASC,nickname ASC LIMIT 10';
 export async function nicknameAvailability(db,value){
- const name=normalizeNickname(value),used=await db.prepare('SELECT nickname FROM ranking_nicknames WHERE nickname=?').bind(name).first();
+ const name=normalizeNickname(value),used=await db.prepare(`SELECT nickname FROM (${TOP_RANKING_SQL}) WHERE nickname=?`).bind(name).first();
  return {nickname:name,available:!used};
 }
 export async function registerGame(db,body,now=Date.now()){
  const value=registration(body),hash=await tokenHash(value.secret),roster=JSON.stringify(value.players);
  const previous=await db.prepare('SELECT token_hash,roster FROM ranking_games WHERE id=?').bind(value.gameId).first();
  if(previous&&(previous.token_hash!==hash||previous.roster!==roster))throw Object.assign(Error('등록된 게임 정보를 확인해 주세요.'),{status:409});
- const statements=[db.prepare('INSERT INTO ranking_games (id,token_hash,roster,created_at) VALUES (?,?,?,?) ON CONFLICT(id) DO NOTHING').bind(value.gameId,hash,roster,now)];
- for(const p of value.players)statements.push(db.prepare('INSERT INTO ranking_nicknames (nickname,game_id,player_id,registered_at) SELECT ?,?,?,? WHERE EXISTS (SELECT 1 FROM ranking_games WHERE id=? AND token_hash=? AND roster=?) AND NOT EXISTS (SELECT 1 FROM ranking_nicknames WHERE nickname=? AND game_id=? AND player_id=?)').bind(p.name,value.gameId,p.id,now,value.gameId,hash,roster,p.name,value.gameId,p.id));
- try{await db.batch(statements);}catch(error){if(/UNIQUE constraint failed: ranking_nicknames\.nickname/i.test(error.message))throw Object.assign(Error(DUPLICATE_NICKNAME),{status:409});throw error;}
+ // Rechecking an existing game's roster must remain safe even after it enters the ranking.
+ if(previous)return {registered:true,gameId:value.gameId};
+ for(const player of value.players){
+  if(!(await nicknameAvailability(db,player.name)).available)throw Object.assign(Error(DUPLICATE_NICKNAME),{status:409});
+ }
+ await db.prepare('INSERT INTO ranking_games (id,token_hash,roster,created_at) VALUES (?,?,?,?) ON CONFLICT(id) DO NOTHING').bind(value.gameId,hash,roster,now).run();
  const game=await db.prepare('SELECT token_hash,roster FROM ranking_games WHERE id=?').bind(value.gameId).first();
  if(game.token_hash!==hash||game.roster!==roster)throw Object.assign(Error('등록된 게임 정보를 확인해 주세요.'),{status:409});
  return {registered:true,gameId:value.gameId};
@@ -43,6 +47,6 @@ export async function submitGame(db,id,secret,body,now=Date.now()){
  await db.batch(statements);return {recorded:true,duplicate:false};
 }
 export async function topRanking(db){
- const result=await db.prepare('SELECT nickname,score,1 AS games FROM (SELECT *,ROW_NUMBER() OVER (PARTITION BY nickname ORDER BY score DESC,completed_at ASC,game_id ASC,player_id ASC) AS position FROM ranking_scores) WHERE position=1 ORDER BY score DESC,completed_at ASC,nickname ASC LIMIT 10').all();
+ const result=await db.prepare(TOP_RANKING_SQL).all();
  return {entries:result.results.map((p,i)=>({rank:i+1,nickname:p.nickname,score:Number(p.score),games:1})),updatedAt:Date.now()};
 }

@@ -156,3 +156,9 @@ dialog#modal::backdrop{background:#164d7959}
  #modal .purchase-price>span,#modal .purchase-price small{font-size:15px}
  #modal .purchase-confirm-cta{font-size:17px;min-height:52px;padding:14px 10px}
 }
+
+#modal .backward-dice .dice-cube.red-dice{display:block;width:54px;height:54px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;transform:none;filter:none}
+#modal .backward-dice .dice-cube.red-dice svg{display:block;width:100%;height:100%}
+#modal .activity-symbol.backward-dice{width:58px;height:58px;background:none;box-shadow:none}
+#modal .special-info>.backward-dice{display:flex;justify-content:center;margin:0 auto 20px}
+#modal .special-info>.backward-dice .dice-cube.red-dice{width:76px;height:76px}

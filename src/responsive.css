@@ -285,3 +285,14 @@ body.portrait-game{overflow:hidden}
  padding:10px var(--dialog-pad-right,28px) 10px var(--dialog-pad-left,28px);
  border-radius:0;background:#eef8ff;box-shadow:0 1px 0 #d7eafa;
 }
+
+/* A slim 26px strip for entrance dialogs, down from the previous 52px header. */
+#modal.entrance-help .modal-header,
+#modal.ranking-modal .modal-header,
+#modal.character-bio-modal .modal-header{padding-top:1px;padding-bottom:1px;min-height:26px}
+#modal.entrance-help .modal-header .icon-button,
+#modal.ranking-modal .modal-header .icon-button,
+#modal.character-bio-modal .modal-header .icon-button{width:24px;height:24px;min-width:24px;min-height:24px}
+#modal.entrance-help .modal-header .icon-button svg,
+#modal.ranking-modal .modal-header .icon-button svg,
+#modal.character-bio-modal .modal-header .icon-button svg{width:20px;height:20px}

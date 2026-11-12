@@ -134,3 +134,25 @@ dialog#modal::backdrop{background:#164d7959}
  padding:0;line-height:1;border-radius:50%;color:#23658d;
 }
 #modal .modal-header .icon-button svg{display:block;width:36px;height:36px;pointer-events:none}
+
+/* Make the purchase decision the focus after the OX result. */
+#modal .purchase-work-summary{margin:18px 0 24px;padding:24px 20px;text-align:center;border:1px solid #b7d5ee;border-radius:18px;background:linear-gradient(145deg,#f3faff,#e1effd)}
+#modal .purchase-work-summary .purchase-composer{font-size:22px;font-weight:800;color:#345d83;margin:0 0 10px}
+#modal .purchase-work-summary h3{font-size:34px;line-height:1.35;color:#173f6b;margin:0;word-break:keep-all;overflow-wrap:normal}
+#modal .purchase-price{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:22px;color:#245580}
+#modal .purchase-price>span{font-size:17px;font-weight:800}
+#modal .purchase-price strong{font-size:36px;line-height:1.25;font-weight:900}
+#modal .purchase-price small{font-size:19px}
+#modal .purchase-confirm-cta{display:block;padding:20px 16px;min-height:64px;border:2px solid #0a4e99;border-radius:13px;background:linear-gradient(135deg,#1676d8,#124b9e);color:#fff;font-size:20px;font-weight:900;line-height:1.4;box-shadow:0 5px 0 #0a3774,0 8px 16px #174e9224}
+#modal .purchase-confirm-cta:hover{background:#104eab}
+#modal .purchase-confirm-cta:focus-visible{outline:3px solid #f0b844;outline-offset:4px}
+#modal .purchase-confirm-cta+.text-button{margin-top:14px}
+@media(max-width:650px),(max-height:500px){
+ #modal .purchase-work-summary{margin:12px 0 18px;padding:16px 12px}
+ #modal .purchase-work-summary .purchase-composer{font-size:18px;margin-bottom:6px}
+ #modal .purchase-work-summary h3{font-size:26px}
+ #modal .purchase-price{margin-top:12px;gap:10px}
+ #modal .purchase-price strong{font-size:28px}
+ #modal .purchase-price>span,#modal .purchase-price small{font-size:15px}
+ #modal .purchase-confirm-cta{font-size:17px;min-height:52px;padding:14px 10px}
+}

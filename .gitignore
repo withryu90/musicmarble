@@ -1,3 +1,8 @@
 node_modules/
 dist/
 .DS_Store
+
+ranking-service/.wrangler/
+ranking-service/.dev.vars*
+ranking-service/.env*
+ranking-service/dist/

@@ -1,15 +1,15 @@
 import {randomInt,randomToken} from './random.js';
-import * as G from './engine.js?v=concert-planning-1';
-import {botDecision,applyBotDecision} from './bots.js?v=concert-planning-1';
+import * as G from './engine.js?v=ranking-1';
+import {botDecision,applyBotDecision} from './bots.js?v=ranking-1';
 import {activityChanges} from './activities.js';
-import {drawCharacterIds,characterById} from './characters.js?v=concert-planning-1';
+import {drawCharacterIds,characterById} from './characters.js?v=ranking-1';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();}
   code(){let code;do{code=Array.from({length:6},()=>ALPHABET[randomInt(ALPHABET.length)]).join('');}while(this.rooms.has(code));return code;}
   nickname(value){if(typeof value!=='string'||!value.trim()||value.trim().length>16)throw Error('닉네임은 1–16자로 입력해 주세요.');return value.trim();}
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
-  create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,members:[],state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}
+  create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,gameId:randomToken(),createdAt:Date.now(),members:[],state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}
   join(code,name,characterId){const room=this.get(code);if(room.state)throw Error('이미 시작한 게임입니다. 새 방을 만들거나 기존 참가자는 이어하기를 이용해 주세요.');if(room.members.length>=G.MAX_PLAYERS)throw Error('이 방은 정원 4명이 모두 찼습니다.');const nickname=this.nickname(name);if(room.members.some(m=>m.name===nickname))throw Error('방 안에서 다른 닉네임을 사용해 주세요.');const member={id:room.members.length,name:nickname,characterId:this.chooseCharacter(characterId,room.members.map(m=>m.characterId)),token:randomToken()};room.members.push(member);this.broadcast(room);return {code:room.code,token:member.token,playerId:member.id};}
   createSolo(name,{botCount=3,rounds=8,coins=1200}={},characterId){
     this.nickname(name);
@@ -56,7 +56,7 @@ export class RoomService {
     room.updatedAt=now;const payload={code:room.code,messages:room.messages};room.chatListeners?.forEach(fn=>fn(payload));return payload;
   }
   subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn({code:room.code,messages:room.messages??[]});return ()=>room.chatListeners.delete(fn);}
-  snapshot(room){return {code:room.code,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
+  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
   broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);}
   act(code,token,{action,args=[],revision}={}){
     const {room,member}=this.authenticate(code,token);

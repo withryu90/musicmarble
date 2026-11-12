@@ -1,0 +1,14 @@
+{
+  "name": "musicmarble-ranking",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-12",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "musicmarble-ranking",
+      "database_id": "00000000-0000-4000-8000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

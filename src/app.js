@@ -1,6 +1,7 @@
 import {RankingClient} from './ranking.js?v=global-ranking-live-1';
 import {animateFlatStep} from './pawn-motion.js';
 import {HandoffCountdown} from './handoff-countdown.js';
+import {fitBoardTitles} from './board-type.js';
 import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=back-three-1';
 import * as G from './engine.js?v=first-finisher-1';
 import {ActivityInbox} from './activities.js?v=first-finisher-1';
@@ -378,6 +379,10 @@ function updateFullscreenButton(){const button=$('[data-action="fullscreen"]');i
 document.addEventListener('fullscreenchange',updateFullscreenButton);
 document.addEventListener('webkitfullscreenchange',updateFullscreenButton);
 window.addEventListener('resize',syncGameOrientation);
+let boardTypeFrame=null;
+function queueBoardTypeFit(){cancelAnimationFrame(boardTypeFrame);boardTypeFrame=requestAnimationFrame(()=>fitBoardTitles(document));}
+window.addEventListener('resize',queueBoardTypeFit);
+document.fonts?.ready.then(queueBoardTypeFit);
 function render(){
  if(snapshot?.state)lobbyBgm.pause();
  syncGameOrientation();
@@ -388,6 +393,7 @@ function render(){
  const nav=[['board','게임 보드'],['collection','작품 컬렉션'],['learning','배움 노트']];
  $('#app').innerHTML=`<div class="game-shell"><section class="orientation-guide" role="status" aria-label="가로 화면 안내"><div class="rotate-phone" aria-hidden="true">↻</div><h2>휴대폰을 가로로 돌려 주세요</h2><p>뮤직마블은 가로 화면에서 플레이해요.<br>보드와 주사위 버튼을 함께 보며 음악 여행을 떠나요!</p><small>화면이 바뀌지 않으면 휴대폰의 화면 회전 잠금을 해제해 주세요.</small></section><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><nav aria-label="주 메뉴">${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button fullscreen-button" data-action="fullscreen" aria-label="전체화면" title="전체화면 / 홈 화면 실행 안내">⛶</button><button class="icon-button" data-action="help" aria-label="게임 가이드">?</button><button class="settings-button" data-action="settings">⚙ <span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`완주 <b>${lapProgressText(G.current(state))}</b>`}</strong><small>${esc(G.current(state).name)} · 현재 주자 기준</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 4명 · ${session.playerId===0?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools"><button data-action="board-view" aria-pressed="${boardView==='3d'}">${boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기'}</button><button data-action="help">진행 방법 ↗</button></div></div>${board()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView():learning()}</div><aside>${actionPanel()}${chatPanel()}<div class="copyright-note"><span>©</span><p><strong>이용권은 게임 안에서만 유효해요.</strong>실제 작품이나 음원의 저작권을 얻는 것은 아닙니다.</p></div></aside></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
  updateFullscreenButton();
+ queueBoardTypeFit();
  if($('.is-flat .board-wrap'))$('.is-flat .board-wrap').scrollLeft=boardScrollLeft;
  const log=$('#chat-messages');if(log)log.scrollTop=log.scrollHeight;
  if(chatFocused&&$('#chat-input')){$('#chat-input').focus();$('#chat-input').setSelectionRange(selection,selection);}

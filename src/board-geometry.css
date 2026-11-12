@@ -102,14 +102,14 @@
 .board-area.is-3d .cell .tile-copy .landmark{grid-row:1;position:static;margin:0;align-self:center;justify-self:center}
 
 /* Fit the scene to the projected diamond instead of reserving a tall square. */
-.board-area.is-3d .board-surround{gap:6px;padding-top:6px;padding-bottom:8px}
-.board-area.is-3d .board-scene::before{content:"";display:block;padding-top:calc(67.2% + 16px)}
+.board-area.is-3d .board-surround{gap:2px;padding-top:4px;padding-bottom:6px}
+.board-area.is-3d .board-scene::before{content:"";display:block;padding-top:67.2%}
 /* A small optical lift centres the Jua glyphs themselves, not only their line boxes. */
 .board-area.is-3d .cell .tile-copy,.board-area.is-3d .cell:not(.work) .tile-copy{
  transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateZ(15px) translateY(-6cqw);
 }
 @media(max-width:650px){
- .board-area.is-3d .board-surround{gap:8px}
+ .board-area.is-3d .board-surround{gap:6px}
  /* Two rows of pawns at the bottom corner still need clearance on narrow boards. */
  .board-area.is-3d .board-scene::before{padding-top:calc(67.2% + 86px)}
 }
@@ -120,3 +120,42 @@
  .board-area.is-3d .board-player[class*="seat-"]{flex-basis:155px}
 }
 @media(max-width:560px){.board-area.is-3d .board-scene::before{padding-top:calc(67.2% + 66px)}}
+
+/* Anchor the work TITLE itself to the tile centre. Metadata is independently
+   positioned above/below it and can never shift the title's centre. */
+.board-area.is-3d .cell .tile-copy,.board-area.is-3d .cell:not(.work) .tile-copy{
+ inset:auto;left:50%;top:50%;width:0;height:0;display:block;overflow:visible;
+ transform:rotateZ(-45deg) rotateX(-40deg) translateZ(15px);
+}
+.board-area.is-3d .cell .tile-copy strong,
+.board-area.is-3d .cell:not(.work) .tile-copy strong{
+ position:absolute;left:0;top:0;width:80cqw;height:40cqw;max-width:none;max-height:none;
+ transform:translate(-50%,-50%);display:flex;flex-direction:column;
+ justify-content:center;align-items:center;overflow:hidden;
+ font-size:var(--fit-title-size,19cqw);line-height:1.05;letter-spacing:-.02em;margin:0;padding:0;
+}
+.board-area.is-3d .cell .tile-copy .cell-top{
+ position:absolute;left:0;top:-28cqw;width:72cqw;height:10cqw;max-width:none;
+ transform:translate(-50%,-50%);font-size:9cqw;line-height:1.05;text-align:center;
+}
+.board-area.is-3d .cell .tile-copy .cell-price{
+ position:absolute;left:0;top:28cqw;width:72cqw;height:10cqw;max-width:none;
+ transform:translate(-50%,-50%);font-size:9cqw;line-height:1.05;text-align:center;
+}
+.board-area.is-3d .cell .tile-copy .landmark{
+ position:absolute;left:0;top:-28cqw;width:14cqw;height:12cqw;transform:translate(-50%,-50%);
+}
+.board-area.is-3d .cell.start .tile-copy::before{
+ position:absolute;left:0;top:-28cqw;width:max-content;height:auto;
+ transform:translate(-50%,-50%);font-size:14cqw;line-height:1;
+}
+.board-area .cell .tile-copy strong{flex-direction:column}
+.board-area .cell .tile-title-line{
+ display:block;flex:0 0 auto;width:max-content;max-width:none;white-space:nowrap;line-height:1.05;
+}
+.board-area.is-flat .cell .tile-copy strong,
+.board-area.is-flat .cell .tile-copy strong.long-title,
+.board-area.is-flat .cell.prison .tile-copy strong{
+ overflow:hidden;font-size:var(--fit-title-size,19cqw);line-height:1.05;
+}
+.board-area.is-flat .cell .tile-copy .cell-top{font-size:10cqw}

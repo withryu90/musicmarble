@@ -35,5 +35,5 @@ export const CHARACTER_BIOS={
  schoenberg:{birth:1874,death:1951,achievement:'열두 음을 조직하는 12음 기법을 발전시켜 20세기 작곡의 새로운 방향을 제시했습니다.'},
  gershwin:{birth:1898,death:1937,achievement:'「랩소디 인 블루」 등에서 재즈의 리듬과 어법을 클래식 음악과 결합했습니다.'},
  'teacher-yu-jiyoung':{birth:null,death:null,achievement:'뮤직마블 속 음악사와 창작의 권리를 알려주는 대한민국 음악 교사'},
- 'teacher-lee-hwayoung':{birth:null,death:null,achievement:'누구보다 음악을 사랑하고 평소 드럼 연주를 즐기는 대한민국 대표 국어 교사'},
+ 'teacher-lee-hwayoung':{birth:null,death:null,achievement:'평소 드럼 연주를 즐기며 누구보다 음악을 사랑하는 대한민국 대표 음악 교사'},
 };

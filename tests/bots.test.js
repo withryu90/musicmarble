@@ -33,7 +33,7 @@ test('randomly declining purchase and optional quiz cannot loop forever',()=>{
  const {service,room}=setup();try{let s=room.state;s.turn=1;s=G.roll(s,1);const decision=botDecision(s,{},()=>.99);assert.equal(decision.action,'nextTurn');assert.equal(applyBotDecision(s,decision,1).turn,2);}finally{service.close();}
 });
 test('bot quizzes can be wrong and never grant extra rewards',()=>{
- const {service,room}=setup();try{let s=room.state;s.turn=1;s.players[1].position=1;s=G.roll(s,6);const d=botDecision(s,{},()=>.99);s=applyBotDecision(s,d,1);assert.equal(s.feedback.correct,false);assert.equal(s.players[1].coins,1200);assert.equal(s.players[1].attempts,1);}finally{service.close();}
+ const {service,room}=setup();try{let s=room.state;s.turn=1;s.players[1].position=1;s=G.startQuiz(G.roll(s,6));const d=botDecision(s,{},()=>.99);s=applyBotDecision(s,d,1);assert.equal(s.feedback.correct,false);assert.equal(s.players[1].coins,1200);assert.equal(s.players[1].attempts,1);}finally{service.close();}
 });
 test('bots accept reasonable trade offers and reject overpriced offers',()=>{
  const {service,room}=setup();try{let s=buyQualified(G.roll(room.state,1));

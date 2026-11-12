@@ -1,4 +1,4 @@
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=back-three-1';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -8,6 +8,7 @@ export function activityChanges(before,after){
  const rolled=before.phase==='roll'&&after.phase!=='roll'&&before.turn===after.turn&&before.turnNumber===after.turnNumber&&Number.isInteger(after.dice);
  if(rolled){
   const actor=after.turn;
+  if(after.lastBackwardMove){const move=after.lastBackwardMove;add('backward-move','뒤로 3칸 이동',{changes:[],text:`뒤로 3칸 칸에 도착해 왔던 길을 따라 세 칸 뒤로 이동했습니다. 도착한 곳은 「${BOARD[move.to].title}」입니다.`});}
   if(before.players[actor].position+after.dice>=BOARD.length)add('start-bonus','한 바퀴 완주 보너스',{changes:[coin(actor,200)],text:'시대의 문을 지나 200 MC를 받았습니다.'});
   if(after.lastRent){const r=after.lastRent,w=WORKS.find(w=>w.id===r.workId);add('rent','가상 이용료 지급',{workId:r.workId,otherId:r.owner,amount:r.amount,expected:r.expected??null,changes:[coin(actor,-r.amount),coin(r.owner,r.amount)],text:`${w.composer} 「${w.title}」 이용료를 지급했습니다.`});}
   if(after.lastAssignment){const t=after.lastAssignment;

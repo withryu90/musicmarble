@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as G from '../src/engine.js';
+import {BOARD} from '../src/data.js';
+import {activityChanges} from '../src/activities.js';
+import {movementPath,backwardPath} from '../src/movement.js';
+const game=()=>G.createGame({names:['A','B']});
+test('the seventh step from START lands on back three and ends at the fourth tile',()=>{assert.equal(BOARD[7].type,'back-three');const before=game();before.players[0].position=6;const after=G.roll(before,1);assert.equal(after.players[0].position,4);assert.equal(before.players[0].position,6);assert.equal(after.phase,'action');assert.equal(after.quiz,null);assert.deepEqual(after.lastBackwardMove,{from:7,to:4,steps:3});assert.equal(after.players[0].coins,1200);assert.ok(G.isValidSave(after));assert.equal(activityChanges(before,after)[0].type,'backward-move');});
+test('normal work purchase and rent apply at the backward destination',()=>{let s=game();s.players[0].position=6;s=G.roll(s,1);assert.equal(G.startPurchaseQuiz(s).purchaseChallenge.workId,BOARD[4].id);const before=game();before.players[0].position=1;before.ownership[BOARD[4].id]={player:1,level:0};const after=G.roll(before,6);assert.equal(after.players[0].position,4);assert.equal(after.lastRent.workId,BOARD[4].id);assert.equal(after.players[0].coins,1200-G.fee(after,BOARD[4]));assert.equal(after.players[1].coins,1200+after.lastRent.amount);assert.deepEqual(activityChanges(before,after).map(n=>n.type),['backward-move','rent']);});
+test('animation visits the forward tile then each of the three backward tiles',()=>{assert.deepEqual([...movementPath(6,1,28),...backwardPath(7,3,28)],[7,6,5,4]);assert.deepEqual(backwardPath(1,3,28),[0,27,26]);for(const args of [[-1,3,28],[7,0,28],[7,7,28]])assert.throws(()=>backwardPath(...args));});
+test('the next ordinary roll clears the backward event and invalid saved moves are rejected',()=>{let s=game();s.players[0].position=6;s=G.roll(s,1);const invalid=structuredClone(s);invalid.lastBackwardMove.to=5;assert.equal(G.isValidSave(invalid),false);s=G.nextTurn(s);s=G.roll(s,1);assert.equal(s.lastBackwardMove,null);});

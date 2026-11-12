@@ -1,5 +1,5 @@
-import {BOARD,WORKS,QUIZZES} from './data.js';
-import * as G from './engine.js?v=ranking-1';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=back-three-1';
+import * as G from './engine.js?v=back-three-1';
 import {purchaseQuizById} from './purchase-quizzes.js';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.

@@ -410,3 +410,7 @@
 .is-flat .cell.prison .tile-copy .cell-price{grid-row:2;width:100%;font-size:7px;line-height:1.2;white-space:normal;color:#f3f6ff}
 
 .is-flat .cell.prison>.tokens{position:absolute;left:50%;top:0;min-height:0;transform:translate(-50%,-85%);z-index:5}
+
+.is-3d .cell.back-three,.is-flat .cell.back-three{background:linear-gradient(135deg,#edf5ff,#b9d1f4);border-color:#d5e7ff}
+.is-3d .cell.back-three .landmark{color:#3865ae;width:16cqw;height:16cqw}
+.is-3d .cell.back-three .tile-copy{grid-template-rows:16cqw 28cqw 8cqw}

@@ -1,18 +1,18 @@
 import {RankingClient} from './ranking.js';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js';
-import * as G from './engine.js?v=ranking-1';
-import {ActivityInbox} from './activities.js';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=back-three-1';
+import * as G from './engine.js?v=back-three-1';
+import {ActivityInbox} from './activities.js?v=back-three-1';
 import {purchaseQuizById} from './purchase-quizzes.js';
 import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js';
-import {movementPath,boardTokenVisible,boardTokenAnchor} from './movement.js?v=gate-entry-2';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=back-three-1';
 import {diceCube} from './dice.js';
-import {CHARACTER_BIOS} from './character-bios.js?v=ranking-1';
+import {CHARACTER_BIOS} from './character-bios.js?v=back-three-1';
 import {needsLandscape} from './orientation.js';
 import {createBgm} from './bgm.js';
-import {PeerTransport} from './peer-transport.js?v=ranking-1';
+import {PeerTransport} from './peer-transport.js?v=back-three-1';
 import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js';
 import {canOfferTurnHandoff} from './turn-handoff.js';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=ranking-1';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=back-three-1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -103,6 +103,8 @@ function presentDiceResult(next){
 function animateBoardMovement(p){
  p.element.remove();p.moving=true;tab='board';
  const path=p.resultSnapshot.state.lastPrisonRoll&&!p.resultSnapshot.state.lastPrisonRoll.escaped?[]:movementPath(p.before.players[p.playerId].position,p.result,BOARD.length);
+ const forwardSteps=path.length,backward=p.resultSnapshot.state.lastBackwardMove;
+ if(backward&&path.at(-1)===backward.from)path.push(...backwardPath(backward.from,backward.steps,BOARD.length));
  const transfer=p.resultSnapshot.state.lastPrisonTransfer;
  if(transfer&&path.at(-1)===transfer.from)path.push(transfer.to);
  let pathIndex=0;
@@ -110,7 +112,7 @@ function animateBoardMovement(p){
  document.querySelector('.board-scene')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
  if(!path.length){p.timer=setTimeout(()=>{const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);stopDicePresentation();commitSnapshot(result);pending.forEach(receive);},850);return;}
  function advance(){
-  state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);render();
+  state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);p.backward=!!backward&&pathIndex>forwardSteps;p.backwardStep=pathIndex-forwardSteps;render();
   if(pathIndex<path.length)p.timer=setTimeout(advance,900);
   else p.timer=setTimeout(()=>{
    const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
@@ -195,7 +197,7 @@ function showActivity(item){
  if(item.type==='history-event'){
   showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<p class="card-fiction">카드 내용과 코인 금액은 게임용 가상 시나리오입니다.</p><details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
-  const symbols={purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','purchase-quiz-result':'OX','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
+  const symbols={'backward-move':'↶',purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','purchase-quiz-result':'OX','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
   const ledger=(item.changes||[]).map(c=>`<div><span>${characterSprite(state.players[c.playerId])}<b>${esc(state.players[c.playerId].name)}</b></span><strong class="${c.amount<0?'debit':'credit'}">${c.amount>0?'+':''}${num(c.amount)} <small>MC</small></strong></div>`).join('');
   const assignment=item.type==='copyright-transfer'?`<div class="activity-assignment"><div>${characterSprite(actor)}<b>${esc(actor.name)}</b><small>양도하는 참가자</small></div><span aria-hidden="true">→</span><div>${characterSprite(other)}<b>${esc(other.name)}</b><small>양도받는 참가자</small></div></div><p class="assignment-price">작품 구입가 ${num(item.amount)} MC 기준 · 무상 양도</p>`:'';
   const amount=item.type==='trade-offer'?`<div class="activity-proposal">${esc(actor.name)} → ${esc(other.name)}<strong>${num(item.amount)} MC</strong></div>`:'';
@@ -221,7 +223,7 @@ async function resume(){if(!session?.code||!session?.token){session=null;render(
 const num=n=>n.toLocaleString('ko-KR');
 const era=id=>ERAS.find(e=>e.id===id);
 const work=id=>WORKS.find(w=>w.id===id);
-const icon=t=>({start:'⚑',event:'✦',quiz:'?',copyright:'©',concert:'♬',transfer:'⇄',prison:'▥','go-to-prison':'↪',work:'♪'}[t]);
+const icon=t=>({start:'⚑',event:'✦',quiz:'?',copyright:'©',concert:'♬',transfer:'⇄',prison:'▥','go-to-prison':'↪',work:'♪','back-three':'↶'}[t]);
 function notify(message){$('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('#toast').classList.remove('show'),3600);}
 async function apply(fn,...args){
  if(!connected){notify('서버에 다시 연결하는 중입니다.');return false;}
@@ -285,6 +287,7 @@ function landmark(type){
   prison:'<rect x="7" y="4" width="50" height="52" rx="4" fill="#18191c" stroke="#aeb7c3" stroke-width="4"/><path d="M18 52v-9c0-13 28-13 28 0v9" fill="#ec6d29"/><circle cx="32" cy="25" r="14" fill="#f4c28b"/><path d="M18 23c-2-18 28-19 28 0l-8-8-7 5-7-2z" fill="#6b4028"/><circle cx="27" cy="25" r="2" fill="#202127"/><circle cx="37" cy="25" r="2" fill="#202127"/><path d="M28 33q4-3 8 0" fill="none" stroke="#7c462e" stroke-width="2"/><path d="M17 7v47m15-47v47m15-47v47" stroke="#606a77" stroke-width="5"/><path d="M16 7v47m15-47v47m15-47v47" stroke="#dce2e9" stroke-width="2"/>',
   transfer:'<rect x="13" y="8" width="30" height="39" rx="4"/><path d="M21 17h14M21 24h14M21 31h7" stroke="white" stroke-width="3"/><path d="M31 46h23l-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="5"/>',
   event:'<path d="M20 6h29v36H20z"/><path d="M13 13h29v36H13z" opacity=".65"/><path d="m31 19 3 7 8 1-6 5 2 8-7-4-7 4 1-8-5-5 8-1z" fill="#fff"/>',
+  'back-three':'<path d="M28 8 8 26l20 18V32h12c9 0 14 5 14 14v6h7v-6c0-14-8-23-21-23H28Z"/>',
   quiz:'<path d="M19 17c0-14 27-14 27 0 0 10-14 9-14 20h-7c0-15 13-13 13-20 0-6-12-6-12 0z"/><circle cx="29" cy="46" r="4"/>',
   copyright:'<circle cx="32" cy="29" r="23"/><circle cx="32" cy="29" r="17" fill="#fff"/><path d="M39 21c-16-8-23 18-2 17" fill="none" stroke="currentColor" stroke-width="6"/>',
   concert:'<path d="M12 25h40v25H12zM8 22 32 6l24 16z"/><path d="M18 28h5v17h-5zm12 0h5v17h-5zm12 0h5v17h-5z" fill="#fff"/><path d="M8 49h48v5H8z"/>',
@@ -294,6 +297,7 @@ function landmark(type){
 function boardTitle(cell){
  const lines={
   'go-to-prison':['감옥으로','가기'],
+  'back-three':['뒤로','3칸'],
   'streaming-prison':boardView==='flat'?['불법','스트리밍','감옥']:['불법 스트리밍','감옥'],
   'handel-water':['수상','음악'],
   'haydn-surprise':['놀람','교향곡'],
@@ -310,10 +314,10 @@ function boardTitle(cell){
  }[cell.id]||({event:['음악사','사건'],copyright:['권리','탐구실'],transfer:['저작권','양도']})[cell.type]||[cell.title];
  return lines.map(line=>`<span class="tile-title-line">${esc(line)}</span>`).join('');
 }
-function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?` · 이동 중 ${dicePresentation.step} / ${dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${String(state.round).padStart(2,'0')}<small> / ${String(state.maxRounds).padStart(2,'0')} ROUND</small><small class="lap-progress">첫 주자 완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴</small></b></section><div class="board-surround">${players()}<div class="board-scroll-hint">↔ 보드를 좌우로 밀어 작품을 살펴보세요.</div><div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
+function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?dicePresentation.backward?` · 뒤로 이동 중 ${dicePresentation.backwardStep} / 3칸`:` · 이동 중 ${dicePresentation.step} / ${dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${String(state.round).padStart(2,'0')}<small> / ${String(state.maxRounds).padStart(2,'0')} ROUND</small><small class="lap-progress">첫 주자 완주 ${state.leaderLaps??0} / ${state.maxRounds}바퀴</small></b></section><div class="board-surround">${players()}<div class="board-scroll-hint">↔ 보드를 좌우로 밀어 작품을 살펴보세요.</div><div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
  const [row,col]=coordinates(i),owner=state.ownership[c.id],active=G.current(state).position===i;
  const tile={baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'}[c.era]||'#9cbfd0';
- return `<button class="cell ${c.type} ${active?'current':''} ${owner?'owned':''} ${owner?.level?'upgraded':''}" data-action="cell" data-index="${i}" style="grid-row:${row};grid-column:${col};--era:${c.era?era(c.era).color:'#cbbd99'};--tile:${tile};--owner-inward:${ownershipDirection(i)};--owner:${owner?playerColor(state.players[owner.player]):'transparent'}" aria-label="${i+1}번 ${esc(c.composer||'')} ${esc(c.title)}${owner?`, ${esc(state.players[owner.player].name)} 보유`:''}"><span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(({start:'출발 · +200 MC',quiz:'+80 MC',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번','go-to-prison':'불법 스트리밍 감옥행'})[c.type]||c.subtitle)}</span></span>${c.type==='start'?startPortal():''}${tokens(i)}${owner?`<span class="ownership-dot" title="${esc(state.players[owner.player].name)} 보유"></span>`:''}${owner?.level?concertHall():''}</button>`;
+ return `<button class="cell ${c.type} ${active?'current':''} ${owner?'owned':''} ${owner?.level?'upgraded':''}" data-action="cell" data-index="${i}" style="grid-row:${row};grid-column:${col};--era:${c.era?era(c.era).color:'#cbbd99'};--tile:${tile};--owner-inward:${ownershipDirection(i)};--owner:${owner?playerColor(state.players[owner.player]):'transparent'}" aria-label="${i+1}번 ${esc(c.composer||'')} ${esc(c.title)}${owner?`, ${esc(state.players[owner.player].name)} 보유`:''}"><span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(({start:'출발 · +200 MC',quiz:'+80 MC','back-three':'거꾸로 3칸',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번','go-to-prison':'불법 스트리밍 감옥행'})[c.type]||c.subtitle)}</span></span>${c.type==='start'?startPortal():''}${tokens(i)}${owner?`<span class="ownership-dot" title="${esc(state.players[owner.player].name)} 보유"></span>`:''}${owner?.level?concertHall():''}</button>`;
  }).join('')}<div class="board-center"><div class="garden-water" aria-hidden="true"></div></div></div></div></div></div></div>`;}
 
 function actionPanel(){
@@ -436,7 +440,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='character-bio')characterBio(el.dataset.id);
  if(a==='redraw-character')await redrawCharacter();
  if(a==='settings')settingsModal();
- if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC!',concert:'음악을 나누는 축제! 도착하면 모든 팀이 100 MC를 받아요.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',prison:PRISON_MESSAGE,'go-to-prison':'이 칸에 도착하면 불법 스트리밍 감옥으로 즉시 이동합니다. 다음 두 번의 자기 차례에 주사위를 굴려 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 다음 자기 차례부터 정상 이동합니다. 감옥으로 이동하는 동안 출발 보너스나 중간 칸의 효과는 발생하지 않습니다.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
+ if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.','back-three':'이 칸에 도착하면 왔던 길을 따라 세 칸 뒤로 이동합니다. 이동을 마친 칸의 작품 구입·가상 이용료 규칙이 적용됩니다.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC!',concert:'음악을 나누는 축제! 도착하면 모든 팀이 100 MC를 받아요.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',prison:PRISON_MESSAGE,'go-to-prison':'이 칸에 도착하면 불법 스트리밍 감옥으로 즉시 이동합니다. 다음 두 번의 자기 차례에 주사위를 굴려 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 다음 자기 차례부터 정상 이동합니다. 감옥으로 이동하는 동안 출발 보너스나 중간 칸의 효과는 발생하지 않습니다.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
  if(a==='work')workModal(work(el.dataset.id));
  if(a==='roll'){
   if(!myTurn()||state.phase!=='roll')return;

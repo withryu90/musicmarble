@@ -50,3 +50,9 @@ test('room broadcasts include ordered notices for both participants and isolate 
   service.broadcast(room);assert.equal(service.snapshot(room).activities.length,2);offA();offB();
  }finally{service.close();}
 });
+test('public quiz verdicts clearly distinguish wrong answers and include chosen and correct answers',()=>{
+ const started=G.startQuiz(G.roll(game(),1)),q=QUIZZES.find(q=>q.id===started.quiz);
+ for(const correct of [true,false]){const index=correct?q.answer:(q.answer+1)%q.options.length,answered=G.answerQuiz(started,index),notice=activityChanges(started,answered)[0];assert.equal(notice.correct,correct);assert.match(notice.title,correct?/정답/:/오답/);assert.equal(notice.selectedAnswer,`${index+1}. ${q.options[index]}`);assert.equal(notice.correctAnswer,`${q.answer+1}. ${q.options[q.answer]}`);}
+ const challenge=G.startPurchaseQuiz(G.roll(game(),1),()=>0),purchase=purchaseQuizById(challenge.purchaseChallenge.questionId);
+ for(const correct of [true,false]){const response=correct?purchase.answer:!purchase.answer,answered=G.answerPurchaseQuiz(challenge,response),notice=activityChanges(challenge,answered)[0];assert.equal(notice.correct,correct);assert.equal(notice.selectedAnswer,response?'O · 맞다':'X · 아니다');assert.equal(notice.correctAnswer,purchase.answer?'O · 맞다':'X · 아니다');assert.match(notice.title,correct?/정답/:/오답/);}
+});

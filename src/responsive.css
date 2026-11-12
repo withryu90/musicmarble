@@ -261,3 +261,15 @@ body.portrait-game{overflow:hidden}
 
 .fullscreen-button{font-size:23px;line-height:1;min-width:44px;min-height:44px}.fullscreen-button[aria-pressed="true"]{background:#d9edff;color:#155e93}#modal .fullscreen-instructions{font-size:12px;line-height:1.8}#modal .fullscreen-instructions ol{padding-left:22px;margin:16px 0}#modal .fullscreen-instructions li{margin:9px 0;line-height:1.8}
 @media(display-mode:standalone),(display-mode:fullscreen){body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}
+
+/* Centre the bell without a circular frame; keep a comfortable touch target. */
+.lobby-header-actions .icon-button.bgm-bell,
+.game-shell .header-actions .icon-button.bgm-bell{
+ display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;
+ min-width:44px;min-height:44px;padding:0;border:0;border-radius:0;
+ background:transparent;box-shadow:none;line-height:1;color:#2c6f9e;
+}
+.lobby-header-actions .bgm-bell svg,.game-shell .header-actions .bgm-bell svg{
+ display:block;width:23px;height:23px;margin:0;pointer-events:none;
+}
+.lobby-header-actions .bgm-bell.is-muted,.game-shell .header-actions .bgm-bell.is-muted{color:#6c8ba2}

@@ -1,0 +1,44 @@
+/* Reserve real document rows for the HUD. Text wrapping and zoom grow these rows,
+   never the board or a shared absolutely positioned overlay. */
+.board-area .board-surround{
+ display:flex;flex-direction:column;gap:24px;padding:16px 0 20px;min-width:0;
+}
+.board-area .board-players{
+ position:relative;inset:auto;display:flex;align-items:stretch;justify-content:space-between;
+ gap:12px;width:100%;min-width:0;z-index:6;pointer-events:none;
+}
+.board-area .board-player[class*="seat-"]{
+ position:relative;inset:auto;flex:0 1 242px;width:calc(50% - 6px);max-width:calc(50% - 6px);
+ min-width:0;height:auto;margin:0;pointer-events:auto;
+}
+.board-area .board-player.seat-top-right,.board-area .board-player.seat-bottom-right{margin-left:auto}
+.board-area .board-scroll-hint{order:4}
+.board-area .board-scene{flex:none;width:100%;min-width:0;margin:0}
+.board-area.is-3d .board-scene{
+ aspect-ratio:1.15;min-height:300px;perspective:none;overflow:visible;
+}
+.board-area.is-3d .board-wrap{
+ width:62%;top:50%;height:auto;min-height:0;aspect-ratio:auto;overflow:visible;
+}
+/* The grid has a definite square containing block. Its children cannot change
+   the frame height through min-content sizing, font loading or zoom rounding. */
+.board-area .board-grid-frame{position:relative;width:100%;min-width:0;flex:none}
+.board-area .board-grid-frame::before{content:"";display:block;padding-top:100%}
+.board-area .board-grid-frame>.board{
+ position:absolute;inset:0;width:100%;height:100%;min-width:0;min-height:0;
+ aspect-ratio:auto;grid-template-columns:repeat(8,minmax(0,1fr));
+ grid-template-rows:repeat(8,minmax(0,1fr));grid-auto-rows:0;grid-auto-columns:0;
+}
+.board-area .board>.cell{min-width:0;min-height:0;width:auto;height:auto;align-self:stretch;justify-self:stretch}
+.board-area .board>.board-center{min-width:0;min-height:0}
+.board-area.is-flat .board-wrap{width:100%;margin-bottom:0;overflow-x:auto}
+.board-area.is-flat .board-grid-frame{min-width:640px}
+.board-area.is-flat .board-scene{aspect-ratio:auto;min-height:0}
+@media(max-width:650px){
+ .board-area .board-surround{gap:20px;padding-top:12px}
+ .board-area .board-player[class*="seat-"]{flex-basis:calc(50% - 6px)}
+}
+@media(max-height:500px) and (orientation:landscape){
+ .board-area .board-surround{gap:18px;padding:12px 0}
+ .board-area.is-3d .board-scene{aspect-ratio:1.15;min-height:280px}
+}

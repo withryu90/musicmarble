@@ -209,3 +209,39 @@
 .board-pawn-group{position:absolute;width:0;height:0;pointer-events:none}
 .board-area.is-3d .board-pawns .tokens{position:absolute;left:0;top:0;transform:translate(-50%,-100%);transform-style:flat;min-height:0}
 .board-area.is-3d .board-pawns .character-token{transform:none;transform-style:flat}
+
+/* Each seat reserves a message row towards the board, so bubbles never cover tiles. */
+.board-area .board-seat{position:relative;flex:0 1 242px;width:calc(50% - 6px);max-width:calc(50% - 6px);min-width:0;display:flex;flex-direction:column;pointer-events:auto}
+.board-area .board-seat.seat-top-right,.board-area .board-seat.seat-bottom-right{margin-left:auto}
+.board-area .board-seat .board-player[class*="seat-"]{flex:none;width:100%;max-width:100%;margin:0;flex-wrap:wrap}
+.player-chat-slot{height:52px;padding:6px 0;min-width:0;pointer-events:none}
+.players-bottom .player-chat-slot{order:-1}
+.player-chat-bubble{position:relative;border:1px solid #aacde5;background:#fff;color:#244b6a;border-radius:12px;padding:5px 9px;box-shadow:0 3px 8px #23507115;font-size:11px;line-height:16px;pointer-events:auto}
+.player-chat-bubble::before{content:'';position:absolute;top:-5px;left:22px;width:8px;height:8px;transform:rotate(45deg);background:white;border-top:1px solid #aacde5;border-left:1px solid #aacde5}
+.players-bottom .player-chat-bubble::before{top:auto;bottom:-5px;transform:rotate(225deg)}
+.player-chat-bubble>span{display:block;max-height:32px;overflow:auto;white-space:pre-wrap;word-break:keep-all;overflow-wrap:normal;scrollbar-width:thin}
+.mobile-turn-controls{display:none}
+.game-shell .room-chat{width:100%;margin:12px 0;border:0;border-radius:10px;background:#eff8ff;box-shadow:none;padding:10px 12px}
+.game-shell .room-chat .chat-messages{height:78px;min-height:78px;gap:0;padding:0 2px;overflow:auto;display:block;-webkit-overflow-scrolling:touch}
+.game-shell .chat-message,.game-shell .chat-message.mine{display:flex;align-items:baseline;gap:8px;max-width:100%;min-height:26px;font-size:11px;line-height:26px}
+.game-shell .chat-message>strong{flex:none;max-width:25%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;color:#256a9d;font-size:11px}
+.game-shell .chat-message p{flex:1;min-width:0;border:0;background:none;border-radius:0;padding:0;line-height:26px;font-size:11px;white-space:pre-wrap;overflow-wrap:normal}
+.game-shell .chat-message time{flex:none;font-size:9px;color:#7193ac}
+.game-shell .room-chat form{border:0;margin:5px 0 0;padding:0}
+.game-shell .chat-empty{padding:0;margin:0;line-height:26px;text-align:left}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap!important}
+@media(max-width:650px),(max-width:1100px) and (any-pointer:coarse),(max-width:1100px) and (max-height:600px) and (orientation:landscape){
+ .game-shell .game-layout{grid-template-columns:minmax(0,1fr)}
+ .game-shell aside{display:none}
+ .board-area .board-seat{flex-basis:calc(50% - 6px)}
+ .board-area .mobile-turn-controls{display:flex;flex-direction:column;gap:5px;width:100%;flex-basis:100%}
+ .mobile-turn-controls .arrival,.mobile-turn-controls .notice,.mobile-turn-controls .roll-visual,.mobile-turn-controls .price-row,.mobile-turn-controls .purchase-pass-note{display:none}
+ .board-player .mobile-turn-controls button{margin:0;min-height:36px;padding:7px 10px;font-size:11px;line-height:1.5;white-space:normal;background:#fff;color:#164b79;border:1px solid #ffffffb3;box-shadow:0 2px 0 #153a5b33}
+ .board-player .mobile-turn-controls button:disabled{opacity:.6}
+ .game-shell .chat-compose input{font-size:16px;min-height:40px}
+ .game-shell .chat-compose button{min-height:40px}
+ .player-chat-bubble{font-size:10px}
+}
+@media(max-width:650px),(max-width:1100px) and (any-pointer:coarse),(max-width:1100px) and (max-height:600px) and (orientation:landscape){
+ .mobile-aux-controls{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+}

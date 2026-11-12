@@ -103,7 +103,7 @@ dialog#modal::backdrop{background:#164d7959}
 
 /* Result words and symbols remain explicit even without colour perception. */
 #modal .quiz-verdict{border:2px solid #4b99ce;border-radius:14px;background:#e8f5ff;padding:14px 16px;margin:4px 0 16px;color:#194d78}
-#modal .quiz-verdict.is-incorrect{border-color:#8695c5;background:#eef0fc;color:#344c80}
+#modal .quiz-verdict.is-incorrect{border-color:#d85866;background:#fff0f2;color:#b42438}
 #modal .quiz-verdict-heading{display:flex;align-items:center;justify-content:center;gap:10px}
 #modal .quiz-verdict-heading>span{font-size:32px;line-height:1;font-weight:900}
 #modal .quiz-verdict-heading>strong{font-size:clamp(22px,4vw,30px);line-height:1.25;font-weight:900;color:inherit}
@@ -119,3 +119,18 @@ dialog#modal::backdrop{background:#164d7959}
  #modal .quiz-verdict-answers p{font-size:11px;gap:8px}
  #modal .quiz-verdict-answers b{flex-basis:58px}
 }
+
+#modal.quiz-wrong-result>h2{color:#b42438}
+#modal .quiz-verdict.is-incorrect .quiz-verdict-answers{border-color:#edb9c0}
+#modal .quiz-verdict.is-incorrect .quiz-verdict-answers p:last-child{color:#194d78}
+#modal .quiz-options .incorrect,#modal .purchase-ox-options button.incorrect{
+ color:#b42438;background:#fff0f2;border:2px solid #cf3d50;
+}
+#modal .quiz-options .incorrect span{color:#b42438;background:#ffdce2}
+#modal .purchase-ox-options button.incorrect strong,#modal .purchase-ox-options button.incorrect span{color:#b42438}
+/* Keep a touch-friendly circle, but make the cross fill its interior clearly. */
+#modal .modal-header .icon-button{
+ display:grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;
+ padding:0;line-height:1;border-radius:50%;color:#23658d;
+}
+#modal .modal-header .icon-button svg{display:block;width:36px;height:36px;pointer-events:none}

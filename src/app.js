@@ -88,7 +88,7 @@ function presentDiceResult(next){
  p.timer=setTimeout(()=>{
   clearInterval(p.ticker);p.element.classList.add('dice-settled');
   p.element.querySelector('.rolling-die').innerHTML=diceCube(p.result);
-  p.element.querySelector('.dice-result').textContent=`${p.result}이 나왔어요!`;
+  p.element.querySelector('.dice-result').textContent=`${p.result}${[1,3,6].includes(p.result)?'이':'가'} 나왔어요!`;
   p.element.querySelector('p').textContent=next.state.lastPrisonRoll&&!next.state.lastPrisonRoll.escaped?'탈출 실패 · 이번 차례는 감옥에 머뭅니다.':next.state.lastPrisonRoll?.escaped?'6! 탈출 성공 · 6칸 앞으로 이동합니다.':`${p.result}칸 앞으로 이동합니다.`;
   p.timer=setTimeout(()=>{
    p.element.classList.add('dice-closing');

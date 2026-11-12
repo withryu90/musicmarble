@@ -25,3 +25,6 @@ test('upright 3D pawns glide between projected tile centres instead of outside-e
  animation=null;animateProjectedStep(scene,0,1,2,{reducedMotion:true});assert.equal(animation,null);
  assert.equal(animateProjectedStep(null,0,1,2),null);
 });
+test('zoomed pawns compensate for camera scale without changing desktop movement',()=>{
+ assert.equal(flatStepFrames({left:20,top:30},{left:100,top:70},2)[0].transform,'translate(-40px, -20px)');
+});

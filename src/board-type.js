@@ -51,6 +51,7 @@ export function diamondSeatInset(board,seat,side,clearance=24){
  return 0;
 }
 function packBoardSeats(root){
+ if(root.querySelector('.game-shell[data-mobile="true"]'))return;
  const area=root.querySelector('.board-area.is-3d');if(!area)return;
  const scene=area.querySelector('.board-scene'),frame=area.querySelector('.board-grid-frame');
  if(!scene||!frame)return;
@@ -70,13 +71,15 @@ function packBoardSeats(root){
 }
 export function fitBoardTitles(root=document){
  packBoardSeats(root);
+ const camera=root.querySelector('.board-scene');
+ const scale=Number(camera?.style.getPropertyValue('--board-zoom'))||1;
  const layer=root.querySelector('.board-labels');
  if(layer){
   const origin=layer.getBoundingClientRect();
   for(const label of layer.querySelectorAll('.board-label')){
    const cell=root.querySelector(`.board>.cell[data-index="${label.dataset.labelIndex}"]`);if(!cell)continue;
-   const r=cell.getBoundingClientRect(),title=label.querySelector('strong'),lines=title.querySelectorAll('.tile-title-line');
-   label.style.left=`${r.left+r.width/2-origin.left}px`;label.style.top=`${r.top+r.height/2-origin.top}px`;
+   const screen=cell.getBoundingClientRect(),r={...screen,width:screen.width/scale,height:screen.height/scale},title=label.querySelector('strong'),lines=title.querySelectorAll('.tile-title-line');
+   label.style.left=`${(screen.left+screen.width/2-origin.left)/scale}px`;label.style.top=`${(screen.top+screen.height/2-origin.top)/scale}px`;
    label.style.setProperty('--label-width',`${r.width}px`);label.style.setProperty('--label-height',`${r.height}px`);
    label.style.setProperty('--title-base',`${r.height*(lines.length===1?.28:.22)}px`);
    fitTitle(title,r);
@@ -95,8 +98,8 @@ export function fitBoardTitles(root=document){
   const origin=pawns.getBoundingClientRect();
   for(const group of pawns.querySelectorAll('.board-pawn-group')){
    const cell=root.querySelector(`.board>.cell[data-index="${group.dataset.pawnIndex}"]`);if(!cell)continue;
-   const anchor=projectedPawnAnchor(cell.getBoundingClientRect(),cell.offsetWidth,cell.offsetHeight,Number(group.dataset.anchorX),Number(group.dataset.anchorY));
-   group.style.left=`${anchor.x-origin.left}px`;group.style.top=`${anchor.y-origin.top}px`;
+   const anchor=projectedPawnAnchor(cell.getBoundingClientRect(),cell.offsetWidth*scale,cell.offsetHeight*scale,Number(group.dataset.anchorX),Number(group.dataset.anchorY));
+   group.style.left=`${(anchor.x-origin.left)/scale}px`;group.style.top=`${(anchor.y-origin.top)/scale}px`;
   }
   pawns.dataset.ready='true';
  }

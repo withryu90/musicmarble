@@ -1,3 +1,4 @@
+import {unzoomedViewportHeight} from './mobile-board.js?v=df1be88fe928';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);
@@ -7,7 +8,7 @@ export function viewportSceneSize(width,height,seatWidth,flat=false){
 }
 export function fitViewportBoard(root=document){
  const shell=root.querySelector('.game-shell[data-tab="board"]');if(!shell)return;
- const view=root.defaultView;if(view)shell.style.height=`${view.visualViewport?.height||view.innerHeight}px`;
+ const view=root.defaultView,mobile=shell.dataset.mobile==='true';if(view)shell.style.height=`${mobile?unzoomedViewportHeight(view.visualViewport?.height||view.innerHeight,view.visualViewport?.scale):view.visualViewport?.height||view.innerHeight}px`;
  const area=shell.querySelector('.board-area'),surround=area?.querySelector('.board-surround'),seat=area?.querySelector('.board-seat');
  if(!area||!surround)return;
  const size=viewportSceneSize(surround.clientWidth,surround.clientHeight,seat?.offsetWidth||140,area.classList.contains('is-flat'));
@@ -17,7 +18,7 @@ export function fitViewportBoard(root=document){
   const board=area.querySelector('.board-scene').getBoundingClientRect();
   for(const item of area.querySelectorAll('.board-seat')){
    item.style.removeProperty('--flat-seat-inset');const r=item.getBoundingClientRect();
-   const inset=item.className.includes('left')?Math.max(0,board.left-r.right-12):-Math.max(0,r.left-board.right-12);
+   const inset=mobile?0:item.className.includes('left')?Math.max(0,board.left-r.right-12):-Math.max(0,r.left-board.right-12);
    item.style.setProperty('--flat-seat-inset',`${Math.trunc(inset)}px`);
   }
  }
@@ -26,7 +27,8 @@ export function fitViewportBoard(root=document){
 export function fitViewportDialog(root=document){
  const dialog=root.querySelector('#modal[open]');if(!dialog)return;
  const view=root.defaultView,body=dialog.querySelector('.modal-body');if(!view||!body)return;
- const visibleHeight=view.visualViewport?.height||view.innerHeight;
+ const mobile=root.querySelector('.game-shell[data-mobile="true"]');
+ const visibleHeight=mobile?unzoomedViewportHeight(view.visualViewport?.height||view.innerHeight,view.visualViewport?.scale):view.visualViewport?.height||view.innerHeight;
  const height=Math.max(180,visibleHeight-16);
  dialog.style.setProperty('--modal-center-y',`${(view.visualViewport?.offsetTop||0)+visibleHeight/2}px`);
  dialog.style.setProperty('--modal-scale','1');body.style.maxHeight='none';body.style.overflow='visible';

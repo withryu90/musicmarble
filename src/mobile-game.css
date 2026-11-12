@@ -1,0 +1,39 @@
+/* Phone/tablet only. Desktop retains its existing board and dialog layout. */
+.game-shell[data-mobile="true"][data-tab="board"] main{padding:2px 4px 4px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-surround{overflow:hidden}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-players{left:0;right:0}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-seat{width:clamp(100px,15vw,132px);max-width:calc(50% - 4px);transform:none!important}
+.game-shell[data-mobile="true"][data-tab="board"] .players-top{top:1px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-bottom{bottom:1px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-player{padding:4px;gap:2px 4px;grid-template-columns:24px minmax(0,1fr)}
+.game-shell[data-mobile="true"][data-tab="board"] .board-player-portrait .character-avatar{width:23px;height:23px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-player-name strong{font-size:9px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-player-coins b{font-size:12px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-player-laps{font-size:7px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-player-turn{top:0;right:3px;font-size:6px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,37%);align-items:center;gap:8px;margin-top:2px;padding:4px 6px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat form{margin:0}
+.game-shell[data-mobile="true"][data-tab="board"] .chat-compose input{font-size:16px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-scene{touch-action:none;will-change:transform;transform-origin:center;transform:translate(-50%,-50%) translate(var(--board-pan-x,0px),var(--board-pan-y,0px)) scale(var(--board-zoom,1))}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-wrap{touch-action:none}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools{gap:3px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools button{padding:2px 5px;font-size:9px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-summary{left:130px;right:260px;gap:5px}
+.game-shell[data-mobile="true"][data-tab="board"] .summary-turn{font-size:9px;max-width:55%}
+.game-shell[data-mobile="true"][data-tab="board"] .summary-round{font-size:12px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-strip{left:5px;width:126px}
+.mobile-board-zoom{display:flex;align-items:center;gap:1px}
+.game-shell[data-mobile="true"] .mobile-board-zoom button{min-width:24px;height:22px;border:1px solid #bad9eb;border-radius:5px;background:#f6fbff;color:#245d82}
+.game-shell[data-mobile="true"] .mobile-board-zoom [data-action="board-zoom-reset"]{min-width:36px;font-size:8px}
+.mobile-dice-overlay .dice-stage{width:230px;max-width:calc(100vw - 24px);min-height:0;padding:12px 18px;border-radius:18px;overflow:visible}
+.mobile-dice-overlay .dice-stage>.eyebrow{font-size:7px;letter-spacing:1px}
+.mobile-dice-overlay .dice-stage h2{font-size:16px;line-height:1.3;margin:6px 0}
+.mobile-dice-overlay .rolling-die{margin:8px auto;min-height:0}
+.mobile-dice-overlay .dice-stage .red-dice{width:52px;height:52px}
+.mobile-dice-overlay .dice-stage .dice-result{font-size:19px;line-height:1.3;margin:6px 0;display:block}
+.mobile-dice-overlay .dice-stage p{font-size:10px;line-height:1.4;margin:5px 0 0}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-surround{overflow:hidden;overflow:clip}
+.game-shell[data-mobile="true"][data-tab="board"] .room-strip button{white-space:nowrap;font-size:8px;letter-spacing:0}
+.game-shell[data-mobile="true"][data-tab="board"] .room-strip button strong{font-size:11px;letter-spacing:1px}
+.mobile-dice-overlay .dice-stage .rolling-die{height:68px;min-height:68px;margin:6px auto}
+.mobile-dice-overlay .dice-stage .dice-result{font-size:17px}

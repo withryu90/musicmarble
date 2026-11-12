@@ -1,25 +1,26 @@
-import {formatModalSentences} from './modal-sentences.js?v=ec38173751e9';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=ec38173751e9';
-import {WORK_ARTWORK} from './work-artwork.js?v=ec38173751e9';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=ec38173751e9';
-import {RankingClient} from './ranking.js?v=ec38173751e9';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=ec38173751e9';
-import {HandoffCountdown} from './handoff-countdown.js?v=ec38173751e9';
-import {fitBoardTitles} from './board-type.js?v=ec38173751e9';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=ec38173751e9';
-import * as G from './engine.js?v=ec38173751e9';
-import {ActivityInbox} from './activities.js?v=ec38173751e9';
-import {purchaseQuizById} from './purchase-quizzes.js?v=ec38173751e9';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=ec38173751e9';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=ec38173751e9';
-import {diceCube} from './dice.js?v=ec38173751e9';
-import {CHARACTER_BIOS} from './character-bios.js?v=ec38173751e9';
-import {needsLandscape} from './orientation.js?v=ec38173751e9';
-import {createBgm} from './bgm.js?v=ec38173751e9';
-import {PeerTransport} from './peer-transport.js?v=ec38173751e9';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=ec38173751e9';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=ec38173751e9';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=ec38173751e9';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=df1be88fe928';
+import {formatModalSentences} from './modal-sentences.js?v=df1be88fe928';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=df1be88fe928';
+import {WORK_ARTWORK} from './work-artwork.js?v=df1be88fe928';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=df1be88fe928';
+import {RankingClient} from './ranking.js?v=df1be88fe928';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=df1be88fe928';
+import {HandoffCountdown} from './handoff-countdown.js?v=df1be88fe928';
+import {fitBoardTitles} from './board-type.js?v=df1be88fe928';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=df1be88fe928';
+import * as G from './engine.js?v=df1be88fe928';
+import {ActivityInbox} from './activities.js?v=df1be88fe928';
+import {purchaseQuizById} from './purchase-quizzes.js?v=df1be88fe928';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=df1be88fe928';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=df1be88fe928';
+import {diceCube} from './dice.js?v=df1be88fe928';
+import {CHARACTER_BIOS} from './character-bios.js?v=df1be88fe928';
+import {needsLandscape} from './orientation.js?v=df1be88fe928';
+import {createBgm} from './bgm.js?v=df1be88fe928';
+import {PeerTransport} from './peer-transport.js?v=df1be88fe928';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=df1be88fe928';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=df1be88fe928';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=df1be88fe928';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -39,7 +40,12 @@ const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담�
 const peerTransport=new PeerTransport();
 const rankingClient=new RankingClient({onChange:updateRankingBoard});
 const key='musicmarble.peer.session.v1';
-let state=G.createGame(),tab='board',boardView=CSS.supports('container-type','inline-size')?'3d':'flat',filter='all',selected=null,busy=false,session=null,snapshot=null,connected=false,events=null,lastAuto='',revealCharacter=false;
+const mobileGame=isMobileGameEnvironment(window,navigator);
+const mobileCamera=new MobileBoardCamera(({scale})=>{
+ const button=$('[data-action="board-zoom-reset"]'),out=$('[data-action="board-zoom-out"]'),inside=$('[data-action="board-zoom-in"]');
+ if(button)button.textContent=`${Math.round(scale*100)}%`;if(out)out.disabled=scale<=1;if(inside)inside.disabled=scale>=3;
+});
+let state=G.createGame(),tab='board',boardView=mobileGame?'flat':CSS.supports('container-type','inline-size')?'3d':'flat',filter='all',selected=null,busy=false,session=null,snapshot=null,connected=false,events=null,lastAuto='',revealCharacter=false;
 try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}
 let bgmVolume=.25;
 try{const saved=localStorage.getItem('musicmarble.bgm.volume');if(saved!==null&&Number.isFinite(Number(saved)))bgmVolume=Math.min(1,Math.max(0,Number(saved)));}catch{}
@@ -85,7 +91,7 @@ let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
 const chatBubbles=new Map(),chatBubbleTimers=new Map();
 let chatInitialized=false;
-function resetActivityFlow(){handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){if(mobileGame){boardView='flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
@@ -93,8 +99,8 @@ function stopDicePresentation(){
 }
 function startDicePresentation(player){
  void soundEffects.play('dice');
- const element=document.createElement('div');element.className='dice-overlay';element.setAttribute('role','status');element.setAttribute('aria-live','polite');
- element.innerHTML=`<div class="dice-stage"><span class="eyebrow">MUSIC MARBLE</span><h2>${esc(player.name)}의 주사위</h2><div class="rolling-die">${diceCube(1)}</div><strong class="dice-result">주사위를 굴리고 있어요…</strong><p>어떤 명곡을 만나게 될까요?</p></div>`;
+ const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');
+ element.innerHTML=`<div class="dice-stage"><span class="eyebrow">MUSIC MARBLE</span><h2>${esc(player.name)}의 주사위</h2><div class="rolling-die">${diceCube(1)}</div><strong class="dice-result">${mobileGame?'주사위를 굴려요…':'주사위를 굴리고 있어요…'}</strong><p>어떤 명곡을 만나게 될까요?</p></div>`;
  document.body.append(element);busy=true;
  const presentation={element,playerId:player.id,started:performance.now(),next:null,result:null,updates:[],resultSnapshot:null,before:structuredClone(state),isBackwardRoll:state.phase==='backward-roll',moving:false,step:0,ticker:null,timer:null};dicePresentation=presentation;
  let face=1;presentation.ticker=setInterval(()=>{face=face%6+1;element.querySelector('.rolling-die').innerHTML=diceCube(face);},150);
@@ -128,13 +134,13 @@ function animateBoardMovement(p){
  let pathIndex=0;
  p.backward=p.isBackwardRoll;p.backwardStep=0;state=structuredClone(p.before);render();
  const movementTarget=boardView==='flat'?document.querySelector(`.cell[data-index="${state.players[p.playerId].position}"]`):document.querySelector('.board-scene');
- movementTarget?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:boardView==='flat'?'nearest':'center',inline:'nearest'});
+ if(!mobileGame)movementTarget?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:boardView==='flat'?'nearest':'center',inline:'nearest'});
  if(!path.length){p.timer=setTimeout(()=>{const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);stopDicePresentation();commitSnapshot(result);pending.forEach(receive);},850);return;}
  function advance(){
   const previousPosition=state.players[p.playerId].position;
   state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);p.backward=!!backward&&pathIndex>forwardSteps;p.backwardStep=pathIndex-forwardSteps;render();
-  if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
-  else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});});
+  if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1,scroll:!mobileGame});
+  else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1});});
   if(pathIndex<path.length)p.timer=setTimeout(advance,900);
   else p.timer=setTimeout(()=>{
    const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
@@ -435,7 +441,7 @@ document.addEventListener('fullscreenchange',updateFullscreenButton);
 document.addEventListener('webkitfullscreenchange',updateFullscreenButton);
 window.addEventListener('resize',syncGameOrientation);
 let boardTypeFrame=null;
-function queueBoardTypeFit(){cancelAnimationFrame(boardTypeFrame);boardTypeFrame=requestAnimationFrame(()=>{fitViewportBoard(document);fitBoardTitles(document);});}
+function queueBoardTypeFit(){cancelAnimationFrame(boardTypeFrame);boardTypeFrame=requestAnimationFrame(()=>{fitViewportBoard(document);if(mobileGame)mobileCamera.apply();fitBoardTitles(document);});}
 window.addEventListener('resize',queueBoardTypeFit);
 window.visualViewport?.addEventListener('resize',queueBoardTypeFit);
 document.fonts?.ready.then(queueBoardTypeFit);
@@ -448,8 +454,9 @@ function render(){
  const chatFocused=document.activeElement?.id==='chat-input',selection=chatFocused?document.activeElement.selectionStart:null;
  const oldChat=$('#chat-messages'),chatScroll=oldChat&&oldChat.scrollHeight-oldChat.scrollTop-oldChat.clientHeight>=45?oldChat.scrollTop:null;
  const nav=[['board','게임 보드'],['collection','작품 컬렉션'],['learning','배움 노트']];
- $('#app').innerHTML=`<div class="game-shell" data-tab="${tab}"><section class="orientation-guide" role="status" aria-label="가로 화면 안내"><div class="rotate-phone" aria-hidden="true">↻</div><h2>휴대폰을 가로로 돌려 주세요</h2><p>뮤직마블은 가로 화면에서 플레이해요.<br>보드와 주사위 버튼을 함께 보며 음악 여행을 떠나요!</p><small>화면이 바뀌지 않으면 휴대폰의 화면 회전 잠금을 해제해 주세요.</small></section><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><nav aria-label="주 메뉴">${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button fullscreen-button" data-action="fullscreen" aria-label="전체화면" title="전체화면 / 홈 화면 실행 안내">⛶</button>${bgmButton()}<button class="icon-button" data-action="help" aria-label="게임 가이드">?</button><button class="settings-button" data-action="settings">⚙ <span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`완주 <b>${lapProgressText(G.current(state))}</b>`}</strong><small>${esc(G.current(state).name)} · 현재 주자 기준</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 4명 · ${session.playerId===0?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools"><button data-action="board-view" aria-pressed="${boardView==='3d'}">${boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기'}</button><button data-action="history">기록</button><button data-action="help">진행 방법 ↗</button></div></div>${board()}${chatPanel()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel():learning()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel()}</div></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
+ $('#app').innerHTML=`<div class="game-shell" data-tab="${tab}" data-mobile="${mobileGame}"><section class="orientation-guide" role="status" aria-label="가로 화면 안내"><div class="rotate-phone" aria-hidden="true">↻</div><h2>휴대폰을 가로로 돌려 주세요</h2><p>뮤직마블은 가로 화면에서 플레이해요.<br>보드와 주사위 버튼을 함께 보며 음악 여행을 떠나요!</p><small>화면이 바뀌지 않으면 휴대폰의 화면 회전 잠금을 해제해 주세요.</small></section><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><nav aria-label="주 메뉴">${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button fullscreen-button" data-action="fullscreen" aria-label="전체화면" title="전체화면 / 홈 화면 실행 안내">⛶</button>${bgmButton()}<button class="icon-button" data-action="help" aria-label="게임 가이드">?</button><button class="settings-button" data-action="settings">⚙ <span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`완주 <b>${lapProgressText(G.current(state))}</b>`}</strong><small>${esc(G.current(state).name)} · 현재 주자 기준</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 4명 · ${session.playerId===0?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools">${mobileGame?`<div class="mobile-board-zoom" aria-label="보드 확대"><button data-action="board-zoom-out" aria-label="보드 축소">−</button><button data-action="board-zoom-reset" aria-label="보드 원래 크기">${Math.round(mobileCamera.state.scale*100)}%</button><button data-action="board-zoom-in" aria-label="보드 확대">＋</button></div>`:''}<button data-action="board-view" aria-pressed="${boardView==='3d'}">${boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기'}</button><button data-action="history">기록</button><button data-action="help">진행 방법 ↗</button></div></div>${board()}${chatPanel()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel():learning()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel()}</div></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
  updateFullscreenButton();
+ if(mobileGame)mobileCamera.bind($('.board-scene'));
  queueBoardTypeFit();
  if($('.is-flat .board-wrap'))$('.is-flat .board-wrap').scrollLeft=boardScrollLeft;
  const log=$('#chat-messages');if(log)log.scrollTop=chatScroll??log.scrollHeight;
@@ -534,6 +541,9 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(busy)return;
  if(a==='handoff-next'){await passHandoff();return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
+ if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoom(1.25);return;}
+ if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoom(.8);return;}
+ if(mobileGame&&a==='board-zoom-reset'){mobileCamera.reset();return;}
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();}
  if(a==='home'){tab='board';render();}
  if(a==='tab'){tab=el.dataset.tab;render();}

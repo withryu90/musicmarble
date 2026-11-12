@@ -1,4 +1,4 @@
-import {BOARD} from './data.js?v=ec38173751e9';
+import {BOARD} from './data.js?v=df1be88fe928';
 // Offer the handoff only after mandatory learning/purchase choices are resolved.
 export function canOfferTurnHandoff(state,playerId){
  if(!state||state.turn!==playerId||state.trade||!['action','jailed'].includes(state.phase))return false;

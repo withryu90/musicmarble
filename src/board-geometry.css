@@ -42,3 +42,14 @@
  .board-area .board-surround{gap:18px;padding:12px 0}
  .board-area.is-3d .board-scene{aspect-ratio:1.15;min-height:280px}
 }
+
+/* Flat-view pawns sit above the tile, outside its text flex layout. */
+.board-area.is-flat .board>.cell{overflow:visible}
+.board-area.is-flat .cell>.tokens{
+ position:absolute;left:50%;top:50%;width:max-content;height:auto;min-height:0;
+ transform:translate(-50%,-50%);z-index:8;pointer-events:none;
+ --figure-width:28px;--figure-height:32px;--character-slot:32px;--nickname-space:0px;
+}
+.board-area.is-flat .tokens .character-token{transform:none;min-height:0}
+.board-area.is-flat .cell.pawn-moving-cell{z-index:12}
+.board-area.is-flat .tokens.token-stack{column-gap:2px;row-gap:2px}

@@ -25,6 +25,12 @@ export const fee=(s,w)=>Math.round((w.fee+(s.ownership[w.id]?.level||0)*20)*coll
 export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.ownership[w.id].level||0)*100,0);
 const clone=s=>structuredClone(s);
 function log(s,text){s.log.unshift({round:s.round,text});s.log=s.log.slice(0,60);}
+function checkBankruptcy(s){
+  if(s.players.length!==2||s.phase==='finished')return s;
+  const player=s.players.find(p=>p.coins===0);if(!player)return s;
+  s.phase='finished';s.endReason={type:'bankruptcy',playerId:player.id};s.trade=null;s.quiz=null;s.feedback=null;s.purchaseChallenge=null;
+  log(s,`${player.name}: 보유 코인 0 MC로 파산 — 2인 게임을 즉시 종료합니다.`);return s;
+}
 function change(s,p,amount){const actual=Math.max(-p.coins,amount);p.coins+=actual;if(actual!==amount)log(s,`${p.name}: 잔액 한도에서 ${-actual} MC 지급. 수업 모드에서 부족액은 면제됩니다.`);return actual;}
 const shuffled=(items,rng)=>{const arr=[...items];for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
 export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=1200,characterIds}={},rng=Math.random){
@@ -32,7 +38,7 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
-  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 function openQuiz(s,kind){
   const pool=s.quizDeck.filter(id=>!kind||QUIZZES.find(q=>q.id===id).kind===kind);
@@ -78,7 +84,7 @@ export function roll(state,dice,rng=Math.random){
     }
   }else if(cell.type==='quiz'||cell.type==='copyright')openQuiz(s,cell.type==='copyright'?'copyright':null);
   else if(cell.type==='concert'){s.players.forEach(team=>team.coins+=100);log(s,'모두의 음악회: 모든 팀 +100 MC');}
-  return s;
+  return checkBankruptcy(s);
 }
 export function startPurchaseQuiz(state,rng=Math.random){
  const s=clone(state),p=current(s),w=BOARD[p.position];
@@ -104,10 +110,10 @@ export function buy(state){
   if(s.phase!=='action'||w.type!=='work'||s.ownership[w.id])throw Error('구입할 수 있는 작품이 아닙니다.');
   if(s.purchaseChallenge?.workId!==w.id||s.purchaseChallenge.correct!==true)throw Error('이용권 구입 OX 퀴즈를 먼저 맞혀야 합니다.');
   if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
-  p.coins-=w.price;s.ownership[w.id]={player:p.id,level:0};s.purchased=true;log(s,`${p.name}: ${w.composer} 「${w.title}」 이용권 구입 (${w.price} MC)`);return s;
+  p.coins-=w.price;s.ownership[w.id]={player:p.id,level:0};s.purchased=true;log(s,`${p.name}: ${w.composer} 「${w.title}」 이용권 구입 (${w.price} MC)`);return checkBankruptcy(s);
 }
 // Production purchase commits the payment, ownership and turn advance atomically.
-export function purchaseAndNext(state){return nextTurn(buy(state.phase==='purchase-feedback'?closePurchaseFeedback(state):state));}
+export function purchaseAndNext(state){const s=buy(state.phase==='purchase-feedback'?closePurchaseFeedback(state):state);return s.phase==='finished'?s:nextTurn(s);}
 export function skipPurchase(state){if(state.phase!=='purchase-feedback'||state.purchaseChallenge?.correct!==true)throw Error('구입 선택을 확인해 주세요.');return nextTurn(closePurchaseFeedback(state));}
 export function concertWork(state){
   if(state.phase!=='action'||state.trade||state.purchased)return null;
@@ -118,7 +124,7 @@ export function canUpgrade(state,id){const w=concertWork(state);return !!w&&w.id
 export function upgrade(state,id){
   const s=clone(state),p=current(s),owner=s.ownership[id];
   if(!canUpgrade(s,id))throw Error('이전에 구입한 내 작품 칸에 다시 도착해야 공연을 기획할 수 있습니다. (100 MC, 작품당 1회)');
-  p.coins-=100;owner.level=1;log(s,`${p.name}: 「${WORKS.find(w=>w.id===id).title}」 공연 기획, 기본 이용료 +20 MC`);return s;
+  p.coins-=100;owner.level=1;log(s,`${p.name}: 「${WORKS.find(w=>w.id===id).title}」 공연 기획, 기본 이용료 +20 MC`);return checkBankruptcy(s);
 }
 export function sell(state,id){
   const s=clone(state),p=current(s),w=WORKS.find(w=>w.id===id);
@@ -135,7 +141,7 @@ export function answerQuiz(state,index){
 export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);s.phase='action';s.quiz=null;s.feedback=null;return s;}
 export function nextTurn(state){
   if(!['action','jailed'].includes(state.phase)||state.trade)throw Error('진행 중인 활동을 먼저 마쳐 주세요.');
-  const s=clone(state);s.turnNumber=(s.turnNumber??0)+1;s.lastSkipped=[];
+  const s=checkBankruptcy(clone(state));if(s.phase==='finished')return s;s.turnNumber=(s.turnNumber??0)+1;s.lastSkipped=[];
   updateProgress(s);
   if(allFinished(s)){s.phase='finished';log(s,`모든 주자가 ${s.maxRounds}바퀴를 완주해 여행 종료! 자산과 배움을 함께 돌아봅니다.`);}
   else{
@@ -155,13 +161,14 @@ export function resolveTrade(state,accepted){
   if(state.phase!=='action'||!state.trade)throw Error('거래 제안이 없습니다.');
   const s=clone(state),t=s.trade,w=WORKS.find(w=>w.id===t.workId);
   if(accepted){if(s.players[t.to].coins<t.price||s.ownership[t.workId]?.player!==t.from)throw Error('거래 조건이 바뀌었습니다.');s.players[t.to].coins-=t.price;s.players[t.from].coins+=t.price;s.ownership[t.workId].player=t.to;log(s,`${s.players[t.to].name}: ${s.players[t.from].name}에게 「${w.title}」 이용권 ${t.price} MC에 구입`);}
-  else log(s,'거래 제안이 거절 또는 취소되었습니다.');s.trade=null;return s;
+  else log(s,'거래 제안이 거절 또는 취소되었습니다.');s.trade=null;return checkBankruptcy(s);
 }
 export function isValidSave(s){
   try{
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>MAX_PLAYERS)return false;
     if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
+    if(s.endReason!=null&&(s.endReason.type!=='bankruptcy'||s.players.length!==2||s.phase!=='finished'||!Number.isInteger(s.endReason.playerId)||s.players[s.endReason.playerId]?.coins!==0))return false;
     if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
     if(s.players.some(p=>p.laps!==undefined&&(!Number.isInteger(p.laps)||p.laps<0||p.laps>s.maxRounds)))return false;
     if(s.phase==='roll'&&hasFinished(s,current(s)))return false;

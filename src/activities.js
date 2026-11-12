@@ -32,6 +32,7 @@ export function activityChanges(before,after){
  if(before.phase==='quiz'&&after.phase==='feedback')add('quiz-result',after.feedback.correct?'퀴즈 정답 보상':'퀴즈 도전 완료',{correct:after.feedback.correct,changes:[coin(after.turn,after.feedback.correct?80:0)],text:after.feedback.correct?'정답으로 80 MC를 얻었습니다.':'이번 문제는 오답입니다. 코인은 차감되지 않습니다.'});
  if(!before.trade&&after.trade){const t=after.trade;add('trade-offer','이용권 거래 제안',{actorId:t.from,otherId:t.to,workId:t.workId,amount:t.price,changes:[],text:`「${WORKS.find(w=>w.id===t.workId).title}」 이용권의 거래 가격 ${t.price} MC를 제안했습니다.`});}
  if(before.trade&&!after.trade&&!notices.some(n=>n.type==='trade-complete'))add('trade-cancelled','거래 거절 또는 취소',{actorId:before.trade.from,otherId:before.trade.to,workId:before.trade.workId,changes:[],text:'거래가 성사되지 않아 이용권과 코인은 이전되지 않았습니다.'});
+ if(after.endReason?.type==='bankruptcy'&&before.endReason?.type!=='bankruptcy'){const id=after.endReason.playerId;add('bankruptcy','파산으로 게임 종료',{actorId:id,changes:[],text:`${after.players[id].name} 님의 보유 코인이 0 MC가 되어 2인 게임을 종료합니다. 최종 결과를 확인해 주세요.`});}
  return notices;
 }
 

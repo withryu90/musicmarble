@@ -13,5 +13,5 @@ test('mandatory quizzes, purchase decisions and trades stay ahead of handoff',()
  const s=landed('work');assert.equal(canOfferTurnHandoff(s,0),false);s.purchaseChallenge={correct:true};assert.equal(canOfferTurnHandoff(s,0),false);s.purchaseChallenge={correct:false};assert.equal(canOfferTurnHandoff(s,0),true);s.trade={from:0,to:1};assert.equal(canOfferTurnHandoff(s,0),false);
 });
 test('unaffordable works allow passing without a purchase quiz and next turn starts at roll',()=>{
- const s=landed('work');s.players[0].coins=0;assert.equal(canOfferTurnHandoff(s,0),true);const next=G.nextTurn(s);assert.equal(next.turn,1);assert.equal(next.phase,'roll');assert.equal(canOfferTurnHandoff(next,0),false);
+ const s=landed('work');s.players[0].coins=1;assert.equal(canOfferTurnHandoff(s,0),true);const next=G.nextTurn(s);assert.equal(next.turn,1);assert.equal(next.phase,'roll');assert.equal(canOfferTurnHandoff(next,0),false);
 });

@@ -27,7 +27,49 @@ export function projectedPawnAnchor(rect,width,height,x,y){
  const dx=(x-50)/100*width,dy=(y-50)/100*height,diagonal=Math.SQRT1_2;
  return {x:rect.left+rect.width/2+(dx-dy)*diagonal,y:rect.top+rect.height/2+(dx+dy)*diagonal*Math.cos(40*Math.PI/180)};
 }
+// The nearest corner of each seat must remain outside the diamond, including its bubble.
+export function diamondSeatOverlap(board,scene,seats,rowHeight,side,clearance=24){
+ if(!seats.length||!board.width||!board.height)return 0;
+ const center=board.left+board.width/2;
+ const available=seats.map(seat=>{
+  const left=seat.left-clearance,right=seat.right+clearance;
+  if(right<board.left||left>board.right)return rowHeight;
+  const nearest=Math.max(left,Math.min(center,right));
+  const slope=board.height*Math.abs(nearest-center)/board.width;
+  return side==='top'?board.top-scene.top+slope-clearance:scene.bottom-board.bottom+slope-clearance;
+ });
+ return Math.max(0,Math.min(rowHeight,...available));
+}
+export function diamondSeatInset(board,seat,side,clearance=24){
+ if(!board.width||!board.height)return 0;
+ const center=board.left+board.width/2;
+ const depth=side==='top'?seat.bottom+clearance-board.top:board.bottom-seat.top+clearance;
+ if(depth<0||depth>=board.height/2)return 0;
+ const half=depth*board.width/board.height;
+ if(seat.right<center)return Math.max(0,center-half-clearance-seat.right);
+ if(seat.left>center)return -Math.max(0,seat.left-center-half-clearance);
+ return 0;
+}
+function packBoardSeats(root){
+ const area=root.querySelector('.board-area.is-3d');if(!area)return;
+ const scene=area.querySelector('.board-scene'),frame=area.querySelector('.board-grid-frame');
+ if(!scene||!frame)return;
+ for(const seat of area.querySelectorAll('.board-seat'))seat.style.removeProperty('--seat-inset');
+ const sceneRect=scene.getBoundingClientRect(),boardRect=frame.getBoundingClientRect();
+ for(const side of ['top','bottom']){
+  const row=area.querySelector(`.players-${side}`);if(!row)continue;
+  const seats=[...row.querySelectorAll('.board-seat')].map(seat=>seat.getBoundingClientRect());
+  const overlap=diamondSeatOverlap(boardRect,sceneRect,seats,row.getBoundingClientRect().height,side);
+  area.style.setProperty(`--seat-overlap-${side}`,`${Math.floor(overlap)}px`);
+ }
+ const packedBoard=frame.getBoundingClientRect();
+ for(const side of ['top','bottom'])for(const seat of area.querySelectorAll(`.players-${side} .board-seat`)){
+  const inset=diamondSeatInset(packedBoard,seat.getBoundingClientRect(),side);
+  seat.style.setProperty('--seat-inset',`${Math.trunc(inset)}px`);
+ }
+}
 export function fitBoardTitles(root=document){
+ packBoardSeats(root);
  const layer=root.querySelector('.board-labels');
  if(layer){
   const origin=layer.getBoundingClientRect();

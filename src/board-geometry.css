@@ -253,3 +253,14 @@
 .board-player .seat-turn-controls button{margin:0;min-height:36px;padding:7px 10px;font-size:11px;line-height:1.5;white-space:normal;background:#fff;color:#164b79;border:1px solid #ffffffb3;box-shadow:0 2px 0 #153a5b33}
 .board-player .seat-turn-controls button:disabled{opacity:.6}
 .turn-aux-controls{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+
+/* Close the flat-board gap; its only reserved strip is the live chat bubble. */
+.board-area .board-surround,.board-area.is-flat .board-surround,.board-area.is-3d .board-surround{gap:4px;padding:4px 0 6px}
+.board-area.is-flat .board-wrap{padding:clamp(4px,.6vw,8px)}
+/* Let the HUD rows use the empty triangles, bounded by the measured diamond edges. */
+.board-area.is-3d .board-scene{margin-top:calc(-1 * var(--seat-overlap-top,0px));margin-bottom:calc(-1 * var(--seat-overlap-bottom,0px))}
+.board-area.is-3d .players-top .board-seat{align-self:flex-end}
+.board-area.is-3d .players-bottom .board-seat{align-self:flex-start}
+.player-chat-slot{padding:4px 0}
+
+.board-area.is-3d .board-seat{transform:translateX(var(--seat-inset,0px))}

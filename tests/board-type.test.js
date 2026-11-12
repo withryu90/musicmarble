@@ -19,3 +19,31 @@ test('upright pawn anchors follow the projected tile centre and outward edges',a
  assert.ok(left.x<70&&left.y<68);assert.ok(right.x>70&&right.y>68);
  assert.ok(Math.abs(left.x+right.x-140)<.001);assert.ok(Math.abs(left.y+right.y-136)<.001);
 });
+
+
+test('seat packing uses empty diamond corners while keeping the bubble clear of sloping edges',async()=>{
+ const {diamondSeatOverlap}=await import('../src/board-type.js');
+ const scene={left:0,top:0,right:1200,bottom:820},board={left:60,top:10,right:1140,bottom:810,width:1080,height:800};
+ const seats=[{left:0,right:242},{left:958,right:1200}];
+ assert.equal(diamondSeatOverlap(board,scene,seats,200,'top'),200);
+ assert.equal(diamondSeatOverlap(board,scene,seats,160,'bottom'),160);
+ const tight=diamondSeatOverlap(board,scene,[{left:0,right:510}],200,'top');
+ assert.ok(tight>0&&tight<40);
+ assert.equal(diamondSeatOverlap(board,scene,[{left:350,right:850}],200,'top'),0);
+ assert.equal(diamondSeatOverlap(board,scene,[],0,'bottom'),0);
+});
+test('narrow landscape seats cannot be pushed across the diamond tip',async()=>{
+ const {diamondSeatOverlap}=await import('../src/board-type.js');
+ const scene={top:0,bottom:450},board={left:40,top:10,right:627,bottom:440,width:587,height:430};
+ assert.equal(diamondSeatOverlap(board,scene,[{left:0,right:327},{left:339,right:667}],150,'top'),0);
+});
+
+test('horizontal seat packing approaches the diamond without entering its sloped edge',async()=>{
+ const {diamondSeatInset}=await import('../src/board-type.js');
+ const board={left:60,top:10,right:1140,bottom:810,width:1080,height:800};
+ const left={left:0,right:242,top:0,bottom:200},right={left:958,right:1200,top:0,bottom:200};
+ const inset=diamondSeatInset(board,left,'top');
+ assert.ok(inset>0);assert.equal(diamondSeatInset(board,right,'top'),-inset);
+ assert.equal(diamondSeatInset(board,{...left,left:350,right:850},'top'),0);
+ assert.equal(diamondSeatInset(board,{...left,bottom:390},'top'),0);
+});

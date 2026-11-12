@@ -1,25 +1,25 @@
-import {formatModalSentences} from './modal-sentences.js?v=2fe79581ddcd';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=2fe79581ddcd';
-import {WORK_ARTWORK} from './work-artwork.js?v=2fe79581ddcd';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=2fe79581ddcd';
-import {RankingClient} from './ranking.js?v=2fe79581ddcd';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=2fe79581ddcd';
-import {HandoffCountdown} from './handoff-countdown.js?v=2fe79581ddcd';
-import {fitBoardTitles} from './board-type.js?v=2fe79581ddcd';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=2fe79581ddcd';
-import * as G from './engine.js?v=2fe79581ddcd';
-import {ActivityInbox} from './activities.js?v=2fe79581ddcd';
-import {purchaseQuizById} from './purchase-quizzes.js?v=2fe79581ddcd';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=2fe79581ddcd';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=2fe79581ddcd';
-import {diceCube} from './dice.js?v=2fe79581ddcd';
-import {CHARACTER_BIOS} from './character-bios.js?v=2fe79581ddcd';
-import {needsLandscape} from './orientation.js?v=2fe79581ddcd';
-import {createBgm} from './bgm.js?v=2fe79581ddcd';
-import {PeerTransport} from './peer-transport.js?v=2fe79581ddcd';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=2fe79581ddcd';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=2fe79581ddcd';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=2fe79581ddcd';
+import {formatModalSentences} from './modal-sentences.js?v=ec38173751e9';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=ec38173751e9';
+import {WORK_ARTWORK} from './work-artwork.js?v=ec38173751e9';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=ec38173751e9';
+import {RankingClient} from './ranking.js?v=ec38173751e9';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=ec38173751e9';
+import {HandoffCountdown} from './handoff-countdown.js?v=ec38173751e9';
+import {fitBoardTitles} from './board-type.js?v=ec38173751e9';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=ec38173751e9';
+import * as G from './engine.js?v=ec38173751e9';
+import {ActivityInbox} from './activities.js?v=ec38173751e9';
+import {purchaseQuizById} from './purchase-quizzes.js?v=ec38173751e9';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=ec38173751e9';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=ec38173751e9';
+import {diceCube} from './dice.js?v=ec38173751e9';
+import {CHARACTER_BIOS} from './character-bios.js?v=ec38173751e9';
+import {needsLandscape} from './orientation.js?v=ec38173751e9';
+import {createBgm} from './bgm.js?v=ec38173751e9';
+import {PeerTransport} from './peer-transport.js?v=ec38173751e9';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=ec38173751e9';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=ec38173751e9';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=ec38173751e9';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -492,7 +492,7 @@ function purchaseQuizModal(){
 }
 function quizModal(){const q=QUIZZES.find(q=>q.id===state.quiz);if(!q)return;
  const f=state.feedback;
- showModal(state.phase==='feedback'?(f.correct?'정답입니다!':'오답입니다!'):'생각을 모아, 뮤직 퀴즈',`${f?quizVerdict(f.correct,`${f.index+1}. ${q.options[f.index]}`,`${q.answer+1}. ${q.options[q.answer]}`):''}<div class="quiz-meta">${pill(q.kind==='copyright'?'© 저작권 탐구':'♫ 음악사 탐구')}${pill(f?(f.correct?'보상 +80 MC':'코인 차감 없음'):'정답 +80 MC')}</div><h3 class="quiz-question">${q.question}</h3><div class="quiz-options">${q.options.map((o,i)=>`<button data-action="answer" data-index="${i}" ${f?'disabled':''} class="${f?(i===q.answer?'correct':i===f.index?'incorrect':''):''}"><span>${i+1}</span>${o}${f&&i===q.answer?' ✓ 정답':f&&i===f.index?' ✕ 선택한 답 · 오답':''}</button>`).join('')}</div>${f?`<div class="quiz-explanation"><strong>${f.correct?'정답 · 80 MC 획득':'오답 · 코인은 차감되지 않아요'}</strong><p>${q.explanation}</p></div><button class="primary full" data-action="feedback-close">해설 확인하고 계속하기 →</button>`:'<p class="muted">친구들과 이야기한 뒤 답을 하나 골라 주세요.</p>'}`);$('#modal').dataset.auto='true';
+ showModal(state.phase==='feedback'?(f.correct?'정답입니다!':'오답입니다!'):'생각을 모아, 뮤직 퀴즈',`${f?quizVerdict(f.correct):''}<div class="quiz-meta">${pill(q.kind==='copyright'?'© 저작권 탐구':'♫ 음악사 탐구')}${pill(f?(f.correct?'보상 +80 MC':'코인 차감 없음'):'정답 +80 MC')}</div><h3 class="quiz-question">${q.question}</h3><div class="quiz-options">${q.options.map((o,i)=>`<button data-action="answer" data-index="${i}" ${f?'disabled':''} class="${f?(i===q.answer?'correct':i===f.index?'incorrect':''):''}"><span>${i+1}</span>${o}${f&&i===q.answer?' ✓ 정답':f&&i===f.index?' ✕ 선택한 답 · 오답':''}</button>`).join('')}</div>${f?`<div class="quiz-explanation"><strong>${f.correct?'정답 · 80 MC 획득':'오답 · 코인은 차감되지 않아요'}</strong><p>${q.explanation}</p></div><button class="primary full" data-action="feedback-close">해설 확인하고 계속하기 →</button>`:'<p class="muted">친구들과 이야기한 뒤 답을 하나 골라 주세요.</p>'}`,f?'learning-feedback-modal quiz-result-notice':'learning-quiz-modal');$('#modal').dataset.auto='true';
 }
 function workModal(w){selected=w.id;const o=state.ownership[w.id],p=G.current(state),mine=o?.player===p.id,canAct=state.phase==='action'&&myTurn();
  showModal(esc(w.title),`<div class="work-modal-meta">${pill(era(w.era).name)}<span>${w.composer} · ${w.year}</span></div><div class="work-story" style="--era:${era(w.era).color}"><span>♪</span><p>${w.note}</p></div><div class="stat-grid"><div><span>이용권 가격</span><b>${w.price} <small>MC</small></b></div><div><span>현재 가상 이용료</span><b>${G.fee(state,w)} <small>MC</small></b></div></div><div class="notice">${o?`${esc(state.players[o.player].name)}의 이용권 · ${G.collection(state,w,o.player).name}${o.level?' · 공연 기획 +20 MC':''}`:'아직 보유한 팀이 없어요. 이 칸에 도착해 구입 OX 퀴즈를 맞히면 뮤직코인으로 구입할 수 있어요.'}</div><p class="muted">같은 작곡가 2곡 ×1.5 · 같은 시대 4곡 ×2 (시대 보너스 우선, 중복 없음). 공연 기획은 구입한 내 작품 칸에 다시 도착했을 때만 가능해요. 작품당 100 MC, 1회만 기획할 수 있어요.</p>${mine&&canAct?`<div class="modal-action-grid"><button class="concert-cta full" data-action="upgrade" ${!G.canUpgrade(state,w.id)?'disabled':''}>${concertPlanningIcon()}<span><strong>${o.level?'공연 기획 완료':'공연 기획하기 · 100 MC'}</strong><small>${o.level?'이 작품 칸에 공연장이 세워졌어요':G.concertWork(state)?.id!==w.id?'이 작품 칸에 다시 도착하면 기획할 수 있어요':p.coins<100?'뮤직코인이 부족해요':'기본 이용료 +20 MC · 작은 공연장 설치'}</small></span></button><button class="secondary" data-action="trade-form">다른 팀에 거래 제안</button><button class="text-button" data-action="sell-confirm">은행에 반납 (+${Math.floor((w.price+o.level*100)/2)} MC)</button></div>`:!o&&p.position===BOARD.indexOf(w)&&canAct?`<button class="primary full" data-action="${state.purchaseChallenge?.workId===w.id&&state.purchaseChallenge.correct===true?'buy-modal':'purchase-quiz'}" ${p.coins<w.price?'disabled':''}>${state.purchaseChallenge?.workId===w.id&&state.purchaseChallenge.correct===true?`${w.price} MC로 구입`:'OX 퀴즈 풀고 구입하기 →'}</button>`:''}<small class="muted">가격은 게임을 위한 수치이며 작품의 예술적 가치 순위가 아닙니다.</small>`);

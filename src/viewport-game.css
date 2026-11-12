@@ -1,0 +1,154 @@
+/* A single game viewport: fixed controls, a fitted board stage, and a three-line chat. */
+.game-shell[data-tab="board"]{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.game-shell[data-tab="board"] .site-header{height:44px;min-height:44px;padding:3px 12px;flex-wrap:nowrap;gap:12px;flex:none}
+.game-shell[data-tab="board"] .brand-icon{width:30px;height:30px}
+.game-shell[data-tab="board"] .brand-title{font-size:16px}
+.game-shell[data-tab="board"] .brand-copy small{font-size:5px}
+.game-shell[data-tab="board"] .site-header nav{order:0;flex:1;width:auto;height:100%;gap:12px;justify-content:center}
+.game-shell[data-tab="board"] .site-header nav button{font-size:11px;padding:4px 8px;min-height:30px}
+.game-shell[data-tab="board"] .header-actions{gap:5px;margin-left:auto}
+.game-shell[data-tab="board"] .header-actions button{min-height:30px;height:30px}
+.game-shell[data-tab="board"] .header-actions .icon-button{width:30px}
+.game-shell[data-tab="board"] .classroom-label,.game-shell[data-tab="board"] .settings-button span{display:none}
+.game-shell[data-tab="board"] main{flex:1;min-height:0;width:100%;padding:4px 10px 6px;display:flex;flex-direction:column}
+.game-shell[data-tab="board"] .page-heading,.game-shell[data-tab="board"] footer,.game-shell[data-tab="board"] .activity,.game-shell[data-tab="board"] .board-caption{display:none}
+.game-shell[data-tab="board"] .room-strip{flex:none;min-height:24px;height:24px;margin:0 0 3px;padding:2px 8px;font-size:9px;gap:8px}
+.game-shell[data-tab="board"] .room-strip button{min-height:20px;padding:0 4px;font-size:9px}
+.game-shell[data-tab="board"] .game-layout{display:flex;flex:1;min-height:0;margin:0;gap:0}
+.game-shell[data-tab="board"] .main-column{display:flex;flex-direction:column;width:100%;height:100%;min-height:0}
+.game-shell[data-tab="board"] .board-toolbar{flex:none;height:24px;min-height:24px;margin:0;gap:4px}
+.game-shell[data-tab="board"] .board-toolbar>div{gap:8px;font-size:9px}
+.game-shell[data-tab="board"] .board-tools button{min-height:22px;padding:2px 7px;font-size:9px}
+.game-shell[data-tab="board"] .board-area{flex:1;min-height:0;display:flex;flex-direction:column}
+.game-shell[data-tab="board"] .board-summary{flex:none;min-height:28px;height:28px;padding:3px 8px;margin:0;flex-wrap:nowrap;border-radius:8px;gap:8px}
+.game-shell[data-tab="board"] .board-summary h2{font-size:13px;margin:0}
+.game-shell[data-tab="board"] .summary-eyebrow,.game-shell[data-tab="board"] .lap-progress{display:none}
+.game-shell[data-tab="board"] .summary-turn{font-size:10px}
+.game-shell[data-tab="board"] .summary-round{font-size:15px}
+.game-shell[data-tab="board"] .summary-round small{font-size:8px}
+.game-shell[data-tab="board"] .board-area .board-surround{position:relative;display:block;flex:1;min-height:0;padding:0;margin:0}
+.game-shell[data-tab="board"] .board-area .board-scene{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:var(--viewport-scene-width,50%);height:var(--viewport-scene-height,100%);min-height:0;margin:0;flex:none}
+.game-shell[data-tab="board"] .board-area .board-scene::before{display:none}
+.game-shell[data-tab="board"] .board-area .board-players{position:absolute;left:0;right:0;width:100%;gap:8px;align-items:flex-start}
+.game-shell[data-tab="board"] .players-top{top:4px}
+.game-shell[data-tab="board"] .players-bottom{bottom:4px}
+.game-shell[data-tab="board"] .board-area .board-seat{width:clamp(112px,20vw,180px);max-width:calc(50% - 4px);flex:none;align-self:auto}
+.game-shell[data-tab="board"] .board-player{display:grid;grid-template-columns:30px minmax(0,1fr);gap:3px 5px;min-height:0;padding:5px 6px;border-radius:9px;border-left-width:3px}
+.game-shell[data-tab="board"] .board-player-portrait{display:block}
+.game-shell[data-tab="board"] .board-player-portrait .character-avatar{width:28px;height:28px}
+.game-shell[data-tab="board"] .board-player-name strong{font-size:10px;line-height:1.2}
+.game-shell[data-tab="board"] .board-player-character,.game-shell[data-tab="board"] .board-player-assets,.game-shell[data-tab="board"] .board-player-coins>span{display:none}
+.game-shell[data-tab="board"] .board-player-coins b{font-size:13px;line-height:1.1}
+.game-shell[data-tab="board"] .board-player-laps,.game-shell[data-tab="board"] .board-player-prison{font-size:8px;line-height:1.2;margin:1px 0 0}
+.game-shell[data-tab="board"] .board-player-turn{font-size:7px;padding:1px 5px;top:-7px}
+.game-shell[data-tab="board"] .seat-turn-controls{grid-column:1/-1;display:flex;flex-direction:row;gap:4px}
+.game-shell[data-tab="board"] .board-player .seat-turn-controls button{min-height:28px;height:28px;padding:3px 5px;font-size:10px;white-space:nowrap;line-height:1.2;flex:1;min-width:0}
+.game-shell[data-tab="board"] .board-player .seat-turn-controls .seat-more{flex:0 0 28px;font-size:20px}
+.game-shell[data-tab="board"] .player-chat-slot{height:30px;padding:2px 0}
+.game-shell[data-tab="board"] .player-chat-bubble{padding:3px 6px;font-size:10px;line-height:18px}
+.game-shell[data-tab="board"] .player-chat-bubble>span{max-height:18px;white-space:nowrap;line-height:18px;overflow:auto}
+.game-shell[data-tab="board"] .room-chat{flex:none;margin:3px 0 0;padding:4px 8px;border-radius:8px}
+.game-shell[data-tab="board"] .room-chat .chat-messages{height:48px;min-height:48px}
+.game-shell[data-tab="board"] .chat-message,.game-shell[data-tab="board"] .chat-message p{min-height:16px;line-height:16px;font-size:10px}
+.game-shell[data-tab="board"] .chat-message>strong{font-size:10px}
+.game-shell[data-tab="board"] .room-chat form{margin-top:3px}
+.game-shell[data-tab="board"] .chat-compose input{min-height:30px;height:30px;padding:3px 8px;font-size:14px}
+.game-shell[data-tab="board"] .chat-compose button{min-height:30px;padding:3px 12px;font-size:11px}
+@media(max-height:500px){
+ .game-shell[data-tab="board"] .site-header{height:34px;min-height:34px;padding:1px 8px}
+ .game-shell[data-tab="board"] .brand-icon{width:26px;height:26px}
+ .game-shell[data-tab="board"] .brand-title{font-size:13px}
+ .game-shell[data-tab="board"] .site-header nav{gap:4px}
+ .game-shell[data-tab="board"] .site-header nav button{font-size:10px;padding:2px 5px;min-height:28px}
+ .game-shell[data-tab="board"] .room-chat .chat-messages{height:36px;min-height:36px}
+ .game-shell[data-tab="board"] .chat-message,.game-shell[data-tab="board"] .chat-message p{min-height:12px;line-height:12px;font-size:9px}
+ .game-shell[data-tab="board"] .chat-message>strong{font-size:9px}
+ .game-shell[data-tab="board"] .chat-compose input{font-size:16px;min-height:28px;height:28px}
+ .game-shell[data-tab="board"] .chat-compose button{min-height:28px;height:28px}
+}
+
+/* Dialogs stay centred inside the visible screen, including Safari's changing chrome. */
+dialog#modal{position:fixed;inset:auto;left:50%;top:50%;margin:0;transform:translate(-50%,-50%) scale(var(--modal-scale,1));transform-origin:center;max-height:none!important;overflow:visible;padding:12px 16px}
+#modal .modal-header{min-height:26px;padding-top:1px;padding-bottom:1px;margin-bottom:8px}
+#modal .modal-header .icon-button{width:26px;height:26px;min-height:26px;padding:4px}
+#modal>h2{font-size:21px;line-height:1.3;margin:8px 0 12px}
+#modal .modal-body{min-height:0;overscroll-behavior:contain;scrollbar-width:thin}
+#modal .modal-body>.primary,#modal .modal-body>.secondary{min-height:36px;padding:10px 12px}
+#modal .modal-body>.text-button{margin-top:6px;padding:6px}
+@media(max-height:500px) and (orientation:landscape){
+ dialog#modal{width:min(660px,calc(100vw - 20px));padding:10px 14px}
+ #modal>h2{font-size:18px;margin:6px 0 9px}
+ #modal .modal-header{margin-bottom:4px}
+ #modal.purchase-result-modal .modal-body{display:grid;grid-template-columns:1fr 1.1fr;gap:8px 14px;align-items:center}
+ #modal.purchase-result-modal .quiz-verdict{grid-column:1;grid-row:1;margin:0;padding:10px}
+ #modal.purchase-result-modal .quiz-verdict-heading>strong{font-size:21px}
+ #modal.purchase-result-modal .purchase-work-summary{grid-column:2;grid-row:1/span 3;margin:0;padding:14px 10px}
+ #modal.purchase-result-modal .purchase-composer{font-size:16px;margin-bottom:6px}
+ #modal.purchase-result-modal .purchase-work-summary h3{font-size:24px}
+ #modal.purchase-result-modal .purchase-price{margin-top:12px;gap:7px}
+ #modal.purchase-result-modal .purchase-price strong{font-size:25px}
+ #modal.purchase-result-modal .purchase-confirm-cta{grid-column:1;grid-row:2;min-height:42px;font-size:15px;padding:10px}
+ #modal.purchase-result-modal .text-button{grid-column:1;grid-row:3;font-size:10px;margin:0}
+ #modal .activity-hero{padding:8px;gap:8px;margin:4px 0}
+ #modal .activity-symbol{width:36px;height:36px;font-size:24px}
+ #modal .activity-hero .character-avatar{width:36px;height:36px}
+ #modal .activity-description{font-size:12px;line-height:1.5;margin:8px 0}
+ #modal .quiz-verdict{margin:8px 0;padding:10px}
+ #modal .quiz-question{font-size:17px;margin:12px 0;line-height:1.5}
+ #modal .purchase-quiz-rule{margin:6px 0 0;padding:6px 10px;line-height:1.5}
+ #modal .purchase-ox-options{gap:8px;margin-top:8px}
+ #modal .purchase-ox-options button{min-height:46px;padding:8px}
+ #modal .muted{margin:7px 0;line-height:1.5}
+ #modal .handoff-next-player{padding:8px;margin:8px 0}
+ #modal .handoff-description{margin:8px 0;line-height:1.5}
+ .dice-stage{padding:12px 24px;overflow:visible;max-height:calc(100dvh - 16px)}
+ .dice-stage h2{font-size:20px;margin:8px 0}
+ .dice-stage .red-dice{width:70px;height:70px}
+ .dice-stage .dice-result{font-size:21px;margin:8px 0}
+ .dice-stage p{margin:5px 0;font-size:11px}
+}
+/* Share one compact information row above the board instead of stacking three banners. */
+.game-shell[data-tab="board"] main{position:relative}
+.game-shell[data-tab="board"] .room-strip{position:absolute;top:4px;left:10px;width:150px;height:24px;background:none;border:0;box-shadow:none;padding:0;z-index:8}
+.game-shell[data-tab="board"] .room-strip>span{display:none}
+.game-shell[data-tab="board"] .board-toolbar{justify-content:flex-end}
+.game-shell[data-tab="board"] .board-toolbar>div:first-child{display:none}
+.game-shell[data-tab="board"] .board-area .board-summary{position:absolute;top:4px;left:170px;right:250px;min-height:24px;height:24px;padding:0;background:none;border:0;box-shadow:none;z-index:8;justify-content:center}
+.game-shell[data-tab="board"] .board-summary>div:first-child{display:none}
+.game-shell[data-tab="board"] .summary-turn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+.game-shell[data-tab="board"] .board-pawns .tokens{--figure-width:clamp(12px,calc(var(--viewport-scene-width) * .045),28px);--figure-height:calc(var(--figure-width) * 1.15);--character-slot:calc(var(--figure-width) + 3px);--nickname-space:0px}
+#modal .modal-header{border-radius:16px 16px 0 0}
+#modal.turn-actions-modal .roll-visual,#modal.turn-actions-modal .arrival p,#modal.turn-actions-modal .notice{display:none}
+#modal.turn-actions-modal .arrival{padding:4px 0;margin:0}
+#modal.turn-actions-modal .arrival h3{font-size:18px;margin:3px 0}
+#modal.turn-actions-modal .price-row{padding:6px 0}
+#modal.turn-actions-modal .modal-body>button{margin-top:6px;min-height:34px;padding:8px}
+.game-shell[data-tab="board"] .board-area .board-summary{top:-24px}
+@media(max-height:500px) and (orientation:landscape){
+ #modal.event-card-modal .modal-body{display:grid;grid-template-columns:1.05fr 1fr;gap:8px 16px;align-items:center}
+ #modal.event-card-modal .modal-body>*{grid-column:2;margin:0}
+ #modal.event-card-modal .collectible-card{grid-column:1;grid-row:1/span 6;width:100%;margin:3px 0;padding:8px}
+ #modal.event-card-modal .card-art{height:62px}
+ #modal.event-card-modal .card-art-symbol{font-size:42px}
+ #modal.event-card-modal .card-art-category{bottom:3px;font-size:7px;padding:2px 5px}
+ #modal.event-card-modal .card-ribbon{padding:5px 8px;margin-left:-10px;margin-right:-10px}
+ #modal.event-card-modal .card-ribbon h3{font-size:15px;line-height:1.4}
+ #modal.event-card-modal .card-description{min-height:0;padding:12px 8px 8px}
+ #modal.event-card-modal .card-description p{font-size:11px;line-height:1.5}
+ #modal.event-card-modal .card-effect{font-size:16px;margin-top:5px;padding:3px 7px}
+ #modal.event-card-modal .card-owner{font-size:8px;padding-top:4px}
+ #modal.event-card-modal .activity-footer{padding:6px 0;margin:0}
+}
+.game-shell[data-tab="board"] .board-area .board-summary{width:auto;right:190px;min-width:0}
+.game-shell[data-tab="board"] .summary-round{flex:none;white-space:nowrap}
+.game-shell[data-tab="board"] .summary-round small{display:none}
+@media(max-height:500px){
+ .game-shell[data-tab="board"] .room-chat .chat-messages{height:42px;min-height:42px}
+ .game-shell[data-tab="board"] .chat-message,.game-shell[data-tab="board"] .chat-message p{min-height:14px;line-height:14px;font-size:10px}
+ .game-shell[data-tab="board"] .chat-message>strong{font-size:10px}
+}
+.game-shell[data-tab="board"] .board-player-name{flex-wrap:nowrap;min-width:0}
+.game-shell[data-tab="board"] .board-player-name strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.game-shell[data-tab="board"] .seat-badge{flex:none}
+.game-shell[data-tab="board"] .board-area.is-flat .board-seat{transform:translateX(var(--flat-seat-inset,0px))}
+dialog#modal{top:var(--modal-center-y,50%);max-width:calc(100vw - 20px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}

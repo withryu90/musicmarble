@@ -1,4 +1,4 @@
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=a3481377cc87';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=336a4c4cb138';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){

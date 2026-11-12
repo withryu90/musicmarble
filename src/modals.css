@@ -162,3 +162,11 @@ dialog#modal::backdrop{background:#164d7959}
 #modal .activity-symbol.backward-dice{width:58px;height:58px;background:none;box-shadow:none}
 #modal .special-info>.backward-dice{display:flex;justify-content:center;margin:0 auto 20px}
 #modal .special-info>.backward-dice .dice-cube.red-dice{width:76px;height:76px}
+
+#modal.ranking-modal{width:min(600px,calc(100vw - 24px))}
+.ranking-popup-intro{margin-bottom:18px}
+#modal .ranking-popup-intro p{margin:10px 0;font-size:12px;line-height:1.8}
+#modal .ranking-popup-intro .ranking-refresh{margin-top:4px;min-height:40px}
+#modal.ranking-modal .ranking-list{margin:0;padding:0;list-style:none}
+#modal.ranking-modal .ranking-list strong{min-width:0;word-break:keep-all}
+#modal.ranking-modal .ranking-empty{margin:16px 0;padding:20px;text-align:center}

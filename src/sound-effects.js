@@ -1,5 +1,5 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=5166add302e1',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=5166add302e1',import.meta.url).href};
+export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=70a9a0f06cf1',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=70a9a0f06cf1',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison'];
 export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
  let context=null,enabled=true,generation=0,primed=false;const nodes=new Set(),seen=new Set(),buffers=new Map();

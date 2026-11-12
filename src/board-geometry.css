@@ -53,3 +53,11 @@
 .board-area.is-flat .tokens .character-token{transform:none;min-height:0}
 .board-area.is-flat .cell.pawn-moving-cell{z-index:12}
 .board-area.is-flat .tokens.token-stack{column-gap:2px;row-gap:2px}
+
+/* Keep the four special tiles and their illustrations free of shadows. */
+.board-area .cell:is(.transfer,.prison,.go-to-prison,.start){box-shadow:none}
+.board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .landmark,
+.board-area .cell.start .start-portal{filter:none}
+.board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .tile-copy,
+.board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .tile-copy>*{text-shadow:none}
+.board-area .cell.start .tile-copy::before{box-shadow:none;text-shadow:none}

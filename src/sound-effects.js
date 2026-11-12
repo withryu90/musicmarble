@@ -1,9 +1,11 @@
-// Original, short synthesized effects; no recordings or external audio requests.
+// Original synthesized effects plus locally bundled, credited audio recordings.
+export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison'];
-export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random}={}){
- let context=null,enabled=true,generation=0;const nodes=new Set(),seen=new Set();
+export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args)}={}){
+ let context=null,enabled=true,generation=0;const nodes=new Set(),seen=new Set(),buffers=new Map();
  function prepare(){if(!enabled)return null;try{context??=createContext();return context;}catch{return null;}}
- function unlock(){const ctx=prepare();if(ctx?.state==='suspended')void ctx.resume().catch(()=>{});}
+ function unlock(){const ctx=prepare();if(!ctx)return;if(ctx.state==='suspended')void ctx.resume().catch(()=>{});for(const name of Object.keys(RECORDED_EFFECTS))void loadRecording(ctx,name).catch(()=>{});}
+ function loadRecording(ctx,name){if(!buffers.has(name)){const pending=(async()=>{const response=await fetchAudio(RECORDED_EFFECTS[name]);if(!response.ok)throw Error('Sound unavailable');return ctx.decodeAudioData(await response.arrayBuffer());})();buffers.set(name,pending);pending.catch(()=>buffers.delete(name));}return buffers.get(name);}
  function stop(){generation++;for(const node of nodes){try{node.stop();node.disconnect();}catch{}}nodes.clear();}
  function track(node,end,chain=[]){nodes.add(node);node.onended=()=>{nodes.delete(node);node.disconnect();chain.forEach(n=>n.disconnect());};node.stop(end);}
  function tone(ctx,start,hz,duration,volume,type='sine',endHz=hz){
@@ -25,17 +27,18 @@ export function createSoundEffects({createContext=()=>{const C=globalThis.AudioC
   if(name==='dice')for(let i=0;i<11;i++){const at=t+i*.047+(i%3)*.006;noise(ctx,at,.045,.18-i*.009,750+random()*2000);tone(ctx,at,280+random()*450,.035,.045,'triangle',120);}
   if(name==='gain')[523.25,659.25,783.99,1046.5].forEach((hz,i)=>tone(ctx,t+i*.11,hz,.25,i===3?.13:.1,'triangle'));
   if(name==='loss')[311.13,261.63,207.65,155.56].forEach((hz,i)=>tone(ctx,t+i*.16,hz,.32,.12,'triangle',hz*.95));
-  if(name==='prison')[146.83,110,55].forEach((hz,i)=>{const at=t+i*.25;tone(ctx,at,hz,i===2?.65:.24,.2,'sine',hz*.55);tone(ctx,at,hz*1.49,.22,.05,'triangle',hz*.8);noise(ctx,at,.13,.14,180);});
-  if(name==='applause')for(let i=0;i<34;i++){const offset=i*.045+random()*.055,fade=Math.min(1,(1.8-offset)/.45);noise(ctx,t+offset,.065+random()*.07,(.12+random()*.1)*fade,1000+random()*1600);}
+
  }
  async function play(name,key){
   if(!EFFECTS.includes(name)||!enabled||!isVisible()||(key&&seen.has(key)))return false;
   const ctx=prepare();if(!ctx)return false;const stamp=generation;
   try{
    if(ctx.state==='suspended')await ctx.resume();
+   const recording=RECORDED_EFFECTS[name]?await loadRecording(ctx,name):null;
    if(ctx.state!=='running'||!enabled||!isVisible()||stamp!==generation||(key&&seen.has(key)))return false;
    if(key){seen.add(key);if(seen.size>200)seen.delete(seen.values().next().value);}
-   synthesize(ctx,name);return true;
+   if(recording){const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=recording;gain.gain.value=.7;source.connect(gain);gain.connect(ctx.destination);const start=ctx.currentTime+.015;source.start(start);track(source,start+recording.duration+.02,[gain]);}
+   else synthesize(ctx,name);return true;
   }catch{return false;}
  }
  function setEnabled(value){enabled=Boolean(value);if(!enabled)stop();}

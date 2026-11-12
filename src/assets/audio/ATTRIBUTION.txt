@@ -10,3 +10,18 @@ Pulse-wave melody and harmony, triangle accompaniment and bass, seeded noise per
 Tempo: source timing accelerated by a factor of 1.12; bass shifted down one octave.
 Encoding: stereo AAC, from 32 kHz PCM synthesis.
 No orchestra recording, third-party performance samples, or soundfont is used.
+
+Game ending: crowd-cheers-applause.wav
+Source: "Applause Edited 2" by Sadiquecat, Freesound sound 777708.
+https://freesound.org/people/Sadiquecat/sounds/777708/
+Preview source: https://cdn.freesound.org/previews/777/777708_5287430-hq.mp3
+License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
+Real crowd applause and cheers recorded at a staged TV show, December 19, 2024.
+Edit: 0.2–5.0 seconds, normalized and faded at both ends; stereo PCM WAV.
+
+Prison: beethoven-fate-prison.wav
+Composition motif: Ludwig van Beethoven, Symphony No. 5, G–G–G–E-flat (public domain).
+New performance synthesized for Music Marble with layered brass/string harmonics,
+low octave reinforcement, final low percussion and stereo hall reflections.
+No third-party recording, performance sample or soundfont is used.
+Renderer: scripts/render-dramatic-effects.py. Duration: 3.8 seconds, stereo PCM WAV.

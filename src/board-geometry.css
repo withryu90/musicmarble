@@ -15,7 +15,7 @@
 .board-area .board-scroll-hint{order:4}
 .board-area .board-scene{flex:none;width:100%;min-width:0;margin:0}
 .board-area.is-3d .board-scene{
- aspect-ratio:1.15;min-height:300px;perspective:none;overflow:visible;
+ aspect-ratio:auto;min-height:0;perspective:none;overflow:visible;
 }
 .board-area.is-3d .board-wrap{
  width:62%;top:50%;height:auto;min-height:0;aspect-ratio:auto;overflow:visible;
@@ -40,7 +40,7 @@
 }
 @media(max-height:500px) and (orientation:landscape){
  .board-area .board-surround{gap:18px;padding:12px 0}
- .board-area.is-3d .board-scene{aspect-ratio:1.15;min-height:280px}
+ .board-area.is-3d .board-scene{aspect-ratio:auto;min-height:0}
 }
 
 /* Flat-view pawns sit above the tile, outside its text flex layout. */
@@ -100,3 +100,23 @@
 .board-area.is-3d .cell .tile-copy .cell-price{grid-row:3;margin:0;padding:0;align-self:center}
 .board-area.is-3d .cell.start .tile-copy::before{grid-row:1;font-size:13cqw;line-height:1;padding:0 3cqw}
 .board-area.is-3d .cell .tile-copy .landmark{grid-row:1;position:static;margin:0;align-self:center;justify-self:center}
+
+/* Fit the scene to the projected diamond instead of reserving a tall square. */
+.board-area.is-3d .board-surround{gap:12px;padding-top:8px;padding-bottom:12px}
+.board-area.is-3d .board-scene::before{content:"";display:block;padding-top:calc(67.2% + 40px)}
+/* A small optical lift centres the Jua glyphs themselves, not only their line boxes. */
+.board-area.is-3d .cell .tile-copy,.board-area.is-3d .cell:not(.work) .tile-copy{
+ transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateZ(15px) translateY(-6cqw);
+}
+@media(max-width:650px){
+ .board-area.is-3d .board-surround{gap:10px}
+ /* Two rows of pawns at the bottom corner still need clearance on narrow boards. */
+ .board-area.is-3d .board-scene::before{padding-top:calc(67.2% + 90px)}
+}
+@media(min-width:651px) and (max-width:1100px){
+ .board-area.is-3d .board-player[class*="seat-"]{flex-basis:190px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ .board-area.is-3d .board-player[class*="seat-"]{flex-basis:155px}
+}
+@media(max-width:560px){.board-area.is-3d .board-scene::before{padding-top:calc(67.2% + 70px)}}

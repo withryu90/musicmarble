@@ -9,6 +9,7 @@ export const current=s=>s.players[s.turn];
 export const completedLaps=(s,p)=>p.laps??(p.id===0?s.leaderLaps??0:0);
 export const hasFinished=(s,p)=>completedLaps(s,p)>=s.maxRounds;
 export const allFinished=s=>s.players.every(p=>hasFinished(s,p));
+export const firstFinisher=s=>s.players.find(p=>hasFinished(s,p));
 export function nextPlayerIndex(s){
   for(let step=1;step<=s.players.length;step++){const index=(s.turn+step)%s.players.length;if(!hasFinished(s,s.players[index]))return index;}
   return s.turn;
@@ -25,6 +26,11 @@ export const fee=(s,w)=>Math.round((w.fee+(s.ownership[w.id]?.level||0)*20)*coll
 export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.ownership[w.id].level||0)*100,0);
 const clone=s=>structuredClone(s);
 function log(s,text){s.log.unshift({round:s.round,text});s.log=s.log.slice(0,60);}
+function finishByLaps(s,player,moveSteps){
+ s.phase='finished';s.round=s.maxRounds;s.trade=null;s.quiz=null;s.feedback=null;s.purchaseChallenge=null;
+ s.endReason={type:'laps',playerId:player.id,...(moveSteps===undefined?{}:{moveSteps})};
+ log(s,`${player.name}: 가장 먼저 ${s.maxRounds}바퀴 완주! 게임을 종료합니다.`);return s;
+}
 function checkBankruptcy(s){
   if(s.players.length!==2||s.phase==='finished')return s;
   const player=s.players.find(p=>p.coins===0);if(!player)return s;
@@ -55,7 +61,7 @@ export function roll(state,dice,rng=Math.random){
     log(s,`${p.name}: 탈출 주사위 ${dice} — ${escaped?'탈출 성공! 6칸 이동':p.skipTurns?'탈출 실패, 다음 자기 차례에 한 번 더 도전':'두 번 도전 완료, 다음 자기 차례부터 정상 이동'}`);
     if(!escaped){s.phase='jailed';return s;}
   }
-  const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;p.laps=completedLaps(s,p)+1;updateProgress(s);log(s,`${p.name}: 한 바퀴 완주! +200 MC (${p.laps}/${s.maxRounds}바퀴)`);if(hasFinished(s,p))log(s,`${p.name}: 모든 바퀴 완주! 이번 차례를 마친 뒤 다른 여행자를 기다립니다.`);}p.position=next%BOARD.length;
+  const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;p.laps=completedLaps(s,p)+1;updateProgress(s);log(s,`${p.name}: 한 바퀴 완주! +200 MC (${p.laps}/${s.maxRounds}바퀴)`);if(hasFinished(s,p)){const moveSteps=BOARD.length-p.position;p.position=0;return finishByLaps(s,p,moveSteps);}}p.position=next%BOARD.length;
   let cell=BOARD[p.position];log(s,`${p.name}: ${dice}칸 이동 → ${cell.title}`);
   if(cell.type==='back-three'){
     const from=p.position;p.position=(from-3+BOARD.length)%BOARD.length;s.lastBackwardMove={from,to:p.position,steps:3};cell=BOARD[p.position];
@@ -143,7 +149,7 @@ export function nextTurn(state){
   if(!['action','jailed'].includes(state.phase)||state.trade)throw Error('진행 중인 활동을 먼저 마쳐 주세요.');
   const s=checkBankruptcy(clone(state));if(s.phase==='finished')return s;s.turnNumber=(s.turnNumber??0)+1;s.lastSkipped=[];
   updateProgress(s);
-  if(allFinished(s)){s.phase='finished';log(s,`모든 주자가 ${s.maxRounds}바퀴를 완주해 여행 종료! 자산과 배움을 함께 돌아봅니다.`);}
+  if(firstFinisher(s))return finishByLaps(s,firstFinisher(s));
   else{
     s.turn=nextPlayerIndex(s);
     s.phase='roll';
@@ -168,7 +174,7 @@ export function isValidSave(s){
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>MAX_PLAYERS)return false;
     if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
-    if(s.endReason!=null&&(s.endReason.type!=='bankruptcy'||s.players.length!==2||s.phase!=='finished'||!Number.isInteger(s.endReason.playerId)||s.players[s.endReason.playerId]?.coins!==0))return false;
+    if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
     if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
     if(s.players.some(p=>p.laps!==undefined&&(!Number.isInteger(p.laps)||p.laps<0||p.laps>s.maxRounds)))return false;
     if(s.phase==='roll'&&hasFinished(s,current(s)))return false;

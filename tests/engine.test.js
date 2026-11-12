@@ -16,7 +16,7 @@ test('quiz rewards once, requires explanation and enforces once per turn',()=>{l
 test('wrong learning quiz answers cost nothing',()=>{let s=game();s.players[0].position=6;s=G.startQuiz(G.roll(s,1));const q=QUIZZES.find(q=>q.id===s.quiz);s=G.answerQuiz(s,(q.answer+1)%3);assert.equal(s.players[0].coins,1200);assert.equal(s.players[0].attempts,1);assert.equal(s.players[0].knowledge,0);});
 test('passing start and shared concert rewards',()=>{let s=game();s.players[0].position=27;s=G.roll(s,1);assert.equal(s.players[0].coins,1400);s=game();s.players[0].position=13;s=G.roll(s,1);assert.ok(s.players.every(p=>p.coins===1300));});
 test('events draw one card and apply exactly once',()=>{let s=G.roll(game(),3);assert.equal(s.eventCursor,1);assert.equal(s.players[0].coins,1200+s.lastEvent.actual);assert.throws(()=>G.roll(s,3));});
-test('full four-player game finishes only after every player completes the configured laps',()=>{let s=game(),turns=0,seed=123;while(s.phase!=='finished'){assert.ok(turns<2000,'game must terminate');seed=(seed*1664525+1013904223)>>>0;s=G.roll(s,seed%6+1);if(s.phase==='quiz'){s=G.answerQuiz(s,0);s=G.closeFeedback(s);}if(BOARD[G.current(s).position].type==='work'&&!s.ownership[BOARD[G.current(s).position].id]&&G.current(s).coins>=BOARD[G.current(s).position].price)s=buyQualified(s);assert.ok(G.isValidSave(s));s=G.nextTurn(s);turns++;}assert.ok(turns>20);assert.equal(s.leaderLaps,4);assert.ok(s.players.every(p=>p.laps===4));assert.equal(s.round,4);assert.throws(()=>G.roll(s,1));assert.ok(s.players.every(p=>G.score(s,p)>=p.coins));});
+test('full four-player game finishes when the first player completes the configured laps',()=>{let s=game(),turns=0,seed=123;while(s.phase!=='finished'){assert.ok(turns<2000,'game must terminate');seed=(seed*1664525+1013904223)>>>0;s=G.roll(s,seed%6+1);if(s.phase==='finished')break;if(s.phase==='quiz'){s=G.answerQuiz(s,0);s=G.closeFeedback(s);}if(BOARD[G.current(s).position].type==='work'&&!s.ownership[BOARD[G.current(s).position].id]&&G.current(s).coins>=BOARD[G.current(s).position].price)s=buyQualified(s);assert.ok(G.isValidSave(s));s=G.nextTurn(s);turns++;}assert.ok(turns>20);assert.equal(s.players.filter(p=>p.laps===4).length,1);assert.equal(s.round,4);assert.throws(()=>G.roll(s,1));assert.ok(s.players.every(p=>G.score(s,p)>=p.coins));});
 
 test('unowned works show their base fee without phantom collection bonuses',()=>{
  const s=game();assert.deepEqual(G.owned(s,undefined),[]);for(const w of WORKS)assert.equal(G.fee(s,w),w.fee);
@@ -34,14 +34,10 @@ test('crossing start counts personal laps and the round waits for every player',
   s=G.nextTurn(s);assert.equal(s.round,1);assert.equal(s.turn,1);assert.equal(s.phase,'roll');
  }
 });
-test('4, 8 and 12 laps end only after the final arrival quiz and activities',()=>{
+test('4, 8 and 12 laps end immediately at START with no final arrival quiz',()=>{
  for(const rounds of [4,8,12]){
-  let s=G.createGame({names:['A','B'],rounds});s.players.forEach(p=>p.laps=rounds);s.players[0].laps=rounds-1;s.leaderLaps=rounds-1;s.round=rounds;s.players[0].position=27;
-  // Cross start and reach a quiz through the normal rules, then finish that turn.
-  s=G.roll(s,6);assert.equal(s.leaderLaps,rounds);assert.equal(s.phase,'action');
-  s=G.startQuiz(s);assert.throws(()=>G.nextTurn(s));
-  s=G.answerQuiz(s,0);assert.throws(()=>G.nextTurn(s));s=G.closeFeedback(s);
-  s=G.nextTurn(s);assert.equal(s.phase,'finished');assert.equal(s.round,rounds);assert.equal(s.turn,0);assert.ok(G.isValidSave(s));
+  let s=G.createGame({names:['A','B'],rounds});s.players[0].laps=rounds-1;s.players[0].position=27;
+  s=G.roll(s,6);assert.equal(s.phase,'finished');assert.equal(s.players[0].position,0);assert.equal(s.players[0].laps,rounds);assert.equal(s.players[1].laps,0);assert.equal(s.round,rounds);assert.equal(s.endReason.moveSteps,1);assert.throws(()=>G.startQuiz(s));assert.throws(()=>G.nextTurn(s));assert.ok(G.isValidSave(s));
  }
 });
 

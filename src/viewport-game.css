@@ -167,3 +167,5 @@ dialog#modal{top:var(--modal-center-y,50%);max-width:calc(100vw - 20px - env(saf
 .seat-dice-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:21px;height:21px;pointer-events:none}
 .game-shell .seat-dice-icon .red-dice{display:block;width:21px;height:21px;min-width:0;padding:0;margin:0;border:0;border-radius:0;background:none;box-shadow:none;transform:none;filter:none}
 .seat-dice-icon svg{display:block;width:100%;height:100%}
+#modal .modal-body :is(p,.quiz-question,.notice,.muted,small){word-break:keep-all;overflow-wrap:normal;hyphens:none}
+#modal br[data-sentence-break]{display:block}

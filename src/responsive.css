@@ -38,7 +38,7 @@ body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inse
  input,select,textarea,.chat-compose input{font-size:16px}
  #modal input,#modal select,#modal textarea,.lobby-card input,.lobby-card select{font-size:16px}
  #modal button,.lobby-card button,.chat-compose button{min-height:44px}
- #modal .modal-header .icon-button{width:44px;height:44px;flex-shrink:0}
+ #modal .modal-header .icon-button{width:32px;height:32px;min-height:32px;flex-shrink:0}
  #modal .modal-header{margin-bottom:10px}
  .game-shell{background-attachment:scroll;background-size:auto,auto 100vh;background-size:auto,auto 100svh}
  .game-shell .page-heading{gap:10px;flex-wrap:wrap}
@@ -80,7 +80,7 @@ body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inse
 #modal.character-bio-modal{width:min(500px,calc(100vw - 24px))}
 .character-bio-modal .character-achievement{margin-bottom:0}
 #modal .modal-header{position:sticky;top:0;z-index:20;background:#eef8ff;border-radius:8px;padding:4px 0}
-#modal .modal-header .icon-button{width:44px;height:44px;min-height:44px;flex-shrink:0}
+#modal .modal-header .icon-button{width:32px;height:32px;min-height:32px;flex-shrink:0}
 @media(max-width:650px){
  #modal{padding:20px}
  #modal>h2{font-size:21px;line-height:1.5;margin-bottom:14px}

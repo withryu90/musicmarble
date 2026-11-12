@@ -128,12 +128,12 @@ dialog#modal::backdrop{background:#164d7959}
 }
 #modal .quiz-options .incorrect span{color:#b42438;background:#ffdce2}
 #modal .purchase-ox-options button.incorrect strong,#modal .purchase-ox-options button.incorrect span{color:#b42438}
-/* Keep a touch-friendly circle, but make the cross fill its interior clearly. */
+/* Keep the close circle compact with a clearly fitted cross. */
 #modal .modal-header .icon-button{
- display:grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;
+ display:grid;place-items:center;width:32px;height:32px;min-width:32px;min-height:32px;
  padding:0;line-height:1;border-radius:50%;color:#23658d;
 }
-#modal .modal-header .icon-button svg{display:block;width:36px;height:36px;pointer-events:none}
+#modal .modal-header .icon-button svg{display:block;width:26px;height:26px;pointer-events:none}
 
 /* Make the purchase decision the focus after the OX result. */
 #modal .purchase-work-summary{margin:18px 0 24px;padding:24px 20px;text-align:center;border:1px solid #b7d5ee;border-radius:18px;background:linear-gradient(145deg,#f3faff,#e1effd)}

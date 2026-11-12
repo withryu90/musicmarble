@@ -1,0 +1,23 @@
+// Original illustrations inspired by each work; decorative, not historical documentation.
+export const WORK_ARTWORK=Object.freeze({
+ 'bach-air':new URL('./assets/works/bach-air.jpg',import.meta.url).href,
+ 'bach-brandenburg':new URL('./assets/works/bach-brandenburg.jpg',import.meta.url).href,
+ 'vivaldi-spring':new URL('./assets/works/vivaldi-spring.jpg',import.meta.url).href,
+ 'vivaldi-winter':new URL('./assets/works/vivaldi-winter.jpg',import.meta.url).href,
+ 'handel-water':new URL('./assets/works/handel-water.jpg',import.meta.url).href,
+ 'mozart-serenade':new URL('./assets/works/mozart-serenade.jpg',import.meta.url).href,
+ 'mozart-flute':new URL('./assets/works/mozart-flute.jpg',import.meta.url).href,
+ 'beethoven-5':new URL('./assets/works/beethoven-5.jpg',import.meta.url).href,
+ 'beethoven-9':new URL('./assets/works/beethoven-9.jpg',import.meta.url).href,
+ 'haydn-surprise':new URL('./assets/works/haydn-surprise.jpg',import.meta.url).href,
+ 'schubert-king':new URL('./assets/works/schubert-king.jpg',import.meta.url).href,
+ 'schubert-trout':new URL('./assets/works/schubert-trout.jpg',import.meta.url).href,
+ 'chopin-nocturne':new URL('./assets/works/chopin-nocturne.jpg',import.meta.url).href,
+ 'chopin-polonaises':new URL('./assets/works/chopin-polonaises.jpg',import.meta.url).href,
+ 'brahms-hungarian-5':new URL('./assets/works/brahms-hungarian-5.jpg',import.meta.url).href,
+ 'debussy-moon':new URL('./assets/works/debussy-moon.jpg',import.meta.url).href,
+ 'debussy-sea':new URL('./assets/works/debussy-sea.jpg',import.meta.url).href,
+ 'stravinsky-firebird':new URL('./assets/works/stravinsky-firebird.jpg',import.meta.url).href,
+ 'stravinsky-spring':new URL('./assets/works/stravinsky-spring.jpg',import.meta.url).href,
+ 'ravel-bolero':new URL('./assets/works/ravel-bolero.jpg',import.meta.url).href,
+});

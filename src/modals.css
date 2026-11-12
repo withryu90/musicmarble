@@ -170,3 +170,8 @@ dialog#modal::backdrop{background:#164d7959}
 #modal.ranking-modal .ranking-list{margin:0;padding:0;list-style:none}
 #modal.ranking-modal .ranking-list strong{min-width:0;word-break:keep-all}
 #modal.ranking-modal .ranking-empty{margin:16px 0;padding:20px;text-align:center}
+
+/* Keep the original work imagery behind a quiet, readable purchase summary. */
+#modal .purchase-work-summary.has-work-art{position:relative;isolation:isolate;overflow:hidden;background:#eaf4fc}
+#modal .purchase-work-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:.82;filter:saturate(.8);z-index:-2;pointer-events:none}
+#modal .purchase-work-summary.has-work-art::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#eef7ff55,#f2f9ffd9 28%,#f2f9ffd9 72%,#eef7ff55),linear-gradient(0deg,#eaf4fc66,transparent 35%,transparent 70%,#eaf4fc44);pointer-events:none}

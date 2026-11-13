@@ -164,3 +164,10 @@ body.mobile-game-scroll-lock{background:transparent}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player-coins b{font-size:15px}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player-laps{font-size:8px}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{align-self:center}
+
+/* Double the bubble column without shrinking participant cards or covering tiles. */
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all{width:calc(clamp(150px,23vw,190px) + 44px)}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all .board-seat{grid-template-columns:minmax(0,1fr) 88px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{width:88px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble{width:100%;padding:6px;font-size:11px;line-height:16px;border-radius:9px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble>span{max-height:var(--mobile-bubble-max,64px);line-height:16px;white-space:pre-wrap;overflow:auto}

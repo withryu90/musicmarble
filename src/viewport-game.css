@@ -211,3 +211,7 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 
 /* Each web card sizes independently; local action buttons expand only their own card. */
 .game-shell[data-mobile="false"][data-tab="board"] .board-player{min-height:0;align-content:start}
+
+/* Larger, readable desktop bubbles retain their protected seat-column bounds. */
+.game-shell[data-mobile="false"][data-tab="board"] .player-chat-bubble{padding:8px 10px;font-size:12px;line-height:21px}
+.game-shell[data-mobile="false"][data-tab="board"] .player-chat-bubble>span{line-height:21px}

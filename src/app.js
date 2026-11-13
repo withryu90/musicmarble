@@ -1,28 +1,28 @@
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=7f2d323725af';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=7f2d323725af';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=7f2d323725af';
-import {formatModalSentences} from './modal-sentences.js?v=7f2d323725af';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=7f2d323725af';
-import {WORK_ARTWORK} from './work-artwork.js?v=7f2d323725af';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=7f2d323725af';
-import {RankingClient} from './ranking.js?v=7f2d323725af';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=7f2d323725af';
-import {HandoffCountdown} from './handoff-countdown.js?v=7f2d323725af';
-import {fitBoardTitles} from './board-type.js?v=7f2d323725af';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=7f2d323725af';
-import * as G from './engine.js?v=7f2d323725af';
-import {ActivityInbox} from './activities.js?v=7f2d323725af';
-import {purchaseQuizById} from './purchase-quizzes.js?v=7f2d323725af';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=7f2d323725af';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=7f2d323725af';
-import {diceCube} from './dice.js?v=7f2d323725af';
-import {CHARACTER_BIOS} from './character-bios.js?v=7f2d323725af';
-import {needsLandscape} from './orientation.js?v=7f2d323725af';
-import {createBgm} from './bgm.js?v=7f2d323725af';
-import {PeerTransport} from './peer-transport.js?v=7f2d323725af';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=7f2d323725af';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=7f2d323725af';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=7f2d323725af';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=5eb87bff035b';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=5eb87bff035b';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=5eb87bff035b';
+import {formatModalSentences} from './modal-sentences.js?v=5eb87bff035b';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5eb87bff035b';
+import {WORK_ARTWORK} from './work-artwork.js?v=5eb87bff035b';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=5eb87bff035b';
+import {RankingClient} from './ranking.js?v=5eb87bff035b';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5eb87bff035b';
+import {HandoffCountdown} from './handoff-countdown.js?v=5eb87bff035b';
+import {fitBoardTitles} from './board-type.js?v=5eb87bff035b';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=5eb87bff035b';
+import * as G from './engine.js?v=5eb87bff035b';
+import {ActivityInbox} from './activities.js?v=5eb87bff035b';
+import {purchaseQuizById} from './purchase-quizzes.js?v=5eb87bff035b';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5eb87bff035b';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5eb87bff035b';
+import {diceCube} from './dice.js?v=5eb87bff035b';
+import {CHARACTER_BIOS} from './character-bios.js?v=5eb87bff035b';
+import {needsLandscape} from './orientation.js?v=5eb87bff035b';
+import {createBgm} from './bgm.js?v=5eb87bff035b';
+import {PeerTransport} from './peer-transport.js?v=5eb87bff035b';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=5eb87bff035b';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=5eb87bff035b';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=5eb87bff035b';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -471,11 +471,26 @@ function render(){
  syncGameOrientation();
  if(participantIntroPending){$('#app').innerHTML='<div class="participant-intro-backdrop" aria-hidden="true"></div>';return;}
  if(!snapshot?.state){renderLobby();return;}
+ const mobileHeader=mobileGame?$('.game-shell > .site-header'):null;
+ const mobileTools=mobileGame?$('.game-shell .board-tools'):null;
  const boardScrollLeft=$('.is-flat .board-wrap')?.scrollLeft??0;
  const chatFocused=document.activeElement?.id==='chat-input',selection=chatFocused?document.activeElement.selectionStart:null;
  const oldChat=$('#chat-messages'),chatScroll=oldChat&&oldChat.scrollHeight-oldChat.scrollTop-oldChat.clientHeight>=45?oldChat.scrollTop:null;
  const nav=[['board','게임 보드'],['collection','작품 컬렉션'],['learning','배움 노트']];
  $('#app').innerHTML=`<div class="game-shell" data-tab="${tab}" data-mobile="${mobileGame}"><section class="orientation-guide" role="status" aria-label="가로 화면 안내"><div class="rotate-phone" aria-hidden="true">↻</div><h2>휴대폰을 가로로 돌려 주세요</h2><p>뮤직마블은 가로 화면에서 플레이해요.<br>보드와 주사위 버튼을 함께 보며 음악 여행을 떠나요!</p><small>화면이 바뀌지 않으면 휴대폰의 화면 회전 잠금을 해제해 주세요.</small></section><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><nav aria-label="주 메뉴"${mobileGame?' class="mobile-page-nav"':''}>${mobileGame?'<details class="mobile-page-menu"><summary aria-label="페이지 메뉴" title="게임 보드 · 작품 컬렉션 · 배움 노트"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></summary><div class="mobile-page-options">':''}${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}${mobileGame?'<button data-action="help">도움말</button><button data-action="history">기록</button></div></details>':''}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button fullscreen-button" data-action="fullscreen" aria-label="전체화면" title="전체화면 / 홈 화면 실행 안내"><svg class="header-control-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>${bgmButton()}${mobileGame?'':'<button class="icon-button" data-action="help" aria-label="게임 가이드">?</button>'}<button class="settings-button" data-action="settings" aria-label="수업 설정"><svg class="header-control-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-.6 2.4-2 .9-2.2-.7-2 3.4 1.7 1.7v2.6L2.2 15l2 3.4 2.2-.7 2 .9L9 21h4l.6-2.4 2-.9 2.2.7 2-3.4-1.7-1.7v-2.6L19.8 9l-2-3.4-2.2.7-2-.9L13 3Z" transform="translate(1 0)"/><circle cx="12" cy="12" r="3"/></svg><span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`완주 <b>${lapProgressText(G.current(state))}</b>`}</strong><small>${esc(G.current(state).name)} · 현재 주자 기준</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 4명 · ${session.playerId===0?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools">${mobileGame?`<div class="mobile-board-zoom" aria-label="보드 확대"><button data-action="board-zoom-out" aria-label="보드 축소">−</button><button data-action="board-zoom-reset" aria-label="보드 원래 크기">${Math.round(mobileCamera.state.scale*100)}%</button><button data-action="board-zoom-in" aria-label="보드 확대">＋</button></div>`:''}<button data-action="board-view" aria-label="${boardView==='3d'?'평면 보기':'입체 보기'}" aria-pressed="${boardView==='3d'}">${mobileGame?(boardView==='3d'?'평면':'입체'):(boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기')}</button>${mobileGame?'':'<button data-action="history">기록</button>'}${mobileGame?'':'<button data-action="help">진행 방법 ↗</button>'}</div></div>${board()}${chatPanel()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel():learning()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel()}</div></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
+ // Keep the right-side controls as independent DOM nodes during pawn frames.
+ if(mobileHeader){
+  $('.game-shell > .site-header')?.replaceWith(mobileHeader);
+  mobileHeader.querySelectorAll('[data-action="tab"]').forEach(button=>{
+   const active=button.dataset.tab===tab;button.classList.toggle('active',active);
+   if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
+  });
+ }
+ if(mobileTools&&$('.game-shell .board-tools')){
+  $('.game-shell .board-tools').replaceWith(mobileTools);
+  const view=mobileTools.querySelector('[data-action="board-view"]');
+  view.textContent=boardView==='3d'?'평면':'입체';view.setAttribute('aria-label',boardView==='3d'?'평면 보기':'입체 보기');view.setAttribute('aria-pressed',String(boardView==='3d'));
+ }
  updateFullscreenButton();
  if(mobileGame)mobileCamera.bind($('.board-scene'));
  queueBoardTypeFit();
@@ -563,9 +578,10 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='activity-next'){dismissActivity();return;}
  if(a==='ranking-jump'){rankingModal();return;}
  if(a==='ranking-refresh'){void rankingClient.refresh(true);return;}
- // Changing the local camera is safe even while a turn or pawn is in motion.
+ // View controls do not change the shared game state and remain usable in motion.
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();return;}
- if(busy)return;
+ const mobileViewAction=mobileGame&&['board-zoom-in','board-zoom-out','board-zoom-reset','home','tab','filter','fullscreen','close','help','settings','history','export'].includes(a);
+ if(busy&&!mobileViewAction)return;
  if(a==='handoff-next'){await passHandoff();return;}
  if(a==='handoff-open'){if(myTurn()&&canOfferTurnHandoff(state,session.playerId))turnHandoffModal();return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}

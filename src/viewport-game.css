@@ -209,5 +209,5 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 /* Room codes remain in the waiting room and settings, outside the web game HUD. */
 .game-shell[data-mobile="false"] .room-strip{display:none}
 
-/* Match every web player card to the natural height of the card with controls. */
-.game-shell[data-mobile="false"][data-tab="board"] .board-player{min-height:var(--desktop-card-height,0px);align-content:start}
+/* Each web card sizes independently; local action buttons expand only their own card. */
+.game-shell[data-mobile="false"][data-tab="board"] .board-player{min-height:0;align-content:start}

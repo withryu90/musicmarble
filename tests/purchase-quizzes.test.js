@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as G from '../src/engine.js';
-import {WORKS} from '../src/data.js';
+import {BOARD,WORKS} from '../src/data.js';
 import {PURCHASE_QUIZZES,purchaseQuizById} from '../src/purchase-quizzes.js';
 import {botDecision,applyBotDecision} from '../server/bots.js';
 const arrival=()=>G.roll(G.createGame({names:['가온','나래'],coins:1200}),1);
 const challenge=()=>G.startPurchaseQuiz(arrival(),()=>0);
 const answer=(s,correct=true)=>G.answerPurchaseQuiz(s,correct?purchaseQuizById(s.purchaseChallenge.questionId).answer:!purchaseQuizById(s.purchaseChallenge.questionId).answer);
-test('every purchasable work has both O and X questions with explanations',()=>{
- assert.equal(PURCHASE_QUIZZES.length,40);assert.equal(new Set(PURCHASE_QUIZZES.map(q=>q.id)).size,40);
- for(const w of WORKS){const qs=PURCHASE_QUIZZES.filter(q=>q.workId===w.id);assert.deepEqual(qs.map(q=>q.answer),[true,false]);assert.ok(qs.every(q=>q.question&&q.explanation));}
+test('all twenty works have five distinct OX questions with explanations and sources',()=>{
+ assert.equal(PURCHASE_QUIZZES.length,100);assert.equal(new Set(PURCHASE_QUIZZES.map(q=>q.id)).size,100);
+ for(const w of WORKS){const qs=PURCHASE_QUIZZES.filter(q=>q.workId===w.id);assert.equal(qs.length,5);assert.ok(qs.filter(q=>q.answer).length>=2);assert.ok(qs.filter(q=>!q.answer).length>=2);assert.ok(qs.every(q=>q.question&&q.explanation&&q.source?.startsWith('https://')));}
 });
 test('purchase is rejected until a correct OX answer has been acknowledged',()=>{
  const initial=arrival();assert.throws(()=>G.buy(initial));let s=challenge();assert.throws(()=>G.buy(s));s=answer(s);assert.throws(()=>G.buy(s));
@@ -52,4 +52,24 @@ test('purchase completion respects the configured final lap and ends the game',(
 });
 test('room purchase API atomically advances and publicly announces the actual buyer',async()=>{
  const {RoomService}=await import('../server/rooms.js');const service=new RoomService();try{const a=service.create('A');service.join(a.code,'B');const room=service.get(a.code);service.act(a.code,a.token,{action:'start',revision:room.revision});room.state=challenge();service.broadcast(room);const q=purchaseQuizById(room.state.purchaseChallenge.questionId);service.act(a.code,a.token,{action:'answerPurchaseQuiz',args:[q.answer],revision:room.revision});const revision=room.revision;service.act(a.code,a.token,{action:'purchaseAndNext',revision});assert.equal(room.state.turn,1);assert.equal(room.state.phase,'roll');assert.deepEqual(service.snapshot(room).activities.at(-1).changes,[{playerId:0,amount:-160}]);assert.equal(service.snapshot(room).activities.at(-1).actorId,0);assert.throws(()=>service.act(a.code,a.token,{action:'purchaseAndNext',revision}));assert.throws(()=>service.act(a.code,a.token,{action:'roll',revision:room.revision}));}finally{service.close();}
+});
+
+test('every one of the 100 work questions can be drawn and answered through the purchase gate',()=>{
+ assert.equal(new Set(PURCHASE_QUIZZES.map(q=>q.question)).size,100);
+ for(const w of WORKS){
+  const questions=PURCHASE_QUIZZES.filter(q=>q.workId===w.id);
+  for(let i=0;i<questions.length;i++){
+   const s=G.createGame({names:['A','B'],coins:1600});s.phase='action';s.dice=1;s.players[0].position=BOARD.findIndex(c=>c.id===w.id);
+   const drawn=G.startPurchaseQuiz(s,()=>(i+.1)/questions.length);
+   assert.equal(drawn.purchaseChallenge.questionId,questions[i].id);assert.ok(G.isValidSave(drawn));
+   const correct=G.answerPurchaseQuiz(drawn,questions[i].answer);
+   assert.equal(correct.purchaseChallenge.correct,true);assert.ok(G.isValidSave(correct));
+   const wrong=G.answerPurchaseQuiz(drawn,!questions[i].answer);
+   assert.equal(wrong.purchaseChallenge.correct,false);assert.equal(G.closePurchaseFeedback(wrong).turn,1);
+  }
+ }
+});
+test('expansion preserves all existing purchase question IDs and excludes copyright content',()=>{
+ for(const w of WORKS){assert.equal(purchaseQuizById(`${w.id}-ox-o`).answer,true);assert.equal(purchaseQuizById(`${w.id}-ox-x`).answer,false);}
+ for(const q of PURCHASE_QUIZZES)assert.doesNotMatch(q.question,/저작권|이용허락|라이선스/);
 });

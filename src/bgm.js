@@ -1,4 +1,4 @@
-export const BGM_SOURCE='./src/assets/audio/mozart-k525-chiptune.m4a?v=02948552a9d4';
+export const BGM_SOURCE='./src/assets/audio/mozart-k525-chiptune.m4a?v=67c5bf5689da';
 export function createBgm({AudioClass=Audio,createContext=()=>{const C=window.AudioContext||window.webkitAudioContext;return C?new C():null;},onChange=()=>{},volume=.25}={}){
  let audio=null,context=null,gain=null,currentVolume=Math.min(1,Math.max(0,volume)),error=false,blocked=false,wanted=false;
  const status=()=>({playing:Boolean(audio&&!audio.paused&&!error&&(!context||context.state==='running')),volume:currentVolume,error,blocked});

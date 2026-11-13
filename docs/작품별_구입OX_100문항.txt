@@ -1,0 +1,622 @@
+뮤직마블 · 작품별 구입 OX 퀴즈 100문항
+20작품 × 각 5문항 · O=맞다 / X=아니다
+
+【바흐 · G선상의 아리아】
+1. 「G선상의 아리아」는 바흐의 관현악 모음곡 제3번에 들어 있는 음악이다.
+문항 ID: bach-air-ox-o
+정답: O
+해설: 바흐는 바로크 시대를 대표하는 작곡가이며, 이 아리아는 관현악 모음곡 제3번의 일부입니다.
+참고: https://www.bachvereniging.nl/en/bwv/bwv-1068
+
+2. 바흐는 낭만주의 시대에 주로 활동한 작곡가이다.
+문항 ID: bach-air-ox-x
+정답: X
+해설: 바흐는 바로크 시대를 대표하는 작곡가이며, 이 아리아는 관현악 모음곡 제3번의 일부입니다.
+참고: https://www.bachvereniging.nl/en/bwv/bwv-1068
+
+3. 「G선상의 아리아」는 원래 현악기와 통주저음을 위한 기악곡이다.
+문항 ID: bach-air-ox-3
+정답: O
+해설: 원곡의 아리아는 현악기와 통주저음으로 연주합니다. 가수가 노래하는 성악곡이 아닙니다.
+참고: https://www.bachvereniging.nl/en/bwv/bwv-1068
+
+4. 「G선상의 아리아」는 바흐 관현악 모음곡 제3번의 두 번째 곡이다.
+문항 ID: bach-air-ox-4
+정답: O
+해설: 모음곡은 서곡으로 시작하며, 그 다음에 아리아가 나옵니다.
+참고: https://www.bachvereniging.nl/en/bwv/bwv-1068
+
+5. 「G선상의 아리아」는 원래 오페라 속 등장인물이 노래하는 곡이다.
+문항 ID: bach-air-ox-5
+정답: X
+해설: 이 작품의 아리아는 악기로 연주하는 기악곡입니다. 제목에 아리아가 있어도 모두 오페라의 노래인 것은 아닙니다.
+참고: https://www.bachvereniging.nl/en/bwv/bwv-1068
+
+【바흐 · 브란덴부르크 협주곡】
+6. 바흐의 「브란덴부르크 협주곡」은 여섯 곡으로 이루어져 있다.
+문항 ID: bach-brandenburg-ox-o
+정답: O
+해설: 여섯 협주곡은 다양한 독주 악기와 합주의 조합을 보여 줍니다.
+참고: https://www.laphil.com/works/brandenburg-concertos-complete
+
+7. 「브란덴부르크 협주곡」은 피아노 한 대만으로 연주하는 독주곡 모음이다.
+문항 ID: bach-brandenburg-ox-x
+정답: X
+해설: 여섯 협주곡은 다양한 독주 악기와 합주의 조합을 보여 줍니다.
+참고: https://www.laphil.com/works/brandenburg-concertos-complete
+
+8. 「브란덴부르크 협주곡」은 곡마다 독주 악기와 합주 편성이 다르다.
+문항 ID: bach-brandenburg-ox-3
+정답: O
+해설: 여섯 협주곡은 서로 다른 악기 조합을 사용하며 다양한 음색과 합주 방식을 들려줍니다.
+참고: https://www.laphil.com/works/brandenburg-concertos-complete
+
+9. 「브란덴부르크 협주곡」 제5번에는 플루트·바이올린·하프시코드가 독주 악기로 등장한다.
+문항 ID: bach-brandenburg-ox-4
+정답: O
+해설: 제5번에서는 플루트, 바이올린, 하프시코드가 독주 역할을 맡습니다. 하프시코드의 긴 독주도 들을 수 있습니다.
+참고: https://www.laphil.com/works/brandenburg-concertos-complete
+
+10. 「브란덴부르크 협주곡」은 합창단이 가사를 노래하는 종교 칸타타 모음이다.
+문항 ID: bach-brandenburg-ox-5
+정답: X
+해설: 이 작품들은 독주 악기와 합주가 어우러지는 기악 협주곡입니다. 종교 성악곡인 칸타타와 구별합니다.
+참고: https://www.laphil.com/works/brandenburg-concertos-complete
+
+【비발디 · 사계: 봄】
+11. 비발디의 「사계」는 봄·여름·가을·겨울을 주제로 한 바이올린 협주곡이다.
+문항 ID: vivaldi-spring-ox-o
+정답: O
+해설: 「사계」는 바로크 작곡가 비발디의 작품이며, 네 계절을 바이올린 협주곡으로 표현합니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+12. 「사계: 봄」을 작곡한 사람은 베토벤이다.
+문항 ID: vivaldi-spring-ox-x
+정답: X
+해설: 「사계」는 바로크 작곡가 비발디의 작품이며, 네 계절을 바이올린 협주곡으로 표현합니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+13. 「사계: 봄」에는 새의 지저귐을 떠올리게 하는 음악이 나온다.
+문항 ID: vivaldi-spring-ox-3
+정답: O
+해설: 비발디는 바이올린의 선율과 장식음을 활용해 봄의 새소리를 표현합니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+14. 「사계: 봄」은 빠름·느림·빠름의 세 악장으로 구성된다.
+문항 ID: vivaldi-spring-ox-4
+정답: O
+해설: 「봄」은 빠른 1악장, 느린 2악장, 빠른 3악장으로 이루어진 바이올린 협주곡입니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+15. 「사계: 봄」에서는 합창단이 부르는 가사가 음악의 중심이다.
+문항 ID: vivaldi-spring-ox-5
+정답: X
+해설: 「봄」은 독주 바이올린과 합주가 연주하는 기악 협주곡입니다. 장면을 묘사하지만 가사를 합창하는 작품은 아닙니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+【비발디 · 사계: 겨울】
+16. 「사계: 겨울」에는 추위와 겨울 풍경을 떠올리게 하는 표현이 나타난다.
+문항 ID: vivaldi-winter-ox-o
+정답: O
+해설: 비발디는 바로크 시대 작곡가입니다. 「겨울」에서는 떨리는 듯한 리듬과 선율로 계절의 모습을 표현합니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+17. 비발디는 근현대의 전자음악 작곡가이다.
+문항 ID: vivaldi-winter-ox-x
+정답: X
+해설: 비발디는 바로크 시대 작곡가입니다. 「겨울」에서는 떨리는 듯한 리듬과 선율로 계절의 모습을 표현합니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+18. 「사계: 겨울」에서는 독주 바이올린이 중요한 역할을 한다.
+문항 ID: vivaldi-winter-ox-3
+정답: O
+해설: 「겨울」은 바이올린 협주곡으로, 독주 바이올린과 합주가 겨울의 여러 모습을 표현합니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+19. 「사계: 겨울」의 두 번째 악장은 느린 라르고이다.
+문항 ID: vivaldi-winter-ox-4
+정답: O
+해설: 두 번째 악장은 느린 라르고입니다. 빠른 바깥 악장들과 대비되는 차분한 선율을 들을 수 있습니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+20. 「겨울」은 「사계」를 이루는 네 협주곡 중 첫 번째 곡이다.
+문항 ID: vivaldi-winter-ox-5
+정답: X
+해설: 「사계」는 봄·여름·가을·겨울의 순서입니다. 「겨울」은 네 번째 협주곡입니다.
+참고: https://www.laphil.com/works/the-four-seasons
+
+【헨델 · 수상 음악】
+21. 「수상 음악」은 헨델이 작곡한 바로크 시대 음악이다.
+문항 ID: handel-water-ox-o
+정답: O
+해설: 「수상 음악」은 헨델의 바로크 시대 관현악 모음곡입니다.
+참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+
+22. 「수상 음악」을 작곡한 사람은 쇼팽이다.
+문항 ID: handel-water-ox-x
+정답: X
+해설: 「수상 음악」은 헨델의 바로크 시대 관현악 모음곡입니다.
+참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+
+23. 「수상 음악」은 1717년 템스강의 왕실 뱃놀이와 관련이 있다.
+문항 ID: handel-water-ox-3
+정답: O
+해설: 헨델은 조지 1세의 템스강 뱃놀이를 위한 음악을 작곡했습니다. 이 공연은 1717년에 열렸습니다.
+참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+
+24. 「수상 음악」에는 여러 춤곡이 모음곡 형태로 묶여 있다.
+문항 ID: handel-water-ox-4
+정답: O
+해설: 「수상 음악」은 여러 곡을 묶은 관현악 모음곡으로, 다양한 춤곡 리듬을 들을 수 있습니다.
+참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+
+25. 「수상 음악」은 독창과 합창이 중심인 오라토리오이다.
+문항 ID: handel-water-ox-5
+정답: X
+해설: 「수상 음악」은 악기들이 연주하는 관현악 모음곡입니다. 헨델의 오라토리오 「메시아」와 구별합니다.
+참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+
+【모차르트 · 작은 밤의 음악】
+26. 모차르트는 고전주의 시대를 대표하는 작곡가이다.
+문항 ID: mozart-serenade-ox-o
+정답: O
+해설: 「작은 밤의 음악」은 모차르트의 세레나데이며, 고전주의 음악의 명료한 선율을 들을 수 있습니다.
+참고: https://www.laphil.com/works/eine-kleine-nachtmusik
+
+27. 「작은 밤의 음악」은 쇼팽이 작곡했다.
+문항 ID: mozart-serenade-ox-x
+정답: X
+해설: 「작은 밤의 음악」은 모차르트의 세레나데이며, 고전주의 음악의 명료한 선율을 들을 수 있습니다.
+참고: https://www.laphil.com/works/eine-kleine-nachtmusik
+
+28. 「작은 밤의 음악」은 원래 현악기를 위한 작품이다.
+문항 ID: mozart-serenade-ox-3
+정답: O
+해설: 이 세레나데는 바이올린·비올라·첼로·더블베이스 같은 현악기로 연주합니다. 현악 합주로도 널리 연주됩니다.
+참고: https://www.laphil.com/works/eine-kleine-nachtmusik
+
+29. 「아이네 클라이네 나흐트무지크」는 「작은 밤의 음악」의 독일어 제목이다.
+문항 ID: mozart-serenade-ox-4
+정답: O
+해설: 독일어 제목 Eine kleine Nachtmusik를 우리말로 「작은 밤의 음악」이라고 부릅니다.
+참고: https://www.laphil.com/works/eine-kleine-nachtmusik
+
+30. 「작은 밤의 음악」은 가수들이 등장인물을 연기하며 부르는 오페라이다.
+문항 ID: mozart-serenade-ox-5
+정답: X
+해설: 이 작품은 현악기를 위한 기악 세레나데입니다. 모차르트의 오페라 「마술피리」와는 다른 장르입니다.
+참고: https://www.laphil.com/works/eine-kleine-nachtmusik
+
+【모차르트 · 마술피리】
+31. 모차르트의 「마술피리」에는 노래와 말로 하는 대사가 함께 나온다.
+문항 ID: mozart-flute-ox-o
+정답: O
+해설: 「마술피리」는 모차르트의 오페라로, 노래와 대사가 함께하는 징슈필에 속합니다.
+참고: https://www.metopera.org/fluteguide
+
+32. 「마술피리」는 드뷔시의 피아노 독주곡이다.
+문항 ID: mozart-flute-ox-x
+정답: X
+해설: 「마술피리」는 모차르트의 오페라로, 노래와 대사가 함께하는 징슈필에 속합니다.
+참고: https://www.metopera.org/fluteguide
+
+33. 「마술피리」에는 밤의 여왕이라는 인물이 등장한다.
+문항 ID: mozart-flute-ox-3
+정답: O
+해설: 밤의 여왕은 「마술피리」의 주요 등장인물 중 한 명이며, 소프라노가 노래합니다.
+참고: https://www.metopera.org/fluteguide
+
+34. 「마술피리」의 원래 가사와 대사는 독일어이다.
+문항 ID: mozart-flute-ox-4
+정답: O
+해설: 「마술피리」는 독일어로 노래하고 대화하는 징슈필입니다. 번역 공연이 있더라도 원래 언어는 독일어입니다.
+참고: https://www.metopera.org/fluteguide
+
+35. 「마술피리」는 사람이 노래하지 않고 관현악만 연주하는 교향곡이다.
+문항 ID: mozart-flute-ox-5
+정답: X
+해설: 「마술피리」는 가수들이 등장하는 오페라입니다. 노래, 대사와 무대 연기가 함께합니다.
+참고: https://www.metopera.org/fluteguide
+
+【베토벤 · 교향곡 제5번】
+36. 베토벤 교향곡 제5번에서는 짧은 네 음의 동기가 중요한 역할을 한다.
+문항 ID: beethoven-5-ox-o
+정답: O
+해설: 짧은 네 음의 동기가 제5번의 중요한 특징입니다. 마지막 악장에 독창과 합창이 등장하는 작품은 교향곡 제9번입니다.
+참고: https://www.laphil.com/works/symphony-no-5-in-c-minor-op-67
+
+37. 베토벤 교향곡 제5번의 마지막 악장에는 독창과 합창이 들어간다.
+문항 ID: beethoven-5-ox-x
+정답: X
+해설: 짧은 네 음의 동기가 제5번의 중요한 특징입니다. 마지막 악장에 독창과 합창이 등장하는 작품은 교향곡 제9번입니다.
+참고: https://www.laphil.com/works/symphony-no-5-in-c-minor-op-67
+
+38. 베토벤 교향곡 제5번은 네 악장으로 이루어져 있다.
+문항 ID: beethoven-5-ox-3
+정답: O
+해설: 제5번은 네 악장으로 구성됩니다. 악장마다 빠르기와 분위기가 달라지면서 하나의 교향곡을 이룹니다.
+참고: https://www.laphil.com/works/symphony-no-5-in-c-minor-op-67
+
+39. 베토벤 교향곡 제5번은 다단조로 시작해 마지막 악장에서 다장조의 밝은 울림을 들려준다.
+문항 ID: beethoven-5-ox-4
+정답: O
+해설: 제5번은 다단조에서 출발하며, 마지막 악장은 다장조입니다. 조성과 음색의 변화로 뚜렷한 대비를 만듭니다.
+참고: https://www.laphil.com/works/symphony-no-5-in-c-minor-op-67
+
+40. 베토벤 교향곡 제5번의 유명한 첫 동기는 긴 음 세 개 뒤에 짧은 음 하나가 이어진다.
+문항 ID: beethoven-5-ox-5
+정답: X
+해설: 유명한 첫 동기는 짧은 음 세 개와 긴 음 하나의 리듬입니다. 같은 음의 개수라도 길이의 배열에 따라 느낌이 달라집니다.
+참고: https://www.laphil.com/works/symphony-no-5-in-c-minor-op-67
+
+【베토벤 · 교향곡 제9번】
+41. 베토벤 교향곡 제9번의 마지막 악장에는 독창과 합창이 등장한다.
+문항 ID: beethoven-9-ox-o
+정답: O
+해설: 교향곡 제9번은 관현악과 함께 마지막 악장에서 독창과 합창을 사용합니다.
+참고: https://www.laphil.com/works/symphony-no-9-beethoven
+
+42. 베토벤 교향곡 제9번은 피아노 한 대로만 연주하는 독주곡이다.
+문항 ID: beethoven-9-ox-x
+정답: X
+해설: 교향곡 제9번은 관현악과 함께 마지막 악장에서 독창과 합창을 사용합니다.
+참고: https://www.laphil.com/works/symphony-no-9-beethoven
+
+43. 베토벤 교향곡 제9번의 마지막 악장에는 실러의 「환희에 부쳐」를 바탕으로 한 노래가 나온다.
+문항 ID: beethoven-9-ox-3
+정답: O
+해설: 베토벤은 마지막 악장에서 실러의 시를 활용했습니다. 이 부분을 흔히 「환희의 송가」라고 부릅니다.
+참고: https://www.laphil.com/works/symphony-no-9-beethoven
+
+44. 베토벤 교향곡 제9번은 네 악장으로 이루어져 있다.
+문항 ID: beethoven-9-ox-4
+정답: O
+해설: 제9번은 네 악장입니다. 마지막 악장에서 독창자들과 합창단이 관현악에 합류합니다.
+참고: https://www.laphil.com/works/symphony-no-9-beethoven
+
+45. 베토벤 교향곡 제9번은 바로크 시대인 1724년에 초연되었다.
+문항 ID: beethoven-9-ox-5
+정답: X
+해설: 제9번의 초연은 1824년 빈에서 이루어졌습니다. 1724년은 베토벤이 태어나기 전입니다.
+참고: https://www.laphil.com/works/symphony-no-9-beethoven
+
+【하이든 · 놀람 교향곡】
+46. 「놀람 교향곡」은 하이든의 교향곡 제94번이다.
+문항 ID: haydn-surprise-ox-o
+정답: O
+해설: 「놀람 교향곡」은 하이든의 교향곡으로, 느린 악장의 갑작스러운 강한 화음으로 유명합니다.
+참고: https://www.laphil.com/works/symphony-no-94-surprise
+
+47. 「놀람 교향곡」은 모차르트의 오페라이다.
+문항 ID: haydn-surprise-ox-x
+정답: X
+해설: 「놀람 교향곡」은 하이든의 교향곡으로, 느린 악장의 갑작스러운 강한 화음으로 유명합니다.
+참고: https://www.laphil.com/works/symphony-no-94-surprise
+
+48. 「놀람 교향곡」의 별명은 두 번째 악장의 갑작스러운 강한 화음과 관련이 있다.
+문항 ID: haydn-surprise-ox-3
+정답: O
+해설: 조용한 선율 뒤에 강한 합주 화음이 갑자기 나옵니다. 이 대비가 「놀람」이라는 별명과 연결됩니다.
+참고: https://www.laphil.com/works/symphony-no-94-surprise
+
+49. 「놀람 교향곡」의 두 번째 악장에서는 주제와 변주를 들을 수 있다.
+문항 ID: haydn-surprise-ox-4
+정답: O
+해설: 단순한 주제를 제시한 뒤 여러 변주가 이어집니다. 익숙한 선율이 어떻게 바뀌는지 비교할 수 있습니다.
+참고: https://www.laphil.com/works/symphony-no-94-surprise
+
+50. 「놀람 교향곡」은 전곡이 단 하나의 악장으로만 이루어져 있다.
+문항 ID: haydn-surprise-ox-5
+정답: X
+해설: 하이든의 교향곡 제94번은 네 악장입니다. 유명한 놀람 화음은 그중 두 번째 악장에 나옵니다.
+참고: https://www.laphil.com/works/symphony-no-94-surprise
+
+【슈베르트 · 마왕】
+51. 슈베르트의 「마왕」에서는 한 명의 가수가 여러 등장인물을 표현한다.
+문항 ID: schubert-king-ox-o
+정답: O
+해설: 「마왕」은 피아노 반주가 있는 가곡입니다. 가수는 여러 인물을 표현하고, 피아노는 질주와 긴장을 나타냅니다.
+참고: https://schubert-online.at/activpage/werke_einzelansicht.php?herkunft=allewerke&lang=E&top=7&werke_id=4
+
+52. 슈베르트의 「마왕」은 피아노 반주 없이 부르는 무반주 가곡이다.
+문항 ID: schubert-king-ox-x
+정답: X
+해설: 「마왕」은 피아노 반주가 있는 가곡입니다. 가수는 여러 인물을 표현하고, 피아노는 질주와 긴장을 나타냅니다.
+참고: https://schubert-online.at/activpage/werke_einzelansicht.php?herkunft=allewerke&lang=E&top=7&werke_id=4
+
+53. 슈베르트의 「마왕」은 괴테의 시에 음악을 붙인 가곡이다.
+문항 ID: schubert-king-ox-3
+정답: O
+해설: 슈베르트는 괴테의 시 「마왕」을 바탕으로 독창과 피아노를 위한 가곡을 작곡했습니다.
+참고: https://schubert-online.at/activpage/werke_einzelansicht.php?herkunft=allewerke&lang=E&top=7&werke_id=4
+
+54. 「마왕」의 빠르게 반복되는 피아노 리듬은 말의 질주를 떠올리게 한다.
+문항 ID: schubert-king-ox-4
+정답: O
+해설: 반복되는 셋잇단음표는 달리는 말과 급박한 움직임을 떠올리게 하며 긴장감을 높입니다.
+참고: https://schubert-online.at/activpage/werke_einzelansicht.php?herkunft=allewerke&lang=E&top=7&werke_id=4
+
+55. 「마왕」은 노래 없이 바이올린 두 대·비올라·첼로만 연주하는 현악 4중주이다.
+문항 ID: schubert-king-ox-5
+정답: X
+해설: 「마왕」은 사람이 노래하고 피아노가 반주하는 가곡입니다. 현악 4중주가 아닙니다.
+참고: https://schubert-online.at/activpage/werke_einzelansicht.php?herkunft=allewerke&lang=E&top=7&werke_id=4
+
+【슈베르트 · 송어 5중주】
+56. 슈베르트의 「송어 5중주」는 다섯 연주자가 함께 연주하는 실내악곡이다.
+문항 ID: schubert-trout-ox-o
+정답: O
+해설: 「송어 5중주」는 실내악 작품이며, 가곡 「송어」의 선율을 변주하는 악장이 포함되어 있습니다.
+참고: https://www.laphil.com/works/piano-quintet-the-trout
+
+57. 슈베르트의 「송어 5중주」는 대규모 관현악단을 위한 교향곡이다.
+문항 ID: schubert-trout-ox-x
+정답: X
+해설: 「송어 5중주」는 실내악 작품이며, 가곡 「송어」의 선율을 변주하는 악장이 포함되어 있습니다.
+참고: https://www.laphil.com/works/piano-quintet-the-trout
+
+58. 「송어 5중주」의 편성에는 피아노와 더블베이스가 모두 포함된다.
+문항 ID: schubert-trout-ox-3
+정답: O
+해설: 피아노·바이올린·비올라·첼로·더블베이스가 함께 연주합니다. 바이올린이 두 대인 편성과 다릅니다.
+참고: https://www.laphil.com/works/piano-quintet-the-trout
+
+59. 「송어 5중주」의 네 번째 악장에는 슈베르트 가곡 「송어」의 선율을 바탕으로 한 변주가 나온다.
+문항 ID: schubert-trout-ox-4
+정답: O
+해설: 네 번째 악장은 가곡 「송어」의 선율을 주제로 사용합니다. 악기와 반주가 달라지며 변주가 이어집니다.
+참고: https://www.laphil.com/works/piano-quintet-the-trout
+
+60. 「송어 5중주」의 원곡을 연주하려면 가수가 반드시 가사를 노래해야 한다.
+문항 ID: schubert-trout-ox-5
+정답: X
+해설: 이 5중주는 다섯 악기로 연주하는 기악 실내악곡입니다. 선율의 바탕이 된 가곡 「송어」와 구별합니다.
+참고: https://www.laphil.com/works/piano-quintet-the-trout
+
+【쇼팽 · 녹턴 Op.9 No.2】
+61. 쇼팽은 피아노를 중심으로 많은 작품을 남겼다.
+문항 ID: chopin-nocturne-ox-o
+정답: O
+해설: 쇼팽은 대표적인 피아노 작곡가이며, 이 녹턴도 피아노를 위한 작품입니다.
+참고: https://chopin.nifc.pl/pl/chopin/kompozycja/154
+
+62. 쇼팽의 「녹턴 Op.9 No.2」는 트럼펫 독주를 위해 쓰인 원곡이다.
+문항 ID: chopin-nocturne-ox-x
+정답: X
+해설: 쇼팽은 대표적인 피아노 작곡가이며, 이 녹턴도 피아노를 위한 작품입니다.
+참고: https://chopin.nifc.pl/pl/chopin/kompozycja/154
+
+63. 쇼팽의 「녹턴 Op.9 No.2」에서는 노래하듯 흐르는 선율을 들을 수 있다.
+문항 ID: chopin-nocturne-ox-3
+정답: O
+해설: 피아노의 선율을 노래하듯 표현하는 것이 중요한 작품입니다. 반주 위로 장식적인 선율이 이어집니다.
+참고: https://chopin.nifc.pl/pl/chopin/kompozycja/154
+
+64. 쇼팽의 「녹턴 Op.9 No.2」는 내림마장조의 피아노곡이다.
+문항 ID: chopin-nocturne-ox-4
+정답: O
+해설: Op.9의 두 번째 녹턴은 내림마장조입니다. 작품번호와 곡 번호를 함께 보면 다른 녹턴과 구분할 수 있습니다.
+참고: https://chopin.nifc.pl/pl/chopin/kompozycja/154
+
+65. 「녹턴」은 군대의 행진만을 위해 만들어진 음악 장르를 뜻한다.
+문항 ID: chopin-nocturne-ox-5
+정답: X
+해설: 녹턴은 밤을 연상시키는 성격 소품을 가리키는 이름입니다. 쇼팽은 피아노로 서정적인 녹턴을 발전시켰습니다.
+참고: https://chopin.nifc.pl/pl/chopin/kompozycja/154
+
+【쇼팽 · 영웅 폴로네즈】
+66. 쇼팽의 「영웅 폴로네즈」는 폴란드 춤 리듬과 관련이 있다.
+문항 ID: chopin-polonaises-ox-o
+정답: O
+해설: 쇼팽은 낭만주의 시대 작곡가입니다. 폴로네즈는 폴란드의 춤에서 비롯된 형식입니다.
+참고: https://chopin.nifc.pl/en/chopin/gatunki/6_polonaise
+
+67. 쇼팽은 바로크 시대를 대표하는 작곡가이다.
+문항 ID: chopin-polonaises-ox-x
+정답: X
+해설: 쇼팽은 낭만주의 시대 작곡가입니다. 폴로네즈는 폴란드의 춤에서 비롯된 형식입니다.
+참고: https://chopin.nifc.pl/en/chopin/gatunki/6_polonaise
+
+68. 「영웅 폴로네즈」는 폴로네즈의 세 박자 리듬을 바탕으로 한다.
+문항 ID: chopin-polonaises-ox-3
+정답: O
+해설: 폴로네즈는 폴란드에서 발전한 세 박자 춤입니다. 쇼팽은 그 리듬을 피아노 예술 작품으로 확장했습니다.
+참고: https://chopin.nifc.pl/en/chopin/gatunki/6_polonaise
+
+69. 「영웅 폴로네즈」는 내림가장조 Op.53의 피아노곡이다.
+문항 ID: chopin-polonaises-ox-4
+정답: O
+해설: 흔히 「영웅」이라고 부르는 작품은 내림가장조 폴로네즈 Op.53입니다.
+참고: https://chopin.nifc.pl/en/chopin/gatunki/6_polonaise
+
+70. 「영웅 폴로네즈」는 원래 오페라 가수가 부르는 성악 아리아로 작곡되었다.
+문항 ID: chopin-polonaises-ox-5
+정답: X
+해설: 이 작품은 피아노 독주곡입니다. 가수의 노래가 아니라 피아노의 리듬과 화음으로 힘찬 성격을 표현합니다.
+참고: https://chopin.nifc.pl/en/chopin/gatunki/6_polonaise
+
+【브람스 · 헝가리 무곡 제5번】
+71. 「헝가리 무곡 제5번」은 브람스의 작품이다.
+문항 ID: brahms-hungarian-5-ox-o
+정답: O
+해설: 브람스는 낭만주의 시대 작곡가이며 「헝가리 무곡 제5번」에서 춤의 활력을 느낄 수 있습니다.
+참고: https://www.laphil.com/works/three-hungarian-dances-no-1-in-g-minor-no-6-in-d-major-no-5-in-g-minor
+
+72. 「헝가리 무곡 제5번」은 바흐의 바로크 시대 작품이다.
+문항 ID: brahms-hungarian-5-ox-x
+정답: X
+해설: 브람스는 낭만주의 시대 작곡가이며 「헝가리 무곡 제5번」에서 춤의 활력을 느낄 수 있습니다.
+참고: https://www.laphil.com/works/three-hungarian-dances-no-1-in-g-minor-no-6-in-d-major-no-5-in-g-minor
+
+73. 브람스의 「헝가리 무곡」은 원래 피아노 네 손을 위한 형태로 출판되었다.
+문항 ID: brahms-hungarian-5-ox-3
+정답: O
+해설: 두 연주자가 한 대의 피아노에서 함께 연주하는 네 손 연탄곡으로 출판되었고, 관현악 편곡으로도 널리 알려졌습니다.
+참고: https://www.laphil.com/works/three-hungarian-dances-no-1-in-g-minor-no-6-in-d-major-no-5-in-g-minor
+
+74. 「헝가리 무곡 제5번」은 모두 21곡인 「헝가리 무곡」 중 한 곡이다.
+문항 ID: brahms-hungarian-5-ox-4
+정답: O
+해설: 브람스의 「헝가리 무곡」은 총 21곡입니다. 제5번은 그중 특히 유명한 곡입니다.
+참고: https://www.laphil.com/works/three-hungarian-dances-no-1-in-g-minor-no-6-in-d-major-no-5-in-g-minor
+
+75. 「헝가리 무곡 제5번」에서는 처음부터 끝까지 빠르기와 셈여림이 전혀 달라지지 않는다.
+문항 ID: brahms-hungarian-5-ox-5
+정답: X
+해설: 빠르기와 셈여림의 대비가 춤의 활력과 재치를 만듭니다. 연주를 들으며 분위기가 바뀌는 지점을 찾아볼 수 있습니다.
+참고: https://www.laphil.com/works/three-hungarian-dances-no-1-in-g-minor-no-6-in-d-major-no-5-in-g-minor
+
+【드뷔시 · 달빛】
+76. 드뷔시의 「달빛」은 「베르가마스크 모음곡」에 들어 있는 곡이다.
+문항 ID: debussy-moon-ox-o
+정답: O
+해설: 「달빛」은 드뷔시의 피아노 모음곡 「베르가마스크 모음곡」에 속합니다.
+참고: https://www.laphil.com/works/clair-de-lune-from-suite-bergamasque
+
+77. 「베르가마스크 모음곡」의 「달빛」을 작곡한 사람은 모차르트이다.
+문항 ID: debussy-moon-ox-x
+정답: X
+해설: 「달빛」은 드뷔시의 피아노 모음곡 「베르가마스크 모음곡」에 속합니다.
+참고: https://www.laphil.com/works/clair-de-lune-from-suite-bergamasque
+
+78. 드뷔시의 「달빛」은 원래 피아노 독주를 위한 곡이다.
+문항 ID: debussy-moon-ox-3
+정답: O
+해설: 「달빛」의 원곡은 피아노 독주곡입니다. 다른 악기 편곡도 있지만 원래 편성과 구별해야 합니다.
+참고: https://www.laphil.com/works/clair-de-lune-from-suite-bergamasque
+
+79. 「달빛」은 「베르가마스크 모음곡」의 세 번째 곡이다.
+문항 ID: debussy-moon-ox-4
+정답: O
+해설: 「베르가마스크 모음곡」의 세 번째 곡이 「달빛」입니다. 여러 곡을 묶은 모음곡의 일부입니다.
+참고: https://www.laphil.com/works/clair-de-lune-from-suite-bergamasque
+
+80. 드뷔시의 「달빛」은 베토벤 교향곡 제9번의 마지막 악장이다.
+문항 ID: debussy-moon-ox-5
+정답: X
+해설: 「달빛」은 드뷔시의 피아노곡입니다. 베토벤 교향곡 제9번은 다른 작곡가의 별도 작품입니다.
+참고: https://www.laphil.com/works/clair-de-lune-from-suite-bergamasque
+
+【드뷔시 · 바다】
+81. 드뷔시의 「바다」는 관현악의 다양한 음색으로 바다의 모습을 표현한다.
+문항 ID: debussy-sea-ox-o
+정답: O
+해설: 「바다」는 관현악 작품으로, 악기들의 다양한 음색과 움직임을 활용합니다.
+참고: https://www.laphil.com/works/la-mer
+
+82. 드뷔시의 「바다」의 원곡은 피아노 독주만을 위한 작품이다.
+문항 ID: debussy-sea-ox-x
+정답: X
+해설: 「바다」는 관현악 작품으로, 악기들의 다양한 음색과 움직임을 활용합니다.
+참고: https://www.laphil.com/works/la-mer
+
+83. 드뷔시의 「바다」는 세 부분으로 이루어진 관현악 작품이다.
+문항 ID: debussy-sea-ox-3
+정답: O
+해설: 드뷔시는 「바다」를 세 개의 교향적 스케치로 구성했습니다. 각 부분은 바다의 서로 다른 모습을 떠올리게 합니다.
+참고: https://www.laphil.com/works/la-mer
+
+84. 「바다」의 마지막 부분 제목은 「바람과 바다의 대화」이다.
+문항 ID: debussy-sea-ox-4
+정답: O
+해설: 세 번째 부분은 「바람과 바다의 대화」입니다. 다양한 악기의 음색과 움직임이 어우러집니다.
+참고: https://www.laphil.com/works/la-mer
+
+85. 「바다」는 가수 한 명이 악기 없이 부르도록 작곡된 무반주 가곡이다.
+문항 ID: debussy-sea-ox-5
+정답: X
+해설: 「바다」는 큰 관현악단이 연주하는 기악 작품입니다. 여러 악기군의 음색 변화가 중요한 역할을 합니다.
+참고: https://www.laphil.com/works/la-mer
+
+【스트라빈스키 · 불새】
+86. 스트라빈스키의 「불새」는 발레 음악이다.
+문항 ID: stravinsky-firebird-ox-o
+정답: O
+해설: 「불새」는 스트라빈스키가 러시아 설화를 바탕으로 작곡한 발레 음악입니다.
+참고: https://www.laphil.com/works/the-firebird
+
+87. 「불새」는 헨델이 작곡한 오라토리오이다.
+문항 ID: stravinsky-firebird-ox-x
+정답: X
+해설: 「불새」는 스트라빈스키가 러시아 설화를 바탕으로 작곡한 발레 음악입니다.
+참고: https://www.laphil.com/works/the-firebird
+
+88. 스트라빈스키의 「불새」는 1910년 파리에서 처음 공연된 발레 음악이다.
+문항 ID: stravinsky-firebird-ox-3
+정답: O
+해설: 「불새」는 1910년 파리에서 발레 뤼스가 초연했습니다. 이 작품은 젊은 스트라빈스키를 널리 알렸습니다.
+참고: https://www.laphil.com/works/the-firebird
+
+89. 「불새」의 이야기에는 이반 왕자와 마법의 새가 등장한다.
+문항 ID: stravinsky-firebird-ox-4
+정답: O
+해설: 러시아 설화를 바탕으로 이반 왕자, 불새, 마법사 카스체이 등의 이야기가 펼쳐집니다.
+참고: https://www.laphil.com/works/the-firebird
+
+90. 「불새」의 원래 편성은 바이올린 두 대·비올라·첼로의 현악 4중주이다.
+문항 ID: stravinsky-firebird-ox-5
+정답: X
+해설: 「불새」의 원곡은 큰 관현악단을 위한 발레 음악입니다. 현악기뿐 아니라 관악기와 타악기 등의 다채로운 소리를 사용합니다.
+참고: https://www.laphil.com/works/the-firebird
+
+【스트라빈스키 · 봄의 제전】
+91. 스트라빈스키의 「봄의 제전」은 강렬한 리듬과 불규칙한 강세로 알려져 있다.
+문항 ID: stravinsky-spring-ox-o
+정답: O
+해설: 「봄의 제전」은 20세기 발레 음악으로, 대담한 강세와 리듬이 중요한 특징입니다.
+참고: https://www.laphil.com/works/the-rite-of-spring
+
+92. 「봄의 제전」은 바로크 시대의 전형적인 모음곡이다.
+문항 ID: stravinsky-spring-ox-x
+정답: X
+해설: 「봄의 제전」은 20세기 발레 음악으로, 대담한 강세와 리듬이 중요한 특징입니다.
+참고: https://www.laphil.com/works/the-rite-of-spring
+
+93. 「봄의 제전」은 1913년 파리에서 초연된 발레 음악이다.
+문항 ID: stravinsky-spring-ox-3
+정답: O
+해설: 「봄의 제전」은 1913년 파리에서 발레로 초연되었습니다. 스트라빈스키의 20세기 대표작 중 하나입니다.
+참고: https://www.laphil.com/works/the-rite-of-spring
+
+94. 「봄의 제전」의 시작에서는 높은 음역의 바순 독주를 들을 수 있다.
+문항 ID: stravinsky-spring-ox-4
+정답: O
+해설: 첫머리는 높은 음역의 바순 독주로 시작합니다. 익숙한 악기에서도 낯선 음색을 들을 수 있습니다.
+참고: https://www.laphil.com/works/the-rite-of-spring
+
+95. 「봄의 제전」은 비발디의 「사계」를 이루는 네 협주곡 중 하나이다.
+문항 ID: stravinsky-spring-ox-5
+정답: X
+해설: 「봄의 제전」은 스트라빈스키의 발레 음악입니다. 비발디의 바이올린 협주곡 「사계: 봄」과는 다른 작품입니다.
+참고: https://www.laphil.com/works/the-rite-of-spring
+
+【라벨 · 볼레로】
+96. 라벨의 「볼레로」에서는 반복되는 리듬과 선율이 중요한 역할을 한다.
+문항 ID: ravel-bolero-ox-o
+정답: O
+해설: 「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
+
+97. 「볼레로」를 작곡한 사람은 비발디이다.
+문항 ID: ravel-bolero-ox-x
+정답: X
+해설: 「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
+
+98. 「볼레로」에서는 작은북이 반복되는 리듬을 꾸준히 연주한다.
+문항 ID: ravel-bolero-ox-3
+정답: O
+해설: 작은북의 일정한 리듬이 곡을 받쳐 줍니다. 반복되는 리듬 위로 여러 악기의 선율이 이어집니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
+
+99. 「볼레로」는 악기들이 더해지며 전체적으로 점점 크게 들리는 크레셴도가 중요하다.
+문항 ID: ravel-bolero-ox-4
+정답: O
+해설: 처음의 작은 소리가 점차 커집니다. 악기 편성과 음색의 변화도 함께 들을 수 있습니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
+
+100. 「볼레로」에서는 처음부터 끝까지 같은 악기 한 대만 선율을 연주한다.
+문항 ID: ravel-bolero-ox-5
+정답: X
+해설: 선율은 여러 악기와 악기군으로 이어집니다. 같은 선율도 음색이 달라지면 새로운 느낌을 줍니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel

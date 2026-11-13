@@ -10,7 +10,7 @@ function context(state='running'){
  ctx.decodeAudioData=async()=>({duration:4.8});ctx.createGain=node;ctx.createBiquadFilter=node;ctx.createOscillator=voice;ctx.createBufferSource=voice;
  ctx.createBuffer=(channels,length)=>({getChannelData:()=>new Float32Array(length)});return ctx;
 }
-test('all five effects schedule finite audio, with local recordings for crowd and fate motif',async()=>{
+test('all effects schedule finite audio, including concert, crowd and fate recordings',async()=>{
  for(const name of EFFECTS){const ctx=context(),sfx=createSoundEffects({fetchAudio,createContext:()=>ctx,random:()=>.5});assert.equal(await sfx.play(name),true);assert.ok(ctx.voices.length>0);for(const n of ctx.voices){assert.ok(n.startAt>=ctx.currentTime);assert.ok(n.endAt>n.startAt);assert.ok(n.endAt-ctx.currentTime<(RECORDED_EFFECTS[name]?5:2.2));}sfx.stop();}
 });
 test('muting stops active sounds and blocks new playback; hidden tabs stay silent',async()=>{
@@ -96,4 +96,25 @@ test('failed prison scheduling releases the BGM suspension',async()=>{
  const ctx=context(),events=[];ctx.createBufferSource=()=>({connect(){},disconnect(){},start(){throw Error('closed context');}});
  const sfx=createSoundEffects({createContext:()=>ctx,fetchAudio,onPlaybackStart:()=>events.push('start'),onPlaybackEnd:()=>events.push('end')});
  assert.equal(await sfx.play('prison'),false);assert.deepEqual(events,['start','end']);
+});
+
+test('concert notices select Ode to Joy and replayed room snapshots cannot duplicate it',async()=>{
+ assert.equal(activitySound({type:'concert'}),'concert');const ctx=context(),sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});
+ assert.equal(await sfx.play('concert','ROOM:event:42'),true);const voices=ctx.voices.length;
+ assert.equal(await sfx.play('concert','ROOM:event:42'),false);assert.equal(ctx.voices.length,voices);
+ sfx.setEnabled(false);assert.equal(await sfx.play('concert','ROOM:event:43'),false);
+});
+test('concert excerpt contains exactly the requested two Ode to Joy phrases at an unclipped level',async()=>{
+ const {readFile}=await import('node:fs/promises'),data=await readFile(new URL(RECORDED_EFFECTS.concert));
+ const rate=data.readUInt32LE(24),frames=(data.length-44)/4;assert.equal(rate,22050);assert.ok(frames/rate>16&&frames/rate<17);
+ const phrase=['B','B','C','D','D','C','B','A','G','G','A','B','B','A','A','B','B','C','D','D','C','B','A','G','G','A','B','A','G','G'];
+ const lengths=[1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2,1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2];
+ const hz={G:391.995,A:440,B:493.883,C:523.251,D:587.33};let beat=0;
+ for(let n=0;n<phrase.length;n++){
+  const start=Math.round((beat*.5+.10)*rate),samples=[];
+  for(let i=0;i<Math.round(.08*rate);i++)samples.push((data.readInt16LE(44+(start+i)*4)+data.readInt16LE(46+(start+i)*4))/65536);
+  const scored=Object.entries(hz).map(([name,f])=>{let re=0,im=0;for(let i=0;i<samples.length;i++){const phase=2*Math.PI*f*i/rate;re+=samples[i]*Math.cos(phase);im+=samples[i]*Math.sin(phase);}return [name,re*re+im*im];}).sort((a,b)=>b[1]-a[1]);
+  assert.equal(scored[0][0],phrase[n],`requested melody note ${n+1}`);beat+=lengths[n];
+ }
+ let peak=0;for(let i=44;i<data.length;i+=2)peak=Math.max(peak,Math.abs(data.readInt16LE(i)));assert.ok(peak>10000&&peak<25000);assert.equal(data.readInt16LE(data.length-2),0);
 });

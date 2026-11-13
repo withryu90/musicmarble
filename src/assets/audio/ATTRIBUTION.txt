@@ -40,3 +40,14 @@ Created with scripts/render-game-bgm.py; 16 bars, 84 BPM, 45.71 seconds.
 Soft music-box/marimba-style sine synthesis, warm chords and bass.
 No third-party recording, melody, sample or soundfont was copied.
 Stereo 22.05 kHz 16-bit PCM WAV; circular echoes preserve the loop boundary.
+
+Concert opening: beethoven-ode-concert.wav
+Composition: Ludwig van Beethoven (1770–1827), Symphony No. 9, Op. 125,
+IV: Ode to Joy theme. Public-domain composition.
+Public-domain score reference: Mutopia-2009/08/05-528, typeset by Peter Chubb.
+https://www.ibiblio.org/mutopia/cgibin/piece-info.cgi?id=528
+Excerpt: first two 16-beat phrases, G major, B B C D ... A G G.
+Performance and accompaniment newly synthesized by scripts/render-concert-ode.py.
+No third-party performance, recording, soundfont, or instrument samples used.
+16.65 seconds, 120 BPM, stereo 22.05 kHz 16-bit PCM WAV.
+Plays once per concert notice, alongside game BGM; the global bell mutes both.

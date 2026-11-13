@@ -9,7 +9,7 @@ function fixture(){
 }
 test('game music loops independently of dice, coin, quiz and ending effects',()=>{
  const {music,state}=fixture();music.sync({game:true});assert.equal(state.source,'garden');assert.equal(state.volume,.1);
- for(const name of ['dice','gain','loss','applause']){music.effectStarted(name,1);assert.equal(state.playing,true);music.effectEnded(name,1);assert.equal(state.playing,true);}
+ for(const name of ['dice','gain','loss','applause','concert']){music.effectStarted(name,1);assert.equal(state.playing,true);music.effectEnded(name,1);assert.equal(state.playing,true);}
 });
 test('only prison playback suspends BGM until every active prison clip ends',()=>{
  const {music,state}=fixture();music.sync({game:true});music.effectStarted('prison',1);assert.equal(state.playing,false);

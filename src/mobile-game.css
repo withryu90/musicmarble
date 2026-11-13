@@ -37,3 +37,27 @@
 .game-shell[data-mobile="true"][data-tab="board"] .room-strip button strong{font-size:11px;letter-spacing:1px}
 .mobile-dice-overlay .dice-stage .rolling-die{height:68px;min-height:68px;margin:6px auto}
 .mobile-dice-overlay .dice-stage .dice-result{font-size:17px}
+
+/* Mobile only: one left rail, with the full remaining stage reserved for the board. */
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all{
+ left:0;right:auto;top:0;bottom:0;width:clamp(150px,23vw,190px);
+ display:flex;flex-direction:column;justify-content:center;align-items:stretch;
+ gap:5px;padding:3px 2px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all .board-seat{
+ display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;
+ width:100%;max-width:100%;margin:0;flex:none;gap:5px;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player{grid-column:2;grid-row:1;min-width:0}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{
+ grid-column:1;grid-row:1;order:0;width:44px;height:auto;padding:0;min-width:0;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble{padding:4px;border-radius:7px;font-size:8px;line-height:12px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble>span{white-space:pre-wrap;line-height:12px;max-height:36px;overflow:auto}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble::before{
+ left:auto;right:-4px;top:calc(50% - 3px);bottom:auto;width:6px;height:6px;transform:rotate(135deg);
+}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-scene{left:calc((100% + var(--mobile-rail-width,190px))/2)}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat{display:block;padding:2px 4px;margin-top:2px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat .chat-messages{display:none}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat form{border:0;padding:0;margin:0}

@@ -1,26 +1,26 @@
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=461bf908441d';
-import {formatModalSentences} from './modal-sentences.js?v=461bf908441d';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=461bf908441d';
-import {WORK_ARTWORK} from './work-artwork.js?v=461bf908441d';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=461bf908441d';
-import {RankingClient} from './ranking.js?v=461bf908441d';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=461bf908441d';
-import {HandoffCountdown} from './handoff-countdown.js?v=461bf908441d';
-import {fitBoardTitles} from './board-type.js?v=461bf908441d';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=461bf908441d';
-import * as G from './engine.js?v=461bf908441d';
-import {ActivityInbox} from './activities.js?v=461bf908441d';
-import {purchaseQuizById} from './purchase-quizzes.js?v=461bf908441d';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=461bf908441d';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=461bf908441d';
-import {diceCube} from './dice.js?v=461bf908441d';
-import {CHARACTER_BIOS} from './character-bios.js?v=461bf908441d';
-import {needsLandscape} from './orientation.js?v=461bf908441d';
-import {createBgm} from './bgm.js?v=461bf908441d';
-import {PeerTransport} from './peer-transport.js?v=461bf908441d';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=461bf908441d';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=461bf908441d';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=461bf908441d';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=d502ffdd4355';
+import {formatModalSentences} from './modal-sentences.js?v=d502ffdd4355';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=d502ffdd4355';
+import {WORK_ARTWORK} from './work-artwork.js?v=d502ffdd4355';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=d502ffdd4355';
+import {RankingClient} from './ranking.js?v=d502ffdd4355';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=d502ffdd4355';
+import {HandoffCountdown} from './handoff-countdown.js?v=d502ffdd4355';
+import {fitBoardTitles} from './board-type.js?v=d502ffdd4355';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=d502ffdd4355';
+import * as G from './engine.js?v=d502ffdd4355';
+import {ActivityInbox} from './activities.js?v=d502ffdd4355';
+import {purchaseQuizById} from './purchase-quizzes.js?v=d502ffdd4355';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=d502ffdd4355';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=d502ffdd4355';
+import {diceCube} from './dice.js?v=d502ffdd4355';
+import {CHARACTER_BIOS} from './character-bios.js?v=d502ffdd4355';
+import {needsLandscape} from './orientation.js?v=d502ffdd4355';
+import {createBgm} from './bgm.js?v=d502ffdd4355';
+import {PeerTransport} from './peer-transport.js?v=d502ffdd4355';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=d502ffdd4355';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=d502ffdd4355';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=d502ffdd4355';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -375,11 +375,11 @@ function boardTitle(cell){
 function tileCopy(c){return `<span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(c.type==='go-to-prison'?'':({start:'출발 · +200 MC',quiz:'+80 MC','back-three':'추가 주사위',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번'})[c.type]||c.subtitle)}</span></span>`;}
 function boardLabelLayer(){return `<div class="board-labels" aria-hidden="true">${BOARD.map((c,i)=>`<div class="board-label ${c.type}" data-label-index="${i}">${tileCopy(c)}${state.ownership[c.id]?.level?concertHall():''}</div>`).join('')}</div>`;}
 function boardPawnLayer(){return `<div class="board-pawns">${BOARD.map((c,i)=>{if(!state.players.some(p=>p.position===i&&tokenVisible(p)))return '';const [row,col]=coordinates(i),anchor=boardTokenAnchor(row,col,BOARD_SIDE);return `<div class="board-pawn-group" data-pawn-index="${i}" data-anchor-x="${anchor.x}" data-anchor-y="${anchor.y}">${tokens(i)}</div>`;}).join('')}</div>`;}
-function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?dicePresentation.backward?` · 뒤로 이동 중 ${dicePresentation.backwardStep} / ${dicePresentation.resultSnapshot.state.lastBackwardMove?.steps??dicePresentation.result}칸`:` · 이동 중 ${dicePresentation.step} / ${dicePresentation.totalSteps??dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${lapProgressText(G.current(state))}<small> ROUND · 완주</small><small class="lap-progress">${esc(G.current(state).name)} 기준 · 전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명</small></b></section><div class="board-surround">${players('top')}<div class="board-scroll-hint">↔ 보드를 좌우로 밀어 작품을 살펴보세요.</div><div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board-grid-frame"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
+function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?dicePresentation.backward?` · 뒤로 이동 중 ${dicePresentation.backwardStep} / ${dicePresentation.resultSnapshot.state.lastBackwardMove?.steps??dicePresentation.result}칸`:` · 이동 중 ${dicePresentation.step} / ${dicePresentation.totalSteps??dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${lapProgressText(G.current(state))}<small> ROUND · 완주</small><small class="lap-progress">${esc(G.current(state).name)} 기준 · 전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명</small></b></section><div class="board-surround">${players(mobileGame?'all':'top')}<div class="board-scroll-hint">↔ 보드를 좌우로 밀어 작품을 살펴보세요.</div><div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board-grid-frame"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
  const [row,col]=coordinates(i),owner=state.ownership[c.id],active=G.current(state).position===i;
  const tile={baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'}[c.era]||'#9cbfd0';
  return `<button class="cell ${c.type} ${active?'current':''} ${dicePresentation?.moving&&state.players[dicePresentation.playerId].position===i?'pawn-moving-cell':''} ${owner?'owned':''} ${owner?.level?'upgraded':''}" data-action="cell" data-index="${i}" style="grid-row:${row};grid-column:${col};--era:${c.era?era(c.era).color:'#cbbd99'};--tile:${tile};--owner-inward:${ownershipDirection(i)};--owner:${owner?playerColor(state.players[owner.player]):'transparent'}" aria-label="${i+1}번 ${esc(c.composer||'')} ${esc(c.title)}${owner?`, ${esc(state.players[owner.player].name)} 보유`:''}">${tileCopy(c)}${c.type==='start'?startPortal():''}${tokens(i)}${owner?`<span class="ownership-dot" title="${esc(state.players[owner.player].name)} 보유"></span>`:''}${owner?.level?concertHall():''}</button>`;
- }).join('')}<div class="board-center"><div class="garden-water" aria-hidden="true"><div class="pond-water-effects"><span class="water-caustics"></span><span class="water-glints"></span><span class="water-ripple ripple-one"></span><span class="water-ripple ripple-two"></span><span class="water-ripple ripple-three"></span></div><span class="fountain-shimmer"></span></div></div></div></div></div>${boardView==='3d'?boardLabelLayer()+boardPawnLayer():''}</div>${players('bottom')}</div></div>`;}
+ }).join('')}<div class="board-center"><div class="garden-water" aria-hidden="true"><div class="pond-water-effects"><span class="water-caustics"></span><span class="water-glints"></span><span class="water-ripple ripple-one"></span><span class="water-ripple ripple-two"></span><span class="water-ripple ripple-three"></span></div><span class="fountain-shimmer"></span></div></div></div></div></div>${boardView==='3d'?boardLabelLayer()+boardPawnLayer():''}</div>${mobileGame?'':players('bottom')}</div></div>`;}
 
 function actionPanel(){
  const p=G.current(state),c=BOARD[p.position],o=state.ownership[c.id];
@@ -412,7 +412,7 @@ function seatControls(){
 }
 function players(row){
  const seats=['top-left','top-right','bottom-left','bottom-right'];
- return `<section class="board-players players-${row}" aria-label="함께 여행하는 친구 · ${row==='top'?'위쪽':'아래쪽'}"><h3 class="board-players-heading">함께 여행하는 친구 · ${state.players.length} PLAYERS</h3>${state.players.map((p,i)=>({p,i})).filter(({i})=>seats[i].startsWith(row)).sort((a,b)=>Number(seats[a.i].endsWith('right'))-Number(seats[b.i].endsWith('right'))).map(({p,i})=>`<div class="board-seat seat-${seats[i]}"><article class="board-player seat-${seats[i]} ${p.id===state.turn&&state.phase!=='finished'?'active':''} ${p.id===session.playerId?'is-me':''}" style="--player-color:${playerColor(p)};--player-ink:${playerInk(p)}" aria-label="${esc(p.name)} 참가자 정보"><div class="board-player-portrait">${characterSprite(p)}<span class="seat-number">${i+1}</span></div><div class="board-player-info"><div class="board-player-name"><strong>${esc(p.name)}</strong>${p.id===session.playerId?'<span class="seat-badge">나</span>':''}</div><small class="board-player-character">${esc(characterFor(p).name)}</small><div class="board-player-coins"><span>보유 코인</span><b>${num(p.coins)} <small>MC</small></b></div><div class="board-player-assets"><span>총자산</span><b>${num(G.score(state,p))} MC</b><span>이용권 ${G.owned(state,p.id).length}</span></div><small class="board-player-laps">완주 ${lapProgressText(p)}${G.hasFinished(state,p)?' · 완주':''}</small>${p.skipTurns?`<small class="board-player-prison">감옥 탈출 기회 ${p.skipTurns}번</small>`:''}</div>${p.id===session.playerId?`<div class="seat-turn-controls">${seatControls()}</div>`:''}${p.id===state.turn&&state.phase!=='finished'?'<span class="board-player-turn">진행 중</span>':''}</article><div class="player-chat-slot" data-chat-player="${p.id}">${playerChatBubble(p.id)}</div></div>`).join('')}</section>`;
+ return `<section class="board-players players-${row}" aria-label="함께 여행하는 친구 · ${row==='all'?'왼쪽':row==='top'?'위쪽':'아래쪽'}"><h3 class="board-players-heading">함께 여행하는 친구 · ${state.players.length} PLAYERS</h3>${state.players.map((p,i)=>({p,i})).filter(({i})=>row==='all'||seats[i].startsWith(row)).sort((a,b)=>row==='all'?a.i-b.i:Number(seats[a.i].endsWith('right'))-Number(seats[b.i].endsWith('right'))).map(({p,i})=>`<div class="board-seat seat-${seats[i]}"><article class="board-player seat-${seats[i]} ${p.id===state.turn&&state.phase!=='finished'?'active':''} ${p.id===session.playerId?'is-me':''}" style="--player-color:${playerColor(p)};--player-ink:${playerInk(p)}" aria-label="${esc(p.name)} 참가자 정보"><div class="board-player-portrait">${characterSprite(p)}<span class="seat-number">${i+1}</span></div><div class="board-player-info"><div class="board-player-name"><strong>${esc(p.name)}</strong>${p.id===session.playerId?'<span class="seat-badge">나</span>':''}</div><small class="board-player-character">${esc(characterFor(p).name)}</small><div class="board-player-coins"><span>보유 코인</span><b>${num(p.coins)} <small>MC</small></b></div><div class="board-player-assets"><span>총자산</span><b>${num(G.score(state,p))} MC</b><span>이용권 ${G.owned(state,p.id).length}</span></div><small class="board-player-laps">완주 ${lapProgressText(p)}${G.hasFinished(state,p)?' · 완주':''}</small>${p.skipTurns?`<small class="board-player-prison">감옥 탈출 기회 ${p.skipTurns}번</small>`:''}</div>${p.id===session.playerId?`<div class="seat-turn-controls">${seatControls()}</div>`:''}${p.id===state.turn&&state.phase!=='finished'?'<span class="board-player-turn">진행 중</span>':''}</article><div class="player-chat-slot" data-chat-player="${p.id}">${playerChatBubble(p.id)}</div></div>`).join('')}</section>`;
 }
 
 function collectionView(){return `<section class="collection-view"><div class="view-intro"><span class="eyebrow">THE MUSIC LIBRARY</span><h2>작품을 만나는 또 다른 방법</h2><p>시대와 작곡가를 알아가며 나만의 음악 컬렉션을 완성하세요.</p></div><div class="filters">${[{id:'all',name:'모든 시대'},...ERAS].map(e=>`<button data-action="filter" data-id="${e.id}" class="${filter===e.id?'selected':''}">${e.name}</button>`).join('')}</div><div class="work-grid">${WORKS.filter(w=>filter==='all'||w.era===filter).map(w=>{const o=state.ownership[w.id];return `<button class="work-card" data-action="work" data-id="${w.id}" style="--era:${era(w.era).color}"><div class="work-art"><span>${esc(w.composer)}</span><b>${w.composer==='바흐'?'𝄞':'♫'}</b><small>${esc(w.year)}</small></div><div class="work-details"><span>${era(w.era).name}</span><h3>${w.title}</h3><p>${o?`${esc(state.players[o.player].name)} 보유${o.level?' · 공연 기획':''}`:'아직 만나지 않은 컬렉션'}</p><div><strong>${w.price} MC</strong><span>이용료 ${G.fee(state,w)} MC ↗</span></div></div></button>`;}).join('')}</div></section>`;}

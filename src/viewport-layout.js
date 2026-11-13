@@ -1,4 +1,4 @@
-import {unzoomedViewportHeight} from './mobile-board.js?v=461bf908441d';
+import {unzoomedViewportHeight} from './mobile-board.js?v=d502ffdd4355';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);
@@ -6,12 +6,20 @@ export function viewportSceneSize(width,height,seatWidth,flat=false){
  const sceneWidth=Math.max(1,Math.min(flat?availableWidth:width,availableHeight/(flat?1:.672)));
  return {width:sceneWidth,height:sceneWidth*(flat?1:.672)};
 }
+// A mobile rail occupies only the left side; all remaining space belongs to the board.
+export function mobileSceneSize(width,height,railWidth,flat=false){
+ const ratio=flat?1:.672;
+ const sceneWidth=Math.max(1,Math.min(width-railWidth-8,(height-4)/ratio));
+ return {width:sceneWidth,height:sceneWidth*ratio};
+}
 export function fitViewportBoard(root=document){
  const shell=root.querySelector('.game-shell[data-tab="board"]');if(!shell)return;
  const view=root.defaultView,mobile=shell.dataset.mobile==='true';if(view)shell.style.height=`${mobile?unzoomedViewportHeight(view.visualViewport?.height||view.innerHeight,view.visualViewport?.scale):view.visualViewport?.height||view.innerHeight}px`;
  const area=shell.querySelector('.board-area'),surround=area?.querySelector('.board-surround'),seat=area?.querySelector('.board-seat');
  if(!area||!surround)return;
- const size=viewportSceneSize(surround.clientWidth,surround.clientHeight,seat?.offsetWidth||140,area.classList.contains('is-flat'));
+ const rail=mobile?area.querySelector('.players-all')?.offsetWidth||0:0;
+ const size=mobile?mobileSceneSize(surround.clientWidth,surround.clientHeight,rail,area.classList.contains('is-flat')):viewportSceneSize(surround.clientWidth,surround.clientHeight,seat?.offsetWidth||140,area.classList.contains('is-flat'));
+ if(mobile)area.style.setProperty('--mobile-rail-width',`${rail}px`);
  area.style.setProperty('--viewport-scene-width',`${size.width}px`);
  area.style.setProperty('--viewport-scene-height',`${size.height}px`);
  if(area.classList.contains('is-flat')){

@@ -9,3 +9,13 @@ test('flat and diamond scenes fit their viewport without changing board proporti
   assert.ok(Math.abs(s.height/s.width-(flat?1:.672))<.001);
  }
 });
+
+test('mobile board uses space to the right of one rail in either view',async()=>{
+ const {mobileSceneSize}=await import('../src/viewport-layout.js');
+ for(const [w,h,rail] of [[836,290,190],[659,275,154],[1016,650,190]])for(const flat of [true,false]){
+  const s=mobileSceneSize(w,h,rail,flat);
+  assert.ok(s.width<=w-rail-8+.001);
+  assert.ok(s.height<=h-4+.001);
+  assert.ok(Math.abs(s.height/s.width-(flat?1:.672))<.001);
+ }
+});

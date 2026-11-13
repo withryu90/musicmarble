@@ -41,13 +41,23 @@ Soft music-box/marimba-style sine synthesis, warm chords and bass.
 No third-party recording, melody, sample or soundfont was copied.
 Stereo 22.05 kHz 16-bit PCM WAV; circular echoes preserve the loop boundary.
 
-Concert opening: beethoven-ode-concert.wav
-Composition: Ludwig van Beethoven (1770–1827), Symphony No. 9, Op. 125,
-IV: Ode to Joy theme. Public-domain composition.
-Public-domain score reference: Mutopia-2009/08/05-528, typeset by Peter Chubb.
-https://www.ibiblio.org/mutopia/cgibin/piece-info.cgi?id=528
-Excerpt: first two 16-beat phrases, G major, B B C D ... A G G.
-Performance and accompaniment newly synthesized by scripts/render-concert-ode.py.
-No third-party performance, recording, soundfont, or instrument samples used.
-16.65 seconds, 120 BPM, stereo 22.05 kHz 16-bit PCM WAV.
-Plays once per concert notice, alongside game BGM; the global bell mutes both.
+Concert opening: beethoven-ode-concert-orchestra.wav
+Composition: Ludwig van Beethoven, Symphony No. 9, Op. 125, IV, Ode to Joy.
+Actual performance: Neues Symphonie-Orchester (Berlin), Bruno Seidler-Winkler,
+conductor. Deutsche Grammophon recording, circa 1922–1923.
+First published December 1923 (Grammophon 69607–69613); US issue November 1924
+(Vocalion 35050–35056). The original composition and historical sound recording
+are out of copyright in the US and their country of origin at publication time
+of this game update (2026). No modern re-recording or arrangement is used.
+Source and transfer: The Shellackophile collection, Internet Archive:
+https://archive.org/details/69607-13-beethoven-9-s-w-iv
+Source file: 69607-13 Beethoven 9 S-W (iv).mp3 (public original-shellac transfer).
+Recording date/publication information supplied by the source item's metadata.
+Sound recording term reference (1923–1946: 100 years):
+https://ask.loc.gov/recorded-sound/faq/313179
+Editing: source 217.98–230.00 seconds (12.02 seconds), original D-major key,
+original tempo; downsampled to stereo 22.05 kHz 16-bit PCM WAV, normalized to
+70% peak, with 25 ms fade-in / 180 ms fade-out. Historical surface noise retained.
+No synthesis, soundfont, added instruments, pitch shift or time stretch.
+Excerpt preparation: scripts/render-concert-ode.py.
+Plays once per concert notice alongside BGM; the global bell mutes both.

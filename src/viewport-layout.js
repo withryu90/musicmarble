@@ -1,4 +1,4 @@
-import {unzoomedViewportHeight} from './mobile-board.js?v=794a24ae1d72';
+import {unzoomedViewportHeight} from './mobile-board.js?v=834bdc840e11';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);
@@ -19,7 +19,11 @@ export function fitViewportBoard(root=document){
  if(!area||!surround)return;
  const rail=mobile?area.querySelector('.players-all')?.offsetWidth||0:0;
  const size=mobile?mobileSceneSize(surround.clientWidth,surround.clientHeight,rail,area.classList.contains('is-flat')):viewportSceneSize(surround.clientWidth,surround.clientHeight,seat?.offsetWidth||140,area.classList.contains('is-flat'));
- if(mobile)area.style.setProperty('--mobile-rail-width',`${rail}px`);
+ if(mobile){
+  area.style.setProperty('--mobile-rail-width',`${rail}px`);
+  // The composer floats below the left rail, never across the bottom-left tile.
+  shell.style.setProperty('--mobile-composer-max',`${Math.max(100,(surround.clientWidth+rail-size.width)/2-8)}px`);
+ }
  area.style.setProperty('--viewport-scene-width',`${size.width}px`);
  area.style.setProperty('--viewport-scene-height',`${size.height}px`);
  if(area.classList.contains('is-flat')){

@@ -110,3 +110,19 @@ body.mobile-game-scroll-lock :is(.players-all,.player-chat-bubble>span,.modal-bo
  .game-shell[data-mobile="true"][data-tab="board"] .board-tools{gap:2px}
  .game-shell[data-mobile="true"][data-tab="board"] .board-tools button{height:22px;min-height:22px;font-size:8px}
 }
+
+/* Bubbles now point left towards their participant, on the right of each card. */
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all .board-seat{grid-template-columns:minmax(0,1fr) 44px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player{grid-column:1}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{grid-column:2}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble::before{left:-4px;right:auto;transform:rotate(-45deg)}
+/* Compact right rail, with help/history consolidated into the ellipsis menu. */
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav{right:3px;width:26px;height:26px}
+.game-shell[data-mobile="true"] .mobile-page-menu summary{width:26px;height:26px;padding:2px}
+.game-shell[data-mobile="true"] .site-header .header-actions{top:36px;right:3px;width:26px;gap:2px}
+.game-shell[data-mobile="true"] .site-header .header-actions button{width:26px;min-width:26px;height:26px;min-height:26px;padding:0}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools{top:122px;right:3px;width:26px;gap:2px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools button{width:26px;min-width:26px;height:24px;min-height:24px;font-size:8px;padding:0}
+.game-shell[data-mobile="true"][data-tab="board"] main{padding:2px 34px 2px 4px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat{position:absolute;bottom:2px;left:4px;width:calc((100% - 38px)/3);max-width:var(--mobile-composer-max);margin:0;z-index:12}
+.game-shell[data-mobile="true"]:not([data-tab="board"]) main{padding-right:34px}

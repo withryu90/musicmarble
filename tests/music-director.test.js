@@ -24,6 +24,6 @@ test('ending prison playback cannot override mute or hidden-tab settings',()=>{
 test('bundled original game loop is mobile-compatible stereo PCM with a smooth join',async()=>{
  const {readFile}=await import('node:fs/promises');const data=await readFile(new URL('../src/assets/audio/music-garden-loop.wav',import.meta.url));
  assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.readUInt16LE(20),1);assert.equal(data.readUInt16LE(22),2);assert.equal(data.readUInt32LE(24),22050);
- const frames=(data.length-44)/4;assert.ok(frames/22050>45&&frames/22050<46);
+ const frames=(data.length-44)/4;assert.ok(frames/22050>33&&frames/22050<34);
  for(let channel=0;channel<2;channel++)assert.ok(Math.abs(data.readInt16LE(44+channel*2)-data.readInt16LE(data.length-4+channel*2))<1000);
 });

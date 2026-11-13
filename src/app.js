@@ -1,30 +1,30 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=d0b88e1d226e';
-import {createMusicDirector} from './music-director.js?v=d0b88e1d226e';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=d0b88e1d226e';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=d0b88e1d226e';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=d0b88e1d226e';
-import {formatModalSentences} from './modal-sentences.js?v=d0b88e1d226e';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=d0b88e1d226e';
-import {WORK_ARTWORK} from './work-artwork.js?v=d0b88e1d226e';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=d0b88e1d226e';
-import {RankingClient} from './ranking.js?v=d0b88e1d226e';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=d0b88e1d226e';
-import {HandoffCountdown} from './handoff-countdown.js?v=d0b88e1d226e';
-import {fitBoardTitles} from './board-type.js?v=d0b88e1d226e';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=d0b88e1d226e';
-import * as G from './engine.js?v=d0b88e1d226e';
-import {ActivityInbox} from './activities.js?v=d0b88e1d226e';
-import {purchaseQuizById} from './purchase-quizzes.js?v=d0b88e1d226e';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=d0b88e1d226e';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=d0b88e1d226e';
-import {diceCube} from './dice.js?v=d0b88e1d226e';
-import {CHARACTER_BIOS} from './character-bios.js?v=d0b88e1d226e';
-import {needsLandscape} from './orientation.js?v=d0b88e1d226e';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=d0b88e1d226e';
-import {PeerTransport} from './peer-transport.js?v=d0b88e1d226e';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=d0b88e1d226e';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=d0b88e1d226e';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=d0b88e1d226e';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=91d3dc70dcfd';
+import {createMusicDirector} from './music-director.js?v=91d3dc70dcfd';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=91d3dc70dcfd';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=91d3dc70dcfd';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=91d3dc70dcfd';
+import {formatModalSentences} from './modal-sentences.js?v=91d3dc70dcfd';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=91d3dc70dcfd';
+import {WORK_ARTWORK} from './work-artwork.js?v=91d3dc70dcfd';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=91d3dc70dcfd';
+import {RankingClient} from './ranking.js?v=91d3dc70dcfd';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=91d3dc70dcfd';
+import {HandoffCountdown} from './handoff-countdown.js?v=91d3dc70dcfd';
+import {fitBoardTitles} from './board-type.js?v=91d3dc70dcfd';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=91d3dc70dcfd';
+import * as G from './engine.js?v=91d3dc70dcfd';
+import {ActivityInbox} from './activities.js?v=91d3dc70dcfd';
+import {purchaseQuizById} from './purchase-quizzes.js?v=91d3dc70dcfd';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=91d3dc70dcfd';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=91d3dc70dcfd';
+import {diceCube} from './dice.js?v=91d3dc70dcfd';
+import {CHARACTER_BIOS} from './character-bios.js?v=91d3dc70dcfd';
+import {needsLandscape} from './orientation.js?v=91d3dc70dcfd';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=91d3dc70dcfd';
+import {PeerTransport} from './peer-transport.js?v=91d3dc70dcfd';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=91d3dc70dcfd';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=91d3dc70dcfd';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=91d3dc70dcfd';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -58,7 +58,7 @@ let bgmEnabled=true;
 if(bgmVolume===0)bgmVolume=.25;
 const soundEffects=createSoundEffects({onPlaybackStart:(name,id)=>musicDirector.effectStarted(name,id),onPlaybackEnd:(name,id)=>musicDirector.effectEnded(name,id)});
 const lobbyBgm=createBgm({volume:bgmVolume,onChange:updateBgmControls});
-const musicDirector=createMusicDirector({bgm:lobbyBgm,lobbySource:BGM_SOURCE,gameSource:GAME_BGM_SOURCE,isVisible:()=>!document.hidden,lobbyVolume:bgmVolume,gameVolume:Math.min(.14,bgmVolume*.4)});
+const musicDirector=createMusicDirector({bgm:lobbyBgm,lobbySource:BGM_SOURCE,gameSource:GAME_BGM_SOURCE,isVisible:()=>!document.hidden,lobbyVolume:bgmVolume,gameVolume:Math.min(.10,bgmVolume*.30)});
 function bgmBell(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4M11 2V1h2v1"/><path class="bell-slash" d="M3 3 21 21"/></svg>`;}
 function updateBgmControls(){
  const button=$('[data-action="bgm-toggle"]');if(!button)return;
@@ -211,7 +211,7 @@ function streamingModal(appId){
  const p=G.current(state),cell=BOARD[p.position],app=streamingApp(appId||(cell.type==='streaming'?cell.id:null));
  if(app){
   const ownerId=state.platformOwners?.[app.id],owner=state.players[ownerId],canBuy=myTurn()&&cell.id===app.id&&G.canBuyPlatform(state);
-  showModal(`${app.name} 점유`,`<div class="streaming-modal-hero">${streamingIcon(app.id)}<h3>${app.name}</h3><strong>${STREAMING_RIGHTS_PRICE} MC</strong></div><p class="streaming-rule">${owner?`${esc(owner.name)} 님이 점유권을 소유하고 있어요.`:'이 앱의 게임 속 점유권을 구입할 수 있어요.'}</p><div class="notice"><p>점유권을 가진 뒤 작품의 소유 여부와 관계없이 어떤 작품 칸이든 도착하면, ${STREAMING_INSTALL_PRICE} MC로 자동 스트리밍을 설치할 수 있어요.</p><p>설치한 다음 방문부터 도착한 참가자가 설치자에게 ${STREAMING_REVENUE} MC를 지급합니다. 작품 소유주도 지불하며, 설치자 본인은 추가 비용이 없어요. 작품 이용료와는 별개예요.</p></div>${canBuy?`<button class="primary full" data-action="streaming-buy">${STREAMING_RIGHTS_PRICE} MC로 점유권 구입하기</button><button class="secondary full" data-action="streaming-skip">이번에는 구입하지 않기</button>`:`<button class="primary full" data-action="close">확인</button>`}`,'streaming-modal');
+  showModal('스트리밍앱 점유',`<div class="streaming-modal-hero">${streamingIcon(app.id)}<h3>${app.name}</h3><strong>${STREAMING_RIGHTS_PRICE} MC</strong></div>${owner?`<p class="streaming-rule">${esc(owner.name)} 님이 점유권을 소유하고 있어요.</p>`:''}<div class="notice"><p>점유권을 가진 뒤 작품의 소유 여부와 관계없이 어떤 작품 칸이든 도착하면, ${STREAMING_INSTALL_PRICE} MC로 자동 스트리밍을 설치할 수 있어요.</p><p>설치한 다음 방문부터 도착한 참가자가 설치자에게 ${STREAMING_REVENUE} MC를 지급합니다. 작품 소유주도 지불하며, 설치자 본인은 추가 비용이 없어요. 작품 이용료와는 별개예요.</p></div>${canBuy?`<button class="primary full" data-action="streaming-buy">${STREAMING_RIGHTS_PRICE} MC로 점유권 구입하기</button><button class="secondary full" data-action="streaming-skip">이번에는 구입하지 않기</button>`:`<button class="primary full" data-action="close">확인</button>`}`,'streaming-modal');
  }else{
   const options=myTurn()?G.streamingOptions(state):[];
   showModal('자동 스트리밍 설치',`<div class="notice"><h3>${esc(cell.composer||'')} · ${esc(cell.title)}</h3><p>설치비 ${STREAMING_INSTALL_PRICE} MC · 앱별 작품당 1회</p><p>이후 방문자가 설치자에게 ${STREAMING_REVENUE} MC를 지급합니다. 작품 소유주도 지불하며, 설치자 본인은 추가 비용이 없어요. 작품 소유자는 바뀌지 않아요.</p></div><div class="streaming-options">${options.map(app=>`<button class="streaming-option" data-action="streaming-install" data-app="${app.id}">${streamingIcon(app.id)}<span><strong>${app.name}</strong><small>${STREAMING_INSTALL_PRICE} MC로 설치</small></span><b>＋</b></button>`).join('')}</div>${options.length?'<button class="secondary full" data-action="streaming-skip">이번에는 설치하지 않기</button>':'<p class="muted">도착한 작품 칸에서 내 앱의 점유권과 50 MC가 있어야 설치할 수 있어요.</p><button class="primary full" data-action="close">확인</button>'}`,'streaming-modal');

@@ -474,3 +474,9 @@
 
 .streaming-markers.is-single{grid-template-columns:1fr}
 .board-area.is-3d .board-label>.streaming-markers.is-single{left:calc(var(--label-width)*.16);top:calc(var(--label-height)*-.1);width:calc(var(--label-width)*.18)}
+
+/* Occupied app badges use the existing portrait-column space without covering balances. */
+.board-player-avatar{position:relative;display:inline-block;vertical-align:top;line-height:0}
+.player-app-badges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;width:30px;margin:5px auto 0;line-height:0}
+.player-app-badge{display:block;aspect-ratio:1;min-width:0;padding:1px;border-radius:4px;background:#ffffffed;box-shadow:0 1px 3px #102f4a38}
+.player-app-badge svg{display:block;width:100%;height:100%}

@@ -1,30 +1,30 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=46c2f225c791';
-import {createMusicDirector} from './music-director.js?v=46c2f225c791';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=46c2f225c791';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=46c2f225c791';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=46c2f225c791';
-import {formatModalSentences} from './modal-sentences.js?v=46c2f225c791';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=46c2f225c791';
-import {WORK_ARTWORK} from './work-artwork.js?v=46c2f225c791';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=46c2f225c791';
-import {RankingClient} from './ranking.js?v=46c2f225c791';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=46c2f225c791';
-import {HandoffCountdown} from './handoff-countdown.js?v=46c2f225c791';
-import {fitBoardTitles} from './board-type.js?v=46c2f225c791';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=46c2f225c791';
-import * as G from './engine.js?v=46c2f225c791';
-import {ActivityInbox} from './activities.js?v=46c2f225c791';
-import {purchaseQuizById} from './purchase-quizzes.js?v=46c2f225c791';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=46c2f225c791';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=46c2f225c791';
-import {diceCube} from './dice.js?v=46c2f225c791';
-import {CHARACTER_BIOS} from './character-bios.js?v=46c2f225c791';
-import {needsLandscape} from './orientation.js?v=46c2f225c791';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=46c2f225c791';
-import {PeerTransport} from './peer-transport.js?v=46c2f225c791';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=46c2f225c791';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=46c2f225c791';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=46c2f225c791';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=48b86500ac01';
+import {createMusicDirector} from './music-director.js?v=48b86500ac01';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=48b86500ac01';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=48b86500ac01';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=48b86500ac01';
+import {formatModalSentences} from './modal-sentences.js?v=48b86500ac01';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=48b86500ac01';
+import {WORK_ARTWORK} from './work-artwork.js?v=48b86500ac01';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=48b86500ac01';
+import {RankingClient} from './ranking.js?v=48b86500ac01';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=48b86500ac01';
+import {HandoffCountdown} from './handoff-countdown.js?v=48b86500ac01';
+import {fitBoardTitles} from './board-type.js?v=48b86500ac01';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=48b86500ac01';
+import * as G from './engine.js?v=48b86500ac01';
+import {ActivityInbox} from './activities.js?v=48b86500ac01';
+import {purchaseQuizById} from './purchase-quizzes.js?v=48b86500ac01';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=48b86500ac01';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=48b86500ac01';
+import {diceCube} from './dice.js?v=48b86500ac01';
+import {CHARACTER_BIOS} from './character-bios.js?v=48b86500ac01';
+import {needsLandscape} from './orientation.js?v=48b86500ac01';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=48b86500ac01';
+import {PeerTransport} from './peer-transport.js?v=48b86500ac01';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=48b86500ac01';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=48b86500ac01';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=48b86500ac01';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -456,9 +456,13 @@ function seatControls(){
  const rollIcon=['roll','roll-backward'].includes(main[0])?`<span class="seat-dice-icon" aria-hidden="true">${diceCube(5).replace('<div','<span').replace('</div>','</span>')}</span>`:'';
  return `<button class="primary" data-action="${main[0]}" ${busy?'disabled':''}>${rollIcon}<span>${busy?'이동 중…':main[1]}</span></button>`;
 }
+function playerStreamingBadges(player){
+ const apps=STREAMING_APPS.filter(app=>state.platformOwners?.[app.id]===player.id);
+ return apps.length?`<span class="player-app-badges" role="group" aria-label="보유 스트리밍 앱 점유권">${apps.map(app=>`<span class="player-app-badge" role="img" aria-label="${app.name} 점유권" title="${app.name} 점유권">${streamingIcon(app.id).replace('role="img"','aria-hidden="true"')}</span>`).join('')}</span>`:'';
+}
 function players(row){
  const seats=['top-left','top-right','bottom-left','bottom-right'];
- return `<section class="board-players players-${row}" aria-label="함께 여행하는 친구 · ${row==='all'?'왼쪽':row==='top'?'위쪽':'아래쪽'}"><h3 class="board-players-heading">함께 여행하는 친구 · ${state.players.length} PLAYERS</h3>${state.players.map((p,i)=>({p,i})).filter(({i})=>row==='all'||seats[i].startsWith(row)).sort((a,b)=>row==='all'?a.i-b.i:Number(seats[a.i].endsWith('right'))-Number(seats[b.i].endsWith('right'))).map(({p,i})=>`<div class="board-seat seat-${seats[i]}"><article class="board-player seat-${seats[i]} ${p.id===state.turn&&state.phase!=='finished'?'active':''} ${p.id===session.playerId?'is-me':''}" style="--player-color:${playerColor(p)};--player-ink:${playerInk(p)}" aria-label="${esc(p.name)} 참가자 정보"><div class="board-player-portrait">${characterSprite(p)}<span class="seat-number">${i+1}</span></div><div class="board-player-info"><div class="board-player-name"><strong>${esc(p.name)}</strong>${p.id===session.playerId?'<span class="seat-badge">나</span>':''}</div><small class="board-player-character">${esc(characterFor(p).name)}</small><div class="board-player-coins"><span>보유 코인</span><b>${num(p.coins)} <small>MC</small></b></div><div class="board-player-assets"><span>총자산</span><b>${num(G.score(state,p))} MC</b><span>이용권 ${G.owned(state,p.id).length}</span></div><small class="board-player-laps">완주 ${lapProgressText(p)}${G.hasFinished(state,p)?' · 완주':''}</small>${p.skipTurns?`<small class="board-player-prison">감옥 탈출 기회 ${p.skipTurns}번</small>`:''}</div>${p.id===session.playerId?`<div class="seat-turn-controls">${seatControls()}</div>`:''}${p.id===state.turn&&state.phase!=='finished'?'<span class="board-player-turn">진행 중</span>':''}</article><div class="player-chat-slot" data-chat-player="${p.id}">${playerChatBubble(p.id)}</div></div>`).join('')}</section>`;
+ return `<section class="board-players players-${row}" aria-label="함께 여행하는 친구 · ${row==='all'?'왼쪽':row==='top'?'위쪽':'아래쪽'}"><h3 class="board-players-heading">함께 여행하는 친구 · ${state.players.length} PLAYERS</h3>${state.players.map((p,i)=>({p,i})).filter(({i})=>row==='all'||seats[i].startsWith(row)).sort((a,b)=>row==='all'?a.i-b.i:Number(seats[a.i].endsWith('right'))-Number(seats[b.i].endsWith('right'))).map(({p,i})=>`<div class="board-seat seat-${seats[i]}"><article class="board-player seat-${seats[i]} ${p.id===state.turn&&state.phase!=='finished'?'active':''} ${p.id===session.playerId?'is-me':''}" style="--player-color:${playerColor(p)};--player-ink:${playerInk(p)}" aria-label="${esc(p.name)} 참가자 정보"><div class="board-player-portrait"><span class="board-player-avatar">${characterSprite(p)}<span class="seat-number">${i+1}</span></span>${playerStreamingBadges(p)}</div><div class="board-player-info"><div class="board-player-name"><strong>${esc(p.name)}</strong>${p.id===session.playerId?'<span class="seat-badge">나</span>':''}</div><small class="board-player-character">${esc(characterFor(p).name)}</small><div class="board-player-coins"><span>보유 코인</span><b>${num(p.coins)} <small>MC</small></b></div><div class="board-player-assets"><span>총자산</span><b>${num(G.score(state,p))} MC</b><span>이용권 ${G.owned(state,p.id).length}</span></div><small class="board-player-laps">완주 ${lapProgressText(p)}${G.hasFinished(state,p)?' · 완주':''}</small>${p.skipTurns?`<small class="board-player-prison">감옥 탈출 기회 ${p.skipTurns}번</small>`:''}</div>${p.id===session.playerId?`<div class="seat-turn-controls">${seatControls()}</div>`:''}${p.id===state.turn&&state.phase!=='finished'?'<span class="board-player-turn">진행 중</span>':''}</article><div class="player-chat-slot" data-chat-player="${p.id}">${playerChatBubble(p.id)}</div></div>`).join('')}</section>`;
 }
 
 function collectionView(){return `<section class="collection-view"><div class="view-intro"><span class="eyebrow">THE MUSIC LIBRARY</span><h2>작품을 만나는 또 다른 방법</h2><p>시대와 작곡가를 알아가며 나만의 음악 컬렉션을 완성하세요.</p></div><div class="streaming-portfolio">${STREAMING_APPS.map(app=>`<div>${streamingIcon(app.id)}<strong>${app.name}</strong><small>${state.platformOwners?.[app.id]===undefined?'미점유':esc(state.players[state.platformOwners[app.id]].name)}</small></div>`).join('')}</div><div class="filters">${[{id:'all',name:'모든 시대'},...ERAS].map(e=>`<button data-action="filter" data-id="${e.id}" class="${filter===e.id?'selected':''}">${e.name}</button>`).join('')}</div><div class="work-grid">${WORKS.filter(w=>filter==='all'||w.era===filter).map(w=>{const o=state.ownership[w.id];return `<button class="work-card" data-action="work" data-id="${w.id}" style="--era:${era(w.era).color}"><div class="work-art"><span>${esc(w.composer)}</span><b>${w.composer==='바흐'?'𝄞':'♫'}</b><small>${esc(w.year)}</small></div><div class="work-details"><span>${era(w.era).name}</span><h3>${w.title}</h3><p>${o?`${esc(state.players[o.player].name)} 보유${o.level?' · 공연 기획':''}`:'아직 만나지 않은 컬렉션'}</p><div><strong>${w.price} MC</strong><span>이용료 ${G.fee(state,w)} MC ↗</span></div></div></button>`;}).join('')}</div></section>`;}

@@ -171,3 +171,5 @@ body.mobile-game-scroll-lock{background:transparent}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{width:88px}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble{width:100%;padding:6px;font-size:11px;line-height:16px;border-radius:9px}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble>span{max-height:var(--mobile-bubble-max,64px);line-height:16px;white-space:pre-wrap;overflow:auto}
+
+.game-shell[data-mobile="true"] .player-app-badges{width:28px;gap:2px;margin-top:4px}

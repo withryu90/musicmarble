@@ -214,3 +214,32 @@ dialog#modal::backdrop{background:#164d7959}
  #modal .bankruptcy-message{font-size:15px;margin:6px 0}
  #modal .bankruptcy-detail{font-size:12px;line-height:1.4}
 }
+
+/* Shared concert tickets: each attendee receives one independently drawn tier. */
+#modal .concert-host{display:flex;align-items:center;justify-content:center;gap:10px;margin:5px 0 12px;flex-wrap:wrap}
+#modal .concert-host>span:first-child{font-size:30px;color:#268fc6}
+#modal .concert-host>strong{font-size:20px;color:#194d78}
+#modal .concert-invitation{text-align:center;font-size:14px;margin:0 0 16px}
+#modal .concert-tickets{display:grid;gap:10px}
+#modal .concert-ticket{--seat:#3198bf;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;position:relative;padding:13px 16px;border:1px solid #bbd9eb;border-left:5px solid var(--seat);border-radius:12px;background:linear-gradient(110deg,#edf7ff,#fff)}
+#modal .concert-ticket.seat-r{--seat:#7761ad}
+#modal .concert-ticket.seat-vip{--seat:#ad8232;background:linear-gradient(110deg,#fff8e8,#f3f9ff)}
+#modal .concert-ticket-guest{display:flex;gap:8px;align-items:center;min-width:0}
+#modal .concert-ticket-guest strong{font-size:15px;overflow-wrap:anywhere}
+#modal .concert-seat{color:var(--seat);font-size:22px}
+#modal .concert-ticket-price{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-top:1px dashed #c6dce9;padding-top:8px}
+#modal .concert-ticket-price>strong{font-size:21px;color:#205982;white-space:nowrap}
+#modal .concert-ticket-price>span{font-size:11px;color:#65849d;text-align:right}
+#modal .concert-income{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px;margin-top:14px;border-radius:12px;background:#e0f0ff;color:#245f8e}
+#modal .concert-income strong{font-size:24px;white-space:nowrap}
+#modal .concert-seat-guide{text-align:center;font-size:11px;margin:10px 0 16px;line-height:1.7}
+@media(max-height:500px) and (orientation:landscape){
+ #modal.concert-tickets-modal{width:min(650px,calc(100vw - 28px))}
+ #modal .concert-tickets{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+ #modal .concert-ticket{padding:9px;gap:6px}
+ #modal .concert-ticket-guest{grid-column:1/-1}
+ #modal .concert-seat{font-size:18px}
+ #modal .concert-ticket-price{flex-wrap:wrap;padding-top:6px}
+ #modal .concert-income{margin-top:9px;padding:9px}
+ #modal .concert-seat-guide{margin:6px 0 10px}
+}

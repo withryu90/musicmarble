@@ -1,4 +1,4 @@
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=09fa422b0ac3';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=13452f8e2171';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -20,7 +20,7 @@ export function activityChanges(before,after){
   if(after.lastPrisonRoll){const r=after.lastPrisonRoll;add('prison-roll',r.escaped?'감옥 탈출 성공!':r.remaining?'감옥 탈출 실패':'감옥 대기 종료',{changes:[],escaped:r.escaped,text:r.escaped?'주사위 6! 감옥에서 즉시 탈출하여 6칸 이동합니다.':r.remaining?`주사위 ${r.dice}. 감옥에 머뭅니다. 다음 자기 차례에 한 번 더 도전할 수 있습니다.`:`주사위 ${r.dice}. 두 번의 도전을 마쳤습니다. 이번 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다.`});}
   if(!after.lastPrisonRoll&&BOARD[after.players[actor].position].type==='prison')add('prison-entry','불법 스트리밍 감옥',{changes:[],text:PRISON_MESSAGE});
   if(after.lastEvent)add('history-event',after.lastEvent.title,{card:{...after.lastEvent},changes:[coin(actor,after.lastEvent.actual)],text:after.lastEvent.text});
-  if(BOARD[after.players[actor].position].type==='concert')add('concert','모두의 음악회 지원금',{changes:after.players.map(p=>coin(p.id,100)),text:'모든 참가자가 음악회 지원금 100 MC를 받았습니다.'});
+  if(after.lastConcert){const c=after.lastConcert;add('concert','음악회 개최 · 티켓 안내',{concert:structuredClone(c),changes:[...c.tickets.map(t=>coin(t.playerId,-t.amount)),coin(c.hostId,c.total)],text:`${after.players[c.hostId].name} 님이 음악회를 개최했습니다. 참가자마다 좌석을 무작위로 배정하고 티켓비를 개최자에게 지급했습니다.`});}
  }
  for(const w of WORKS){
   const previous=before.ownership[w.id],next=after.ownership[w.id];

@@ -17,10 +17,10 @@ test('rent reports the payer, owner, actual amount and waived shortfall',()=>{
  const s=game();s.ownership['bach-air']={player:1,level:0};s.players[0].coins=10;
  const arrived=G.roll(s,1),n=activityChanges(s,arrived)[0];assert.equal(n.type,'rent');assert.equal(n.expected,30);assert.deepEqual(n.changes,[{playerId:0,amount:-10},{playerId:1,amount:10}]);
 });
-test('passing start, history cards and all-player concert awards are separate notices',()=>{
+test('passing start, history cards and concert ticket settlements are separate notices',()=>{
  const s=game();s.players[0].position=26;const arrived=G.roll(s,5),notices=activityChanges(s,arrived);
  assert.deepEqual(notices.map(n=>n.type),['start-bonus','history-event']);assert.equal(notices[0].changes[0].amount,200);assert.equal(notices[1].card.id,arrived.lastEvent.id);
- const c=game();c.players[0].position=13;const concert=activityChanges(c,G.roll(c,1))[0];assert.equal(concert.type,'concert');assert.deepEqual(concert.changes.map(c=>c.amount),[100,100,100]);
+ const c=game();c.players[0].position=13;const concert=activityChanges(c,G.roll(c,1,()=>.5))[0];assert.equal(concert.type,'concert');assert.deepEqual(concert.changes.map(c=>c.amount),[-100,-100,200]);assert.deepEqual(concert.concert.tickets.map(t=>t.seatId),['r','r']);
 });
 test('all 24 cards retain text, amount and category for public trading-card display',()=>{
  for(let i=0;i<EVENTS.length;i++){const s=game();s.eventDeck=[i,...s.eventDeck.filter(n=>n!==i)];const n=activityChanges(s,G.roll(s,3))[0];assert.equal(n.card.title,EVENTS[i].title);assert.equal(n.card.text,EVENTS[i].text);assert.equal(n.card.category,EVENTS[i].category);assert.equal(n.changes[0].amount,EVENTS[i].amount);}

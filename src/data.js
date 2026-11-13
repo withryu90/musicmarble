@@ -21,7 +21,7 @@ export const BOARD = [
   w('beethoven-5','베토벤','교향곡 제5번','1808 초연','classical',280,55,'짧은 네 음의 동기가 작품 전체를 이끕니다. 베토벤은 고전과 낭만을 잇는 작곡가입니다.'),
   w('beethoven-9','베토벤','교향곡 제9번','1824 초연','classical',300,60,'마지막 악장에 독창과 합창을 더해 교향곡의 표현 범위를 넓혔습니다.'),
   w('haydn-surprise','하이든','놀람 교향곡','1791','classical',260,50,'교향곡 제94번. 조용한 선율 속 갑작스러운 강한 화음으로 재치 있는 대비를 들려줍니다.'),
-  {id:'concert',type:'concert',title:'모두의 음악회',subtitle:'함께 +100 MC'},
+  {id:'concert',type:'concert',title:'음악회 개최',subtitle:'좌석별 티켓비'},
   w('schubert-king','슈베르트','마왕','1815','romantic',220,45,'한 명의 가수가 여러 인물을 표현하고, 피아노는 말발굽 같은 리듬으로 긴장을 만듭니다.'),
   w('schubert-trout','슈베르트','송어 5중주','1819','romantic',240,50,'가곡 「송어」의 선율을 변주합니다. 익숙한 멜로디가 어떻게 바뀌는지 살펴보세요.'),
   {id:'event-3',type:'event',title:'음악사 사건',subtitle:'새로운 청중'},
@@ -92,3 +92,5 @@ export const SOURCES = [
   {label:'문화체육관광부 · 저작권법상 권리자',url:'https://www.mcst.go.kr/site/s_policy/copyright/netizen/netizen03.jsp'},
   {label:'한국저작권위원회 · 공유마당 만료저작물 안내',url:'https://gongu.copyright.or.kr/gongu/main/contents.do?menuNo=200091'},
 ];
+
+export const CONCERT_SEATS=Object.freeze([{id:'s',name:'S석',price:50},{id:'r',name:'R석',price:100},{id:'vip',name:'VIP석',price:150}].map(Object.freeze));

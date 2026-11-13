@@ -1,29 +1,29 @@
-import {createMusicDirector} from './music-director.js?v=09fa422b0ac3';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=09fa422b0ac3';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=09fa422b0ac3';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=09fa422b0ac3';
-import {formatModalSentences} from './modal-sentences.js?v=09fa422b0ac3';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=09fa422b0ac3';
-import {WORK_ARTWORK} from './work-artwork.js?v=09fa422b0ac3';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=09fa422b0ac3';
-import {RankingClient} from './ranking.js?v=09fa422b0ac3';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=09fa422b0ac3';
-import {HandoffCountdown} from './handoff-countdown.js?v=09fa422b0ac3';
-import {fitBoardTitles} from './board-type.js?v=09fa422b0ac3';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=09fa422b0ac3';
-import * as G from './engine.js?v=09fa422b0ac3';
-import {ActivityInbox} from './activities.js?v=09fa422b0ac3';
-import {purchaseQuizById} from './purchase-quizzes.js?v=09fa422b0ac3';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=09fa422b0ac3';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=09fa422b0ac3';
-import {diceCube} from './dice.js?v=09fa422b0ac3';
-import {CHARACTER_BIOS} from './character-bios.js?v=09fa422b0ac3';
-import {needsLandscape} from './orientation.js?v=09fa422b0ac3';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=09fa422b0ac3';
-import {PeerTransport} from './peer-transport.js?v=09fa422b0ac3';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=09fa422b0ac3';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=09fa422b0ac3';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=09fa422b0ac3';
+import {createMusicDirector} from './music-director.js?v=13452f8e2171';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=13452f8e2171';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=13452f8e2171';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=13452f8e2171';
+import {formatModalSentences} from './modal-sentences.js?v=13452f8e2171';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=13452f8e2171';
+import {WORK_ARTWORK} from './work-artwork.js?v=13452f8e2171';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=13452f8e2171';
+import {RankingClient} from './ranking.js?v=13452f8e2171';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=13452f8e2171';
+import {HandoffCountdown} from './handoff-countdown.js?v=13452f8e2171';
+import {fitBoardTitles} from './board-type.js?v=13452f8e2171';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=13452f8e2171';
+import * as G from './engine.js?v=13452f8e2171';
+import {ActivityInbox} from './activities.js?v=13452f8e2171';
+import {purchaseQuizById} from './purchase-quizzes.js?v=13452f8e2171';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=13452f8e2171';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=13452f8e2171';
+import {diceCube} from './dice.js?v=13452f8e2171';
+import {CHARACTER_BIOS} from './character-bios.js?v=13452f8e2171';
+import {needsLandscape} from './orientation.js?v=13452f8e2171';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=13452f8e2171';
+import {PeerTransport} from './peer-transport.js?v=13452f8e2171';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=13452f8e2171';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=13452f8e2171';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=13452f8e2171';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -253,6 +253,9 @@ function showActivity(item){
  const footer=item.type==='backward-entry'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
  if(item.type==='bankruptcy'){
   showModal('파산 · 게임 종료',`<section class="bankruptcy-scene"><div class="bankruptcy-coins" aria-hidden="true"><span>MC</span><span>MC</span><span>MC</span></div><span class="bankruptcy-kicker">음악 투자의 마지막 순간</span><h2 class="bankruptcy-title">파산</h2><div class="bankruptcy-player">${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><div class="bankruptcy-balance"><strong>0</strong><span>MC</span></div><p class="bankruptcy-message">뮤직코인이 모두 소진되었습니다.</p><p class="bankruptcy-detail">${esc(actor.name)} 님의 파산으로<br>2인 게임이 종료됩니다.</p></section><button class="primary full" data-action="activity-next">최종 결과 확인하기 →</button>`,'activity-modal bankruptcy-modal');
+ }else if(item.type==='concert'&&item.concert){
+  const c=item.concert;
+  showModal('음악회 개최',`<div class="concert-host"><span aria-hidden="true">♬</span>${characterSprite(actor)}<strong>${esc(actor.name)} 님의 음악회</strong></div><p class="concert-invitation">막이 오릅니다! 여러분의 좌석을 확인해 주세요.</p><div class="concert-tickets">${c.tickets.map(t=>{const guest=state.players[t.playerId],seat=CONCERT_SEATS.find(s=>s.id===t.seatId);return `<div class="concert-ticket seat-${seat.id}"><div class="concert-ticket-guest">${characterSprite(guest)}<strong>${esc(guest.name)}</strong></div><b class="concert-seat">${seat.name}</b><div class="concert-ticket-price"><strong>${num(t.amount)} <small>MC</small></strong><span>티켓비 지불${t.amount<t.price?` · 정가 ${t.price} MC 중 잔액 한도`:''}</span></div></div>`;}).join('')}</div><div class="concert-income"><span>개최자 티켓 수입</span><strong>+${num(c.total)} MC</strong></div><p class="concert-seat-guide">좌석 무작위 배정 · S석 50 / R석 100 / VIP석 150 MC</p>${footer}`,'activity-modal concert-tickets-modal');
  }else if(item.type==='history-event'){
   showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
@@ -391,11 +394,11 @@ function boardTitle(cell){
   'schubert-trout':['송어','5중주'],
   'chopin-nocturne':['녹턴','Op.9 No.2'],
   'chopin-polonaises':['영웅','폴로네즈'],
-  concert:['모두의','음악회'],
+  concert:['음악회','개최'],
  }[cell.id]||({event:['음악사','사건'],copyright:['권리','탐구실'],transfer:['저작권','양도']})[cell.type]||[cell.title];
  return lines.map(line=>`<span class="tile-title-line">${esc(line)}</span>`).join('');
 }
-function tileCopy(c){return `<span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(c.type==='go-to-prison'?'':({start:'출발 · +200 MC',quiz:'+80 MC','back-three':'추가 주사위',concert:'+100 MC',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번'})[c.type]||c.subtitle)}</span></span>`;}
+function tileCopy(c){return `<span class="tile-copy">${c.type!=='work'?landmark(c.type):''}<span class="cell-top">${c.type==='work'?esc(c.composer):icon(c.type)}</span><strong class="${c.id==='bach-brandenburg'?'long-title':''}">${boardTitle(c)}</strong><span class="cell-price">${c.price?`${c.price} MC`:esc(c.type==='go-to-prison'?'':({start:'출발 · +200 MC',quiz:'+80 MC','back-three':'추가 주사위',concert:'좌석별 티켓비',event:'음악사 카드',copyright:'저작권 퀴즈',transfer:'최고가 작품',prison:'6으로 탈출 · 기회 2번'})[c.type]||c.subtitle)}</span></span>`;}
 function boardLabelLayer(){return `<div class="board-labels" aria-hidden="true">${BOARD.map((c,i)=>`<div class="board-label ${c.type}" data-label-index="${i}">${tileCopy(c)}${state.ownership[c.id]?.level?concertHall():''}</div>`).join('')}</div>`;}
 function boardPawnLayer(){return `<div class="board-pawns">${BOARD.map((c,i)=>{if(!state.players.some(p=>p.position===i&&tokenVisible(p)))return '';const [row,col]=coordinates(i),anchor=boardTokenAnchor(row,col,BOARD_SIDE);return `<div class="board-pawn-group" data-pawn-index="${i}" data-anchor-x="${anchor.x}" data-anchor-y="${anchor.y}">${tokens(i)}</div>`;}).join('')}</div>`;}
 function board(){return `<div class="board-area ${boardView==='3d'?'is-3d':'is-flat'}"><section class="board-summary" aria-label="보드 진행 정보"><div><span class="summary-eyebrow">MUSIC MARBLE</span><h2>명곡의 정원</h2></div><div class="summary-turn"><span class="live-dot"></span>${esc(G.current(state).name)}${dicePresentation?.moving?dicePresentation.backward?` · 뒤로 이동 중 ${dicePresentation.backwardStep} / ${dicePresentation.resultSnapshot.state.lastBackwardMove?.steps??dicePresentation.result}칸`:` · 이동 중 ${dicePresentation.step} / ${dicePresentation.totalSteps??dicePresentation.result}칸`:state.phase==='finished'?' · 여행 완료':'의 차례'}</div><b class="summary-round">${lapProgressText(G.current(state))}<small> ROUND · 완주</small><small class="lap-progress">${esc(G.current(state).name)} 기준 · 전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명</small></b></section><div class="board-surround">${players(mobileGame?'all':'top')}<div class="board-scroll-hint">↔ 보드를 좌우로 밀어 작품을 살펴보세요.</div>${mobileGame?'<div class="mobile-board-viewport"><div class="mobile-board-scrollspace">':''}<div class="board-scene"><div class="garden-ground" aria-hidden="true"></div><div class="scene-decoration decoration-left" aria-hidden="true">♫</div><div class="scene-decoration decoration-right" aria-hidden="true">♪</div><div class="board-wrap"><div class="board-grid-frame"><div class="board" aria-label="음악사 보드판, 시계 방향 진행">${BOARD.map((c,i)=>{
@@ -416,7 +419,7 @@ function actionPanel(){
  else if(state.phase==='quiz'||state.phase==='feedback')content=`<div class="arrival"><span>배움의 시간</span><h3>${state.phase==='quiz'?'함께 답을 골라 보세요':'답보다 중요한 해설'}</h3><p>퀴즈 정답 시 80 MC를 얻어요.</p></div><button class="primary full" data-action="quiz-open">${state.phase==='quiz'?'퀴즈 열기':'해설 확인하기'} →</button>`;
  else if(state.trade)content=`<div class="notice">거래 제안을 보냈어요. 상대 참가자의 응답을 기다려 주세요.</div><button class="primary full" data-action="trade-open">거래 제안 확인</button>`;
  else {
-  content=`<div class="arrival"><span>${state.dice}칸 이동 · ${c.composer?esc(c.composer):'도착한 곳'}</span><h3>${esc(c.title)}</h3><p>${c.type==='work'?esc(c.note):c.type==='start'?'다시 새로운 시대를 만나러 가요.':c.type==='concert'?'모든 팀에 음악회 지원금 100 MC가 지급되었어요.':c.type==='transfer'?(state.lastAssignment?.skipped?'보유 작품이 없어 양도 없이 통과했어요.':'가장 비싼 작품의 가상 권리를 다른 참가자에게 양도했어요.'):state.lastEvent?esc(state.lastEvent.title):'시대의 이야기를 나눠 보세요.'}</p></div>`;
+  content=`<div class="arrival"><span>${state.dice}칸 이동 · ${c.composer?esc(c.composer):'도착한 곳'}</span><h3>${esc(c.title)}</h3><p>${c.type==='work'?esc(c.note):c.type==='start'?'다시 새로운 시대를 만나러 가요.':c.type==='concert'?'다른 참가자들이 무작위 좌석 등급에 따라 티켓비를 지불했어요.':c.type==='transfer'?(state.lastAssignment?.skipped?'보유 작품이 없어 양도 없이 통과했어요.':'가장 비싼 작품의 가상 권리를 다른 참가자에게 양도했어요.'):state.lastEvent?esc(state.lastEvent.title):'시대의 이야기를 나눠 보세요.'}</p></div>`;
   if(c.type==='work'&&!o){const passed=state.purchaseChallenge?.workId===c.id&&state.purchaseChallenge.correct===true;content+=`<div class="price-row"><span>가상 이용권</span><strong>${num(c.price)} <small>MC</small></strong></div>${passed?'<div class="purchase-pass-note">✓ OX 정답 · 이용권 구입 가능</div>':''}<button class="primary full" data-action="${passed?'buy':'purchase-quiz'}" ${p.coins<c.price?'disabled':''}>${p.coins<c.price?'뮤직코인이 부족해요':passed?'이용권 구입하기 ＋':'OX 퀴즈 풀고 구입하기 →'}</button>`;}
   if(c.type==='work'&&o)content+=`<div class="notice">${o.player===p.id?'나의 컬렉션에 있는 작품이에요.':state.lastRent?.workId===c.id?`${esc(state.players[state.lastRent.owner].name)}에게 ${state.lastRent.amount} MC를 지급했어요.`:`${esc(state.players[o.player].name)}의 이용권입니다.`}<b>기준 이용료 ${G.fee(state,c)} MC</b></div>`;
   if(state.lastEvent)content+=`<button class="secondary full" data-action="event">✦ 사건 카드 다시 보기</button>`;
@@ -559,7 +562,7 @@ function soloSetup(){
  const nickname=$('#entry-form input[name="nickname"]')?.value||'';
  showModal('봇 친구들과 음악 여행을 떠나요',`<p class="muted">나와 랜덤한 닉네임의 봇들이 함께 플레이해요. 나의 캐릭터를 직접 고르거나 랜덤으로 정하세요. 봇은 나와 겹치지 않게 배정됩니다. 봇은 주사위, 작품 구입, 공연 기획, 퀴즈를 자동으로 진행하고 거래 제안에도 응답해요.</p><form id="solo-form"><label>나의 닉네임<input name="nickname" required maxlength="16" autocomplete="nickname" placeholder="예: 선율 탐험가" value="${esc(nickname)}" /></label>${characterPicker($('#entry-form select[name="characterId"]')?.value||'')}<div class="form-row"><label>함께할 봇 수<select name="bots"><option value="1">봇 1명 · 총 2명</option><option value="2">봇 2명 · 총 3명</option><option value="3" selected>봇 3명 · 총 4명</option></select></label><label>게임 길이<select name="rounds"><option value="4">4라운드 · 모두 4바퀴</option><option value="8" selected>8라운드 · 모두 8바퀴</option><option value="12">12라운드 · 모두 12바퀴</option></select></label></div><div class="notice">모두 1,200 MC로 시작해요. 봇도 같은 규칙을 적용받으며, 퀴즈를 틀리거나 거래를 거절할 수 있어요. 화면을 나가면 봇은 기다리고, 「이전 게임 이어하기」로 돌아오면 계속합니다.</div><button type="submit" class="primary full">봇과 게임 시작 →</button></form>`,'entrance-help');
 }
-function help(){showModal('한 차례에 하나씩, 음악을 만나요',`<ol class="guide"><li><b>주사위를 굴리고 이동해요.</b><p>시계 방향으로 음악사를 여행해요. 한 바퀴를 돌면 200 MC를 받습니다.</p></li><li><b>작품의 가상 이용권을 선택해요.</b><p>구입 가능한 빈 작품에 도착하면 이동을 마친 뒤 OX 퀴즈가 자동으로 열려요. 정답이면 뮤직코인을 내고 이용권을 구입한 뒤 자동으로 다음 참가자에게 차례를 넘기고, 오답이면 코인 차감 없이 해설 확인 후 다음 참가자의 차례로 넘어가요. 다른 팀의 작품에 도착하면 가상 이용료를 자동 지급합니다. 작품 칸의 작은 점은 소유 팀 색입니다.</p></li><li><b>불법 스트리밍 감옥에서는 6으로 탈출해요.</b><p>출발점 기준 두 번째 사건 칸은 감옥입니다. 도착 후 다음 두 번의 자기 차례에 탈출 주사위를 굴립니다. 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 그 두 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다. 코인이나 보유 작품은 차감되지 않습니다. 「감옥으로 가기」 칸도 감옥으로 즉시 이동시켜 같은 규칙을 적용합니다. 게임용 가상 규칙입니다.</p></li><li><b>구입 전 OX 퀴즈를 풀어요.</b><p>빈 작품 칸에서 한 번 도전할 수 있어요. 정답이면 뮤직코인을 내고 이용권을 구입할 수 있고, 오답이면 코인 차감 없이 해설을 확인하고 다음 참가자에게 차례를 넘겨요. 구입 OX에는 별도 코인·배움 점수 보상이 없어요.</p></li><li><b>사건을 경험하고 퀴즈에 도전해요.</b><p>퀴즈 칸은 필수, 다른 칸에서는 차례당 1회 선택 도전해요. 정답은 80 MC, 오답에는 감점이 없습니다. 「저작권 양도」 칸에서는 최고 구입가 작품 한 개를 무작위로 정한 다른 참가자에게 넘깁니다. 보유 작품이 없으면 통과하며, 코인은 변하지 않습니다.</p></li><li><b>컬렉션과 공연을 기획해요.</b><p>같은 작곡가 2곡이면 이용료 ×1.5, 같은 시대 4곡이면 ×2로 적용해요. 중복 적용하지 않습니다. 구입한 내 작품 칸에 다시 도착했을 때만 100 MC로 공연을 기획할 수 있어요(기본 이용료 +20, 작품당 1회). 작품을 구입한 차례에는 기획할 수 없어요. 내 작품을 눌러 거래 제안이나 은행 반납(투자액 50%)을 할 수 있어요.</p></li><li><b>다음 팀에 차례를 넘겨요.</b><p>각 참가자가 출발점을 통과하거나 도착할 때마다 자신의 완주 횟수가 1바퀴 늘어납니다. 플레이어 중 누구든 설정한 4·8·12바퀴를 가장 먼저 완주하면 시대의 문에서 즉시 게임을 종료하고 최종 점수를 기록합니다. 마지막 이동에서 남은 주사위 칸은 이동하지 않으며 추가 구입·퀴즈·이벤트는 진행하지 않습니다. 교사는 수업 설정에서 일찍 마칠 수 있어요.</p></li></ol><div class="notice">2인 플레이에서는 한 명의 보유 코인이 0 MC가 되면 파산으로 즉시 게임을 종료합니다. 3–4인 플레이에서는 파산과 탈락 없이 잔액 한도에서 비용을 지급하고 부족액을 면제합니다. 거래는 제안을 받은 참가자가 자신의 화면에서 수락해야 완료됩니다.</div><p class="muted">혼자 플레이하려면 첫 화면의 「봇과 혼자 플레이하기」에서 봇 수를 선택하세요. 봇은 자동으로 자기 차례를 진행합니다.</p><p class="muted">공유 코드마다 별도의 방이 만들어집니다. 방마다 최대 4명이 참여하며 여러 방이 동시에 진행됩니다. 게임은 방장 브라우저에서 진행됩니다. 방장은 화면을 열어 두세요. 방장이 나가면 연결이 끊깁니다.</p><button class="primary full" data-action="close">여행으로 돌아가기 →</button>`,snapshot?.state?'':'entrance-help');}
+function help(){showModal('한 차례에 하나씩, 음악을 만나요',`<ol class="guide"><li><b>주사위를 굴리고 이동해요.</b><p>시계 방향으로 음악사를 여행해요. 한 바퀴를 돌면 200 MC를 받습니다.</p></li><li><b>작품의 가상 이용권을 선택해요.</b><p>구입 가능한 빈 작품에 도착하면 이동을 마친 뒤 OX 퀴즈가 자동으로 열려요. 정답이면 뮤직코인을 내고 이용권을 구입한 뒤 자동으로 다음 참가자에게 차례를 넘기고, 오답이면 코인 차감 없이 해설 확인 후 다음 참가자의 차례로 넘어가요. 다른 팀의 작품에 도착하면 가상 이용료를 자동 지급합니다. 작품 칸의 작은 점은 소유 팀 색입니다.</p></li><li><b>불법 스트리밍 감옥에서는 6으로 탈출해요.</b><p>출발점 기준 두 번째 사건 칸은 감옥입니다. 도착 후 다음 두 번의 자기 차례에 탈출 주사위를 굴립니다. 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 그 두 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다. 코인이나 보유 작품은 차감되지 않습니다. 「감옥으로 가기」 칸도 감옥으로 즉시 이동시켜 같은 규칙을 적용합니다. 게임용 가상 규칙입니다.</p></li><li><b>구입 전 OX 퀴즈를 풀어요.</b><p>빈 작품 칸에서 한 번 도전할 수 있어요. 정답이면 뮤직코인을 내고 이용권을 구입할 수 있고, 오답이면 코인 차감 없이 해설을 확인하고 다음 참가자에게 차례를 넘겨요. 구입 OX에는 별도 코인·배움 점수 보상이 없어요.</p></li><li><b>사건을 경험하고 퀴즈에 도전해요.</b><p>퀴즈 칸은 필수, 다른 칸에서는 차례당 1회 선택 도전해요. 정답은 80 MC, 오답에는 감점이 없습니다. 「저작권 양도」 칸에서는 최고 구입가 작품 한 개를 무작위로 정한 다른 참가자에게 넘깁니다. 보유 작품이 없으면 통과하며, 코인은 변하지 않습니다.</p></li><li><b>음악회를 개최해요.</b><p>「음악회 개최」 칸에 도착한 참가자가 개최자가 됩니다. 다른 참가자마다 S석 50 MC·R석 100 MC·VIP석 150 MC 중 하나를 무작위로 배정하고 티켓비를 개최자에게 지급합니다. 같은 등급이 여러 명에게 배정될 수 있어요. 잔액이 부족하면 보유 코인만 지급하며, 2인 게임의 파산 규칙도 적용됩니다.</p></li><li><b>컬렉션과 공연을 기획해요.</b><p>같은 작곡가 2곡이면 이용료 ×1.5, 같은 시대 4곡이면 ×2로 적용해요. 중복 적용하지 않습니다. 구입한 내 작품 칸에 다시 도착했을 때만 100 MC로 공연을 기획할 수 있어요(기본 이용료 +20, 작품당 1회). 작품을 구입한 차례에는 기획할 수 없어요. 내 작품을 눌러 거래 제안이나 은행 반납(투자액 50%)을 할 수 있어요.</p></li><li><b>다음 팀에 차례를 넘겨요.</b><p>각 참가자가 출발점을 통과하거나 도착할 때마다 자신의 완주 횟수가 1바퀴 늘어납니다. 플레이어 중 누구든 설정한 4·8·12바퀴를 가장 먼저 완주하면 시대의 문에서 즉시 게임을 종료하고 최종 점수를 기록합니다. 마지막 이동에서 남은 주사위 칸은 이동하지 않으며 추가 구입·퀴즈·이벤트는 진행하지 않습니다. 교사는 수업 설정에서 일찍 마칠 수 있어요.</p></li></ol><div class="notice">2인 플레이에서는 한 명의 보유 코인이 0 MC가 되면 파산으로 즉시 게임을 종료합니다. 3–4인 플레이에서는 파산과 탈락 없이 잔액 한도에서 비용을 지급하고 부족액을 면제합니다. 거래는 제안을 받은 참가자가 자신의 화면에서 수락해야 완료됩니다.</div><p class="muted">혼자 플레이하려면 첫 화면의 「봇과 혼자 플레이하기」에서 봇 수를 선택하세요. 봇은 자동으로 자기 차례를 진행합니다.</p><p class="muted">공유 코드마다 별도의 방이 만들어집니다. 방마다 최대 4명이 참여하며 여러 방이 동시에 진행됩니다. 게임은 방장 브라우저에서 진행됩니다. 방장은 화면을 열어 두세요. 방장이 나가면 연결이 끊깁니다.</p><button class="primary full" data-action="close">여행으로 돌아가기 →</button>`,snapshot?.state?'':'entrance-help');}
 $('#app').addEventListener('click',handleClick);$('#modal').addEventListener('click',handleClick);
 $('#modal').addEventListener('close',()=>continueFlow());
 $('#modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
@@ -605,7 +608,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='character-bio')characterBio(el.dataset.id);
  if(a==='redraw-character')await redrawCharacter();
  if(a==='settings')settingsModal();
- if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.','back-three':'주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다. 이동을 마친 칸의 작품 구입·가상 이용료·음악사 사건 규칙이 적용됩니다.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC!',concert:'음악을 나누는 축제! 도착하면 모든 팀이 100 MC를 받아요.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',prison:PRISON_MESSAGE,'go-to-prison':'이 칸에 도착하면 불법 스트리밍 감옥으로 즉시 이동합니다. 다음 두 번의 자기 차례에 주사위를 굴려 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 다음 자기 차례부터 정상 이동합니다. 감옥으로 이동하는 동안 출발 보너스나 중간 칸의 효과는 발생하지 않습니다.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
+ if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.','back-three':'주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다. 이동을 마친 칸의 작품 구입·가상 이용료·음악사 사건 규칙이 적용됩니다.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC!',concert:'도착한 참가자가 음악회를 개최합니다. 다른 참가자마다 S석 50 MC·R석 100 MC·VIP석 150 MC 중 하나를 무작위로 배정하고 티켓비를 개최자에게 지급합니다. 같은 등급이 여러 명에게 배정될 수 있으며, 잔액이 부족하면 보유 코인만 지불합니다.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',prison:PRISON_MESSAGE,'go-to-prison':'이 칸에 도착하면 불법 스트리밍 감옥으로 즉시 이동합니다. 다음 두 번의 자기 차례에 주사위를 굴려 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 다음 자기 차례부터 정상 이동합니다. 감옥으로 이동하는 동안 출발 보너스나 중간 칸의 효과는 발생하지 않습니다.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
  if(a==='work')workModal(work(el.dataset.id));
  if(a==='roll'||a==='roll-backward'){
   if(!myTurn()||!['roll','backward-roll'].includes(state.phase))return;

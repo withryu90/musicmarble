@@ -50,6 +50,13 @@ export function diamondSeatInset(board,seat,side,clearance=24){
  if(seat.left>center)return -Math.max(0,seat.left-center-half-clearance);
  return 0;
 }
+// Paired seats use the safer of both offsets so controls or long chat cannot
+// pull just one participant towards the board.
+export function balancedDiamondInsets(board,seats,side,clearance=24){
+ const offsets=seats.map(seat=>diamondSeatInset(board,seat,side,clearance));
+ const distance=Math.min(...offsets.map(Math.abs));
+ return offsets.map(offset=>Math.sign(offset)*distance);
+}
 function packBoardSeats(root){
  if(root.querySelector('.game-shell[data-mobile="true"]'))return;
  const area=root.querySelector('.board-area.is-3d');if(!area)return;
@@ -64,9 +71,10 @@ function packBoardSeats(root){
   area.style.setProperty(`--seat-overlap-${side}`,`${Math.floor(overlap)}px`);
  }
  const packedBoard=frame.getBoundingClientRect();
- for(const side of ['top','bottom'])for(const seat of area.querySelectorAll(`.players-${side} .board-seat`)){
-  const inset=diamondSeatInset(packedBoard,seat.getBoundingClientRect(),side);
-  seat.style.setProperty('--seat-inset',`${Math.trunc(inset)}px`);
+ for(const side of ['top','bottom']){
+  const seats=[...area.querySelectorAll(`.players-${side} .board-seat`)];
+  const insets=balancedDiamondInsets(packedBoard,seats.map(seat=>seat.getBoundingClientRect()),side);
+  seats.forEach((seat,i)=>seat.style.setProperty('--seat-inset',`${Math.trunc(insets[i])}px`));
  }
 }
 export function fitBoardTitles(root=document){

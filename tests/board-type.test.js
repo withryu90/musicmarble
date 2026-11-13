@@ -47,3 +47,14 @@ test('horizontal seat packing approaches the diamond without entering its sloped
  assert.equal(diamondSeatInset(board,{...left,left:350,right:850},'top'),0);
  assert.equal(diamondSeatInset(board,{...left,bottom:390},'top'),0);
 });
+
+test('paired web seats stay symmetric when one card or chat bubble is taller',async()=>{
+ const {balancedDiamondInsets,diamondSeatInset}=await import('../src/board-type.js');
+ const board={left:80,right:920,top:100,bottom:700,width:840,height:600};
+ const seats=[{left:0,right:180,top:0,bottom:200},{left:820,right:1000,top:0,bottom:120}];
+ const [left,right]=balancedDiamondInsets(board,seats,'top');
+ assert.equal(left,-right);
+ assert.ok(left<=diamondSeatInset(board,seats[0],'top'));
+ assert.ok(-right<=-diamondSeatInset(board,seats[1],'top'));
+ assert.deepEqual(balancedDiamondInsets(board,[], 'top'),[]);
+});

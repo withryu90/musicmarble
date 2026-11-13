@@ -1,6 +1,7 @@
-import { BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=65c87ba782f3';
-import {characterById,drawCharacterIds} from './characters.js?v=65c87ba782f3';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=65c87ba782f3';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=46c2f225c791';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=46c2f225c791';
+import {characterById,drawCharacterIds} from './characters.js?v=46c2f225c791';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=46c2f225c791';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
@@ -23,7 +24,7 @@ export function collection(s,work,player){
   return {name:'기본 이용료',multiplier:1};
 }
 export const fee=(s,w)=>Math.round((w.fee+(s.ownership[w.id]?.level||0)*20)*collection(s,w,s.ownership[w.id]?.player).multiplier);
-export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.ownership[w.id].level||0)*100,0);
+export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.ownership[w.id].level||0)*100,0)+Object.values(s.platformOwners||{}).filter(id=>id===p.id).length*STREAMING_RIGHTS_PRICE+Object.values(s.streamingInstallations||{}).reduce((sum,apps)=>sum+Object.values(apps).filter(id=>id===p.id).length*STREAMING_INSTALL_PRICE,0);
 const clone=s=>structuredClone(s);
 function log(s,text){s.log.unshift({round:s.round,text});s.log=s.log.slice(0,60);}
 function finishByLaps(s,player,moveSteps){
@@ -44,7 +45,7 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
-  return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,lastConcert:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  return {version:VERSION,boardLayout:2,platformOwners:{},streamingInstallations:{},streamingHandled:false,lastStreamingRevenue:[],players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,lastConcert:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 // Accept complete historical banks; preserve scores and live answers while adding new questions.
 export function migrateRetiredQuiz(state){
@@ -71,7 +72,7 @@ export function roll(state,dice,rng=Math.random){
   if(state.phase==='backward-roll')return rollBackward(state,dice,rng);
   if(state.phase!=='roll'||hasFinished(state,current(state)))throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
-  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
+  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
   if((p.skipTurns??0)>0){
     if(BOARD[p.position].type!=='prison')throw Error('감옥 위치를 확인해 주세요.');
     const escaped=dice===6;p.skipTurns=escaped?0:p.skipTurns-1;
@@ -86,12 +87,17 @@ export function rollBackward(state,dice,rng=Math.random){
  if(state.phase!=='backward-roll'||BOARD[current(state).position].type!=='back-three')throw Error('뒤로가기 칸에서 추가 주사위를 굴려 주세요.');
  if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
  const s=clone(state),p=current(s),from=p.position;s.dice=dice;s.phase='action';
- s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
+ s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
  p.position=(from-dice+BOARD.length)%BOARD.length;s.lastBackwardMove={from,to:p.position,steps:dice};
  return resolveArrival(s,p,rng);
 }
 function resolveArrival(s,p,rng){
-  const cell=BOARD[p.position];log(s,`${p.name}: ${s.lastBackwardMove?'뒤로 ':''}${s.dice}칸 이동 → ${cell.title}`);
+  const cell=BOARD[p.position];
+  if(cell.type==='work')for(const [appId,ownerId] of Object.entries(s.streamingInstallations?.[cell.id]||{})){
+    s.players[ownerId].coins+=STREAMING_REVENUE;s.lastStreamingRevenue.push({appId,workId:cell.id,playerId:ownerId,amount:STREAMING_REVENUE});
+    log(s,`${s.players[ownerId].name}: ${streamingApp(appId).name} 자동 스트리밍 수익 +${STREAMING_REVENUE} MC (은행 지급)`);
+  }
+  log(s,`${p.name}: ${s.lastBackwardMove?'뒤로 ':''}${s.dice}칸 이동 → ${cell.title}`);
   if(cell.type==='back-three'){
     s.phase='backward-roll';log(s,`${p.name}: 뒤로가기 — 주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다.`);return s;
   }
@@ -128,6 +134,37 @@ function resolveArrival(s,p,rng){
     log(s,`${p.name}: 음악회 개최! 티켓 수입 ${s.lastConcert.total} MC`);
   }
   return checkBankruptcy(s);
+}
+// New 9x9 saves carry an explicit layout marker; old positions follow their old tile IDs.
+export function migrateBoardLayout(state){
+ if(!state||state.boardLayout!==undefined||!Array.isArray(state.players)||!state.players.every(p=>Number.isInteger(p.position)&&LEGACY_BOARD[p.position]))return state;
+ const s=clone(state),map=i=>BOARD.findIndex(c=>c.id===LEGACY_BOARD[i]?.id);
+ s.players.forEach(p=>p.position=map(p.position));s.boardLayout=2;s.platformOwners={};s.streamingInstallations={};s.streamingHandled=false;s.lastStreamingRevenue=[];
+ if(s.lastPrisonTransfer)s.lastPrisonTransfer={from:map(s.lastPrisonTransfer.from),to:map(s.lastPrisonTransfer.to)};
+ // Completed visual paths belong to the former perimeter, and must not replay.
+ s.lastBackwardMove=null;return s;
+}
+export function canBuyPlatform(s){const c=BOARD[current(s).position];return s.phase==='action'&&!s.trade&&!s.streamingHandled&&c.type==='streaming'&&s.platformOwners?.[c.id]===undefined&&current(s).coins>=STREAMING_RIGHTS_PRICE;}
+export function streamingOptions(s){
+ if(s.phase!=='action'||s.trade||s.streamingHandled)return [];
+ const p=current(s),c=BOARD[p.position];
+ if(c.type!=='work'||!s.ownership[c.id]||p.coins<STREAMING_INSTALL_PRICE)return [];
+ return STREAMING_APPS.filter(app=>s.platformOwners?.[app.id]===p.id&&s.streamingInstallations?.[c.id]?.[app.id]===undefined);
+}
+export const streamingOpportunity=s=>canBuyPlatform(s)||streamingOptions(s).length>0;
+export function buyPlatform(state){
+ if(!canBuyPlatform(state))throw Error('도착한 스트리밍 앱 칸에서만 비어 있는 점유권을 구입할 수 있습니다. (200 MC)');
+ const s=clone(state),p=current(s),c=BOARD[p.position];s.platformOwners??={};s.platformOwners[c.id]=p.id;p.coins-=STREAMING_RIGHTS_PRICE;s.streamingHandled=true;
+ log(s,`${p.name}: ${streamingApp(c.id).name} 점유권 구입, -${STREAMING_RIGHTS_PRICE} MC`);return checkBankruptcy(s);
+}
+export function installStreaming(state,appId){
+ if(!streamingOptions(state).some(app=>app.id===appId))throw Error('도착한 보유 작품 칸에 내 앱의 자동 스트리밍을 설치해 주세요. (50 MC, 앱별 1회)');
+ const s=clone(state),p=current(s),c=BOARD[p.position];s.streamingInstallations??={};s.streamingInstallations[c.id]??={};s.streamingInstallations[c.id][appId]=p.id;
+ p.coins-=STREAMING_INSTALL_PRICE;s.streamingHandled=true;log(s,`${p.name}: 「${c.title}」에 ${streamingApp(appId).name} 자동 스트리밍 설치, -${STREAMING_INSTALL_PRICE} MC`);return checkBankruptcy(s);
+}
+export function skipStreaming(state){
+ if(!streamingOpportunity(state))throw Error('현재 선택할 스트리밍 기회가 없습니다.');
+ const s=clone(state);s.streamingHandled=true;return s;
 }
 export function startPurchaseQuiz(state,rng=Math.random){
  const s=clone(state),p=current(s),w=BOARD[p.position];
@@ -191,7 +228,7 @@ export function nextTurn(state){
     s.turn=nextPlayerIndex(s);
     s.phase='roll';
   }
-  s.lastConcert=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
+  s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
 }
 export function finishGame(state){const s=clone(state);s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
@@ -212,6 +249,11 @@ export function isValidSave(s){
     if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','backward-roll','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
+    if(s.boardLayout!==undefined&&s.boardLayout!==2)return false;
+    if(s.streamingHandled!==undefined&&typeof s.streamingHandled!=='boolean')return false;
+    if(s.platformOwners!==undefined&&(!s.platformOwners||typeof s.platformOwners!=='object'||Array.isArray(s.platformOwners)||!Object.entries(s.platformOwners).every(([app,id])=>streamingApp(app)&&Number.isInteger(id)&&s.players[id])))return false;
+    if(s.streamingInstallations!==undefined&&(!s.streamingInstallations||typeof s.streamingInstallations!=='object'||Array.isArray(s.streamingInstallations)||!Object.entries(s.streamingInstallations).every(([id,apps])=>WORKS.some(w=>w.id===id)&&apps&&typeof apps==='object'&&!Array.isArray(apps)&&Object.entries(apps).every(([app,owner])=>streamingApp(app)&&Number.isInteger(owner)&&s.players[owner]&&s.platformOwners?.[app]===owner))))return false;
+    if(s.lastStreamingRevenue!==undefined&&(!Array.isArray(s.lastStreamingRevenue)||s.lastStreamingRevenue.length>4||new Set(s.lastStreamingRevenue.map(r=>r.appId)).size!==s.lastStreamingRevenue.length||!s.lastStreamingRevenue.every(r=>r.workId===BOARD[current(s).position].id&&streamingApp(r.appId)&&WORKS.some(w=>w.id===r.workId)&&Number.isInteger(r.playerId)&&s.players[r.playerId]&&r.amount===STREAMING_REVENUE&&s.streamingInstallations?.[r.workId]?.[r.appId]===r.playerId)))return false;
     if(s.leaderLaps!==undefined&&(!Number.isInteger(s.leaderLaps)||s.leaderLaps<0||s.leaderLaps>s.maxRounds))return false;
     if(s.players.some(p=>p.laps!==undefined&&(!Number.isInteger(p.laps)||p.laps<0||p.laps>s.maxRounds)))return false;
     if(s.phase==='roll'&&hasFinished(s,current(s)))return false;
@@ -236,7 +278,7 @@ export function isValidSave(s){
       if(c.hostId!==s.turn||BOARD[current(s).position].type!=='concert'||!Array.isArray(c.tickets)||c.tickets.length!==s.players.length-1||new Set(c.tickets.map(t=>t.playerId)).size!==c.tickets.length)return false;
       if(!c.tickets.every(t=>Number.isInteger(t.playerId)&&s.players[t.playerId]&&t.playerId!==c.hostId&&CONCERT_SEATS.some(seat=>seat.id===t.seatId&&seat.price===t.price)&&Number.isInteger(t.amount)&&t.amount>=0&&t.amount<=t.price)||c.total!==c.tickets.reduce((sum,t)=>sum+t.amount,0))return false;
     }
-    if(s.lastBackwardMove){const m=s.lastBackwardMove;if(m.from!==7||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}
+    if(s.lastBackwardMove){const m=s.lastBackwardMove;if(BOARD[m.from]?.type!=='back-three'||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}
     if(s.phase==='backward-roll'&&(BOARD[current(s).position].type!=='back-three'||s.lastBackwardMove||s.trade))return false;
     if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>1||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
     if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}

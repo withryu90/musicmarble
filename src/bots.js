@@ -1,6 +1,6 @@
-import {BOARD,WORKS,QUIZZES} from './data.js?v=65c87ba782f3';
-import * as G from './engine.js?v=65c87ba782f3';
-import {purchaseQuizById} from './purchase-quizzes.js?v=65c87ba782f3';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=46c2f225c791';
+import * as G from './engine.js?v=46c2f225c791';
+import {purchaseQuizById} from './purchase-quizzes.js?v=46c2f225c791';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
 export function botDecision(state,previous={},random=Math.random){
@@ -30,6 +30,10 @@ export function botDecision(state,previous={},random=Math.random){
   if(state.phase==='feedback')return decide('closeFeedback');
   if(state.phase!=='action')return null;
   const cell=BOARD[p.position];
+  if(G.streamingOpportunity(state)){
+    if(G.canBuyPlatform(state))return decide(p.coins>=300&&random()<.75?'buyPlatform':'skipStreaming');
+    const apps=G.streamingOptions(state);return p.coins>=150&&random()<.7?decide('installStreaming',[apps[Math.floor(random()*apps.length)].id]):decide('skipStreaming');
+  }
   if(cell.type==='work'&&!state.ownership[cell.id]){
     if(state.purchaseChallenge?.correct===true&&!memory.buy&&p.coins>=cell.price){memory.buy=true;return decide('buy');}
     if(!state.purchaseChallenge&&!memory.purchase){memory.purchase=true;if(p.coins>=cell.price+100&&random()<.85)return decide('startPurchaseQuiz');}
@@ -46,7 +50,7 @@ export function botDecision(state,previous={},random=Math.random){
 export function applyBotDecision(state,decision,dice){
   if(!decision)return state;
   if(decision.action==='roll')return G.roll(state,dice);
-  const actions={buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
+  const actions={buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
   if(!Object.hasOwn(actions,decision.action))throw Error('잘못된 봇 동작입니다.');
   return actions[decision.action](state,...decision.args);
 }

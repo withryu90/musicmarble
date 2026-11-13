@@ -243,3 +243,18 @@ dialog#modal::backdrop{background:#164d7959}
  #modal .concert-income{margin-top:9px;padding:9px}
  #modal .concert-seat-guide{margin:6px 0 10px}
 }
+#modal .streaming-modal-hero{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:16px 0}
+#modal .streaming-modal-hero svg{width:55px;height:55px}
+#modal .streaming-modal-hero h3{font-size:25px}
+#modal .streaming-modal-hero>strong{font-size:24px;color:#167fb6}
+#modal .streaming-rule{text-align:center;font-weight:700;margin:10px 0 18px}
+#modal.streaming-modal .notice{padding:15px;margin:12px 0 18px}
+#modal.streaming-modal .notice p+p{margin-top:10px}
+#modal.streaming-modal .secondary{margin-top:10px}
+#modal .streaming-options{display:grid;gap:9px;margin:16px 0}
+#modal .streaming-option{display:flex;gap:12px;align-items:center;text-align:left;border:2px solid #9bcce7;background:#edf8ff;border-radius:12px;padding:12px}
+#modal .streaming-option svg{width:38px;height:38px;flex:none}
+#modal .streaming-option span{flex:1;display:grid;gap:4px}
+#modal .activity-symbol svg{display:block;width:32px;height:32px}
+.streaming-cta{padding:12px;background:#207fae;color:white;border-radius:9px;font-weight:800}
+.streaming-work-details{padding:12px;border:1px solid #c5ddec;border-radius:12px;margin-bottom:14px;background:#f1f9ff}.streaming-work-details p{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px}.streaming-work-details svg{width:22px;height:22px}

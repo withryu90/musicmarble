@@ -1,8 +1,8 @@
-import {randomInt,randomToken} from './random.js?v=65c87ba782f3';
-import * as G from './engine.js?v=65c87ba782f3';
-import {botDecision,applyBotDecision} from './bots.js?v=65c87ba782f3';
-import {activityChanges} from './activities.js?v=65c87ba782f3';
-import {drawCharacterIds,characterById} from './characters.js?v=65c87ba782f3';
+import {randomInt,randomToken} from './random.js?v=46c2f225c791';
+import * as G from './engine.js?v=46c2f225c791';
+import {botDecision,applyBotDecision} from './bots.js?v=46c2f225c791';
+import {activityChanges} from './activities.js?v=46c2f225c791';
+import {drawCharacterIds,characterById} from './characters.js?v=46c2f225c791';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();}
@@ -82,7 +82,7 @@ export class RoomService {
       }else{
         if(member.id!==state.turn)throw Error('지금은 다른 참가자의 차례입니다.');
         if(state.trade)throw Error('거래 응답을 먼저 기다려 주세요.');
-        const allowed={roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
+        const allowed={buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
         if(!Object.hasOwn(allowed,action))throw Error('지원하지 않는 동작입니다.');
         room.state=allowed[action](state,...args);
       }

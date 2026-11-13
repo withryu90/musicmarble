@@ -5,7 +5,7 @@ import {buyQualified} from '../test-support/purchases.js';
 import {BOARD,WORKS,QUIZZES} from '../src/data.js';
 const game=()=>G.createGame({names:['A','B','C','D'],rounds:4,coins:1200});
 const revisit=s=>{s=structuredClone(s);s.phase='roll';s.players[s.turn].position=0;return G.roll(s,1);};
-test('four players, unique colors, input and dice validation',()=>{const s=game();assert.equal(s.players.length,4);assert.equal(new Set(s.players.map(p=>p.color)).size,4);assert.throws(()=>G.createGame({names:['A']}));assert.throws(()=>G.createGame({names:Array(5).fill('A')}));assert.throws(()=>G.roll(s,0));assert.throws(()=>G.roll(s,7));assert.equal(BOARD.length,28);assert.equal(WORKS.length,20);});
+test('four players, unique colors, input and dice validation',()=>{const s=game();assert.equal(s.players.length,4);assert.equal(new Set(s.players.map(p=>p.color)).size,4);assert.throws(()=>G.createGame({names:['A']}));assert.throws(()=>G.createGame({names:Array(5).fill('A')}));assert.throws(()=>G.roll(s,0));assert.throws(()=>G.roll(s,7));assert.equal(BOARD.length,32);assert.equal(WORKS.length,20);});
 test('buy charges once without mutating previous state',()=>{const s=G.roll(game(),1),b=buyQualified(s);assert.equal(b.players[0].coins,1040);assert.equal(s.players[0].coins,1200);assert.equal(b.ownership['bach-air'].player,0);assert.throws(()=>buyQualified(b));assert.throws(()=>G.roll(b,2));});
 test('insufficient funds and wrong phase reject purchase',()=>{const s=G.roll(game(),1);s.players[0].coins=100;assert.throws(()=>buyQualified(s));assert.throws(()=>buyQualified(game()));});
 test('fees conserve coins and classroom mode never goes negative',()=>{let s=game();s.ownership['bach-air']={player:1,level:0};s.players[0].coins=10;const b=G.roll(s,1);assert.equal(b.players[0].coins,0);assert.equal(b.players[1].coins,1210);});
@@ -14,7 +14,7 @@ test('bank return reimburses half the total investment',()=>{let s=G.upgrade(rev
 test('trade only transfers on acceptance and preserves upgrade',()=>{let s=G.upgrade(revisit(buyQualified(G.roll(game(),1))),'bach-air');const p={workId:'bach-air',to:1,price:300};let pending=G.proposeTrade(s,p);assert.equal(pending.ownership['bach-air'].player,0);assert.throws(()=>G.nextTurn(pending));let rejected=G.resolveTrade(pending,false);assert.equal(rejected.players[0].coins,s.players[0].coins);let accepted=G.resolveTrade(G.proposeTrade(rejected,p),true);assert.equal(accepted.ownership['bach-air'].player,1);assert.equal(accepted.ownership['bach-air'].level,1);assert.equal(accepted.players[1].coins,900);assert.equal(accepted.players[0].coins,1240);assert.throws(()=>G.proposeTrade(s,{...p,price:-1}));assert.throws(()=>G.proposeTrade(s,{...p,to:0}));assert.throws(()=>G.proposeTrade(s,{...p,price:2000}));});
 test('quiz rewards once, requires explanation and enforces once per turn',()=>{let s=G.startQuiz(G.roll(game(),1));const q=QUIZZES.find(q=>q.id===s.quiz);assert.throws(()=>G.nextTurn(s));assert.throws(()=>G.answerQuiz(s,9));s=G.answerQuiz(s,q.answer);assert.equal(s.players[0].coins,1280);assert.equal(s.players[0].knowledge,1);assert.throws(()=>G.answerQuiz(s,q.answer));s=G.closeFeedback(s);assert.throws(()=>G.startQuiz(s));});
 test('wrong learning quiz answers cost nothing',()=>{let s=game();s.players[0].position=0;s=G.startQuiz(G.roll(s,1));const q=QUIZZES.find(q=>q.id===s.quiz);s=G.answerQuiz(s,(q.answer+1)%3);assert.equal(s.players[0].coins,1200);assert.equal(s.players[0].attempts,1);assert.equal(s.players[0].knowledge,0);});
-test('passing start and host concert income',()=>{let s=game();s.players[0].position=27;s=G.roll(s,1);assert.equal(s.players[0].coins,1400);s=game();s.players[0].position=13;s=G.roll(s,1,()=>.5);assert.deepEqual(s.players.map(p=>p.coins),[1500,1100,1100,1100]);});
+test('passing start and host concert income',()=>{let s=game();s.players[0].position=31;s=G.roll(s,1);assert.equal(s.players[0].coins,1400);s=game();s.players[0].position=15;s=G.roll(s,1,()=>.5);assert.deepEqual(s.players.map(p=>p.coins),[1500,1100,1100,1100]);});
 test('events draw one card and apply exactly once',()=>{let s=G.roll(game(),3);assert.equal(s.eventCursor,1);assert.equal(s.players[0].coins,1200+s.lastEvent.actual);assert.throws(()=>G.roll(s,3));});
 test('full four-player game finishes when the first player completes the configured laps',()=>{let s=game(),turns=0,seed=123;while(s.phase!=='finished'){assert.ok(turns<2000,'game must terminate');seed=(seed*1664525+1013904223)>>>0;s=G.roll(s,seed%6+1);if(s.phase==='backward-roll')s=G.roll(s,seed%6+1);if(s.phase==='finished')break;if(s.phase==='quiz'){s=G.answerQuiz(s,0);s=G.closeFeedback(s);}if(BOARD[G.current(s).position].type==='work'&&!s.ownership[BOARD[G.current(s).position].id]&&G.current(s).coins>=BOARD[G.current(s).position].price)s=buyQualified(s);assert.ok(G.isValidSave(s));s=G.nextTurn(s);turns++;}assert.ok(turns>20);assert.equal(s.players.filter(p=>p.laps===4).length,1);assert.equal(s.round,4);assert.throws(()=>G.roll(s,1));assert.ok(s.players.every(p=>G.score(s,p)>=p.coins));});
 
@@ -24,11 +24,11 @@ test('unowned works show their base fee without phantom collection bonuses',()=>
 
 test('turn cycles and other players laps do not increment the round',()=>{
  let s=game();
- for(let i=0;i<4;i++){if(i===1)s.players[i].position=27;s=G.nextTurn(G.roll(s,1));}
+ for(let i=0;i<4;i++){if(i===1)s.players[i].position=31;s=G.nextTurn(G.roll(s,1));}
  assert.equal(s.turn,0);assert.equal(s.round,1);assert.equal(s.leaderLaps,0);assert.equal(s.turnNumber,4);
 });
 test('crossing start counts personal laps and the round waits for every player',()=>{
- for(const [position,dice,landing] of [[27,1,0],[26,6,4]]){
+ for(const [position,dice,landing] of [[31,1,0],[30,6,4]]){
   let s=game();s.players[0].position=position;s=G.roll(s,dice);
   assert.equal(s.leaderLaps,1);assert.equal(s.players[0].position,landing);assert.equal(s.players[0].laps,1);assert.equal(s.round,1);
   s=G.nextTurn(s);assert.equal(s.round,1);assert.equal(s.turn,1);assert.equal(s.phase,'roll');
@@ -36,7 +36,7 @@ test('crossing start counts personal laps and the round waits for every player',
 });
 test('4, 8 and 12 laps end immediately at START with no final arrival quiz',()=>{
  for(const rounds of [4,8,12]){
-  let s=G.createGame({names:['A','B'],rounds});s.players[0].laps=rounds-1;s.players[0].position=27;
+  let s=G.createGame({names:['A','B'],rounds});s.players[0].laps=rounds-1;s.players[0].position=31;
   s=G.roll(s,6);assert.equal(s.phase,'finished');assert.equal(s.players[0].position,0);assert.equal(s.players[0].laps,rounds);assert.equal(s.players[1].laps,0);assert.equal(s.round,rounds);assert.equal(s.endReason.moveSteps,1);assert.throws(()=>G.startQuiz(s));assert.throws(()=>G.nextTurn(s));assert.ok(G.isValidSave(s));
  }
 });

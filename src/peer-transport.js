@@ -1,5 +1,5 @@
-import {RoomService} from './room-service.js?v=65c87ba782f3';
-import * as G from './engine.js?v=65c87ba782f3';
+import {RoomService} from './room-service.js?v=46c2f225c791';
+import * as G from './engine.js?v=46c2f225c791';
 export const PEER_PREFIX='musicmarble-rtc-v1-';
 const STORE='musicmarble.peer.host.v1';
 export function roomPeerId(code){if(typeof code!=='string'||!/^[A-HJ-NP-Z2-9]{6}$/.test(code))throw Error('공유 코드는 영문과 숫자 6자리로 입력해 주세요.');return PEER_PREFIX+code;}
@@ -15,7 +15,7 @@ let sdkPromise;
 async function loadPeer(){
  if(globalThis.Peer)return globalThis.Peer;
  if(!sdkPromise)sdkPromise=new Promise((resolve,reject)=>{
-  const script=document.createElement('script');script.src=new URL('./vendor/peerjs-1.5.5.min.js?v=65c87ba782f3',import.meta.url).href;
+  const script=document.createElement('script');script.src=new URL('./vendor/peerjs-1.5.5.min.js?v=46c2f225c791',import.meta.url).href;
   script.onload=()=>globalThis.Peer?resolve(globalThis.Peer):reject(Error('연결 도구를 불러오지 못했어요.'));
   script.onerror=()=>reject(Error('연결 도구를 불러오지 못했어요. 네트워크를 확인해 주세요.'));document.head.appendChild(script);
  }).catch(e=>{sdkPromise=null;throw e;});
@@ -34,7 +34,7 @@ export class PeerTransport{
  }
  restore(session){
   let r;try{r=JSON.parse(this.storage?.getItem(STORE)||'null');}catch{return false;}
-  if(r?.state)r.state=G.migrateRetiredQuiz(r.state);
+  if(r?.state)r.state=G.migrateRetiredQuiz(G.migrateBoardLayout(r.state));
   if(!r||r.code!==session.code||r.members?.[0]?.token!==session.token||session.playerId!==0||!Array.isArray(r.members)||r.members.length>G.MAX_PLAYERS||r.state&&!G.isValidSave(r.state))return false;
   this.service=new RoomService({botDelay:this.botDelay});this.service.rooms.set(r.code,{...r,listeners:new Set(),chatListeners:new Set(),publishedState:r.state?structuredClone(r.state):null});this.session=session;return true;
  }

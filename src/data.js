@@ -1,3 +1,4 @@
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=46c2f225c791';
 export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 두 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 두 번 모두 6이 나오지 않으면 그 두 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
@@ -6,7 +7,7 @@ export const ERAS = [
   {id:'modern', name:'근현대', years:'19세기 말 이후', color:'#7595b7', detail:'새로운 음색과 리듬으로 기존의 규칙을 넓힌 시대'},
 ];
 const w=(id,composer,title,year,era,price,fee,note)=>({id,composer,title,year,era,price,fee,note,type:'work'});
-export const BOARD = [
+export const LEGACY_BOARD = [
   {id:'start',type:'start',title:'시대의 문',subtitle:'한 바퀴 +200 MC'},
   w('bach-air','바흐','G선상의 아리아','약 1731','baroque',160,30,'관현악 모음곡 제3번의 아리아. 유려한 선율 아래 꾸준한 저음이 흐릅니다.'),
   w('bach-brandenburg','바흐','브란덴부르크 협주곡','1721','baroque',180,35,'여섯 협주곡은 서로 다른 악기 편성으로 독주와 합주의 대화를 들려줍니다.'),
@@ -36,6 +37,11 @@ export const BOARD = [
   w('stravinsky-spring','스트라빈스키','봄의 제전','1913 초연','modern',340,70,'불규칙한 강세와 강렬한 리듬으로 새로운 음악의 가능성을 보여 주었습니다.'),
   w('debussy-sea','드뷔시','바다','1905 초연','modern',300,60,'관현악의 다채로운 색채로 바다의 움직임과 빛을 표현합니다.'),
 ];
+export const BOARD=LEGACY_BOARD.flatMap((cell,index)=>{
+ if((index+1)%7!==0)return [cell];
+ const app=STREAMING_APPS[Math.floor(index/7)];
+ return [cell,{id:app.id,type:'streaming',era:app.era,title:'스트리밍 앱 점유',subtitle:app.name,price:STREAMING_RIGHTS_PRICE}];
+});
 export const WORKS = BOARD.filter(c=>c.type==='work');
 export const EVENTS = [
   {"id":"music-event-01","category":"수익·기회 카드","period":"수익·기회 카드","title":"영화 OST 선정!","text":"당신이 소유한 작품이 인기 영화의 OST로 선정되었습니다!","effect":"+200 MC","amount":200,"prompt":"음악이 영화 장면의 분위기와 감정을 어떻게 바꿀까요?"},

@@ -3,17 +3,17 @@ import assert from 'node:assert/strict';
 import * as G from '../src/engine.js';
 import {BOARD,CONCERT_SEATS} from '../src/data.js';
 import {activityChanges,ActivityInbox} from '../src/activities.js';
-const game=(names=['개최자','관객1','관객2','관객3'])=>{const s=G.createGame({names});s.players[0].position=13;return s;};
+const game=(names=['개최자','관객1','관객2','관객3'])=>{const s=G.createGame({names});s.players[0].position=15;return s;};
 test('concert tile draws each attendee tier once and transfers coins to host without minting money',()=>{
  const before=game(),draws=[0,.5,.999999];let calls=0;
  const after=G.roll(before,1,()=>draws[calls++]);
- assert.equal(BOARD[14].title,'음악회 개최');assert.equal(calls,3);assert.deepEqual(after.lastConcert.tickets.map(t=>t.seatId),['s','r','vip']);
+ assert.equal(BOARD[16].title,'음악회 개최');assert.equal(calls,3);assert.deepEqual(after.lastConcert.tickets.map(t=>t.seatId),['s','r','vip']);
  assert.deepEqual(after.players.map(p=>p.coins),[1500,1150,1100,1050]);assert.equal(after.lastConcert.total,300);
  assert.equal(after.players.reduce((sum,p)=>sum+p.coins,0),4800);assert.deepEqual(before.players.map(p=>p.coins),[1200,1200,1200,1200]);assert.ok(G.isValidSave(after));
 });
 test('each tier has its own price; grades may repeat and the host never pays',()=>{
  for(let i=0;i<CONCERT_SEATS.length;i++){
-  const s=game();s.turn=2;s.players[2].position=13;const after=G.roll(s,1,()=>(i+.1)/3);
+  const s=game();s.turn=2;s.players[2].position=15;const after=G.roll(s,1,()=>(i+.1)/3);
   assert.equal(after.lastConcert.hostId,2);assert.ok(after.lastConcert.tickets.every(t=>t.playerId!==2&&t.seatId===CONCERT_SEATS[i].id&&t.amount===CONCERT_SEATS[i].price));
   assert.equal(after.players[2].coins,1200+3*CONCERT_SEATS[i].price);assert.ok(G.isValidSave(after));
  }

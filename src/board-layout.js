@@ -1,5 +1,5 @@
 // The board uses only the perimeter of the square; corner cells are shared.
-export const BOARD_SIDE=8;
+export const BOARD_SIDE=9;
 export const BOARD_SPACES=4*(BOARD_SIDE-1);
 export function boardCoordinates(index){
  if(!Number.isInteger(index)||index<0||index>=BOARD_SPACES)throw Error('올바른 보드 칸 번호가 필요합니다.');

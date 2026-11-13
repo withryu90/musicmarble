@@ -8,7 +8,7 @@ const game=()=>G.createGame({names:['A','B'],rounds:4});
 test('buying a work never allows an immediate concert, but landing on it on a later turn does',()=>{
  let s=buyQualified(G.roll(game(),1));const bought=structuredClone(s);
  assert.equal(G.concertWork(s),null);assert.equal(G.canUpgrade(s,'bach-air'),false);assert.throws(()=>G.upgrade(s,'bach-air'));
- s=G.nextTurn(s);s=G.nextTurn(G.roll(s,1));s.players[0].position=27;s=G.roll(s,2);
+ s=G.nextTurn(s);s=G.nextTurn(G.roll(s,1));s.players[0].position=31;s=G.roll(s,2);
  assert.equal(G.concertWork(s).id,'bach-air');assert.equal(G.canUpgrade(s,'bach-air'),true);
  const before=s.players[0].coins;s=G.upgrade(s,'bach-air');assert.equal(s.players[0].coins,before-100);assert.equal(s.ownership['bach-air'].level,1);assert.equal(G.fee(s,WORKS.find(w=>w.id==='bach-air')),50);
  assert.throws(()=>G.upgrade(s,'bach-air'));assert.ok(G.isValidSave(s));assert.equal(bought.ownership['bach-air'].level,0);
@@ -26,7 +26,7 @@ test('acquiring a work after arrival does not create a concert opportunity',()=>
  s.ownership['bach-air'].player=0;assert.equal(G.concertWork(s),null);assert.throws(()=>G.upgrade(s,'bach-air'));
 });
 test('a backward move onto an already owned work offers only that work and bots follow the same condition',()=>{
- let s=game();s.players[0].isBot=true;s.players[0].position=6;s.ownership['vivaldi-spring']={player:0,level:0};s=G.roll(G.roll(s,1),3);
+ let s=game();s.players[0].isBot=true;s.players[0].position=7;s.ownership['vivaldi-spring']={player:0,level:0};s=G.roll(G.roll(s,1),4);
  assert.equal(s.lastBackwardMove.to,4);assert.equal(G.concertWork(s)?.id,'vivaldi-spring');
  assert.equal(botDecision(s,{},()=>.1).action,'upgrade');
  s.ownership['vivaldi-spring'].player=1;const decision=botDecision(s,{},()=>.1);assert.notEqual(decision.action,'upgrade');

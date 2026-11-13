@@ -278,8 +278,16 @@
 /* Screen-space diamond hit areas avoid browser 3D hit-testing gaps on tile faces. */
 .board-area.is-3d .board-label::before{content:"";position:absolute;left:0;top:0;width:calc(var(--label-width)*.92);height:calc(var(--label-height)*.92);transform:translate(-50%,-50%);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);pointer-events:auto;cursor:pointer}
 
-/* Every tile face stays shadow-free in both views, including active/hover states. */
-.board-area .board .cell{box-shadow:none}
+/* All tile faces share a flat edge: no bevel, raised hover or thick top border. */
+.board-area:is(.is-flat,.is-3d) .board>.cell{
+ border:0;box-shadow:none;transform:none;filter:none;transition:none;
+}
+.board-area:is(.is-flat,.is-3d) .board>.cell:hover,
+.board-area:is(.is-flat,.is-3d) .board>.cell:focus-visible{
+ transform:none;filter:none;
+}
+/* Remove the extruded rim beneath the tiles as well. */
+.board-area:is(.is-flat,.is-3d) .board-wrap{box-shadow:none;border:0}
 .board-area .cell .landmark,.board-area .cell .start-portal{filter:none}
 .board-area .cell .tile-copy,.board-area .cell .tile-copy>*,
 .board-area.is-3d .board-label .tile-copy,

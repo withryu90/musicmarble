@@ -1,28 +1,28 @@
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=67c5bf5689da';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=67c5bf5689da';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=67c5bf5689da';
-import {formatModalSentences} from './modal-sentences.js?v=67c5bf5689da';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=67c5bf5689da';
-import {WORK_ARTWORK} from './work-artwork.js?v=67c5bf5689da';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=67c5bf5689da';
-import {RankingClient} from './ranking.js?v=67c5bf5689da';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=67c5bf5689da';
-import {HandoffCountdown} from './handoff-countdown.js?v=67c5bf5689da';
-import {fitBoardTitles} from './board-type.js?v=67c5bf5689da';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=67c5bf5689da';
-import * as G from './engine.js?v=67c5bf5689da';
-import {ActivityInbox} from './activities.js?v=67c5bf5689da';
-import {purchaseQuizById} from './purchase-quizzes.js?v=67c5bf5689da';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=67c5bf5689da';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=67c5bf5689da';
-import {diceCube} from './dice.js?v=67c5bf5689da';
-import {CHARACTER_BIOS} from './character-bios.js?v=67c5bf5689da';
-import {needsLandscape} from './orientation.js?v=67c5bf5689da';
-import {createBgm} from './bgm.js?v=67c5bf5689da';
-import {PeerTransport} from './peer-transport.js?v=67c5bf5689da';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=67c5bf5689da';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=67c5bf5689da';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=67c5bf5689da';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=6c8b417e3ccc';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=6c8b417e3ccc';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=6c8b417e3ccc';
+import {formatModalSentences} from './modal-sentences.js?v=6c8b417e3ccc';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=6c8b417e3ccc';
+import {WORK_ARTWORK} from './work-artwork.js?v=6c8b417e3ccc';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=6c8b417e3ccc';
+import {RankingClient} from './ranking.js?v=6c8b417e3ccc';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=6c8b417e3ccc';
+import {HandoffCountdown} from './handoff-countdown.js?v=6c8b417e3ccc';
+import {fitBoardTitles} from './board-type.js?v=6c8b417e3ccc';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=6c8b417e3ccc';
+import * as G from './engine.js?v=6c8b417e3ccc';
+import {ActivityInbox} from './activities.js?v=6c8b417e3ccc';
+import {purchaseQuizById} from './purchase-quizzes.js?v=6c8b417e3ccc';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=6c8b417e3ccc';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=6c8b417e3ccc';
+import {diceCube} from './dice.js?v=6c8b417e3ccc';
+import {CHARACTER_BIOS} from './character-bios.js?v=6c8b417e3ccc';
+import {needsLandscape} from './orientation.js?v=6c8b417e3ccc';
+import {createBgm} from './bgm.js?v=6c8b417e3ccc';
+import {PeerTransport} from './peer-transport.js?v=6c8b417e3ccc';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=6c8b417e3ccc';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=6c8b417e3ccc';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=6c8b417e3ccc';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -511,7 +511,7 @@ let modalFitFrame;
 new MutationObserver(()=>{cancelAnimationFrame(modalFitFrame);modalFitFrame=requestAnimationFrame(()=>{formatModalSentences($('#modal'));fitViewportDialog(document);});}).observe($('#modal'),{childList:true,subtree:true,characterData:true});
 function showModal(title,body,cls=''){
  handoffCountdown.stop();
- const hideResultTitle=cls.includes('quiz-result-notice');
+ const hideResultTitle=cls.includes('quiz-result-notice')||cls.includes('leave-confirm-modal');
  const d=$('#modal');
  if(hideResultTitle){d.removeAttribute('aria-labelledby');d.setAttribute('aria-label',title);}else{d.setAttribute('aria-labelledby','modal-title');d.removeAttribute('aria-label');}
  d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="m3.5 3.5 17 17m0-17-17 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>${hideResultTitle?'':`<h2 id="modal-title">${title}</h2>`}<div class="modal-body">${body}</div>`;
@@ -639,7 +639,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='results')results();
  if(a==='export')exportResults();
  if(a==='copy-code'){try{await navigator.clipboard.writeText(session.code);notify('공유 코드를 복사했어요. 사이트 주소도 함께 보내 주세요.');}catch{notify(`공유 코드: ${session.code}`);}}
- if(a==='leave-confirm')showModal('이 화면에서 나갈까요?',`<p>참가 정보는 이 브라우저에 남습니다. 같은 브라우저에서 「이전 게임 이어하기」를 누르면 돌아올 수 있어요. 방의 참가 슬롯은 유지됩니다.</p><button class="primary full" data-action="leave">첫 화면으로 이동</button><button class="text-button" data-action="close">돌아가기</button>`);
+ if(a==='leave-confirm')showModal('이 화면에서 나갈까요?',`<p>같은 브라우저에서 「이전 게임 이어하기」를 누르면 돌아올 수 있어요.</p><button class="primary full" data-action="leave">첫 화면으로 이동</button><button class="text-button" data-action="close">돌아가기</button>`,'leave-confirm-modal');
  if(a==='resume'){try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}await resume();}
  if(a==='leave'){events?.close();connected=false;snapshot=null;session=null;resetActivityFlow();$('#modal').close();render();}
 

@@ -30,11 +30,11 @@ export const BOARD = [
   w('brahms-hungarian-5','브람스','헝가리 무곡 제5번','1869 출판','romantic',280,55,'춤의 활력과 빠르기·셈여림의 변화를 느낄 수 있는 음악입니다.'),
   {id:'go-to-prison',type:'go-to-prison',title:'감옥으로 가기',subtitle:'불법 스트리밍 감옥행'},
   w('debussy-moon','드뷔시','달빛','1905 출판','modern',280,55,'베르가마스크 모음곡의 한 곡. 화성과 음색이 만드는 분위기에 귀 기울여 보세요.'),
-  w('debussy-sea','드뷔시','바다','1905 초연','modern',300,60,'관현악의 다채로운 색채로 바다의 움직임과 빛을 표현합니다.'),
+  w('ravel-bolero','라벨','볼레로','1928','modern',340,70,'반복되는 리듬과 선율 위에 악기의 음색이 더해지며 점점 강해지는 관현악곡입니다.'),
   {id:'copyright-transfer',type:'transfer',title:'저작권 양도',subtitle:'최고가 작품 양도'},
   w('stravinsky-firebird','스트라빈스키','불새','1910 초연','modern',320,65,'러시아 설화를 바탕으로 한 발레 음악. 풍부한 관현악 음색이 특징입니다.'),
   w('stravinsky-spring','스트라빈스키','봄의 제전','1913 초연','modern',340,70,'불규칙한 강세와 강렬한 리듬으로 새로운 음악의 가능성을 보여 주었습니다.'),
-  w('ravel-bolero','라벨','볼레로','1928','modern',340,70,'반복되는 리듬과 선율 위에 악기의 음색이 더해지며 점점 강해지는 관현악곡입니다.'),
+  w('debussy-sea','드뷔시','바다','1905 초연','modern',300,60,'관현악의 다채로운 색채로 바다의 움직임과 빛을 표현합니다.'),
 ];
 export const WORKS = BOARD.filter(c=>c.type==='work');
 export const EVENTS = [

@@ -189,3 +189,14 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 .game-shell .header-actions .header-control-icon{display:block;width:18px;height:18px;flex:0 0 18px;margin:0;pointer-events:none}
 .game-shell .header-actions .settings-button span{margin:0}
 .game-shell[data-tab="board"] .header-actions :is(.fullscreen-button,.settings-button){width:30px;min-width:30px;height:30px;min-height:30px;padding:0;gap:0}
+
+/* Muted yellow chat palette shared by desktop and mobile. */
+.game-shell .room-chat{background:#e7d8a6;color:#493f29}
+.game-shell .room-chat .chat-compose input{background:#f0e5bf;border-color:#b7a368;color:#493f29;box-shadow:none}
+.game-shell .room-chat .chat-compose input::placeholder{color:#766744;opacity:1}
+.game-shell .room-chat .chat-compose .primary{background:#bda35a;border-color:#a48a44;border-bottom-color:#897037;color:#30270f;box-shadow:0 2px 0 #897037}
+.game-shell .room-chat .chat-compose .primary:hover{background:#b39a50}
+.game-shell .room-chat .chat-message>strong{color:#665020}
+.game-shell .room-chat .chat-message time,.game-shell .room-chat .chat-empty{color:#7b6b44}
+.game-shell .room-chat .chat-message p{color:#493f29}
+.game-shell .room-chat input:focus-visible{outline-color:#8b702b}

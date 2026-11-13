@@ -1,30 +1,30 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=48b86500ac01';
-import {createMusicDirector} from './music-director.js?v=48b86500ac01';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=48b86500ac01';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=48b86500ac01';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=48b86500ac01';
-import {formatModalSentences} from './modal-sentences.js?v=48b86500ac01';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=48b86500ac01';
-import {WORK_ARTWORK} from './work-artwork.js?v=48b86500ac01';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=48b86500ac01';
-import {RankingClient} from './ranking.js?v=48b86500ac01';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=48b86500ac01';
-import {HandoffCountdown} from './handoff-countdown.js?v=48b86500ac01';
-import {fitBoardTitles} from './board-type.js?v=48b86500ac01';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=48b86500ac01';
-import * as G from './engine.js?v=48b86500ac01';
-import {ActivityInbox} from './activities.js?v=48b86500ac01';
-import {purchaseQuizById} from './purchase-quizzes.js?v=48b86500ac01';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=48b86500ac01';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=48b86500ac01';
-import {diceCube} from './dice.js?v=48b86500ac01';
-import {CHARACTER_BIOS} from './character-bios.js?v=48b86500ac01';
-import {needsLandscape} from './orientation.js?v=48b86500ac01';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=48b86500ac01';
-import {PeerTransport} from './peer-transport.js?v=48b86500ac01';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=48b86500ac01';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=48b86500ac01';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=48b86500ac01';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=d0b88e1d226e';
+import {createMusicDirector} from './music-director.js?v=d0b88e1d226e';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=d0b88e1d226e';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=d0b88e1d226e';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=d0b88e1d226e';
+import {formatModalSentences} from './modal-sentences.js?v=d0b88e1d226e';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=d0b88e1d226e';
+import {WORK_ARTWORK} from './work-artwork.js?v=d0b88e1d226e';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=d0b88e1d226e';
+import {RankingClient} from './ranking.js?v=d0b88e1d226e';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=d0b88e1d226e';
+import {HandoffCountdown} from './handoff-countdown.js?v=d0b88e1d226e';
+import {fitBoardTitles} from './board-type.js?v=d0b88e1d226e';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=d0b88e1d226e';
+import * as G from './engine.js?v=d0b88e1d226e';
+import {ActivityInbox} from './activities.js?v=d0b88e1d226e';
+import {purchaseQuizById} from './purchase-quizzes.js?v=d0b88e1d226e';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=d0b88e1d226e';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=d0b88e1d226e';
+import {diceCube} from './dice.js?v=d0b88e1d226e';
+import {CHARACTER_BIOS} from './character-bios.js?v=d0b88e1d226e';
+import {needsLandscape} from './orientation.js?v=d0b88e1d226e';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=d0b88e1d226e';
+import {PeerTransport} from './peer-transport.js?v=d0b88e1d226e';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=d0b88e1d226e';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=d0b88e1d226e';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=d0b88e1d226e';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -193,7 +193,9 @@ function continueFlow(){
  while(deferredSnapshots.length&&deferredSnapshots[0].revision<=snapshot.revision)deferredSnapshots.shift();
  if(deferredSnapshots.length){receive(deferredSnapshots.shift());return;}
  const arrival=BOARD[G.current(state).position],purchaseKey=`${session?.code}:${state.turnNumber}:${state.turn}:${arrival.id}`;
- if(myTurn()&&state.phase==='action'&&!state.trade&&arrival.type==='work'&&!state.ownership[arrival.id]&&!state.purchaseChallenge&&G.current(state).coins>=arrival.price&&autoPurchaseKey!==purchaseKey){autoPurchaseKey=purchaseKey;void apply(G.startPurchaseQuiz);return;}
+ const streamKey=`${session?.code}:${state.turnNumber}:${state.turn}`;
+ if(myTurn()&&G.streamingOpportunity(state)&&!d.open&&lastStreamingPrompt!==streamKey){lastStreamingPrompt=streamKey;streamingModal();return;}
+ if(myTurn()&&state.phase==='action'&&!state.trade&&arrival.type==='work'&&!G.streamingOpportunity(state)&&!state.ownership[arrival.id]&&!state.purchaseChallenge&&G.current(state).coins>=arrival.price&&autoPurchaseKey!==purchaseKey){autoPurchaseKey=purchaseKey;void apply(G.startPurchaseQuiz);return;}
  if(auto!==lastAuto){lastAuto=auto;
   if(state.trade)tradeModal();
   else if(state.phase==='backward-roll'&&myTurn())backwardRollModal();
@@ -201,8 +203,6 @@ function continueFlow(){
   else if(['quiz','feedback'].includes(state.phase)&&myTurn())quizModal();
   else if(state.phase==='finished')results();
  }
- const streamKey=`${session?.code}:${state.turnNumber}:${state.turn}`;
- if(myTurn()&&G.streamingOpportunity(state)&&!d.open&&lastStreamingPrompt!==streamKey){lastStreamingPrompt=streamKey;streamingModal();return;}
  const handoffKey=`${session?.code}:${state.turnNumber}:${state.turn}:${snapshot.revision}`;
  if(myTurn()&&canOfferTurnHandoff(state,session.playerId)&&!d.open&&lastHandoffKey!==handoffKey){lastHandoffKey=handoffKey;turnHandoffModal();}
 }
@@ -211,10 +211,10 @@ function streamingModal(appId){
  const p=G.current(state),cell=BOARD[p.position],app=streamingApp(appId||(cell.type==='streaming'?cell.id:null));
  if(app){
   const ownerId=state.platformOwners?.[app.id],owner=state.players[ownerId],canBuy=myTurn()&&cell.id===app.id&&G.canBuyPlatform(state);
-  showModal(`${app.name} 점유`,`<div class="streaming-modal-hero">${streamingIcon(app.id)}<h3>${app.name}</h3><strong>${STREAMING_RIGHTS_PRICE} MC</strong></div><p class="streaming-rule">${owner?`${esc(owner.name)} 님이 점유권을 소유하고 있어요.`:'이 앱의 게임 속 점유권을 구입할 수 있어요.'}</p><div class="notice"><p>점유권을 가진 뒤 내 작품 또는 다른 참가자가 보유한 작품 칸에 도착하면, ${STREAMING_INSTALL_PRICE} MC로 자동 스트리밍을 설치할 수 있어요.</p><p>설치한 다음 방문부터 누구든 그 칸에 도착하면 은행이 설치자에게 ${STREAMING_REVENUE} MC를 지급합니다. 작품 이용료와는 별개예요.</p></div>${canBuy?`<button class="primary full" data-action="streaming-buy">${STREAMING_RIGHTS_PRICE} MC로 점유권 구입하기</button><button class="secondary full" data-action="streaming-skip">이번에는 구입하지 않기</button>`:`<button class="primary full" data-action="close">확인</button>`}`,'streaming-modal');
+  showModal(`${app.name} 점유`,`<div class="streaming-modal-hero">${streamingIcon(app.id)}<h3>${app.name}</h3><strong>${STREAMING_RIGHTS_PRICE} MC</strong></div><p class="streaming-rule">${owner?`${esc(owner.name)} 님이 점유권을 소유하고 있어요.`:'이 앱의 게임 속 점유권을 구입할 수 있어요.'}</p><div class="notice"><p>점유권을 가진 뒤 작품의 소유 여부와 관계없이 어떤 작품 칸이든 도착하면, ${STREAMING_INSTALL_PRICE} MC로 자동 스트리밍을 설치할 수 있어요.</p><p>설치한 다음 방문부터 도착한 참가자가 설치자에게 ${STREAMING_REVENUE} MC를 지급합니다. 작품 소유주도 지불하며, 설치자 본인은 추가 비용이 없어요. 작품 이용료와는 별개예요.</p></div>${canBuy?`<button class="primary full" data-action="streaming-buy">${STREAMING_RIGHTS_PRICE} MC로 점유권 구입하기</button><button class="secondary full" data-action="streaming-skip">이번에는 구입하지 않기</button>`:`<button class="primary full" data-action="close">확인</button>`}`,'streaming-modal');
  }else{
   const options=myTurn()?G.streamingOptions(state):[];
-  showModal('자동 스트리밍 설치',`<div class="notice"><h3>${esc(cell.composer||'')} · ${esc(cell.title)}</h3><p>설치비 ${STREAMING_INSTALL_PRICE} MC · 앱별 작품당 1회</p><p>이후 누구든 도착하면 은행에서 설치자에게 ${STREAMING_REVENUE} MC가 지급됩니다. 작품 소유자는 바뀌지 않아요.</p></div><div class="streaming-options">${options.map(app=>`<button class="streaming-option" data-action="streaming-install" data-app="${app.id}">${streamingIcon(app.id)}<span><strong>${app.name}</strong><small>${STREAMING_INSTALL_PRICE} MC로 설치</small></span><b>＋</b></button>`).join('')}</div>${options.length?'<button class="secondary full" data-action="streaming-skip">이번에는 설치하지 않기</button>':'<p class="muted">도착한 보유 작품 칸에서 내 앱의 점유권과 50 MC가 있어야 설치할 수 있어요.</p><button class="primary full" data-action="close">확인</button>'}`,'streaming-modal');
+  showModal('자동 스트리밍 설치',`<div class="notice"><h3>${esc(cell.composer||'')} · ${esc(cell.title)}</h3><p>설치비 ${STREAMING_INSTALL_PRICE} MC · 앱별 작품당 1회</p><p>이후 방문자가 설치자에게 ${STREAMING_REVENUE} MC를 지급합니다. 작품 소유주도 지불하며, 설치자 본인은 추가 비용이 없어요. 작품 소유자는 바뀌지 않아요.</p></div><div class="streaming-options">${options.map(app=>`<button class="streaming-option" data-action="streaming-install" data-app="${app.id}">${streamingIcon(app.id)}<span><strong>${app.name}</strong><small>${STREAMING_INSTALL_PRICE} MC로 설치</small></span><b>＋</b></button>`).join('')}</div>${options.length?'<button class="secondary full" data-action="streaming-skip">이번에는 설치하지 않기</button>':'<p class="muted">도착한 작품 칸에서 내 앱의 점유권과 50 MC가 있어야 설치할 수 있어요.</p><button class="primary full" data-action="close">확인</button>'}`,'streaming-modal');
  }
  $('#modal').dataset.auto='true';
 }
@@ -590,7 +590,7 @@ function soloSetup(){
  const nickname=$('#entry-form input[name="nickname"]')?.value||'';
  showModal('봇 친구들과 음악 여행을 떠나요',`<p class="muted">나와 랜덤한 닉네임의 봇들이 함께 플레이해요. 나의 캐릭터를 직접 고르거나 랜덤으로 정하세요. 봇은 나와 겹치지 않게 배정됩니다. 봇은 주사위, 작품 구입, 공연 기획, 퀴즈를 자동으로 진행하고 거래 제안에도 응답해요.</p><form id="solo-form"><label>나의 닉네임<input name="nickname" required maxlength="16" autocomplete="nickname" placeholder="예: 선율 탐험가" value="${esc(nickname)}" /></label>${characterPicker($('#entry-form select[name="characterId"]')?.value||'')}<div class="form-row"><label>함께할 봇 수<select name="bots"><option value="1">봇 1명 · 총 2명</option><option value="2">봇 2명 · 총 3명</option><option value="3" selected>봇 3명 · 총 4명</option></select></label><label>게임 길이<select name="rounds"><option value="4">4라운드 · 모두 4바퀴</option><option value="8" selected>8라운드 · 모두 8바퀴</option><option value="12">12라운드 · 모두 12바퀴</option></select></label></div><div class="notice">모두 1,200 MC로 시작해요. 봇도 같은 규칙을 적용받으며, 퀴즈를 틀리거나 거래를 거절할 수 있어요. 화면을 나가면 봇은 기다리고, 「이전 게임 이어하기」로 돌아오면 계속합니다.</div><button type="submit" class="primary full">봇과 게임 시작 →</button></form>`,'entrance-help');
 }
-function help(){showModal('한 차례에 하나씩, 음악을 만나요',`<ol class="guide"><li><b>주사위를 굴리고 이동해요.</b><p>시계 방향으로 음악사를 여행해요. 한 바퀴를 돌면 200 MC를 받습니다.</p></li><li><b>작품의 가상 이용권을 선택해요.</b><p>구입 가능한 빈 작품에 도착하면 이동을 마친 뒤 OX 퀴즈가 자동으로 열려요. 정답이면 뮤직코인을 내고 이용권을 구입한 뒤 자동으로 다음 참가자에게 차례를 넘기고, 오답이면 코인 차감 없이 해설 확인 후 다음 참가자의 차례로 넘어가요. 다른 팀의 작품에 도착하면 가상 이용료를 자동 지급합니다. 작품 칸의 작은 점은 소유 팀 색입니다.</p></li><li><b>불법 스트리밍 감옥에서는 6으로 탈출해요.</b><p>출발점 기준 두 번째 사건 칸은 감옥입니다. 도착 후 다음 두 번의 자기 차례에 탈출 주사위를 굴립니다. 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 그 두 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다. 코인이나 보유 작품은 차감되지 않습니다. 「감옥으로 가기」 칸도 감옥으로 즉시 이동시켜 같은 규칙을 적용합니다. 게임용 가상 규칙입니다.</p></li><li><b>구입 전 OX 퀴즈를 풀어요.</b><p>빈 작품 칸에서 한 번 도전할 수 있어요. 정답이면 뮤직코인을 내고 이용권을 구입할 수 있고, 오답이면 코인 차감 없이 해설을 확인하고 다음 참가자에게 차례를 넘겨요. 구입 OX에는 별도 코인·배움 점수 보상이 없어요.</p></li><li><b>사건을 경험하고 퀴즈에 도전해요.</b><p>퀴즈 칸은 필수, 다른 칸에서는 차례당 1회 선택 도전해요. 정답은 80 MC, 오답에는 감점이 없습니다. 「저작권 양도」 칸에서는 최고 구입가 작품 한 개를 무작위로 정한 다른 참가자에게 넘깁니다. 보유 작품이 없으면 통과하며, 코인은 변하지 않습니다.</p></li><li><b>스트리밍 앱에 투자해요.</b><p>각 시대의 스트리밍 앱 칸에서 200 MC로 점유권을 구입할 수 있어요. 이후 내 작품이나 다른 참가자의 보유 작품 칸에 도착하면 50 MC로 내 앱의 자동 스트리밍을 설치할 수 있습니다. 한 번 방문할 때 앱 하나를 선택하며, 앱별 작품당 한 번 설치할 수 있어요. 설치한 다음 방문부터 누구든 그 칸에 도착하면 은행이 설치자에게 30 MC를 지급합니다. 작품 이용료와는 별개이며, 설치 상태는 작품 거래·양도 후에도 유지됩니다.</p></li><li><b>음악회를 개최해요.</b><p>「음악회 개최」 칸에 도착한 참가자가 개최자가 됩니다. 다른 참가자마다 S석 50 MC·R석 100 MC·VIP석 150 MC 중 하나를 무작위로 배정하고 티켓비를 개최자에게 지급합니다. 같은 등급이 여러 명에게 배정될 수 있어요. 잔액이 부족하면 보유 코인만 지급하며, 2인 게임의 파산 규칙도 적용됩니다.</p></li><li><b>컬렉션과 공연을 기획해요.</b><p>같은 작곡가 2곡이면 이용료 ×1.5, 같은 시대 4곡이면 ×2로 적용해요. 중복 적용하지 않습니다. 구입한 내 작품 칸에 다시 도착했을 때만 100 MC로 공연을 기획할 수 있어요(기본 이용료 +20, 작품당 1회). 작품을 구입한 차례에는 기획할 수 없어요. 내 작품을 눌러 거래 제안이나 은행 반납(투자액 50%)을 할 수 있어요.</p></li><li><b>다음 팀에 차례를 넘겨요.</b><p>각 참가자가 출발점을 통과하거나 도착할 때마다 자신의 완주 횟수가 1바퀴 늘어납니다. 플레이어 중 누구든 설정한 4·8·12바퀴를 가장 먼저 완주하면 시대의 문에서 즉시 게임을 종료하고 최종 점수를 기록합니다. 마지막 이동에서 남은 주사위 칸은 이동하지 않으며 추가 구입·퀴즈·이벤트는 진행하지 않습니다. 교사는 수업 설정에서 일찍 마칠 수 있어요.</p></li></ol><div class="notice">2인 플레이에서는 한 명의 보유 코인이 0 MC가 되면 파산으로 즉시 게임을 종료합니다. 3–4인 플레이에서는 파산과 탈락 없이 잔액 한도에서 비용을 지급하고 부족액을 면제합니다. 거래는 제안을 받은 참가자가 자신의 화면에서 수락해야 완료됩니다.</div><p class="muted">혼자 플레이하려면 첫 화면의 「봇과 혼자 플레이하기」에서 봇 수를 선택하세요. 봇은 자동으로 자기 차례를 진행합니다.</p><p class="muted">공유 코드마다 별도의 방이 만들어집니다. 방마다 최대 4명이 참여하며 여러 방이 동시에 진행됩니다. 게임은 방장 브라우저에서 진행됩니다. 방장은 화면을 열어 두세요. 방장이 나가면 연결이 끊깁니다.</p><button class="primary full" data-action="close">여행으로 돌아가기 →</button>`,snapshot?.state?'':'entrance-help');}
+function help(){showModal('한 차례에 하나씩, 음악을 만나요',`<ol class="guide"><li><b>주사위를 굴리고 이동해요.</b><p>시계 방향으로 음악사를 여행해요. 한 바퀴를 돌면 200 MC를 받습니다.</p></li><li><b>작품의 가상 이용권을 선택해요.</b><p>구입 가능한 빈 작품에 도착하면 이동을 마친 뒤 OX 퀴즈가 자동으로 열려요. 정답이면 뮤직코인을 내고 이용권을 구입한 뒤 자동으로 다음 참가자에게 차례를 넘기고, 오답이면 코인 차감 없이 해설 확인 후 다음 참가자의 차례로 넘어가요. 다른 팀의 작품에 도착하면 가상 이용료를 자동 지급합니다. 작품 칸의 작은 점은 소유 팀 색입니다.</p></li><li><b>불법 스트리밍 감옥에서는 6으로 탈출해요.</b><p>출발점 기준 두 번째 사건 칸은 감옥입니다. 도착 후 다음 두 번의 자기 차례에 탈출 주사위를 굴립니다. 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 그 두 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다. 코인이나 보유 작품은 차감되지 않습니다. 「감옥으로 가기」 칸도 감옥으로 즉시 이동시켜 같은 규칙을 적용합니다. 게임용 가상 규칙입니다.</p></li><li><b>구입 전 OX 퀴즈를 풀어요.</b><p>빈 작품 칸에서 한 번 도전할 수 있어요. 정답이면 뮤직코인을 내고 이용권을 구입할 수 있고, 오답이면 코인 차감 없이 해설을 확인하고 다음 참가자에게 차례를 넘겨요. 구입 OX에는 별도 코인·배움 점수 보상이 없어요.</p></li><li><b>사건을 경험하고 퀴즈에 도전해요.</b><p>저작권·창작자의 권리에 관한 배움퀴즈는 퀴즈 칸에서 필수, 다른 칸에서는 차례당 1회 선택 도전해요. 정답은 80 MC, 오답에는 감점이 없습니다. 「저작권 양도」 칸에서는 최고 구입가 작품 한 개를 무작위로 정한 다른 참가자에게 넘깁니다. 보유 작품이 없으면 통과하며, 코인은 변하지 않습니다.</p></li><li><b>스트리밍 앱에 투자해요.</b><p>각 시대의 스트리밍 앱 칸에서 200 MC로 점유권을 구입할 수 있어요. 이후 소유 여부와 관계없이 어떤 작품 칸이든 도착하면 50 MC로 내 앱의 자동 스트리밍을 설치할 수 있습니다. 한 번 방문할 때 앱 하나를 선택하며, 앱별 작품당 한 번 설치할 수 있어요. 설치한 다음 방문부터 방문자가 설치자에게 30 MC를 지급합니다. 작품 소유주도 지불하지만 설치자 본인은 추가 비용이 없습니다. 작품 이용료와는 별개이며, 설치 상태는 작품 거래·양도 후에도 유지됩니다.</p></li><li><b>음악회를 개최해요.</b><p>「음악회 개최」 칸에 도착한 참가자가 개최자가 됩니다. 다른 참가자마다 S석 50 MC·R석 100 MC·VIP석 150 MC 중 하나를 무작위로 배정하고 티켓비를 개최자에게 지급합니다. 같은 등급이 여러 명에게 배정될 수 있어요. 잔액이 부족하면 보유 코인만 지급하며, 2인 게임의 파산 규칙도 적용됩니다.</p></li><li><b>컬렉션과 공연을 기획해요.</b><p>같은 작곡가 2곡이면 이용료 ×1.5, 같은 시대 4곡이면 ×2로 적용해요. 중복 적용하지 않습니다. 구입한 내 작품 칸에 다시 도착했을 때만 100 MC로 공연을 기획할 수 있어요(기본 이용료 +20, 작품당 1회). 작품을 구입한 차례에는 기획할 수 없어요. 내 작품을 눌러 거래 제안이나 은행 반납(투자액 50%)을 할 수 있어요.</p></li><li><b>다음 팀에 차례를 넘겨요.</b><p>각 참가자가 출발점을 통과하거나 도착할 때마다 자신의 완주 횟수가 1바퀴 늘어납니다. 플레이어 중 누구든 설정한 4·8·12바퀴를 가장 먼저 완주하면 시대의 문에서 즉시 게임을 종료하고 최종 점수를 기록합니다. 마지막 이동에서 남은 주사위 칸은 이동하지 않으며 추가 구입·퀴즈·이벤트는 진행하지 않습니다. 교사는 수업 설정에서 일찍 마칠 수 있어요.</p></li></ol><div class="notice">2인 플레이에서는 한 명의 보유 코인이 0 MC가 되면 파산으로 즉시 게임을 종료합니다. 3–4인 플레이에서는 파산과 탈락 없이 잔액 한도에서 비용을 지급하고 부족액을 면제합니다. 거래는 제안을 받은 참가자가 자신의 화면에서 수락해야 완료됩니다.</div><p class="muted">혼자 플레이하려면 첫 화면의 「봇과 혼자 플레이하기」에서 봇 수를 선택하세요. 봇은 자동으로 자기 차례를 진행합니다.</p><p class="muted">공유 코드마다 별도의 방이 만들어집니다. 방마다 최대 4명이 참여하며 여러 방이 동시에 진행됩니다. 게임은 방장 브라우저에서 진행됩니다. 방장은 화면을 열어 두세요. 방장이 나가면 연결이 끊깁니다.</p><button class="primary full" data-action="close">여행으로 돌아가기 →</button>`,snapshot?.state?'':'entrance-help');}
 $('#app').addEventListener('click',handleClick);$('#modal').addEventListener('click',handleClick);
 $('#modal').addEventListener('close',()=>continueFlow());
 $('#modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
@@ -638,7 +638,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='character-bio')characterBio(el.dataset.id);
  if(a==='redraw-character')await redrawCharacter();
  if(a==='settings')settingsModal();
- if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else if(c.type==='streaming')streamingModal(c.id);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.','back-three':'주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다. 이동을 마친 칸의 작품 구입·가상 이용료·음악사 사건 규칙이 적용됩니다.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 음악사·저작권 퀴즈를 풀어요. 정답은 80 MC!',concert:'도착한 참가자가 음악회를 개최합니다. 다른 참가자마다 S석 50 MC·R석 100 MC·VIP석 150 MC 중 하나를 무작위로 배정하고 티켓비를 개최자에게 지급합니다. 같은 등급이 여러 명에게 배정될 수 있으며, 잔액이 부족하면 보유 코인만 지불합니다.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',prison:PRISON_MESSAGE,'go-to-prison':'이 칸에 도착하면 불법 스트리밍 감옥으로 즉시 이동합니다. 다음 두 번의 자기 차례에 주사위를 굴려 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 다음 자기 차례부터 정상 이동합니다. 감옥으로 이동하는 동안 출발 보너스나 중간 칸의 효과는 발생하지 않습니다.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
+ if(a==='cell'){const c=BOARD[Number(el.dataset.index)];if(c.type==='work')workModal(c);else if(c.type==='streaming')streamingModal(c.id);else showModal(esc(c.title),`<div class="special-info"><span>${icon(c.type)}</span><p>${{start:'출발점입니다. 이 칸을 통과하거나 도착하면 200 MC를 받아요.','back-three':'주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다. 이동을 마친 칸의 작품 구입·가상 이용료·음악사 사건 규칙이 적용됩니다.',event:'도착하면 음악사 사건 카드가 열려요. 역사적 맥락을 읽고, 게임 속 코인 변화를 경험하세요. 코인 효과는 수업용 가상 설정입니다.',quiz:'도착하면 저작권·창작자의 권리 퀴즈를 풀어요. 정답은 80 MC!',concert:'도착한 참가자가 음악회를 개최합니다. 다른 참가자마다 S석 50 MC·R석 100 MC·VIP석 150 MC 중 하나를 무작위로 배정하고 티켓비를 개최자에게 지급합니다. 같은 등급이 여러 명에게 배정될 수 있으며, 잔액이 부족하면 보유 코인만 지불합니다.',copyright:'작품과 음원의 권리를 구별하는 저작권 퀴즈를 풀어요.',prison:PRISON_MESSAGE,'go-to-prison':'이 칸에 도착하면 불법 스트리밍 감옥으로 즉시 이동합니다. 다음 두 번의 자기 차례에 주사위를 굴려 6이 나오면 즉시 탈출해 6칸 이동합니다. 두 번 모두 실패하면 다음 자기 차례부터 정상 이동합니다. 감옥으로 이동하는 동안 출발 보너스나 중간 칸의 효과는 발생하지 않습니다.',transfer:'보유한 작품 중 구입가가 가장 높은 작품 한 개를 다른 참가자에게 무상 양도합니다. 받는 사람은 무작위로 정하고, 최고가 작품이 여러 개면 그중 한 개를 무작위로 고릅니다. 보유 작품이 없으면 그냥 통과합니다. 공연 기획 상태도 함께 이전되며 코인 지급은 없습니다. 게임 속 가상 권리에만 적용됩니다.'}[c.type]}</p></div><button class="primary full" data-action="close">확인</button>`);}
  if(a==='work')workModal(work(el.dataset.id));
  if(a==='roll'||a==='roll-backward'){
   if(!myTurn()||!['roll','backward-roll'].includes(state.phase))return;

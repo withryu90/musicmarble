@@ -1,4 +1,4 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=48b86500ac01';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=d0b88e1d226e';
 export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 두 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 두 번 모두 6이 나오지 않으면 그 두 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
@@ -70,26 +70,6 @@ export const EVENTS = [
   {"id":"music-event-24","category":"음악사·산업 변화 카드","period":"음악사·산업 변화 카드","title":"음악 출판 계약!","text":"음악 출판사와 유리한 계약을 체결하여 악보 판매 수익을 얻었습니다!","effect":"+100 MC","amount":100,"prompt":"음악 출판사는 작품이 연주자에게 전달되는 과정에서 어떤 역할을 할까요?"},
 ];
 export const QUIZZES = [
-  {id:'q1',kind:'history',question:'바로크 시대에 주로 활동한 작곡가 둘은 누구일까요?',options:['바흐와 비발디','쇼팽과 슈베르트','드뷔시와 스트라빈스키'],answer:0,explanation:'바흐와 비발디는 바로크 시대를 대표합니다. 시대 구분은 흐름을 이해하는 도구이며 경계는 겹칠 수 있습니다.'},
-  {id:'q2',kind:'history',question:'베토벤 교향곡 제9번의 마지막 악장에 더해진 것은?',options:['전자 악기','독창과 합창','영화 화면'],answer:1,explanation:'베토벤은 교향곡에 사람의 목소리를 더했습니다. 악기와 목소리의 결합이 표현을 넓힙니다.'},
-  {id:'q3',kind:'history',question:'「마왕」에서 피아노 반주는 어떤 역할을 할까요?',options:['노래와 상관없는 배경','노래를 대신하는 장식','장면의 긴장과 움직임 표현'],answer:2,explanation:'빠르게 반복되는 반주는 말의 질주와 긴장을 떠올리게 합니다. 가곡에서 시, 노래, 피아노는 함께 이야기를 만듭니다.'},
-  {id:'q4',kind:'history',question:'「봄의 제전」의 특징으로 알맞은 것은?',options:['불규칙한 강세와 강렬한 리듬','언제나 같은 박자의 조용한 반주','바로크 시대의 전형적 모음곡'],answer:0,explanation:'스트라빈스키는 강세와 리듬을 대담하게 다뤘습니다. 낯설게 들린 음악이 훗날 중요한 작품으로 평가되기도 합니다.'},
-  {id:'q9',kind:'history',question:'쇼팽의 「영웅 폴로네즈」와 관련 있는 것은?',options:['그레고리오 성가','전자음악','폴란드 춤 리듬'],answer:2,explanation:'폴로네즈는 폴란드의 춤에서 비롯된 형식입니다. 쇼팽은 피아노로 그 리듬과 성격을 표현했습니다.'},
-  {"id":"q11","kind":"history","era":"baroque","question":"바로크 음악의 통주저음은 주로 어떤 역할을 할까요?","options":["곡의 빠르기를 혼자 결정한다","저음 선율과 화음으로 음악을 받쳐 준다","연주자에게 대사를 알려 준다"],"answer":1,"explanation":"통주저음은 저음 선율을 바탕으로 화음을 채워 음악을 지탱하는 반주 방식입니다. 하프시코드 같은 화음 악기와 첼로 같은 저음 악기가 함께 맡기도 합니다."},
-  {"id":"q12","kind":"history","era":"baroque","question":"하프시코드는 현을 어떻게 울리는 건반악기일까요?","options":["현을 뜯어서 소리 낸다","활로 현을 문질러 소리 낸다","현에 입김을 불어 소리 낸다"],"answer":0,"explanation":"하프시코드는 건반을 누르면 장치가 현을 뜯어 소리를 냅니다. 현을 해머로 치는 피아노와 소리 내는 원리가 다릅니다."},
-  {"id":"q13","kind":"history","era":"baroque","question":"비발디의 「사계」는 무엇을 묘사한 네 곡의 바이올린 협주곡일까요?","options":["네 개의 도시","네 가지 악기 제작법","봄·여름·가을·겨울"],"answer":2,"explanation":"「사계」는 네 계절을 주제로 한 바이올린 협주곡입니다. 새소리, 폭풍, 추위 같은 모습을 음악으로 떠올리게 합니다."},
-  {"id":"q14","kind":"history","era":"baroque","question":"바로크 시대의 합주 협주곡에서 자주 대비되는 두 집단은?","options":["가수와 무용수","소규모 독주자 집단과 큰 합주 집단","지휘자와 관객"],"answer":1,"explanation":"합주 협주곡인 콘체르토 그로소에서는 소규모 독주자 집단과 더 큰 합주 집단이 주고받으며 음색과 규모의 대비를 만듭니다."},
-  {"id":"q15","kind":"history","era":"baroque","question":"바흐의 푸가에서 주제가 여러 성부에 차례로 나타나는 방식은?","options":["주제를 한 번만 연주하고 끝낸다","다른 성부는 모두 연주를 멈춘다","여러 성부가 주제를 모방하며 이어 간다"],"answer":2,"explanation":"푸가는 하나의 주제가 여러 성부에서 모방되어 나타나는 대위적 음악입니다. 각 성부의 선율이 서로 어우러지는 모습을 들을 수 있습니다."},
-  {"id":"q16","kind":"history","era":"classical","question":"고전 시대 음악에서 두드러지는 경향은 무엇일까요?","options":["균형 잡힌 형식과 분명한 악구","모든 곡에 전자음 사용","형식과 악구를 전혀 사용하지 않음"],"answer":0,"explanation":"고전 시대 음악에서는 균형과 명료함을 중시하는 경향을 볼 수 있습니다. 질문과 대답처럼 이어지는 악구도 자주 나타납니다."},
-  {"id":"q17","kind":"history","era":"classical","question":"교향곡과 현악 4중주 발전에 크게 기여한 고전 시대 작곡가는?","options":["드뷔시","하이든","쇼팽"],"answer":1,"explanation":"하이든은 많은 교향곡과 현악 4중주를 작곡하며 두 장르의 형성과 발전에 중요한 역할을 했습니다."},
-  {"id":"q18","kind":"history","era":"classical","question":"현악 4중주의 일반적인 악기 구성은?","options":["바이올린·플루트·트럼펫·피아노","첼로 네 대","바이올린 두 대·비올라·첼로"],"answer":2,"explanation":"현악 4중주는 일반적으로 제1바이올린, 제2바이올린, 비올라, 첼로로 구성됩니다. 네 악기가 대화하듯 선율을 나눕니다."},
-  {"id":"q19","kind":"history","era":"classical","question":"소나타 형식의 기본적인 큰 흐름으로 알맞은 것은?","options":["제시부 → 발전부 → 재현부","재현부 → 제시부 → 발전부","발전부 → 재현부 → 제시부"],"answer":0,"explanation":"소나타 형식은 보통 제시부에서 주요 주제를 소개하고, 발전부에서 변화시키며, 재현부에서 다시 제시합니다. 서주나 코다가 더해지기도 합니다."},
-  {"id":"q20","kind":"history","era":"classical","question":"모차르트의 피아노 협주곡에서 주로 함께 연주하는 것은?","options":["독창자와 합창단만","피아노 독주와 관현악단","피아노 한 대만"],"answer":1,"explanation":"피아노 협주곡은 피아노 독주와 관현악단이 함께 연주합니다. 두 편이 선율을 주고받거나 서로 대비되는 모습을 들을 수 있습니다."},
-  {"id":"q21","kind":"history","era":"romantic","question":"쇼팽이 작품 활동의 중심에 둔 악기는?","options":["피아노","트럼펫","팀파니"],"answer":0,"explanation":"쇼팽은 피아노를 중심으로 녹턴, 마주르카, 폴로네즈, 연습곡 등 다양한 작품을 남겼습니다."},
-  {"id":"q22","kind":"history","era":"romantic","question":"슈베르트의 독일 예술가곡을 이루는 중요한 요소는?","options":["춤과 무대 장치만","관현악과 영상만","시·노래·피아노 반주"],"answer":2,"explanation":"독일 예술가곡인 리트에서는 시의 내용, 노래 선율, 피아노 반주가 함께 표현을 만듭니다. 피아노도 장면과 감정을 전하는 중요한 역할을 합니다."},
-  {"id":"q23","kind":"history","era":"romantic","question":"낭만주의의 표제음악을 설명한 것은?","options":["반드시 가사만으로 이루어진 음악","이야기·시·풍경 등 음악 밖의 내용과 연결된 기악곡","제목이 없는 음악만을 뜻하는 말"],"answer":1,"explanation":"표제음악은 이야기, 시, 풍경 같은 음악 밖의 내용과 연결되는 기악음악입니다. 제목이나 설명이 음악을 이해하는 단서가 되기도 합니다."},
-  {"id":"q24","kind":"history","era":"romantic","question":"리스트가 발전시킨 교향시는 주로 어떤 음악일까요?","options":["문학·그림 등의 내용을 담은 단악장 관현악곡","현악기 한 대로만 연주하는 연습곡","매번 네 악장으로만 이루어진 무곡"],"answer":0,"explanation":"교향시는 문학이나 그림 같은 내용을 바탕으로 하는 단악장 관현악곡입니다. 리스트는 이 장르를 발전시킨 대표적인 작곡가입니다."},
-  {"id":"q25","kind":"history","era":"romantic","question":"루바토를 활용한 연주를 가장 잘 설명한 것은?","options":["처음부터 끝까지 무조건 빠르게 연주한다","모든 음을 똑같이 짧게 끊는다","표현을 위해 빠르기를 유연하게 조절한다"],"answer":2,"explanation":"루바토는 표현을 위해 음이나 악구의 시간을 유연하게 늘이거나 줄이는 방식입니다. 무작정 박자를 잃는다는 뜻은 아닙니다."},
   {"id":"q31","kind":"copyright","question":"음원 파일을 구입하면 그 곡의 저작권도 내 것이 될까요?","options":["구입한 사람이 작곡가가 된다","감상할 수 있는 이용 범위와 저작권 소유는 다르다","다른 사람에게 저작권을 자동으로 넘길 수 있다"],"answer":1,"explanation":"음원 구매는 보통 감상을 위한 이용입니다. 곡의 저작권을 넘겨받는 것과는 다르므로 공개 이용은 별도로 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
   {"id":"q32","kind":"copyright","question":"내 블로그에서 누구나 원하는 때 음악을 듣게 하는 것과 관련 깊은 권리는?","options":["공중송신권","건물 소유권","악기 소유권"],"answer":0,"explanation":"온라인에서 사람들이 원하는 때 음악에 접근하게 하는 전송은 공중송신에 포함됩니다. 개인 감상과 공개 제공을 구별해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
   {"id":"q33","kind":"copyright","question":"보호받는 음악을 영상에 넣고 작곡가 이름을 적으면 이용허락이 자동으로 생길까요?","options":["이름만 적으면 어떤 영상도 가능하다","조회 수가 적으면 허락이 생긴다","출처 표시만으로 이용허락을 대신할 수는 없다"],"answer":2,"explanation":"출처를 적는 것과 이용허락은 별개입니다. 허락이나 법에서 정한 예외 등 이용할 근거가 있는지 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},

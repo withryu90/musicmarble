@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=48b86500ac01';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=48b86500ac01';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=d0b88e1d226e';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=d0b88e1d226e';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -12,7 +12,7 @@ export function activityChanges(before,after){
   if(after.phase==='backward-roll')add('backward-entry','뒤로가기 · 주사위를 한 번 더 굴려요',{changes:[],text:'주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다. 뒤로 이동해 도착한 칸의 규칙을 적용합니다.'});
   if(after.lastBackwardMove){const move=after.lastBackwardMove;add('backward-move',`뒤로 ${move.steps}칸 이동`,{changes:[],text:`추가 주사위 결과는 ${move.steps}입니다. ${move.steps}칸 뒤로 이동했습니다. 도착한 곳은 「${BOARD[move.to].title}」입니다.`});}
   if(before.players[actor].position+after.dice>=BOARD.length)add('start-bonus','한 바퀴 완주 보너스',{changes:[coin(actor,200)],text:'시대의 문을 지나 200 MC를 받았습니다.'});
-  for(const r of after.lastStreamingRevenue||[])add('streaming-income','자동 스트리밍 수익',{actorId:r.playerId,appId:r.appId,workId:r.workId,changes:[coin(r.playerId,r.amount)],text:`${STREAMING_APPS.find(a=>a.id===r.appId).name} · ${WORKS.find(w=>w.id===r.workId).title} 스트리밍 수익을 은행에서 받았습니다. 작품 이용료와는 별개입니다.`});
+  for(const r of after.lastStreamingRevenue||[])add('streaming-income',r.self?'내 자동 스트리밍 방문':'자동 스트리밍 이용료 지급',{actorId:r.payerId??actor,otherId:r.playerId,appId:r.appId,workId:r.workId,changes:r.self?[]:[coin(r.payerId??actor,-r.amount),coin(r.playerId,r.amount)],text:r.self?'본인이 설치한 자동 스트리밍이므로 추가 비용이 없습니다.':`${STREAMING_APPS.find(a=>a.id===r.appId).name} · ${WORKS.find(w=>w.id===r.workId).title} 자동 스트리밍 이용료 ${r.amount} MC를 설치자에게 지급했습니다.${r.amount<30?' 잔액 한도에서 지급하고 부족액은 면제합니다.':''} 작품 이용료와는 별개입니다.`});
   if(after.lastRent){const r=after.lastRent,w=WORKS.find(w=>w.id===r.workId);add('rent','가상 이용료 지급',{workId:r.workId,otherId:r.owner,amount:r.amount,expected:r.expected??null,changes:[coin(actor,-r.amount),coin(r.owner,r.amount)],text:`${w.composer} 「${w.title}」 이용료를 지급했습니다.`});}
   if(after.lastAssignment){const t=after.lastAssignment;
    if(t.skipped)add('copyright-transfer-skipped','양도할 작품 없음',{actorId:t.from,changes:[],text:'보유한 작품이 없어 저작권 양도 없이 이 칸을 통과했습니다.'});
@@ -24,8 +24,8 @@ export function activityChanges(before,after){
   if(after.lastEvent)add('history-event',after.lastEvent.title,{card:{...after.lastEvent},changes:[coin(actor,after.lastEvent.actual)],text:after.lastEvent.text});
   if(after.lastConcert){const c=after.lastConcert;add('concert','음악회 개최 · 티켓 안내',{concert:structuredClone(c),changes:[...c.tickets.map(t=>coin(t.playerId,-t.amount)),coin(c.hostId,c.total)],text:`${after.players[c.hostId].name} 님이 음악회를 개최했습니다. 참가자마다 좌석을 무작위로 배정하고 티켓비를 개최자에게 지급했습니다.`});}
  }
- for(const app of STREAMING_APPS)if(before.platformOwners?.[app.id]===undefined&&after.platformOwners?.[app.id]!==undefined)add('streaming-purchase','스트리밍 앱 점유권 구입',{actorId:after.platformOwners[app.id],appId:app.id,changes:[coin(after.platformOwners[app.id],-STREAMING_RIGHTS_PRICE)],text:`${app.name} 점유권을 구입했습니다. 보유 작품 칸에 도착하면 자동 스트리밍을 설치할 수 있습니다.`});
- for(const [workId,apps] of Object.entries(after.streamingInstallations||{}))for(const [appId,owner] of Object.entries(apps))if(before.streamingInstallations?.[workId]?.[appId]===undefined)add('streaming-install','자동 스트리밍 설치',{actorId:owner,appId,workId,changes:[coin(owner,-STREAMING_INSTALL_PRICE)],text:`${WORKS.find(w=>w.id===workId).title}에 ${STREAMING_APPS.find(a=>a.id===appId).name} 자동 스트리밍을 설치했습니다. 다음 방문부터 누구든 도착하면 은행에서 설치자에게 30 MC를 지급합니다.`});
+ for(const app of STREAMING_APPS)if(before.platformOwners?.[app.id]===undefined&&after.platformOwners?.[app.id]!==undefined)add('streaming-purchase','스트리밍 앱 점유권 구입',{actorId:after.platformOwners[app.id],appId:app.id,changes:[coin(after.platformOwners[app.id],-STREAMING_RIGHTS_PRICE)],text:`${app.name} 점유권을 구입했습니다. 어떤 작품 칸이든 도착하면 자동 스트리밍을 설치할 수 있습니다.`});
+ for(const [workId,apps] of Object.entries(after.streamingInstallations||{}))for(const [appId,owner] of Object.entries(apps))if(before.streamingInstallations?.[workId]?.[appId]===undefined)add('streaming-install','자동 스트리밍 설치',{actorId:owner,appId,workId,changes:[coin(owner,-STREAMING_INSTALL_PRICE)],text:`${WORKS.find(w=>w.id===workId).title}에 ${STREAMING_APPS.find(a=>a.id===appId).name} 자동 스트리밍을 설치했습니다. 다음 방문부터 방문자가 설치자에게 30 MC를 지급합니다. 설치자 본인은 추가 비용이 없습니다.`});
  for(const w of WORKS){
   const previous=before.ownership[w.id],next=after.ownership[w.id];
   if(!previous&&next)add('purchase','작품 이용권 구입',{actorId:next.player,workId:w.id,changes:[coin(next.player,-w.price)],text:`${w.composer} 「${w.title}」의 가상 이용권을 구입했습니다.`});

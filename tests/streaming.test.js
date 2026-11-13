@@ -27,19 +27,19 @@ test('install on current own or opponent-owned works; original ownership and con
   assert.equal(installed.players[0].coins,before-50);assert.deepEqual(installed.ownership['bach-air'],{player:owner,level:1});assert.equal(installed.streamingInstallations['bach-air']['youtube-music'],0);assert.deepEqual(installed.lastStreamingRevenue,[]);assert.ok(G.isValidSave(installed));assert.throws(()=>G.installStreaming(installed,'youtube-music'));assert.equal(canOfferTurnHandoff(installed,0),true);
  }
 });
-test('installation cannot bypass licence, work ownership, location, money, trade or turn limits',()=>{
- let s=landing(licensed(),'bach-air');assert.deepEqual(G.streamingOptions(s),[]);assert.throws(()=>G.installStreaming(s,'youtube-music'));
+test('installation permits vacant works but cannot bypass licence, location, money, trade or turn limits',()=>{
+ let s=landing(licensed(),'bach-air');assert.equal(G.streamingOptions(s).length,1);const vacant=G.installStreaming(s,'youtube-music');assert.equal(vacant.ownership['bach-air'],undefined);assert.ok(G.isValidSave(vacant));
  s.ownership['bach-air']={player:0,level:0};s.platformOwners={};assert.throws(()=>G.installStreaming(s,'youtube-music'));
  s.platformOwners={'youtube-music':0};s.players[0].coins=49;assert.throws(()=>G.installStreaming(s,'youtube-music'));
  s.players[0].coins=100;s.phase='quiz';assert.throws(()=>G.installStreaming(s,'youtube-music'));
  s.phase='action';s.trade={};assert.throws(()=>G.installStreaming(s,'youtube-music'));
 });
-test('every visitor, including the installer, triggers bank revenue separately from rent and only once',()=>{
+test('visitors including work owners pay the installer; self-visits cost nothing and transfers never mint money',()=>{
  const base=licensed();base.ownership['bach-air']={player:1,level:0};base.streamingInstallations['bach-air']={'youtube-music':0};
  for(let visitor=0;visitor<4;visitor++){
-  const next=landing(base,'bach-air',visitor),expected=base.players.map(p=>p.coins);expected[0]+=30;if(visitor!==1){expected[visitor]-=30;expected[1]+=30;}
-  assert.deepEqual(next.players.map(p=>p.coins),expected);assert.equal(next.players.reduce((a,p)=>a+p.coins,0),4830);assert.equal(next.lastStreamingRevenue.length,1);assert.ok(G.isValidSave(next));
-  const after=G.skipStreaming({...next,streamingHandled:false,platformOwners:{...next.platformOwners,'apple-music':visitor}});assert.equal(after.players.reduce((a,p)=>a+p.coins,0),4830);
+  const next=landing(base,'bach-air',visitor),expected=base.players.map(p=>p.coins);if(visitor!==1){expected[visitor]-=30;expected[1]+=30;}if(visitor!==0){expected[visitor]-=30;expected[0]+=30;}
+  assert.deepEqual(next.players.map(p=>p.coins),expected);assert.equal(next.players.reduce((a,p)=>a+p.coins,0),4800);assert.equal(next.lastStreamingRevenue.length,1);assert.ok(G.isValidSave(next));
+  const after=G.skipStreaming({...next,streamingHandled:false,platformOwners:{...next.platformOwners,'apple-music':visitor}});assert.equal(after.players.reduce((a,p)=>a+p.coins,0),4800);
   assert.throws(()=>G.roll(next,1));
  }
 });
@@ -56,7 +56,7 @@ test('platform and installation purchases obey the existing duel bankruptcy rule
 test('structured purchase, installation and income notices are shared once and never repeat on confirmation',()=>{
  const before=landing(game(),'melon'),bought=G.buyPlatform(before),notice=activityChanges(before,bought)[0];assert.equal(notice.type,'streaming-purchase');assert.equal(notice.changes[0].amount,-200);
  const base=licensed();base.ownership['bach-air']={player:0,level:0};const arrived=landing(base,'bach-air'),installed=G.installStreaming(arrived,'youtube-music');assert.equal(activityChanges(arrived,installed)[0].type,'streaming-install');
- const from=structuredClone(installed);from.phase='roll';from.players[0].position=0;const after=G.roll(from,1),events=activityChanges(from,after);assert.equal(events[0].type,'streaming-income');assert.equal(events[0].changes[0].amount,30);
+ const from=structuredClone(installed);from.phase='roll';from.turn=1;from.players[1].position=0;const after=G.roll(from,1),events=activityChanges(from,after),payment=events.find(e=>e.type==='streaming-income');assert.ok(payment);assert.deepEqual(payment.changes,[{playerId:1,amount:-30},{playerId:0,amount:30}]);
  const inbox=new ActivityInbox();inbox.accept('ROOM',[]);inbox.accept('ROOM',events.map((n,i)=>({...n,id:i+1})));const count=inbox.pending.length;inbox.accept('ROOM',events.map((n,i)=>({...n,id:i+1})));assert.equal(inbox.pending.length,count);
 });
 test('new investment fields survive saves, reject malformed owners and installations, and clear per-turn income',()=>{
@@ -78,4 +78,18 @@ test('room actions enforce actor and revision checks; bots use the same optional
   assert.throws(()=>service.act(b.code,b.token,{action:'buyPlatform',revision}));service.act(a.code,a.token,{action:'buyPlatform',revision});assert.equal(room.state.platformOwners['youtube-music'],0);assert.throws(()=>service.act(a.code,a.token,{action:'buyPlatform',revision}));
  }finally{service.close();}
  let s=landing(game(),'spotify');s.players[0].isBot=true;const decision=botDecision(s,{},()=>0);assert.equal(decision.action,'buyPlatform');s=applyBotDecision(s,decision);assert.equal(s.platformOwners.spotify,0);assert.ok(G.isValidSave(s));
+});
+
+test('streaming charges follow rent, respect insufficient balances, and can bankrupt a duel visitor',()=>{
+ for(const count of [2,4]){
+  const s=game(count);s.platformOwners['youtube-music']=0;s.ownership['bach-air']={player:0,level:0};s.streamingInstallations['bach-air']={'youtube-music':0};s.players[1].coins=45;
+  const after=landing(s,'bach-air',1);assert.equal(after.lastRent.amount,30);assert.equal(after.lastStreamingRevenue[0].amount,15);assert.equal(after.players[1].coins,0);assert.equal(after.players[0].coins,1245);assert.equal(after.phase,count===2?'finished':'action');assert.ok(G.isValidSave(after));
+  const notice=activityChanges({...s,turn:1,players:s.players.map(p=>({...p,position:0}))},after).find(n=>n.type==='streaming-income');assert.ok(notice);assert.deepEqual(notice.changes,[{playerId:1,amount:-15},{playerId:0,amount:15}]);
+ }
+});
+test('declining or installing on a vacant work leaves its separate purchase OX opportunity intact',()=>{
+ const initial=landing(licensed(),'bach-air');assert.equal(canOfferTurnHandoff(initial,0),false);
+ for(const next of [G.skipStreaming(initial),G.installStreaming(initial,'youtube-music')]){
+  assert.equal(next.streamingHandled,true);assert.equal(next.purchaseChallenge,null);const quiz=G.startPurchaseQuiz(next);assert.equal(quiz.phase,'purchase-quiz');assert.ok(G.isValidSave(quiz));
+ }
 });

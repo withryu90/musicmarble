@@ -180,3 +180,12 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus,
 dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible{outline:none;outline-offset:0;box-shadow:none}
 dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{color:#1264a0;filter:drop-shadow(0 0 2px #269bdf80)}
 .game-shell[data-tab="board"] .board-area .players-bottom{align-items:flex-end}
+
+/* Vector icons have a fixed, symmetric box independent of font baselines. */
+.game-shell .header-actions :is(.fullscreen-button,.settings-button){
+ display:inline-flex;align-items:center;justify-content:center;gap:5px;
+ box-sizing:border-box;flex-shrink:0;line-height:1;padding:8px;
+}
+.game-shell .header-actions .header-control-icon{display:block;width:18px;height:18px;flex:0 0 18px;margin:0;pointer-events:none}
+.game-shell .header-actions .settings-button span{margin:0}
+.game-shell[data-tab="board"] .header-actions :is(.fullscreen-button,.settings-button){width:30px;min-width:30px;height:30px;min-height:30px;padding:0;gap:0}

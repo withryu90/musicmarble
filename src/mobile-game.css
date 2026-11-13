@@ -97,3 +97,16 @@ body.mobile-game-scroll-lock{position:fixed;inset:0;width:100%;height:100%;overf
 body.mobile-game-scroll-lock .game-shell{overscroll-behavior:none}
 body.mobile-game-scroll-lock .game-shell:not([data-tab="board"]){height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 body.mobile-game-scroll-lock :is(.players-all,.player-chat-bubble>span,.modal-body,.chat-messages,.mobile-page-options){overscroll-behavior:contain}
+
+/* All mobile board tools share the right rail; no toolbar row remains above play. */
+.game-shell[data-mobile="true"][data-tab="board"] .room-strip,
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-summary{display:none}
+.game-shell[data-mobile="true"][data-tab="board"] .board-toolbar{height:0;min-height:0;margin:0;padding:0;flex:none}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools{position:fixed;top:182px;right:2px;z-index:35;display:flex;flex-direction:column;align-items:center;gap:3px;width:38px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools .mobile-board-zoom{display:contents}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools button{display:flex;align-items:center;justify-content:center;width:36px;min-width:36px;height:26px;min-height:26px;padding:2px;border:1px solid #bad9eb;border-radius:5px;background:#f6fbff;color:#245d82;font-size:9px;line-height:1;white-space:nowrap}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat{width:33.333333%}
+@media(max-height:350px){
+ .game-shell[data-mobile="true"][data-tab="board"] .board-tools{gap:2px}
+ .game-shell[data-mobile="true"][data-tab="board"] .board-tools button{height:22px;min-height:22px;font-size:8px}
+}

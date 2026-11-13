@@ -278,16 +278,25 @@
 /* Screen-space diamond hit areas avoid browser 3D hit-testing gaps on tile faces. */
 .board-area.is-3d .board-label::before{content:"";position:absolute;left:0;top:0;width:calc(var(--label-width)*.92);height:calc(var(--label-height)*.92);transform:translate(-50%,-50%);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);pointer-events:auto;cursor:pointer}
 
-/* All tile faces share a flat edge: no bevel, raised hover or thick top border. */
+/* A shared bevel and layered edge gives every tile the same raised depth. */
+.board-area{--tile-depth:clamp(2px,.3vw,4px)}
 .board-area:is(.is-flat,.is-3d) .board>.cell{
- border:0;box-shadow:none;transform:none;filter:none;transition:none;
+ border:1px solid #ffffffb3;
+ box-shadow:inset 0 1px 0 #ffffffb3,
+  0 var(--tile-depth) 0 #8ba6aa,
+  0 calc(var(--tile-depth) + 2px) 0 #587980,
+  0 calc(var(--tile-depth) + 4px) 5px #173e4c30;
+ transform:none;filter:none;transition:none;
 }
 .board-area:is(.is-flat,.is-3d) .board>.cell:hover,
 .board-area:is(.is-flat,.is-3d) .board>.cell:focus-visible{
  transform:none;filter:none;
 }
-/* Remove the extruded rim beneath the tiles as well. */
-.board-area:is(.is-flat,.is-3d) .board-wrap{box-shadow:none;border:0}
+/* A matching low rim supports the raised tiles without changing board geometry. */
+.board-area:is(.is-flat,.is-3d) .board-wrap{
+ border:1px solid #f6f4dd;
+ box-shadow:0 3px 0 #a5bbb7,0 6px 0 #65868b,0 9px 12px #234b4026;
+}
 .board-area .cell .landmark,.board-area .cell .start-portal{filter:none}
 .board-area .cell .tile-copy,.board-area .cell .tile-copy>*,
 .board-area.is-3d .board-label .tile-copy,

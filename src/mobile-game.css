@@ -141,3 +141,13 @@ body.mobile-game-scroll-lock :is(.players-all,.player-chat-bubble>span,.modal-bo
 .game-shell[data-mobile="true"] .mobile-page-menu summary,
 .game-shell[data-mobile="true"] .site-header .header-actions button,
 .game-shell[data-mobile="true"][data-tab="board"] .board-tools button{border:0;background:transparent;box-shadow:none;border-radius:0;padding:0}
+
+/* Edge-aligned cards and one continuous meadow behind the entire mobile game. */
+.game-shell[data-mobile="true"][data-tab="board"] main{padding-left:0}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all{padding-left:0;padding-right:0;left:0}
+.game-shell[data-mobile="true"]{isolation:isolate;background:transparent}
+.game-shell[data-mobile="true"]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#deefcd;background-image:linear-gradient(180deg,#f2faffed 0,#f3fbf5c9 180px,#f3fbf536 420px,#f5fbef14 100%),url('./assets/music-meadow-background.png');background-position:center top,center center;background-size:cover,cover;background-repeat:no-repeat}
+.game-shell[data-mobile="true"] .site-header,
+.game-shell[data-mobile="true"] .header-actions,
+.game-shell[data-mobile="true"] .mobile-page-nav,
+.game-shell[data-mobile="true"] .board-tools{background:transparent;border:0;box-shadow:none}

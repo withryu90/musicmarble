@@ -1,6 +1,6 @@
-import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=7c61d48887b4';
-import {characterById,drawCharacterIds} from './characters.js?v=7c61d48887b4';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=7c61d48887b4';
+import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=02948552a9d4';
+import {characterById,drawCharacterIds} from './characters.js?v=02948552a9d4';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=02948552a9d4';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
@@ -48,7 +48,7 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
 }
 // Retire removed questions without discarding an otherwise valid classroom save.
 export function migrateRetiredQuiz(state){
- const deck=state?.quizDeck,known=new Set(QUIZZES.map(q=>q.id)),retired=new Set(['q6','q7']);
+ const deck=state?.quizDeck,known=new Set(QUIZZES.map(q=>q.id)),retired=new Set(['q6','q7','q10','q26','q27','q28','q29','q30']);
  if(!Array.isArray(deck)||deck.length<=known.size||new Set(deck).size!==deck.length||!deck.every(id=>known.has(id)||retired.has(id))||![...known].every(id=>deck.includes(id)))return state;
  const s=clone(state),cursor=s.quizCursor;
  s.quizDeck=deck.filter(id=>known.has(id));
@@ -59,8 +59,8 @@ export function migrateRetiredQuiz(state){
  }
  return s;
 }
-function openQuiz(s,kind){
-  const pool=s.quizDeck.filter(id=>{const q=QUIZZES.find(q=>q.id===id);return q&&(!kind||q.kind===kind);});
+function openQuiz(s){
+  const pool=s.quizDeck.filter(id=>QUIZZES.some(q=>q.id===id));
   s.quiz=pool[s.quizCursor%pool.length];s.quizCursor++;s.phase='quiz';s.quizUsed=true;
 }
 export function roll(state,dice,rng=Math.random){
@@ -112,7 +112,7 @@ function resolveArrival(s,p,rng){
       s.lastAssignment={from:p.id,to:recipient.id,workId:work.id,price:work.price,skipped:false};
       log(s,`${p.name} → ${recipient.name}: 최고가 작품 「${work.title}」 가상 저작재산권 무상 양도 (${work.price} MC 기준)`);
     }
-  }else if(cell.type==='quiz'||cell.type==='copyright')openQuiz(s,cell.type==='copyright'?'copyright':null);
+  }else if(cell.type==='quiz'||cell.type==='copyright')openQuiz(s);
   else if(cell.type==='concert'){s.players.forEach(team=>team.coins+=100);log(s,'모두의 음악회: 모든 팀 +100 MC');}
   return checkBankruptcy(s);
 }

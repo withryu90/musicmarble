@@ -1,26 +1,27 @@
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=8b1793c90e39';
-import {formatModalSentences} from './modal-sentences.js?v=8b1793c90e39';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=8b1793c90e39';
-import {WORK_ARTWORK} from './work-artwork.js?v=8b1793c90e39';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=8b1793c90e39';
-import {RankingClient} from './ranking.js?v=8b1793c90e39';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=8b1793c90e39';
-import {HandoffCountdown} from './handoff-countdown.js?v=8b1793c90e39';
-import {fitBoardTitles} from './board-type.js?v=8b1793c90e39';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=8b1793c90e39';
-import * as G from './engine.js?v=8b1793c90e39';
-import {ActivityInbox} from './activities.js?v=8b1793c90e39';
-import {purchaseQuizById} from './purchase-quizzes.js?v=8b1793c90e39';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=8b1793c90e39';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=8b1793c90e39';
-import {diceCube} from './dice.js?v=8b1793c90e39';
-import {CHARACTER_BIOS} from './character-bios.js?v=8b1793c90e39';
-import {needsLandscape} from './orientation.js?v=8b1793c90e39';
-import {createBgm} from './bgm.js?v=8b1793c90e39';
-import {PeerTransport} from './peer-transport.js?v=8b1793c90e39';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=8b1793c90e39';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=8b1793c90e39';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=8b1793c90e39';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=982eae9a00e8';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=982eae9a00e8';
+import {formatModalSentences} from './modal-sentences.js?v=982eae9a00e8';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=982eae9a00e8';
+import {WORK_ARTWORK} from './work-artwork.js?v=982eae9a00e8';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=982eae9a00e8';
+import {RankingClient} from './ranking.js?v=982eae9a00e8';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=982eae9a00e8';
+import {HandoffCountdown} from './handoff-countdown.js?v=982eae9a00e8';
+import {fitBoardTitles} from './board-type.js?v=982eae9a00e8';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=982eae9a00e8';
+import * as G from './engine.js?v=982eae9a00e8';
+import {ActivityInbox} from './activities.js?v=982eae9a00e8';
+import {purchaseQuizById} from './purchase-quizzes.js?v=982eae9a00e8';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=982eae9a00e8';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=982eae9a00e8';
+import {diceCube} from './dice.js?v=982eae9a00e8';
+import {CHARACTER_BIOS} from './character-bios.js?v=982eae9a00e8';
+import {needsLandscape} from './orientation.js?v=982eae9a00e8';
+import {createBgm} from './bgm.js?v=982eae9a00e8';
+import {PeerTransport} from './peer-transport.js?v=982eae9a00e8';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=982eae9a00e8';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=982eae9a00e8';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=982eae9a00e8';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -171,10 +172,15 @@ function commitSnapshot(next){
  if(introduce){revealCharacter=false;participantIntroModal();}
  continueFlow();
 }
-function statePromptKey(){return snapshot?.state?`${state.phase}:${state.turn}:${state.quiz}:${state.feedback?.index}:${state.purchaseChallenge?.questionId}:${state.purchaseChallenge?.response}:${state.trade?JSON.stringify(state.trade):''}`:'lobby';}
+function statePromptKey(){return turnPromptKey(snapshot?.state?state:null);}
 function continueFlow(){
  if(dicePresentation||activeActivity||!snapshot?.state)return;
  const d=$('#modal'),auto=statePromptKey();
+ while(deferredSnapshots.length&&deferredSnapshots[0].revision<=snapshot.revision)deferredSnapshots.shift();
+ if(shouldDrainTurnUpdates({deferred:deferredSnapshots.length,pending:activityInbox.pending.length,active:!!activeActivity,intro:participantIntroPending,dice:!!dicePresentation})&&(!d.open||d.dataset.auto==='true')){
+  if(d.open){handoffCountdown.stop();d.close();}
+  receive(deferredSnapshots.shift());return;
+ }
  if(d.open){
   if(d.dataset.auto!=='true'||auto===lastAuto)return;
   d.close();
@@ -222,8 +228,13 @@ function turnHandoffModal(){
 }
 async function passHandoff(){
  handoffCountdown.stop();if(busy||!myTurn()||!canOfferTurnHandoff(state,session.playerId))return;
- const button=$('#modal [data-action="handoff-next"]');busy=true;if(button)button.disabled=true;
- try{const passed=await apply(G.nextTurn);if(!passed&&button){button.disabled=false;button.textContent='다시 차례 넘기기 →';}}finally{busy=false;}
+ busy=true;$('#modal').close();
+ try{
+  const passed=await apply(G.nextTurn);
+  if(!passed)lastHandoffKey=null;
+ }finally{
+  busy=false;render();continueFlow();
+ }
 }
 function dismissActivity(){activeActivity=null;$('#modal').close();continueFlow();}
 function historyCard(e,actorId){
@@ -282,7 +293,14 @@ const icon=t=>({start:'⚑',event:'✦',quiz:'?',copyright:'©',concert:'♬',tr
 function notify(message){$('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('#toast').classList.remove('show'),3600);}
 async function apply(fn,...args){
  if(!connected){notify('서버에 다시 연결하는 중입니다.');return false;}
- try{const next=await request('action',{code:session.code,action:fn.name,args,revision:snapshot.revision});receive(next);return true;}catch(e){notify(e.message);return false;}
+ try{const next=await request('action',{code:session.code,action:fn.name,args,revision:snapshot.revision});receive(next);return true;}catch(e){
+  // A peer may still be finishing the previous notice when another device advances.
+  // Refresh the authoritative state without replaying a purchase or payment.
+  if(e.message.includes('게임 상태가 갱신')){
+   try{receive(await request('resume',{code:session.code}));}catch{}
+  }
+  notify(e.message);return false;
+ }
 }
 function pill(text,cls=''){return `<span class="pill ${cls}">${text}</span>`;}
 function characterSprite(person,extra=''){
@@ -406,7 +424,7 @@ function seatControls(){
  if(state.phase==='finished')return '<button class="primary full" data-action="results">결과 보기</button>';
  if(!myTurn())return state.trade?'<button class="primary full" data-action="trade-open">거래 확인</button>':'';
  const p=G.current(state);
- const main=state.phase==='roll'?['roll',p.skipTurns?'탈출 주사위':'주사위 굴리기']:state.phase==='backward-roll'?['roll-backward','뒤로가기 주사위']:['purchase-quiz','purchase-feedback'].includes(state.phase)?['purchase-quiz-open','OX 퀴즈 확인']:['quiz','feedback'].includes(state.phase)?['quiz-open','배움 퀴즈 확인']:currentConcertWork()?['plan-concert','♫ 공연 기획하기']:['turn-actions','차례 진행하기'];
+ const main=state.phase==='roll'?['roll',p.skipTurns?'탈출 주사위':'주사위 굴리기']:state.phase==='backward-roll'?['roll-backward','뒤로가기 주사위']:['purchase-quiz','purchase-feedback'].includes(state.phase)?['purchase-quiz-open','OX 퀴즈 확인']:['quiz','feedback'].includes(state.phase)?['quiz-open','배움 퀴즈 확인']:currentConcertWork()?['plan-concert','♫ 공연 기획하기']:canOfferTurnHandoff(state,session.playerId)?['handoff-open','차례 넘기기']:['turn-actions','차례 진행하기'];
  const rollIcon=['roll','roll-backward'].includes(main[0])?`<span class="seat-dice-icon" aria-hidden="true">${diceCube(5).replace('<div','<span').replace('</div>','</span>')}</span>`:'';
  return `<button class="primary" data-action="${main[0]}" ${busy?'disabled':''}>${rollIcon}<span>${busy?'이동 중…':main[1]}</span></button>`;
 }
@@ -546,6 +564,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();return;}
  if(busy)return;
  if(a==='handoff-next'){await passHandoff();return;}
+ if(a==='handoff-open'){if(myTurn()&&canOfferTurnHandoff(state,session.playerId))turnHandoffModal();return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
  if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoom(1.25);return;}
  if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoom(.8);return;}

@@ -47,3 +47,26 @@ test('a guest reconnects and continues the same seat after host restoration',asy
   const resumed=await guest.request('resume',{},g);assert.equal(resumed.playerId,1);assert.equal(resumed.members.length,2);
  }finally{host.close();guest.close();restored?.close();}
 });
+
+test('four friends repeatedly hand off turns and each next peer receives a roll state',async()=>{
+ const peers=Array.from({length:4},()=>transport());const sessions=[],snapshots=[];
+ try{
+  sessions.push(await peers[0].request('create',{nickname:'Turn host'}));
+  peers[0].subscribe(sessions[0],{onSnapshot:s=>snapshots[0]=s});
+  for(let i=1;i<4;i++){
+   sessions.push(await peers[i].request('join',{code:sessions[0].code,nickname:`Turn guest ${i}`}));
+   peers[i].subscribe(sessions[i],{onSnapshot:s=>snapshots[i]=s});
+  }
+  await tick();await peers[0].request('action',{action:'start',revision:snapshots[0].revision},sessions[0]);await tick();
+  for(let turn=0;turn<12;turn++){
+   const actor=turn%4;
+   assert.equal(snapshots[actor].state.turn,actor);assert.equal(snapshots[actor].state.phase,'roll');
+   const act=async(action,args=[])=>{await peers[actor].request('action',{action,args,revision:snapshots[actor].revision},sessions[actor]);await tick();};
+   await act('roll');
+   for(let step=0;snapshots[actor].state.phase==='backward-roll'&&step<5;step++)await act('roll');
+   if(snapshots[actor].state.phase==='quiz'){await act('answerQuiz',[0]);await act('closeFeedback');}
+   await act('nextTurn');
+   for(const s of snapshots){assert.equal(s.state.turn,(actor+1)%4);assert.equal(s.state.phase,'roll');}
+  }
+ }finally{peers.forEach(p=>p.close());}
+});

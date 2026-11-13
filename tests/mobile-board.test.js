@@ -37,3 +37,10 @@ test('two-finger zoom and one-finger pan change only camera transform and preser
  fire('pointerdown',4,200,150);fire('pointerup',4,200,150);cancelled=false;handlers.get('click')({preventDefault(){cancelled=true},stopPropagation(){}});assert.equal(cancelled,false);
  camera.reset();assert.equal(camera.state.scale,1);camera.bind(null);assert.equal(handlers.size,0);
 });
+
+test('explicit mobile links select the mobile layout even with desktop-mode browser identification',()=>{
+ const desktop={userAgent:'Macintosh Safari',platform:'MacIntel',maxTouchPoints:0};
+ assert.equal(isMobileGameEnvironment({...view,location:{search:'?v=latest&layout=mobile'}},desktop),true);
+ assert.equal(isMobileGameEnvironment({...view,location:{search:'?v=latest'}},desktop),false);
+ assert.equal(isMobileGameEnvironment(view,{userAgent:'Macintosh Safari',platform:'MacIntel',maxTouchPoints:1}),true);
+});

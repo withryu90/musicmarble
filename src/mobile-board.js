@@ -1,6 +1,8 @@
 export function isMobileGameEnvironment(view=window,nav=navigator){
+ // An explicit mobile link also works when Safari requests a desktop user agent.
+ if(new URLSearchParams(view.location?.search||'').get('layout')==='mobile')return true;
  if(nav.userAgentData?.mobile||/Android|iPhone|iPad|iPod|Mobile/i.test(nav.userAgent||''))return true;
- if(nav.platform==='MacIntel'&&nav.maxTouchPoints>1)return true;
+ if(/^Mac/.test(nav.platform||'')&&nav.maxTouchPoints>0)return true;
  return Boolean(view.matchMedia?.('(any-pointer:coarse)').matches&&Math.max(view.innerWidth,view.innerHeight)<=1100);
 }
 // Native pinch zoom changes the visual viewport, not the intended game layout.

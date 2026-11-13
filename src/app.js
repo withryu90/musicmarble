@@ -1,30 +1,30 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=356cfa2f98fd';
-import {createMusicDirector} from './music-director.js?v=356cfa2f98fd';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=356cfa2f98fd';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=356cfa2f98fd';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=356cfa2f98fd';
-import {formatModalSentences} from './modal-sentences.js?v=356cfa2f98fd';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=356cfa2f98fd';
-import {WORK_ARTWORK} from './work-artwork.js?v=356cfa2f98fd';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=356cfa2f98fd';
-import {RankingClient} from './ranking.js?v=356cfa2f98fd';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=356cfa2f98fd';
-import {HandoffCountdown} from './handoff-countdown.js?v=356cfa2f98fd';
-import {fitBoardTitles} from './board-type.js?v=356cfa2f98fd';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=356cfa2f98fd';
-import * as G from './engine.js?v=356cfa2f98fd';
-import {ActivityInbox} from './activities.js?v=356cfa2f98fd';
-import {purchaseQuizById} from './purchase-quizzes.js?v=356cfa2f98fd';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=356cfa2f98fd';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=356cfa2f98fd';
-import {diceCube} from './dice.js?v=356cfa2f98fd';
-import {CHARACTER_BIOS} from './character-bios.js?v=356cfa2f98fd';
-import {needsLandscape} from './orientation.js?v=356cfa2f98fd';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=356cfa2f98fd';
-import {PeerTransport} from './peer-transport.js?v=356cfa2f98fd';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=356cfa2f98fd';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=356cfa2f98fd';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=356cfa2f98fd';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=7be3347572fd';
+import {createMusicDirector} from './music-director.js?v=7be3347572fd';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=7be3347572fd';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=7be3347572fd';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=7be3347572fd';
+import {formatModalSentences} from './modal-sentences.js?v=7be3347572fd';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=7be3347572fd';
+import {WORK_ARTWORK} from './work-artwork.js?v=7be3347572fd';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=7be3347572fd';
+import {RankingClient} from './ranking.js?v=7be3347572fd';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=7be3347572fd';
+import {HandoffCountdown} from './handoff-countdown.js?v=7be3347572fd';
+import {fitBoardTitles} from './board-type.js?v=7be3347572fd';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=7be3347572fd';
+import * as G from './engine.js?v=7be3347572fd';
+import {ActivityInbox} from './activities.js?v=7be3347572fd';
+import {purchaseQuizById} from './purchase-quizzes.js?v=7be3347572fd';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=7be3347572fd';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=7be3347572fd';
+import {diceCube} from './dice.js?v=7be3347572fd';
+import {CHARACTER_BIOS} from './character-bios.js?v=7be3347572fd';
+import {needsLandscape} from './orientation.js?v=7be3347572fd';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=7be3347572fd';
+import {PeerTransport} from './peer-transport.js?v=7be3347572fd';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=7be3347572fd';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=7be3347572fd';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=7be3347572fd';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -554,6 +554,22 @@ function showModal(title,body,cls=''){
  fitViewportDialog(document);
 }
 function closeModal(){handoffCountdown.stop();if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
+function quizClock(){return '<div class="quiz-clock" role="timer" aria-label="퀴즈 남은 시간"><span>남은 시간</span><strong data-quiz-seconds>10초</strong><progress data-quiz-progress max="10" value="10" aria-label="남은 시간"></progress></div>';}
+let quizClockRequest=false;
+function startQuizClock(){
+ if(!myTurn()||!['quiz','purchase-quiz'].includes(state.phase))return;
+ if(!state.quizDeadline&&!quizClockRequest){quizClockRequest=true;void apply(G.beginQuizTimer).finally(()=>{quizClockRequest=false;});}
+ updateQuizClock();
+}
+function updateQuizClock(){
+ const clock=$('[data-quiz-seconds]');if(!clock)return;
+ const left=state.quizDeadline?Math.max(0,(state.quizDeadline-Date.now())/1000):10;
+ clock.textContent=`${Math.ceil(left)}초`;
+ const bar=$('[data-quiz-progress]');if(bar)bar.value=left;
+ clock.closest('.quiz-clock').classList.toggle('is-urgent',left<=3);
+ if(left===0)$('#modal').querySelectorAll('[data-action="answer"],[data-action="purchase-answer"]').forEach(button=>button.disabled=true);
+}
+setInterval(updateQuizClock,100);
 function quizVerdict(correct,chosen,answer){
  return `<section class="quiz-verdict ${correct?'is-correct':'is-incorrect'}" role="status"><div class="quiz-verdict-heading"><span aria-hidden="true">${correct?'✓':'✕'}</span><strong>${correct?'정답입니다!':'오답입니다!'}</strong></div>${answer?`<div class="quiz-verdict-answers">${chosen?`<p><b>선택한 답</b><span>${esc(chosen)}</span></p>`:''}<p><b>정답</b><span>${esc(answer)}</span></p></div>`:''}</section>`;
 }
@@ -562,15 +578,15 @@ function purchaseQuizModal(){
  const answered=state.phase==='purchase-feedback',w=work(challenge.workId);
  const options=[{value:true,label:'O',meaning:'맞다'},{value:false,label:'X',meaning:'아니다'}];
  if(answered){
-  showModal(challenge.correct?'이용권을 구입할 수 있어요':'이번 구입 기회는 종료됐어요',`${quizVerdict(challenge.correct)}<section class="purchase-work-summary ${challenge.correct?'has-work-art':''}" aria-label="작품 구입 정보">${challenge.correct&&WORK_ARTWORK[w.id]?`<img class="purchase-work-art" src="${WORK_ARTWORK[w.id]}" alt="" aria-hidden="true" decoding="async"/>`:''}<p class="purchase-composer">${esc(w.composer)}</p><h3>${esc(w.title)}</h3><div class="purchase-price"><span>구입가</span><strong>${w.price.toLocaleString()} <small>MC</small></strong></div></section><button class="primary full purchase-confirm-cta" data-action="${challenge.correct?'purchase-confirm':'purchase-feedback-close'}">${challenge.correct?'구입하고 차례 넘기기 →':'차감 없이 다음 차례로 →'}</button>${challenge.correct?'<button class="text-button full" data-action="purchase-decline">구입하지 않고 차례 넘기기 →</button>':''}`,'purchase-quiz-modal purchase-result-modal');
+  showModal(challenge.correct?'이용권을 구입할 수 있어요':'이번 구입 기회는 종료됐어요',`${quizVerdict(challenge.correct)}${challenge.timedOut?'<p class="quiz-timeout">시간이 초과되어 오답으로 처리됐어요.<br>코인은 차감되지 않아요.</p>':''}<section class="purchase-work-summary ${challenge.correct?'has-work-art':''}" aria-label="작품 구입 정보">${challenge.correct&&WORK_ARTWORK[w.id]?`<img class="purchase-work-art" src="${WORK_ARTWORK[w.id]}" alt="" aria-hidden="true" decoding="async"/>`:''}<p class="purchase-composer">${esc(w.composer)}</p><h3>${esc(w.title)}</h3><div class="purchase-price"><span>구입가</span><strong>${w.price.toLocaleString()} <small>MC</small></strong></div></section><button class="primary full purchase-confirm-cta" data-action="${challenge.correct?'purchase-confirm':'purchase-feedback-close'}">${challenge.correct?'구입하고 차례 넘기기 →':'차감 없이 다음 차례로 →'}</button>${challenge.correct?'<button class="text-button full" data-action="purchase-decline">구입하지 않고 차례 넘기기 →</button>':''}`,'purchase-quiz-modal purchase-result-modal');
  }else{
-  showModal('이용권 구입 OX 퀴즈',`<div class="quiz-meta">${pill(`${esc(w.composer)} · ${esc(w.title)}`)}${pill(`구입가 ${w.price} MC`)}</div><p class="purchase-quiz-rule">정답이면 뮤직코인으로 이용권을 구입할 수 있어요.<br>오답이어도 코인 차감은 없습니다.</p><h3 class="quiz-question">${esc(q.question)}</h3><div class="purchase-ox-options">${options.map(o=>`<button data-action="purchase-answer" data-value="${o.value}" aria-label="${o.label} · ${o.meaning}"><strong>${o.label}</strong><span>${o.meaning}</span></button>`).join('')}</div><p class="muted">이 칸에 도착한 동안 한 번만 답할 수 있어요. 구입 OX 퀴즈에는 별도 코인·배움 점수 보상이 없습니다.</p>`,'purchase-quiz-modal');
+  showModal('이용권 구입 OX 퀴즈',`${quizClock()}<div class="quiz-meta">${pill(`${esc(w.composer)} · ${esc(w.title)}`)}${pill(`구입가 ${w.price} MC`)}</div><p class="purchase-quiz-rule">정답이면 뮤직코인으로 이용권을 구입할 수 있어요.<br>오답이어도 코인 차감은 없습니다.</p><h3 class="quiz-question">${esc(q.question)}</h3><div class="purchase-ox-options">${options.map(o=>`<button data-action="purchase-answer" data-value="${o.value}" aria-label="${o.label} · ${o.meaning}"><strong>${o.label}</strong><span>${o.meaning}</span></button>`).join('')}</div><p class="muted">이 칸에 도착한 동안 한 번만 답할 수 있어요. 구입 OX 퀴즈에는 별도 코인·배움 점수 보상이 없습니다.</p>`,'purchase-quiz-modal');
  }
- $('#modal').dataset.auto='true';
+ $('#modal').dataset.auto='true';if(!answered)startQuizClock();
 }
 function quizModal(){const q=QUIZZES.find(q=>q.id===state.quiz);if(!q)return;
  const f=state.feedback;
- showModal(state.phase==='feedback'?(f.correct?'정답입니다!':'오답입니다!'):'생각을 모아, 뮤직 퀴즈',`${f?quizVerdict(f.correct):''}<div class="quiz-meta">${pill(q.kind==='copyright'?'© 저작권 탐구':'♫ 음악사 탐구')}${pill(f?(f.correct?'보상 +80 MC':'코인 차감 없음'):'정답 +80 MC')}</div><h3 class="quiz-question">${q.question}</h3><div class="quiz-options">${q.options.map((o,i)=>`<button data-action="answer" data-index="${i}" ${f?'disabled':''} class="${f?(i===q.answer?'correct':i===f.index?'incorrect':''):''}"><span>${i+1}</span>${o}${f&&i===q.answer?' ✓ 정답':f&&i===f.index?' ✕ 선택한 답 · 오답':''}</button>`).join('')}</div>${f?`<div class="quiz-explanation"><strong>${f.correct?'정답 · 80 MC 획득':'오답 · 코인은 차감되지 않아요'}</strong><p>${q.explanation}</p></div><button class="primary full" data-action="feedback-close">해설 확인하고 계속하기 →</button>`:'<p class="muted">친구들과 이야기한 뒤 답을 하나 골라 주세요.</p>'}`,f?'learning-feedback-modal quiz-result-notice':'learning-quiz-modal');$('#modal').dataset.auto='true';
+ showModal(state.phase==='feedback'?(f.correct?'정답입니다!':'오답입니다!'):'생각을 모아, 뮤직 퀴즈',`${f?quizVerdict(f.correct):quizClock()}${f?.timedOut?'<p class="quiz-timeout">시간이 초과되어 오답으로 처리됐어요.<br>코인은 차감되지 않아요.</p>':''}<div class="quiz-meta">${pill(q.kind==='copyright'?'© 저작권 탐구':'♫ 음악사 탐구')}${pill(f?(f.correct?'보상 +80 MC':'코인 차감 없음'):'정답 +80 MC')}</div><h3 class="quiz-question">${q.question}</h3><div class="quiz-options">${q.options.map((o,i)=>`<button data-action="answer" data-index="${i}" ${f?'disabled':''} class="${f?(i===q.answer?'correct':i===f.index?'incorrect':''):''}"><span>${i+1}</span>${o}${f&&i===q.answer?' ✓ 정답':f&&i===f.index?' ✕ 선택한 답 · 오답':''}</button>`).join('')}</div>${f?`<div class="quiz-explanation"><strong>${f.correct?'정답 · 80 MC 획득':'오답 · 코인은 차감되지 않아요'}</strong><p>${q.explanation}</p></div><button class="primary full" data-action="feedback-close">해설 확인하고 계속하기 →</button>`:'<p class="muted">친구들과 이야기한 뒤 답을 하나 골라 주세요.</p>'}`,f?'learning-feedback-modal quiz-result-notice':'learning-quiz-modal');$('#modal').dataset.auto='true';if(!f)startQuizClock();
 }
 function streamingWorkDetails(id){
  const apps=Object.entries(state.streamingInstallations?.[id]||{});

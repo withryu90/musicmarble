@@ -1,11 +1,11 @@
-import {randomInt,randomToken} from './random.js?v=356cfa2f98fd';
-import * as G from './engine.js?v=356cfa2f98fd';
-import {botDecision,applyBotDecision} from './bots.js?v=356cfa2f98fd';
-import {activityChanges} from './activities.js?v=356cfa2f98fd';
-import {drawCharacterIds,characterById} from './characters.js?v=356cfa2f98fd';
+import {randomInt,randomToken} from './random.js?v=7be3347572fd';
+import * as G from './engine.js?v=7be3347572fd';
+import {botDecision,applyBotDecision} from './bots.js?v=7be3347572fd';
+import {activityChanges} from './activities.js?v=7be3347572fd';
+import {drawCharacterIds,characterById} from './characters.js?v=7be3347572fd';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {
-  constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();}
+  constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
   code(){let code;do{code=Array.from({length:6},()=>ALPHABET[randomInt(ALPHABET.length)]).join('');}while(this.rooms.has(code));return code;}
   nickname(value){if(typeof value!=='string'||!value.trim()||value.trim().length>16)throw Error('닉네임은 1–16자로 입력해 주세요.');return value.trim();}
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
@@ -44,7 +44,18 @@ export class RoomService {
     },this.botDelay);
     timer.unref?.();this.botTimers.set(room.code,timer);
   }
-  close(){for(const timer of this.botTimers.values())clearTimeout(timer);this.botTimers.clear();}
+  scheduleQuiz(room){
+    clearTimeout(this.quizTimers.get(room.code));this.quizTimers.delete(room.code);
+    if(!room.state?.quizDeadline||!['quiz','purchase-quiz'].includes(room.state.phase))return;
+    const timer=setTimeout(()=>{
+      this.quizTimers.delete(room.code);
+      if(!this.rooms.has(room.code))return;
+      const next=G.expireQuiz(room.state);
+      if(next!==room.state){room.state=next;this.broadcast(room);}else this.scheduleQuiz(room);
+    },Math.max(0,room.state.quizDeadline-Date.now()));
+    timer.unref?.();this.quizTimers.set(room.code,timer);
+  }
+  close(){for(const timer of this.quizTimers.values())clearTimeout(timer);this.quizTimers.clear();for(const timer of this.botTimers.values())clearTimeout(timer);this.botTimers.clear();}
   get(code){const normalized=String(code||'').trim().toUpperCase();const room=this.rooms.get(normalized);if(!room)throw Error('방을 찾을 수 없습니다. 코드를 확인해 주세요.');return room;}
   authenticate(code,token){const room=this.get(code),member=room.members.find(m=>!m.isBot&&typeof token==='string'&&m.token===token);if(!member)throw Error('참가 정보를 확인할 수 없습니다. 같은 브라우저의 이어하기를 이용해 주세요.');return {room,member};}
   chat(code,token,message){
@@ -57,9 +68,10 @@ export class RoomService {
   }
   subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn({code:room.code,messages:room.messages??[]});return ()=>room.chatListeners.delete(fn);}
   snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
-  broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);}
+  broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
   act(code,token,{action,args=[],revision}={}){
     const {room,member}=this.authenticate(code,token);
+    if(room.state){const expired=G.expireQuiz(room.state);if(expired!==room.state){room.state=expired;this.broadcast(room);if(['answerQuiz','answerPurchaseQuiz','beginQuizTimer','expireQuiz'].includes(action))return this.snapshot(room);}}
     if(revision!==room.revision)throw Error('게임 상태가 갱신되었습니다. 화면을 확인하고 다시 시도해 주세요.');
     if(!Array.isArray(args))throw Error('잘못된 요청입니다.');
     if(action==='rerollCharacter'){
@@ -82,13 +94,13 @@ export class RoomService {
       }else{
         if(member.id!==state.turn)throw Error('지금은 다른 참가자의 차례입니다.');
         if(state.trade)throw Error('거래 응답을 먼저 기다려 주세요.');
-        const allowed={buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
+        const allowed={beginQuizTimer:s=>G.beginQuizTimer(s),expireQuiz:s=>G.expireQuiz(s),buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
         if(!Object.hasOwn(allowed,action))throw Error('지원하지 않는 동작입니다.');
         room.state=allowed[action](state,...args);
       }
     }
     this.broadcast(room);return this.snapshot(room);
   }
-  subscribe(code,token,fn){const {room}=this.authenticate(code,token);room.listeners.add(fn);fn(this.snapshot(room));this.scheduleBot(room);return ()=>{room.listeners.delete(fn);if(!room.listeners.size){clearTimeout(this.botTimers.get(room.code));this.botTimers.delete(room.code);}};}
-  cleanup(now=Date.now()){for(const [code,room] of this.rooms)if(room.listeners.size===0&&now-room.updatedAt>24*60*60*1000){clearTimeout(this.botTimers.get(code));this.botTimers.delete(code);this.rooms.delete(code);}}
+  subscribe(code,token,fn){const {room}=this.authenticate(code,token);room.listeners.add(fn);fn(this.snapshot(room));this.scheduleBot(room);this.scheduleQuiz(room);return ()=>{room.listeners.delete(fn);if(!room.listeners.size){clearTimeout(this.botTimers.get(room.code));this.botTimers.delete(room.code);}};}
+  cleanup(now=Date.now()){for(const [code,room] of this.rooms)if(room.listeners.size===0&&now-room.updatedAt>24*60*60*1000){clearTimeout(this.botTimers.get(code));this.botTimers.delete(code);clearTimeout(this.quizTimers.get(code));this.quizTimers.delete(code);this.rooms.delete(code);}}
 }

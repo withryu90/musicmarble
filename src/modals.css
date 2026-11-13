@@ -258,3 +258,10 @@ dialog#modal::backdrop{background:#164d7959}
 #modal .activity-symbol svg{display:block;width:32px;height:32px}
 .streaming-cta{padding:12px;background:#207fae;color:white;border-radius:9px;font-weight:800}
 .streaming-work-details{padding:12px;border:1px solid #c5ddec;border-radius:12px;margin-bottom:14px;background:#f1f9ff}.streaming-work-details p{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px}.streaming-work-details svg{width:22px;height:22px}
+
+.quiz-clock{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:8px 12px;background:#e6f4ff;border-radius:8px;color:#205e8b;font-size:13px}
+.quiz-clock strong{font-size:20px;white-space:nowrap}
+.quiz-clock progress{flex:1;min-width:40px;height:7px;accent-color:#258bc9}
+.quiz-clock.is-urgent{color:#b42b3c;background:#fff0f2}
+.quiz-clock.is-urgent progress{accent-color:#cf394d}
+.quiz-timeout{text-align:center;color:#b42b3c;font-weight:700;line-height:1.6}

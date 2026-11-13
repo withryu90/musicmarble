@@ -1,9 +1,10 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=356cfa2f98fd';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=356cfa2f98fd';
-import {characterById,drawCharacterIds} from './characters.js?v=356cfa2f98fd';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=356cfa2f98fd';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=7be3347572fd';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=7be3347572fd';
+import {characterById,drawCharacterIds} from './characters.js?v=7be3347572fd';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=7be3347572fd';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
+export const QUIZ_TIME_LIMIT=10000;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
 export const current=s=>s.players[s.turn];
 // Old saves recorded only the first player's laps; retain that known progress.
@@ -28,14 +29,14 @@ export const score=(s,p)=>p.coins+owned(s,p.id).reduce((n,w)=>n+w.price+(s.owner
 const clone=s=>structuredClone(s);
 function log(s,text){s.log.unshift({round:s.round,text});s.log=s.log.slice(0,60);}
 function finishByLaps(s,player,moveSteps){
- s.phase='finished';s.round=s.maxRounds;s.trade=null;s.quiz=null;s.feedback=null;s.purchaseChallenge=null;
+ s.quizDeadline=null;s.phase='finished';s.round=s.maxRounds;s.trade=null;s.quiz=null;s.feedback=null;s.purchaseChallenge=null;
  s.endReason={type:'laps',playerId:player.id,...(moveSteps===undefined?{}:{moveSteps})};
  log(s,`${player.name}: 가장 먼저 ${s.maxRounds}바퀴 완주! 게임을 종료합니다.`);return s;
 }
 function checkBankruptcy(s){
   if(s.players.length!==2||s.phase==='finished')return s;
   const player=s.players.find(p=>p.coins===0);if(!player)return s;
-  s.phase='finished';s.endReason={type:'bankruptcy',playerId:player.id};s.trade=null;s.quiz=null;s.feedback=null;s.purchaseChallenge=null;
+  s.quizDeadline=null;s.phase='finished';s.endReason={type:'bankruptcy',playerId:player.id};s.trade=null;s.quiz=null;s.feedback=null;s.purchaseChallenge=null;
   log(s,`${player.name}: 보유 코인 0 MC로 파산 — 2인 게임을 즉시 종료합니다.`);return s;
 }
 function change(s,p,amount){const actual=Math.max(-p.coins,amount);p.coins+=actual;if(actual!==amount)log(s,`${p.name}: 잔액 한도에서 ${-actual} MC 지급. 수업 모드에서 부족액은 면제됩니다.`);return actual;}
@@ -67,7 +68,7 @@ export function migrateRetiredQuiz(state){
 }
 function openQuiz(s){
   const pool=s.quizDeck.filter(id=>QUIZZES.some(q=>q.id===id));
-  s.quiz=pool[s.quizCursor%pool.length];s.quizCursor++;s.phase='quiz';s.quizUsed=true;
+  s.quizDeadline=null;s.quiz=pool[s.quizCursor%pool.length];s.quizCursor++;s.phase='quiz';s.quizUsed=true;
 }
 export function roll(state,dice,rng=Math.random){
   if(state.phase==='backward-roll')return rollBackward(state,dice,rng);
@@ -176,13 +177,27 @@ export function startPurchaseQuiz(state,rng=Math.random){
  if(s.purchaseChallenge)throw Error('구입 OX 퀴즈는 도착할 때 한 번만 도전할 수 있습니다.');
  if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
  const questions=PURCHASE_QUIZZES.filter(q=>q.workId===w.id),q=questions[Math.floor(rng()*questions.length)];
- s.purchaseChallenge={workId:w.id,questionId:q.id,response:null,correct:null};s.phase='purchase-quiz';return s;
+ s.quizDeadline=null;s.purchaseChallenge={workId:w.id,questionId:q.id,response:null,correct:null};s.phase='purchase-quiz';return s;
+}
+// The clock starts when the participant actually sees the question, after movement.
+export function beginQuizTimer(state,now=Date.now()){
+ if(!['quiz','purchase-quiz'].includes(state.phase))throw Error('진행 중인 퀴즈가 없습니다.');
+ if(state.quizDeadline)return state;
+ const s=clone(state);s.quizDeadline=now+QUIZ_TIME_LIMIT;return s;
+}
+export function expireQuiz(state,now=Date.now()){
+ if(!['quiz','purchase-quiz'].includes(state.phase)||!state.quizDeadline||now<state.quizDeadline)return state;
+ const s=clone(state);s.quizDeadline=null;
+ if(s.phase==='purchase-quiz'){
+  s.purchaseChallenge.response=null;s.purchaseChallenge.correct=false;s.purchaseChallenge.timedOut=true;s.phase='purchase-feedback';
+ }else{current(s).attempts++;s.feedback={correct:false,index:-1,timedOut:true};s.phase='feedback';}
+ log(s,`${current(s).name}: 퀴즈 시간 초과 — 오답 처리, 코인 차감 없음`);return s;
 }
 export function answerPurchaseQuiz(state,response){
  if(state.phase!=='purchase-quiz'||!state.purchaseChallenge||typeof response!=='boolean')throw Error('O 또는 X를 선택해 주세요.');
  const s=clone(state),challenge=s.purchaseChallenge,q=purchaseQuizById(challenge.questionId);
  if(!q||q.workId!==BOARD[current(s).position].id)throw Error('구입 퀴즈 정보를 확인해 주세요.');
- challenge.response=response;challenge.correct=response===q.answer;s.phase='purchase-feedback';
+ s.quizDeadline=null;challenge.response=response;challenge.correct=response===q.answer;s.phase='purchase-feedback';
  log(s,`${current(s).name}: 구입 OX 퀴즈 ${challenge.correct?'정답 — 이용권 구입 가능':'오답 — 코인 차감 없이 구입 기회 종료'}`);return s;
 }
 export function closePurchaseFeedback(state){
@@ -220,7 +235,7 @@ export function answerQuiz(state,index){
   if(state.phase!=='quiz')throw Error('진행 중인 퀴즈가 없습니다.');
   const s=clone(state),q=QUIZZES.find(q=>q.id===s.quiz),p=current(s);
   if(!Number.isInteger(index)||index<0||index>=q.options.length)throw Error('답을 선택해 주세요.');
-  p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
+  s.quizDeadline=null;p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
 }
 export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);s.phase='action';s.quiz=null;s.feedback=null;return s;}
 export function nextTurn(state){
@@ -234,7 +249,7 @@ export function nextTurn(state){
   }
   s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
 }
-export function finishGame(state){const s=clone(state);s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
+export function finishGame(state){const s=clone(state);s.quizDeadline=null;s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
   const s=clone(state),p=current(s);
   if(s.phase!=='action'||s.trade||s.ownership[workId]?.player!==p.id||!Number.isInteger(to)||!s.players[to]||to===p.id||!Number.isInteger(price)||price<1||price>10000)throw Error('거래할 작품, 상대 팀, 1–10,000 MC의 정수 가격을 확인해 주세요.');
@@ -270,7 +285,8 @@ export function isValidSave(s){
     if(!Array.isArray(s.quizDeck)||s.quizDeck.length!==QUIZZES.length||new Set(s.quizDeck).size!==QUIZZES.length||!s.quizDeck.every(id=>QUIZZES.some(q=>q.id===id)))return false;
     if(!Number.isInteger(s.eventCursor)||s.eventCursor<0||!Number.isInteger(s.quizCursor)||s.quizCursor<0||typeof s.quizUsed!=='boolean')return false;
     if(['quiz','feedback'].includes(s.phase)&&!QUIZZES.some(q=>q.id===s.quiz))return false;
-    if(s.phase==='feedback'&&(!s.feedback||typeof s.feedback.correct!=='boolean'||!Number.isInteger(s.feedback.index)||s.feedback.index<0||s.feedback.index>2))return false;
+    if(s.quizDeadline!=null&&(!Number.isSafeInteger(s.quizDeadline)||s.quizDeadline<1||!['quiz','purchase-quiz'].includes(s.phase)))return false;
+    if(s.phase==='feedback'&&(!s.feedback||typeof s.feedback.correct!=='boolean'||(s.feedback.timedOut===true?s.feedback.correct!==false||s.feedback.index!==-1:!Number.isInteger(s.feedback.index)||s.feedback.index<0||s.feedback.index>2)))return false;
     if(s.trade&&(!WORKS.some(w=>w.id===s.trade.workId)||s.ownership[s.trade.workId]?.player!==s.trade.from||s.trade.from!==s.turn||!s.players[s.trade.to]||s.trade.to===s.trade.from||!Number.isInteger(s.trade.price)||s.trade.price<1||s.trade.price>10000||s.phase!=='action'))return false;
     if(s.players.some(p=>p.skipTurns!==undefined&&(!Number.isInteger(p.skipTurns)||p.skipTurns<0||p.skipTurns>2)))return false;
     if(s.lastPrisonTransfer&&(!Number.isInteger(s.lastPrisonTransfer.from)||BOARD[s.lastPrisonTransfer.from]?.type!=='go-to-prison'||BOARD[s.lastPrisonTransfer.to]?.type!=='prison'||current(s).position!==s.lastPrisonTransfer.to))return false;
@@ -285,9 +301,9 @@ export function isValidSave(s){
     if(s.lastBackwardMove){const m=s.lastBackwardMove;if(BOARD[m.from]?.type!=='back-three'||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}
     if(s.phase==='backward-roll'&&(BOARD[current(s).position].type!=='back-three'||s.lastBackwardMove||s.trade))return false;
     if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>1||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
-    if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
+    if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.timedOut===true?c.response!==null||c.correct!==false:c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
     if(['purchase-quiz','purchase-feedback'].includes(s.phase)&&(!s.purchaseChallenge||s.ownership[s.purchaseChallenge.workId]))return false;
-    if(s.phase==='purchase-quiz'&&s.purchaseChallenge.response!==null)return false;
+    if(s.phase==='purchase-quiz'&&(s.purchaseChallenge.response!==null||s.purchaseChallenge.timedOut===true))return false;
     if(s.phase==='purchase-feedback'&&typeof s.purchaseChallenge.correct!=='boolean')return false;
     if(s.lastAssignment){const t=s.lastAssignment;if(!Number.isInteger(t.from)||!s.players[t.from]||typeof t.skipped!=='boolean')return false;if(!t.skipped&&(!Number.isInteger(t.to)||!s.players[t.to]||t.to===t.from||!WORKS.some(w=>w.id===t.workId&&w.price===t.price)))return false;}
     if(s.lastEvent&&(!EVENTS.some(e=>e.title===s.lastEvent.title)||typeof s.lastEvent.text!=='string'||typeof s.lastEvent.prompt!=='string'||typeof s.lastEvent.effect!=='string'||!Number.isInteger(s.lastEvent.actual)))return false;

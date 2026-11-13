@@ -70,3 +70,42 @@ test('four friends repeatedly hand off turns and each next peer receives a roll 
   }
  }finally{peers.forEach(p=>p.close());}
 });
+
+test('two friends survive rapid timer/answer races, timeout and repeated purchases without waiting on each other',async()=>{
+ const {GameActions}=await import('../src/game-actions.js');
+ const {purchaseQuizById}=await import('../src/purchase-quizzes.js');
+ const peers=[transport(),transport()],sessions=[],snapshots=[],queues=[];
+ try{
+  sessions.push(await peers[0].request('create',{nickname:'Sync host'}));
+  peers[0].subscribe(sessions[0],{onSnapshot:s=>snapshots[0]=s});
+  sessions.push(await peers[1].request('join',{code:sessions[0].code,nickname:'Sync guest'}));
+  peers[1].subscribe(sessions[1],{onSnapshot:s=>snapshots[1]=s});await tick();
+  await peers[0].request('action',{action:'start',revision:snapshots[0].revision},sessions[0]);await tick();
+  for(let i=0;i<2;i++)queues.push(new GameActions({latest:()=>snapshots[i],remember:s=>{if(s.revision>=snapshots[i].revision)snapshots[i]=s;},send:(body,who)=>peers[i].request('action',body,who),refresh:who=>peers[i].request('resume',{},who)}));
+  const room=peers[0].service.get(sessions[0].code);
+  for(let n=0;n<8;n++){
+   const actor=n%2,s=room.state;
+   assert.equal(s.turn,actor);assert.equal(s.phase,'roll');
+   // A deterministic work arrival keeps this test focused on network ordering.
+   s.phase='action';s.dice=1;s.players[actor].position=1;s.purchaseChallenge=null;s.streamingHandled=true;delete s.ownership['bach-air'];
+   peers[0].service.broadcast(room);await tick();
+   const run=(action,args=[],shown=snapshots[actor])=>queues[actor].run({action,args},sessions[actor],shown);
+   await run('startPurchaseQuiz');await tick();const shown=structuredClone(snapshots[actor]);
+   const answer=purchaseQuizById(shown.state.purchaseChallenge.questionId).answer;
+   await Promise.all([run('beginQuizTimer',[],shown),run('answerPurchaseQuiz',[answer],shown)]);await tick();
+   assert.equal(room.state.phase,'purchase-feedback');assert.equal(room.state.purchaseChallenge.correct,true);
+   const feedback=structuredClone(snapshots[actor]);
+   await Promise.all([run('purchaseAndNext',[],feedback),run('purchaseAndNext',[],feedback)]);await tick();
+   for(const received of snapshots){assert.equal(received.state.turn,1-actor);assert.equal(received.state.phase,'roll');assert.equal(received.revision,room.revision);}
+  }
+  const actor=room.state.turn;room.state.phase='action';room.state.quizUsed=false;peers[0].service.broadcast(room);await tick();
+  await queues[actor].run({action:'startQuiz'},sessions[actor],snapshots[actor]);await tick();
+  await queues[actor].run({action:'beginQuizTimer'},sessions[actor],snapshots[actor]);await tick();
+  room.state.quizDeadline=Date.now()-1;
+  await queues[actor].run({action:'answerQuiz',args:[0]},sessions[actor],snapshots[actor]);await tick();
+  assert.equal(room.state.feedback.timedOut,true);
+  await queues[actor].run({action:'closeFeedback'},sessions[actor],snapshots[actor]);await tick();
+  await queues[actor].run({action:'nextTurn'},sessions[actor],snapshots[actor]);await tick();
+  for(const received of snapshots){assert.equal(received.state.turn,1-actor);assert.equal(received.state.phase,'roll');}
+ }finally{peers.forEach(p=>p.close());}
+});

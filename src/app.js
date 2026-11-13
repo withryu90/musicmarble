@@ -1,30 +1,31 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=7be3347572fd';
-import {createMusicDirector} from './music-director.js?v=7be3347572fd';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=7be3347572fd';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=7be3347572fd';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=7be3347572fd';
-import {formatModalSentences} from './modal-sentences.js?v=7be3347572fd';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=7be3347572fd';
-import {WORK_ARTWORK} from './work-artwork.js?v=7be3347572fd';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=7be3347572fd';
-import {RankingClient} from './ranking.js?v=7be3347572fd';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=7be3347572fd';
-import {HandoffCountdown} from './handoff-countdown.js?v=7be3347572fd';
-import {fitBoardTitles} from './board-type.js?v=7be3347572fd';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=7be3347572fd';
-import * as G from './engine.js?v=7be3347572fd';
-import {ActivityInbox} from './activities.js?v=7be3347572fd';
-import {purchaseQuizById} from './purchase-quizzes.js?v=7be3347572fd';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=7be3347572fd';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=7be3347572fd';
-import {diceCube} from './dice.js?v=7be3347572fd';
-import {CHARACTER_BIOS} from './character-bios.js?v=7be3347572fd';
-import {needsLandscape} from './orientation.js?v=7be3347572fd';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=7be3347572fd';
-import {PeerTransport} from './peer-transport.js?v=7be3347572fd';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=7be3347572fd';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=7be3347572fd';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=7be3347572fd';
+import {GameActions} from './game-actions.js?v=36568eb5a507';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=36568eb5a507';
+import {createMusicDirector} from './music-director.js?v=36568eb5a507';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=36568eb5a507';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=36568eb5a507';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=36568eb5a507';
+import {formatModalSentences} from './modal-sentences.js?v=36568eb5a507';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=36568eb5a507';
+import {WORK_ARTWORK} from './work-artwork.js?v=36568eb5a507';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=36568eb5a507';
+import {RankingClient} from './ranking.js?v=36568eb5a507';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=36568eb5a507';
+import {HandoffCountdown} from './handoff-countdown.js?v=36568eb5a507';
+import {fitBoardTitles} from './board-type.js?v=36568eb5a507';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=36568eb5a507';
+import * as G from './engine.js?v=36568eb5a507';
+import {ActivityInbox} from './activities.js?v=36568eb5a507';
+import {purchaseQuizById} from './purchase-quizzes.js?v=36568eb5a507';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=36568eb5a507';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=36568eb5a507';
+import {diceCube} from './dice.js?v=36568eb5a507';
+import {CHARACTER_BIOS} from './character-bios.js?v=36568eb5a507';
+import {needsLandscape} from './orientation.js?v=36568eb5a507';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=36568eb5a507';
+import {PeerTransport} from './peer-transport.js?v=36568eb5a507';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=36568eb5a507';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=36568eb5a507';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=36568eb5a507';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -80,9 +81,21 @@ document.addEventListener('touchend',unlockLobbyMusic,{capture:true,passive:true
 document.addEventListener('click',unlockLobbyMusic,{capture:true});
 document.addEventListener('keydown',e=>{if(!['Shift','Control','Alt','Meta','Escape'].includes(e.key))unlockLobbyMusic(e);},{capture:true});
 const myTurn=()=>connected&&session?.playerId===state.turn;
+let latestRoomSnapshot=null,syncInFlight=false;
+function rememberRoomSnapshot(next){
+ if(!next||next.code!==session?.code)return;
+ if(!latestRoomSnapshot||latestRoomSnapshot.code!==next.code||next.revision>latestRoomSnapshot.revision){latestRoomSnapshot=next;}
+}
+const gameActions=new GameActions({
+ latest:code=>latestRoomSnapshot?.code===code?latestRoomSnapshot:null,
+ send:(body,who)=>peerTransport.request('action',body,who),
+ refresh:who=>peerTransport.request('resume',{code:who.code},who),
+ remember:rememberRoomSnapshot
+});
 async function request(path,body){
  if(['create','join','create-solo'].includes(path))body={...body,nickname:await rankingClient.assertNicknameAvailable(body.nickname)};
  if(path==='action'&&body.action==='start'&&!snapshot?.state)await Promise.all(snapshot.members.filter(p=>!p.isBot).map(p=>rankingClient.assertNicknameAvailable(p.name)));
+ if(path==='action')return gameActions.run(body,session,snapshot);
  return peerTransport.request(path,body,session);
 }
 
@@ -96,7 +109,7 @@ let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
 const chatBubbles=new Map(),chatBubbleTimers=new Map();
 let chatInitialized=false;
-function resetActivityFlow(){if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
@@ -156,9 +169,16 @@ function animateBoardMovement(p){
  p.timer=setTimeout(advance,900);
 }
 function receive(next){
+ rememberRoomSnapshot(next);
  if(participantIntroPending&&snapshot?.state){if(next.revision>snapshot.revision&&!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);return;}
  if(snapshot&&next.revision<snapshot.revision)return;
- if(dicePresentation){presentDiceResult(next);return;}
+ if(dicePresentation){
+  const p=dicePresentation;
+  if(p.result===null&&next.state&&(next.state.turn!==p.playerId||next.state.turnNumber!==p.before.turnNumber)){
+   stopDicePresentation();commitSnapshot(next);return;
+  }
+  presentDiceResult(next);return;
+ }
  if(activeActivity||activityInbox.pending.length){if(!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);deferredSnapshots.sort((a,b)=>a.revision-b.revision);return;}
  const before=snapshot?.state,after=next.state;
  if(['roll','backward-roll'].includes(before?.phase)&&after&&after.turn===before.turn&&after.turnNumber===before.turnNumber&&(['action','quiz','backward-roll'].includes(after.phase)||after.phase==='finished'&&['bankruptcy','laps'].includes(after.endReason?.type))&&after.dice!==null){
@@ -170,6 +190,7 @@ function commitSnapshot(next){
  if(snapshot&&next.revision<snapshot.revision)return;
  const introduce=!snapshot?.state&&next.state&&(next.state.turnNumber??0)===0&&next.state.dice===null;
  if(introduce)participantIntroPending=true;
+ if(!snapshot||next.revision>snapshot.revision)lastPresentationProgressAt=Date.now();
  snapshot=next;if(next.state)state=next.state;
  rankingClient.observe(next,session,G.score);
  activityInbox.accept(next.code,next.activities||[]);render();
@@ -195,7 +216,7 @@ function continueFlow(){
  const arrival=BOARD[G.current(state).position],purchaseKey=`${session?.code}:${state.turnNumber}:${state.turn}:${arrival.id}`;
  const streamKey=`${session?.code}:${state.turnNumber}:${state.turn}`;
  if(myTurn()&&G.streamingOpportunity(state)&&!d.open&&lastStreamingPrompt!==streamKey){lastStreamingPrompt=streamKey;streamingModal();return;}
- if(myTurn()&&state.phase==='action'&&!state.trade&&arrival.type==='work'&&!G.streamingOpportunity(state)&&!state.ownership[arrival.id]&&!state.purchaseChallenge&&G.current(state).coins>=arrival.price&&autoPurchaseKey!==purchaseKey){autoPurchaseKey=purchaseKey;void apply(G.startPurchaseQuiz);return;}
+ if(myTurn()&&state.phase==='action'&&!state.trade&&arrival.type==='work'&&!G.streamingOpportunity(state)&&!state.ownership[arrival.id]&&!state.purchaseChallenge&&G.current(state).coins>=arrival.price&&autoPurchaseKey!==purchaseKey){autoPurchaseKey=purchaseKey;void apply(G.startPurchaseQuiz).finally(()=>{if(autoPurchaseKey===purchaseKey)autoPurchaseKey=null;});return;}
  if(auto!==lastAuto){lastAuto=auto;
   if(state.trade)tradeModal();
   else if(state.phase==='backward-roll'&&myTurn())backwardRollModal();
@@ -269,7 +290,7 @@ function showActivity(item){
  activeActivity=item;
  const effect=activitySound(item);if(effect)void soundEffects.play(effect,`${session.code}:${effect==='prison'?`prison:${state.turnNumber}:${item.actorId}`:`event:${item.id}`}`);
  const actor=state.players[item.actorId],other=state.players[item.otherId];
- const footer=item.type==='backward-entry'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
+ const footer=item.type==='backward-entry'&&item.actorId===state.turn&&state.phase==='backward-roll'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
  if(item.type==='bankruptcy'){
   showModal('파산 · 게임 종료',`<section class="bankruptcy-scene"><div class="bankruptcy-coins" aria-hidden="true"><span>MC</span><span>MC</span><span>MC</span></div><span class="bankruptcy-kicker">음악 투자의 마지막 순간</span><h2 class="bankruptcy-title">파산</h2><div class="bankruptcy-player">${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><div class="bankruptcy-balance"><strong>0</strong><span>MC</span></div><p class="bankruptcy-message">뮤직코인이 모두 소진되었습니다.</p><p class="bankruptcy-detail">${esc(actor.name)} 님의 파산으로<br>2인 게임이 종료됩니다.</p></section><button class="primary full" data-action="activity-next">최종 결과 확인하기 →</button>`,'activity-modal bankruptcy-modal');
  }else if(item.type==='concert'&&item.concert){
@@ -299,6 +320,29 @@ function connect(){
   onDisconnect:message=>{connected=false;render();if(message)notify(message);}
  });
 }
+async function syncRoom(){
+ if(syncInFlight||!session?.code||!snapshot?.state)return;
+ syncInFlight=true;const who={...session},previousConnection=peerTransport.connection;
+ try{
+  const next=await peerTransport.request('resume',{code:who.code},who);
+  if(session?.code!==who.code||session?.token!==who.token)return;
+  const reconnect=!connected||previousConnection!==peerTransport.connection;connected=true;rememberRoomSnapshot(next);
+  const lagging=next.revision>snapshot.revision;
+  if(shouldRecoverPresentation({latestRevision:next.revision,presentedRevision:snapshot.revision,lastProgressAt:lastPresentationProgressAt,intro:participantIntroPending})){
+   stopDicePresentation();handoffCountdown.stop();activeActivity=null;deferredSnapshots=[];
+   if($('#modal').open)$('#modal').close();
+   lastAuto='';lastHandoffKey=null;commitSnapshot(next);
+  }else if(lagging)receive(next);
+  else if(!dicePresentation&&!activeActivity&&!activityInbox.pending.length){
+   if(myTurn()&&!state.quizDeadline&&['quiz','purchase-quiz'].includes(state.phase))startQuizClock();
+   continueFlow();
+  }
+  if(reconnect)connect();
+ }catch{}finally{syncInFlight=false;}
+}
+let lastPresentationProgressAt=Date.now();
+setInterval(()=>{void syncRoom();},4000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)void syncRoom();});
 function nicknameError(form,message){
  if(!form)return;form.querySelector('.nickname-error')?.remove();
  const input=form.querySelector('input[name="nickname"]');if(!input)return;

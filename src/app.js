@@ -1,29 +1,29 @@
-import {createMusicDirector} from './music-director.js?v=13452f8e2171';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=13452f8e2171';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=13452f8e2171';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=13452f8e2171';
-import {formatModalSentences} from './modal-sentences.js?v=13452f8e2171';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=13452f8e2171';
-import {WORK_ARTWORK} from './work-artwork.js?v=13452f8e2171';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=13452f8e2171';
-import {RankingClient} from './ranking.js?v=13452f8e2171';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=13452f8e2171';
-import {HandoffCountdown} from './handoff-countdown.js?v=13452f8e2171';
-import {fitBoardTitles} from './board-type.js?v=13452f8e2171';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=13452f8e2171';
-import * as G from './engine.js?v=13452f8e2171';
-import {ActivityInbox} from './activities.js?v=13452f8e2171';
-import {purchaseQuizById} from './purchase-quizzes.js?v=13452f8e2171';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=13452f8e2171';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=13452f8e2171';
-import {diceCube} from './dice.js?v=13452f8e2171';
-import {CHARACTER_BIOS} from './character-bios.js?v=13452f8e2171';
-import {needsLandscape} from './orientation.js?v=13452f8e2171';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=13452f8e2171';
-import {PeerTransport} from './peer-transport.js?v=13452f8e2171';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=13452f8e2171';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=13452f8e2171';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=13452f8e2171';
+import {createMusicDirector} from './music-director.js?v=684dd534b8c6';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=684dd534b8c6';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=684dd534b8c6';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=684dd534b8c6';
+import {formatModalSentences} from './modal-sentences.js?v=684dd534b8c6';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=684dd534b8c6';
+import {WORK_ARTWORK} from './work-artwork.js?v=684dd534b8c6';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=684dd534b8c6';
+import {RankingClient} from './ranking.js?v=684dd534b8c6';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=684dd534b8c6';
+import {HandoffCountdown} from './handoff-countdown.js?v=684dd534b8c6';
+import {fitBoardTitles} from './board-type.js?v=684dd534b8c6';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=684dd534b8c6';
+import * as G from './engine.js?v=684dd534b8c6';
+import {ActivityInbox} from './activities.js?v=684dd534b8c6';
+import {purchaseQuizById} from './purchase-quizzes.js?v=684dd534b8c6';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=684dd534b8c6';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=684dd534b8c6';
+import {diceCube} from './dice.js?v=684dd534b8c6';
+import {CHARACTER_BIOS} from './character-bios.js?v=684dd534b8c6';
+import {needsLandscape} from './orientation.js?v=684dd534b8c6';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=684dd534b8c6';
+import {PeerTransport} from './peer-transport.js?v=684dd534b8c6';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=684dd534b8c6';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=684dd534b8c6';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=684dd534b8c6';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -361,7 +361,7 @@ const PLAYER_PALETTE=['#2166e8','#f59e0b','#a442d8','#11a881'];
 function playerColor(person){return PLAYER_PALETTE[person.id]||PLAYER_PALETTE[0];}
 function playerInk(person){return person.id===0||person.id===2?'#ffffff':'#07111a';}
 function tokenVisible(player){return boardTokenVisible(state,player,dicePresentation?.moving?dicePresentation.playerId:null);}
-function tokens(index){const occupants=state.players.filter(p=>p.position===index&&tokenVisible(p));const [row,col]=coordinates(index);const {x,y}=boardTokenAnchor(row,col,BOARD_SIDE);return `<div class="tokens ${index===0?'tokens-at-start':''} ${occupants.length>=3?'token-stack':''}" style="--token-x:${x}%;--token-y:${y}%">${occupants.map(p=>`<span data-player-id="${p.id}" class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${playerColor(p)}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터">${characterSprite(p,'board-character')}<span class="character-ground"></span></span>`).join('')}</div>`;}
+function tokens(index){const occupants=state.players.filter(p=>p.position===index&&tokenVisible(p));const [row,col]=coordinates(index);const {x,y}=boardTokenAnchor(row,col,BOARD_SIDE);return `<div class="tokens ${index===0?'tokens-at-start':''} ${occupants.length>=3?'token-stack':''}" style="--token-x:${x}%;--token-y:${y}%">${occupants.map(p=>`<span data-player-id="${p.id}" class="token character-token ${p.id===state.turn?'token-active':''} ${dicePresentation?.moving&&p.id===dicePresentation.playerId?'token-moving':''}" style="--team:${playerColor(p)}" title="${esc(p.name)} · ${esc(characterFor(p).name)}${p.isBot?' · BOT':''}" aria-label="${esc(p.name)}의 ${esc(characterFor(p).name)} 캐릭터"><span class="pawn-figure">${characterSprite(p,'board-character')}<span class="character-ground"></span></span></span>`).join('')}</div>`;}
 const coordinates=boardCoordinates;
 function startPortal(){return `<span class="start-portal" aria-hidden="true"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gate-gold"><stop stop-color="#f6e0a0"/><stop offset=".5" stop-color="#be9047"/><stop offset="1" stop-color="#ffe7a0"/></linearGradient><linearGradient id="gate-light" x2="0" y2="1"><stop stop-color="#bceeff" stop-opacity=".9"/><stop offset="1" stop-color="#398bc0" stop-opacity=".1"/></linearGradient></defs><path d="M22 105V48a28 28 0 0 1 56 0v57" fill="url(#gate-light)" stroke="#286b98" stroke-width="12"/><path d="M20 106V46a30 30 0 0 1 60 0v60" fill="none" stroke="url(#gate-gold)" stroke-width="6"/><path d="M28 102V48a22 22 0 0 1 44 0v54" fill="none" stroke="#f8e4a4" stroke-width="2"/><path d="M13 54h17v50H13zM70 54h17v50H70z" fill="#397ba3" stroke="#ebcc82" stroke-width="2"/><path d="M10 101h24v9H10zM66 101h24v9H66zM10 48h24v8H10zM66 48h24v8H66z" fill="url(#gate-gold)" stroke="#87643d"/><path d="M6 110h88v7H6z" fill="#f1d58f" stroke="#957640"/><path d="M37 18h26l-3-11H40z" fill="url(#gate-gold)" stroke="#96733f"/><path d="M53 29v28c-12-5-16 12-6 12 5 0 10-3 10-8V38l10-3V25z" fill="#f3db95" stroke="#a17b3e" stroke-width="1"/></svg></span>`;}
 function landmark(type){

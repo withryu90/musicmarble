@@ -188,10 +188,11 @@
 @keyframes dice-stage-out{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(12px) scale(.97)}}
 @media(prefers-reduced-motion:reduce){.dice-overlay,.dice-stage,.dice-overlay.dice-closing,.dice-closing .dice-stage{animation:none}}
 
-.token-moving .board-character{animation:character-step .48s ease-out both}
+.pawn-figure{position:absolute;inset:0}
+.token-moving .pawn-figure{animation:character-step .48s ease-out both}
 .token-moving .character-nickname{border-color:#67b0de;background:#e7f5ff}
-@keyframes character-step{0%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-11px)}100%{transform:translateX(-50%) translateY(0)}}
-@media(prefers-reduced-motion:reduce){.token-moving .board-character{animation:none}}
+@keyframes character-step{0%{transform:translateY(0)}40%{transform:translateY(-11px)}100%{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.token-moving .pawn-figure{animation:none}}
 
 .summary-round .lap-progress{display:block;font-size:9px;letter-spacing:0;line-height:1.6;margin-top:4px;color:#6089a5}
 
@@ -371,7 +372,7 @@
 /* First appearances and later returns share the actual START tile anchor. */
 .is-3d .cell.start>.tokens-at-start{left:50%;top:50%;transform:translate(-50%,-50%) rotateZ(-45deg) rotateX(-40deg) translateZ(26px)}
 .is-flat .cell.start>.tokens-at-start{position:absolute;left:50%;top:50%;min-height:0;transform:translate(-50%,-50%);z-index:5}
-.tokens-at-start .token-moving .board-character{animation:none}
+.tokens-at-start .token-moving .pawn-figure{animation:none}
 
 /* Native bust art already matches the portrait frame; do not crop it like full-body art. */
 .character-single.character-bust .character-sprite{background-size:100% 100%;background-position:center;transform:none}

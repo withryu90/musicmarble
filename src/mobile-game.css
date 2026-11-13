@@ -74,3 +74,19 @@
 .game-shell[data-mobile="true"] .mobile-page-options button.active{background:#d9edff;color:#155e93;font-weight:700}
 .game-shell[data-mobile="true"] .mobile-page-options button.active::after{display:none}
 .game-shell[data-mobile="true"] .site-header .header-actions{margin-left:4px}
+
+/* Replace the mobile header row with a logo and a vertical right control rail. */
+.game-shell[data-mobile="true"] .site-header{display:contents}
+.game-shell[data-mobile="true"] .site-header .brand{position:fixed;top:5px;left:8px;z-index:30;margin:0;padding:0;gap:0;width:30px;height:30px}
+.game-shell[data-mobile="true"] .site-header .brand-copy{display:none}
+.game-shell[data-mobile="true"] .site-header .brand-icon{width:30px;height:30px}
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav{position:fixed;top:6px;right:6px;left:auto;z-index:40;margin:0;width:30px;height:30px}
+.game-shell[data-mobile="true"] .site-header .header-actions{position:fixed;top:42px;right:6px;left:auto;z-index:35;display:flex;flex-direction:column;align-items:center;gap:5px;margin:0;width:30px}
+.game-shell[data-mobile="true"] .site-header .header-actions :is(.classroom-label,.settings-button span){display:none}
+.game-shell[data-mobile="true"] .site-header .header-actions button{display:flex;align-items:center;justify-content:center;flex:none;width:30px;min-width:30px;height:30px;min-height:30px;padding:0;margin:0;gap:0;line-height:1}
+.game-shell[data-mobile="true"] .mobile-page-options{top:0;right:calc(100% + 6px)}
+.game-shell[data-mobile="true"][data-tab="board"] main{padding:2px 46px 4px 4px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-strip{top:38px;left:8px;z-index:10}
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .board-summary{left:45px;right:300px}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat{width:50%;align-self:flex-start}
+.game-shell[data-mobile="true"]:not([data-tab="board"]) main{padding-top:40px;padding-right:46px}

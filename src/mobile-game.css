@@ -61,3 +61,16 @@
 .game-shell[data-mobile="true"][data-tab="board"] .room-chat{display:block;padding:2px 4px;margin-top:2px}
 .game-shell[data-mobile="true"][data-tab="board"] .room-chat .chat-messages{display:none}
 .game-shell[data-mobile="true"][data-tab="board"] .room-chat form{border:0;padding:0;margin:0}
+
+/* Compact navigation across all mobile game pages; desktop keeps its three tabs. */
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav{position:relative;order:0;flex:none;align-self:center;width:auto;height:30px;margin-left:auto;display:block}
+.game-shell[data-mobile="true"] .mobile-page-menu{position:relative}
+.game-shell[data-mobile="true"] .mobile-page-menu summary{display:flex;align-items:center;justify-content:center;width:30px;height:30px;padding:5px;list-style:none;border:1px solid #bfdcec;border-radius:7px;background:#edf8ff;color:#2c6f9e;cursor:pointer}
+.game-shell[data-mobile="true"] .mobile-page-menu summary::-webkit-details-marker{display:none}
+.game-shell[data-mobile="true"] .mobile-page-menu summary svg{display:block;width:20px;height:20px;fill:currentColor}
+.game-shell[data-mobile="true"] .mobile-page-menu summary:focus-visible{outline:2px solid #269bdf;outline-offset:2px}
+.game-shell[data-mobile="true"] .mobile-page-options{position:absolute;top:calc(100% + 6px);right:0;width:156px;padding:5px;display:flex;flex-direction:column;gap:3px;border:1px solid #bad9eb;border-radius:10px;background:#f5fbff;box-shadow:0 5px 18px #16486a30;z-index:50}
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav .mobile-page-options button{display:block;width:100%;min-height:36px;height:auto;padding:8px 12px;border-radius:6px;text-align:left;font-size:12px;color:#315d7c}
+.game-shell[data-mobile="true"] .mobile-page-options button.active{background:#d9edff;color:#155e93;font-weight:700}
+.game-shell[data-mobile="true"] .mobile-page-options button.active::after{display:none}
+.game-shell[data-mobile="true"] .site-header .header-actions{margin-left:4px}

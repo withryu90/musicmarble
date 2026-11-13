@@ -1,28 +1,28 @@
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=b15bc87dab52';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=b15bc87dab52';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=b15bc87dab52';
-import {formatModalSentences} from './modal-sentences.js?v=b15bc87dab52';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=b15bc87dab52';
-import {WORK_ARTWORK} from './work-artwork.js?v=b15bc87dab52';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=b15bc87dab52';
-import {RankingClient} from './ranking.js?v=b15bc87dab52';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=b15bc87dab52';
-import {HandoffCountdown} from './handoff-countdown.js?v=b15bc87dab52';
-import {fitBoardTitles} from './board-type.js?v=b15bc87dab52';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=b15bc87dab52';
-import * as G from './engine.js?v=b15bc87dab52';
-import {ActivityInbox} from './activities.js?v=b15bc87dab52';
-import {purchaseQuizById} from './purchase-quizzes.js?v=b15bc87dab52';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=b15bc87dab52';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=b15bc87dab52';
-import {diceCube} from './dice.js?v=b15bc87dab52';
-import {CHARACTER_BIOS} from './character-bios.js?v=b15bc87dab52';
-import {needsLandscape} from './orientation.js?v=b15bc87dab52';
-import {createBgm} from './bgm.js?v=b15bc87dab52';
-import {PeerTransport} from './peer-transport.js?v=b15bc87dab52';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=b15bc87dab52';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=b15bc87dab52';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=b15bc87dab52';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=96731a793fe6';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=96731a793fe6';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=96731a793fe6';
+import {formatModalSentences} from './modal-sentences.js?v=96731a793fe6';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=96731a793fe6';
+import {WORK_ARTWORK} from './work-artwork.js?v=96731a793fe6';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=96731a793fe6';
+import {RankingClient} from './ranking.js?v=96731a793fe6';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=96731a793fe6';
+import {HandoffCountdown} from './handoff-countdown.js?v=96731a793fe6';
+import {fitBoardTitles} from './board-type.js?v=96731a793fe6';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=96731a793fe6';
+import * as G from './engine.js?v=96731a793fe6';
+import {ActivityInbox} from './activities.js?v=96731a793fe6';
+import {purchaseQuizById} from './purchase-quizzes.js?v=96731a793fe6';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=96731a793fe6';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=96731a793fe6';
+import {diceCube} from './dice.js?v=96731a793fe6';
+import {CHARACTER_BIOS} from './character-bios.js?v=96731a793fe6';
+import {needsLandscape} from './orientation.js?v=96731a793fe6';
+import {createBgm} from './bgm.js?v=96731a793fe6';
+import {PeerTransport} from './peer-transport.js?v=96731a793fe6';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=96731a793fe6';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=96731a793fe6';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=96731a793fe6';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -47,7 +47,7 @@ const mobileCamera=new MobileBoardCamera(({scale})=>{
  const button=$('[data-action="board-zoom-reset"]'),out=$('[data-action="board-zoom-out"]'),inside=$('[data-action="board-zoom-in"]');
  if(button)button.textContent=`${Math.round(scale*100)}%`;if(out)out.disabled=scale<=1;if(inside)inside.disabled=scale>=3;
 });
-let state=G.createGame(),tab='board',boardView=mobileGame?'flat':CSS.supports('container-type','inline-size')?'3d':'flat',filter='all',selected=null,busy=false,session=null,snapshot=null,connected=false,events=null,lastAuto='',revealCharacter=false;
+let state=G.createGame(),tab='board',boardView=CSS.supports('container-type','inline-size')?'3d':'flat',filter='all',selected=null,busy=false,session=null,snapshot=null,connected=false,events=null,lastAuto='',revealCharacter=false;
 try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}
 let bgmVolume=.25;
 try{const saved=localStorage.getItem('musicmarble.bgm.volume');if(saved!==null&&Number.isFinite(Number(saved)))bgmVolume=Math.min(1,Math.max(0,Number(saved)));}catch{}
@@ -93,7 +93,7 @@ let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
 const chatBubbles=new Map(),chatBubbleTimers=new Map();
 let chatInitialized=false;
-function resetActivityFlow(){if(mobileGame){boardView='flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);

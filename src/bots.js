@@ -1,6 +1,6 @@
-import {BOARD,WORKS,QUIZZES} from './data.js?v=6c8b417e3ccc';
-import * as G from './engine.js?v=6c8b417e3ccc';
-import {purchaseQuizById} from './purchase-quizzes.js?v=6c8b417e3ccc';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=a6d213222461';
+import * as G from './engine.js?v=a6d213222461';
+import {purchaseQuizById} from './purchase-quizzes.js?v=a6d213222461';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
 export function botDecision(state,previous={},random=Math.random){

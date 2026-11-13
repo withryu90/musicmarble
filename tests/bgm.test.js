@@ -48,3 +48,11 @@ test('interrupted mobile audio is not reported as playing and resumes on the nex
  const gain={gain:{value:1},connect(){}},ctx={state:'running',destination:{},createGain:()=>gain,createMediaElementSource:()=>({connect(){}}),resumes:0,async resume(){this.resumes++;this.state='running';}};
  const bgm=createBgm({AudioClass:FakeAudio,createContext:()=>ctx});await bgm.play();ctx.state='interrupted';assert.equal(bgm.status().playing,false);await bgm.play();assert.equal(ctx.resumes,1);assert.equal(bgm.status().playing,true);
 });
+
+test('scene switches reuse the unlocked audio element and pauses preserve the playback position',async()=>{
+ FakeAudio.instances=[];let connections=0;
+ const ctx={state:'running',destination:{},createGain:()=>({gain:{value:1},connect(){}}),createMediaElementSource:()=>{connections++;return {connect(){}};}};
+ const bgm=createBgm({AudioClass:FakeAudio,createContext:()=>ctx});await bgm.play();bgm.setSource('garden.wav');await bgm.play();
+ assert.equal(FakeAudio.instances.length,1);assert.equal(connections,1);const audio=FakeAudio.instances[0];assert.equal(audio.src,'garden.wav');assert.equal(audio.loop,true);
+ audio.currentTime=12.5;bgm.pause();await bgm.play();assert.equal(audio.currentTime,12.5);assert.equal(bgm.status().source,'garden.wav');
+});

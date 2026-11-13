@@ -1,28 +1,29 @@
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=6c8b417e3ccc';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=6c8b417e3ccc';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=6c8b417e3ccc';
-import {formatModalSentences} from './modal-sentences.js?v=6c8b417e3ccc';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=6c8b417e3ccc';
-import {WORK_ARTWORK} from './work-artwork.js?v=6c8b417e3ccc';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=6c8b417e3ccc';
-import {RankingClient} from './ranking.js?v=6c8b417e3ccc';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=6c8b417e3ccc';
-import {HandoffCountdown} from './handoff-countdown.js?v=6c8b417e3ccc';
-import {fitBoardTitles} from './board-type.js?v=6c8b417e3ccc';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=6c8b417e3ccc';
-import * as G from './engine.js?v=6c8b417e3ccc';
-import {ActivityInbox} from './activities.js?v=6c8b417e3ccc';
-import {purchaseQuizById} from './purchase-quizzes.js?v=6c8b417e3ccc';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=6c8b417e3ccc';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=6c8b417e3ccc';
-import {diceCube} from './dice.js?v=6c8b417e3ccc';
-import {CHARACTER_BIOS} from './character-bios.js?v=6c8b417e3ccc';
-import {needsLandscape} from './orientation.js?v=6c8b417e3ccc';
-import {createBgm} from './bgm.js?v=6c8b417e3ccc';
-import {PeerTransport} from './peer-transport.js?v=6c8b417e3ccc';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=6c8b417e3ccc';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=6c8b417e3ccc';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=6c8b417e3ccc';
+import {createMusicDirector} from './music-director.js?v=a6d213222461';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=a6d213222461';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=a6d213222461';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=a6d213222461';
+import {formatModalSentences} from './modal-sentences.js?v=a6d213222461';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a6d213222461';
+import {WORK_ARTWORK} from './work-artwork.js?v=a6d213222461';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=a6d213222461';
+import {RankingClient} from './ranking.js?v=a6d213222461';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a6d213222461';
+import {HandoffCountdown} from './handoff-countdown.js?v=a6d213222461';
+import {fitBoardTitles} from './board-type.js?v=a6d213222461';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=a6d213222461';
+import * as G from './engine.js?v=a6d213222461';
+import {ActivityInbox} from './activities.js?v=a6d213222461';
+import {purchaseQuizById} from './purchase-quizzes.js?v=a6d213222461';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a6d213222461';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a6d213222461';
+import {diceCube} from './dice.js?v=a6d213222461';
+import {CHARACTER_BIOS} from './character-bios.js?v=a6d213222461';
+import {needsLandscape} from './orientation.js?v=a6d213222461';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=a6d213222461';
+import {PeerTransport} from './peer-transport.js?v=a6d213222461';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=a6d213222461';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=a6d213222461';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=a6d213222461';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -54,23 +55,24 @@ try{const saved=localStorage.getItem('musicmarble.bgm.volume');if(saved!==null&&
 let bgmEnabled=true;
 // A fresh visit always starts with music enabled, even after a previous mute.
 if(bgmVolume===0)bgmVolume=.25;
-const soundEffects=createSoundEffects();
+const soundEffects=createSoundEffects({onPlaybackStart:(name,id)=>musicDirector.effectStarted(name,id),onPlaybackEnd:(name,id)=>musicDirector.effectEnded(name,id)});
 const lobbyBgm=createBgm({volume:bgmVolume,onChange:updateBgmControls});
+const musicDirector=createMusicDirector({bgm:lobbyBgm,lobbySource:BGM_SOURCE,gameSource:GAME_BGM_SOURCE,isVisible:()=>!document.hidden,lobbyVolume:bgmVolume,gameVolume:Math.min(.14,bgmVolume*.4)});
 function bgmBell(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4M11 2V1h2v1"/><path class="bell-slash" d="M3 3 21 21"/></svg>`;}
 function updateBgmControls(){
  const button=$('[data-action="bgm-toggle"]');if(!button)return;
  const status=lobbyBgm.status();button.classList.toggle('is-muted',!bgmEnabled);
  button.setAttribute('aria-pressed',String(bgmEnabled));
  button.setAttribute('aria-label',bgmEnabled?'소리 끄기':'소리 켜기');
- button.title=snapshot?.state?`효과음 ${bgmEnabled?'켜짐 · 누르면 끄기':'꺼짐 · 누르면 켜기'}`:bgmEnabled?(status.blocked?'음악 켜짐 · 화면을 터치하면 재생됩니다':status.error?'음악을 불러오지 못했어요 · 다시 켜 주세요':'음악·효과음 켜짐 · 누르면 끄기'):'음악·효과음 꺼짐 · 누르면 켜기';
+ button.title=snapshot?.state?`음악·효과음 ${bgmEnabled?'켜짐 · 누르면 끄기':'꺼짐 · 누르면 켜기'}`:bgmEnabled?(status.blocked?'음악 켜짐 · 화면을 터치하면 재생됩니다':status.error?'음악을 불러오지 못했어요 · 다시 켜 주세요':'음악·효과음 켜짐 · 누르면 끄기'):'음악·효과음 꺼짐 · 누르면 켜기';
 }
-function bgmButton(){return `<button type="button" class="icon-button bgm-bell ${bgmEnabled?'':'is-muted'}" data-action="bgm-toggle" aria-label="${bgmEnabled?'소리 끄기':'소리 켜기'}" aria-pressed="${bgmEnabled}" title="${snapshot?.state?`효과음 ${bgmEnabled?'켜짐 · 누르면 끄기':'꺼짐 · 누르면 켜기'}`:bgmEnabled?'음악·효과음 켜짐 · 누르면 끄기':'음악·효과음 꺼짐 · 누르면 켜기'}">${bgmBell()}</button>`;}
-function startBackgroundMusic(gesture=false){if(bgmEnabled&&!snapshot?.state&&!document.hidden)void lobbyBgm.play({gesture});}
-document.addEventListener('visibilitychange',()=>{if(document.hidden){lobbyBgm.pause();soundEffects.stop();}else startBackgroundMusic();});
+function bgmButton(){return `<button type="button" class="icon-button bgm-bell ${bgmEnabled?'':'is-muted'}" data-action="bgm-toggle" aria-label="${bgmEnabled?'소리 끄기':'소리 켜기'}" aria-pressed="${bgmEnabled}" title="${snapshot?.state?`음악·효과음 ${bgmEnabled?'켜짐 · 누르면 끄기':'꺼짐 · 누르면 켜기'}`:bgmEnabled?'음악·효과음 켜짐 · 누르면 끄기':'음악·효과음 꺼짐 · 누르면 켜기'}">${bgmBell()}</button>`;}
+function startBackgroundMusic(gesture=false){musicDirector.sync({game:Boolean(snapshot?.state),enabled:bgmEnabled,gesture});}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){startBackgroundMusic();soundEffects.stop();}else startBackgroundMusic();});
 function unlockLobbyMusic(e){
  if(bgmEnabled)soundEffects.unlock();
  if(e.target.closest?.('[data-action="bgm-toggle"]'))return;
- if(bgmEnabled&&!lobbyBgm.status().playing)startBackgroundMusic(true);
+ if(bgmEnabled)startBackgroundMusic(true);
 }
 document.addEventListener('pointerdown',unlockLobbyMusic,{capture:true});
 document.addEventListener('touchend',unlockLobbyMusic,{capture:true,passive:true});
@@ -467,7 +469,7 @@ window.addEventListener('resize',queueBoardTypeFit);
 window.visualViewport?.addEventListener('resize',queueBoardTypeFit);
 document.fonts?.ready.then(queueBoardTypeFit);
 function render(){
- if(snapshot?.state)lobbyBgm.pause();
+ startBackgroundMusic();
  syncGameOrientation();
  if(participantIntroPending){$('#app').innerHTML='<div class="participant-intro-backdrop" aria-hidden="true"></div>';return;}
  if(!snapshot?.state){renderLobby();return;}
@@ -574,7 +576,7 @@ $('#modal').addEventListener('submit',async e=>{
 
 });
 async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)return;const a=el.dataset.action;if(el.tagName==='A')e.preventDefault();if(el.closest('.mobile-page-options'))el.closest('details').open=false;
- if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;soundEffects.setEnabled(bgmEnabled);if(bgmEnabled){soundEffects.unlock();if(snapshot?.state)void soundEffects.play('gain');startBackgroundMusic(true);}else lobbyBgm.pause();updateBgmControls();return;}
+ if(a==='bgm-toggle'){bgmEnabled=!bgmEnabled;startBackgroundMusic(true);soundEffects.setEnabled(bgmEnabled);if(bgmEnabled)soundEffects.unlock();updateBgmControls();return;}
  if(a==='activity-next'){dismissActivity();return;}
  if(a==='ranking-jump'){rankingModal();return;}
  if(a==='ranking-refresh'){void rankingClient.refresh(true);return;}

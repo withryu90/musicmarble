@@ -33,3 +33,10 @@ Edit: original 0.82–7.80 seconds, normalized to 82% peak, 25 ms fade-in,
 350 ms fade-out; 6.98 seconds, stereo 44.1 kHz 16-bit PCM WAV.
 No synthesis, pitch change, tempo change, added instruments or added reverb.
 Editor: scripts/render-dramatic-effects.py (also prepares the CC0 crowd clip).
+
+Game BGM: music-garden-loop.wav
+Original melody, chord arrangement and synthesized performance for Music Marble.
+Created with scripts/render-game-bgm.py; 16 bars, 84 BPM, 45.71 seconds.
+Soft music-box/marimba-style sine synthesis, warm chords and bass.
+No third-party recording, melody, sample or soundfont was copied.
+Stereo 22.05 kHz 16-bit PCM WAV; circular echoes preserve the loop boundary.

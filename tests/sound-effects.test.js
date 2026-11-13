@@ -86,3 +86,14 @@ test('Safari unlock selects playback audio and starts a one-frame source within 
  sfx.unlock();assert.equal(configured,1);assert.ok(lengths.includes(1));assert.equal(ctx.voices[0].startAt,0);assert.ok(ctx.voices[0].endAt>ctx.currentTime);
  const count=ctx.voices.length;sfx.unlock();assert.equal(ctx.voices.length,count);
 });
+
+test('recorded playback hooks resume music on actual completion or stop, exactly once',async()=>{
+ const events=[],ctx=context(),sfx=createSoundEffects({createContext:()=>ctx,fetchAudio,onPlaybackStart:(name,id)=>events.push(['start',name,id]),onPlaybackEnd:(name,id)=>events.push(['end',name,id])});
+ await sfx.play('prison');assert.deepEqual(events.map(e=>e[0]),['start']);ctx.voices[0].onended();ctx.voices[0].onended();assert.deepEqual(events.map(e=>e[0]),['start','end']);
+ await sfx.play('prison');sfx.stop();ctx.voices[1].onended();assert.deepEqual(events.map(e=>e[0]),['start','end','start','end']);
+});
+test('failed prison scheduling releases the BGM suspension',async()=>{
+ const ctx=context(),events=[];ctx.createBufferSource=()=>({connect(){},disconnect(){},start(){throw Error('closed context');}});
+ const sfx=createSoundEffects({createContext:()=>ctx,fetchAudio,onPlaybackStart:()=>events.push('start'),onPlaybackEnd:()=>events.push('end')});
+ assert.equal(await sfx.play('prison'),false);assert.deepEqual(events,['start','end']);
+});

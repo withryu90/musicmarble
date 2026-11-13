@@ -1,8 +1,8 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=6c8b417e3ccc',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=6c8b417e3ccc',import.meta.url).href};
+export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=a6d213222461',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=a6d213222461',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison'];
-export function createSoundEffects({createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
- let context=null,enabled=true,generation=0,primed=false;const nodes=new Set(),seen=new Set(),buffers=new Map();
+export function createSoundEffects({onPlaybackStart=()=>{},onPlaybackEnd=()=>{},createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
+ let context=null,enabled=true,generation=0,primed=false,playbackId=0;const nodes=new Set(),seen=new Set(),buffers=new Map();
  function prepare(){if(!enabled)return null;try{configureSession();context??=createContext();return context;}catch{return null;}}
  function unlock(){
   const ctx=prepare();if(!ctx)return;
@@ -12,8 +12,8 @@ export function createSoundEffects({createContext=()=>{const C=globalThis.AudioC
   for(const name of Object.keys(RECORDED_EFFECTS))void loadRecording(ctx,name).catch(()=>{});
  }
  function loadRecording(ctx,name){if(!buffers.has(name)){const pending=(async()=>{const response=await fetchAudio(RECORDED_EFFECTS[name]);if(!response.ok)throw Error('Sound unavailable');return ctx.decodeAudioData(await response.arrayBuffer());})();buffers.set(name,pending);pending.catch(()=>buffers.delete(name));}return buffers.get(name);}
- function stop(){generation++;for(const node of nodes){try{node.stop();node.disconnect();}catch{}}nodes.clear();}
- function track(node,end,chain=[]){nodes.add(node);node.onended=()=>{nodes.delete(node);node.disconnect();chain.forEach(n=>n.disconnect());};node.stop(end);}
+ function stop(){generation++;for(const node of nodes){try{node.stop();node.onended?.();node.disconnect();}catch{}}nodes.clear();}
+ function track(node,end,chain=[],onEnd=()=>{}){let ended=false;nodes.add(node);node.onended=()=>{if(ended)return;ended=true;nodes.delete(node);node.disconnect();chain.forEach(n=>n.disconnect());onEnd();};node.stop(end);}
  function tone(ctx,start,hz,duration,volume,type='sine',endHz=hz){
   const source=ctx.createOscillator(),gain=ctx.createGain();source.type=type;
   source.frequency.setValueAtTime(hz,start);source.frequency.exponentialRampToValueAtTime(endHz,start+duration);
@@ -43,7 +43,7 @@ export function createSoundEffects({createContext=()=>{const C=globalThis.AudioC
    const recording=RECORDED_EFFECTS[name]?await loadRecording(ctx,name):null;
    if(ctx.state!=='running'||!enabled||!isVisible()||stamp!==generation||(key&&seen.has(key)))return false;
    if(key){seen.add(key);if(seen.size>200)seen.delete(seen.values().next().value);}
-   if(recording){const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=recording;gain.gain.value=.7;source.connect(gain);gain.connect(ctx.destination);const start=ctx.currentTime+.015;source.start(start);track(source,start+recording.duration+.02,[gain]);}
+   if(recording){const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=recording;gain.gain.value=.7;source.connect(gain);gain.connect(ctx.destination);const start=ctx.currentTime+.015,id=++playbackId;try{onPlaybackStart(name,id);}catch{}try{source.start(start);track(source,start+recording.duration+.02,[gain],()=>{try{onPlaybackEnd(name,id);}catch{}});}catch(error){try{onPlaybackEnd(name,id);}catch{}source.disconnect();gain.disconnect();throw error;}}
    else synthesize(ctx,name);return true;
   }catch{return false;}
  }

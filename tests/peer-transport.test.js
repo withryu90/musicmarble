@@ -109,3 +109,20 @@ test('two friends survive rapid timer/answer races, timeout and repeated purchas
   for(const received of snapshots){assert.equal(received.state.turn,1-actor);assert.equal(received.state.phase,'roll');}
  }finally{peers.forEach(p=>p.close());}
 });
+
+test('shared-room four-round setting survives another player joining and host refresh',async()=>{
+ const saved=storage(),host=transport(saved),guest=transport();let restored;
+ try{
+  const h=await host.request('create',{nickname:'4라운드 방장'});let current;host.subscribe(h,{onSnapshot:s=>current=s});
+  await host.request('action',{action:'configure',args:[{rounds:4,coins:1000}],revision:current.revision},h);
+  const g=await guest.request('join',{code:h.code,nickname:'4라운드 친구'});await tick();
+  assert.equal(current.config.rounds,4);
+  host.close();restored=transport(saved);
+  let resumed=await restored.request('resume',{},h);assert.equal(resumed.config.rounds,4);
+  await guest.request('resume',{},g);
+  resumed=await restored.request('resume',{},h);
+  const started=await restored.request('action',{action:'start',revision:resumed.revision},h);
+  assert.equal(started.state.maxRounds,4);assert.equal(started.state.players[0].coins,1000);
+  const other=await guest.request('resume',{},g);assert.equal(other.state.maxRounds,4);
+ }finally{host.close();guest.close();restored?.close();}
+});

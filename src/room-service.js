@@ -1,15 +1,16 @@
-import {randomInt,randomToken} from './random.js?v=36568eb5a507';
-import * as G from './engine.js?v=36568eb5a507';
-import {botDecision,applyBotDecision} from './bots.js?v=36568eb5a507';
-import {activityChanges} from './activities.js?v=36568eb5a507';
-import {drawCharacterIds,characterById} from './characters.js?v=36568eb5a507';
+import {roomConfig} from './lobby-config.js?v=6f170e1ca2c2';
+import {randomInt,randomToken} from './random.js?v=6f170e1ca2c2';
+import * as G from './engine.js?v=6f170e1ca2c2';
+import {botDecision,applyBotDecision} from './bots.js?v=6f170e1ca2c2';
+import {activityChanges} from './activities.js?v=6f170e1ca2c2';
+import {drawCharacterIds,characterById} from './characters.js?v=6f170e1ca2c2';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
   code(){let code;do{code=Array.from({length:6},()=>ALPHABET[randomInt(ALPHABET.length)]).join('');}while(this.rooms.has(code));return code;}
   nickname(value){if(typeof value!=='string'||!value.trim()||value.trim().length>16)throw Error('닉네임은 1–16자로 입력해 주세요.');return value.trim();}
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
-  create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,gameId:randomToken(),createdAt:Date.now(),members:[],state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}
+  create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,gameId:randomToken(),createdAt:Date.now(),members:[],config:roomConfig(),state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}
   join(code,name,characterId){const room=this.get(code);if(room.state)throw Error('이미 시작한 게임입니다. 새 방을 만들거나 기존 참가자는 이어하기를 이용해 주세요.');if(room.members.length>=G.MAX_PLAYERS)throw Error('이 방은 정원 4명이 모두 찼습니다.');const nickname=this.nickname(name);if(room.members.some(m=>m.name===nickname))throw Error('방 안에서 다른 닉네임을 사용해 주세요.');const member={id:room.members.length,name:nickname,characterId:this.chooseCharacter(characterId,room.members.map(m=>m.characterId)),token:randomToken()};room.members.push(member);this.broadcast(room);return {code:room.code,token:member.token,playerId:member.id};}
   createSolo(name,{botCount=3,rounds=8,coins=1200}={},characterId){
     this.nickname(name);
@@ -22,7 +23,7 @@ export class RoomService {
       const index=randomInt(available.length),nickname=available.splice(index,1)[0];
       room.members.push({id:i+1,name:nickname,isBot:true,characterId:drawCharacterIds(1,room.members.map(m=>m.characterId))[0]});
     }
-    room.state=G.createGame({names:room.members.map(m=>m.name),characterIds:room.members.map(m=>m.characterId),rounds,coins});
+    room.config=roomConfig({rounds,coins});room.state=G.createGame({names:room.members.map(m=>m.name),characterIds:room.members.map(m=>m.characterId),rounds,coins});
     room.state.players.forEach(p=>p.isBot=!!room.members[p.id].isBot);
     this.broadcast(room);return session;
   }
@@ -67,7 +68,7 @@ export class RoomService {
     room.updatedAt=now;const payload={code:room.code,messages:room.messages};room.chatListeners?.forEach(fn=>fn(payload));return payload;
   }
   subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn({code:room.code,messages:room.messages??[]});return ()=>room.chatListeners.delete(fn);}
-  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
+  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
   broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
   act(code,token,{action,args=[],revision}={}){
     const {room,member}=this.authenticate(code,token);
@@ -79,10 +80,14 @@ export class RoomService {
       if(room.state&&!canSoloRedraw)throw Error('게임을 시작한 뒤에는 캐릭터를 바꿀 수 없습니다.');
       member.characterId=drawCharacterIds(1,room.members.map(m=>m.characterId))[0];
       if(room.state){room.state=structuredClone(room.state);room.state.players[member.id].characterId=member.characterId;}
+    }else if(action==='configure'){
+      if(member.id!==0)throw Error('방장만 수업 설정을 바꿀 수 있습니다.');
+      if(room.state)throw Error('게임 시작 후 설정은 바꿀 수 없습니다.');
+      room.config=roomConfig(args[0]||{},room.config||roomConfig());
     }else if(action==='start'){
       if(member.id!==0)throw Error('방장만 게임을 시작할 수 있습니다.');
       if(room.state)throw Error('이미 시작된 게임입니다.');
-      const config=args[0]||{};room.state=G.createGame({names:room.members.map(m=>m.name),characterIds:room.members.map(m=>m.characterId),rounds:Number(config.rounds??8),coins:Number(config.coins??1200)});
+      const config=roomConfig(args[0]||{},room.config||roomConfig());room.config=config;room.state=G.createGame({names:room.members.map(m=>m.name),characterIds:room.members.map(m=>m.characterId),...config});
     }else{
       const state=room.state;if(!state||state.phase==='finished')throw Error('진행 중인 게임이 없습니다.');
       if(action==='resolveTrade'){

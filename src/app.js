@@ -1,28 +1,28 @@
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=5eb87bff035b';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=5eb87bff035b';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=5eb87bff035b';
-import {formatModalSentences} from './modal-sentences.js?v=5eb87bff035b';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5eb87bff035b';
-import {WORK_ARTWORK} from './work-artwork.js?v=5eb87bff035b';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=5eb87bff035b';
-import {RankingClient} from './ranking.js?v=5eb87bff035b';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5eb87bff035b';
-import {HandoffCountdown} from './handoff-countdown.js?v=5eb87bff035b';
-import {fitBoardTitles} from './board-type.js?v=5eb87bff035b';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=5eb87bff035b';
-import * as G from './engine.js?v=5eb87bff035b';
-import {ActivityInbox} from './activities.js?v=5eb87bff035b';
-import {purchaseQuizById} from './purchase-quizzes.js?v=5eb87bff035b';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5eb87bff035b';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5eb87bff035b';
-import {diceCube} from './dice.js?v=5eb87bff035b';
-import {CHARACTER_BIOS} from './character-bios.js?v=5eb87bff035b';
-import {needsLandscape} from './orientation.js?v=5eb87bff035b';
-import {createBgm} from './bgm.js?v=5eb87bff035b';
-import {PeerTransport} from './peer-transport.js?v=5eb87bff035b';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=5eb87bff035b';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=5eb87bff035b';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=5eb87bff035b';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=763f17b49026';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=763f17b49026';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=763f17b49026';
+import {formatModalSentences} from './modal-sentences.js?v=763f17b49026';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=763f17b49026';
+import {WORK_ARTWORK} from './work-artwork.js?v=763f17b49026';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=763f17b49026';
+import {RankingClient} from './ranking.js?v=763f17b49026';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=763f17b49026';
+import {HandoffCountdown} from './handoff-countdown.js?v=763f17b49026';
+import {fitBoardTitles} from './board-type.js?v=763f17b49026';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=763f17b49026';
+import * as G from './engine.js?v=763f17b49026';
+import {ActivityInbox} from './activities.js?v=763f17b49026';
+import {purchaseQuizById} from './purchase-quizzes.js?v=763f17b49026';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=763f17b49026';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=763f17b49026';
+import {diceCube} from './dice.js?v=763f17b49026';
+import {CHARACTER_BIOS} from './character-bios.js?v=763f17b49026';
+import {needsLandscape} from './orientation.js?v=763f17b49026';
+import {createBgm} from './bgm.js?v=763f17b49026';
+import {PeerTransport} from './peer-transport.js?v=763f17b49026';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=763f17b49026';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=763f17b49026';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=763f17b49026';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -216,7 +216,7 @@ function concertPlanningModal(){
 function concertHall(){return `<span class="concert-hall" role="img" aria-label="공연 기획 완료 · 작은 공연장"><svg viewBox="0 0 80 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 59 53 68 75 55 30 47Z" fill="#3e6581"/><path d="M16 27 51 35 51 59 16 51Z" fill="#f8e7bb"/><path d="M51 35 68 25 68 49 51 59Z" fill="#c99b50"/><path d="M9 26 45 7 74 23 51 37Z" fill="#436d99"/><path d="M9 26 45 7 51 16 20 30Z" fill="#638fb6"/><path d="M22 34 27 35 27 52 22 51ZM42 38 47 39 47 56 42 55Z" fill="#fff9e9"/><path d="M30 40Q35 31 40 42V55L30 53Z" fill="#29537d"/><path d="M34 41H38V53H34Z" fill="#91cce6"/><path d="M54 38 59 35V43L54 46ZM62 33 66 31V39L62 42Z" fill="#fff1b6"/><path d="M11 54 50 63 71 51V56L51 68 11 59Z" fill="#e3c17e"/><path d="M47 15V25C41 23 39 29 44 30 48 30 50 28 50 25V18L57 16V12Z" fill="#ffdf78"/></svg></span>`;}
 function turnHandoffModal(){
  const next=state.players[G.nextPlayerIndex(state)],finishing=!!G.firstFinisher(state),continuing=!finishing&&next.id===state.turn;
- showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'버튼을 누르면 최종 결과를 확인할 수 있어요.':continuing?'다른 참가자들은 모두 완주했어요. 10초 후 나의 다음 차례로 자동으로 넘어갑니다. 버튼을 누르면 바로 이어갈 수 있어요.':'10초 후 다음 참가자에게 자동으로 차례를 넘깁니다. 버튼을 누르면 바로 넘길 수 있어요.'}</p>${finishing?'':concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
+ showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'':continuing?'다른 참가자들은 모두 완주했어요. 10초 후 나의 다음 차례로 자동으로 넘어갑니다.':'10초 후 다음 참가자에게 자동으로 차례를 넘깁니다.'}</p>${finishing?'':concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
  $('#modal').dataset.auto='true';
  if(!finishing){
   const code=session.code,turn=state.turn,turnNumber=state.turnNumber;

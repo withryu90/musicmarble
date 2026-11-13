@@ -1,6 +1,6 @@
-import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=916565837978';
-import {characterById,drawCharacterIds} from './characters.js?v=916565837978';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=916565837978';
+import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=63cb1d4edf9f';
+import {characterById,drawCharacterIds} from './characters.js?v=63cb1d4edf9f';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=63cb1d4edf9f';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];

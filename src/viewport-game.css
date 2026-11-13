@@ -200,3 +200,8 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 .game-shell .room-chat .chat-message time,.game-shell .room-chat .chat-empty{color:#7d9583}
 .game-shell .room-chat .chat-message p{color:#354b3e}
 .game-shell .room-chat input:focus-visible{outline-color:#91b995}
+
+/* Desktop chat grows down/up inside its seat column instead of one clipped line. */
+.game-shell[data-mobile="false"][data-tab="board"] .player-chat-slot{height:auto;min-height:30px;padding:4px 0}
+.game-shell[data-mobile="false"][data-tab="board"] .player-chat-bubble{max-width:100%;padding:6px 8px;line-height:18px}
+.game-shell[data-mobile="false"][data-tab="board"] .player-chat-bubble>span{max-height:var(--desktop-bubble-max,180px);white-space:pre-wrap;line-height:18px;word-break:keep-all;overflow-wrap:normal;overflow-y:auto;overflow-x:auto}

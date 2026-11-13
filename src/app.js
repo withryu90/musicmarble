@@ -1,28 +1,28 @@
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=916565837978';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=916565837978';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=916565837978';
-import {formatModalSentences} from './modal-sentences.js?v=916565837978';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=916565837978';
-import {WORK_ARTWORK} from './work-artwork.js?v=916565837978';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=916565837978';
-import {RankingClient} from './ranking.js?v=916565837978';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=916565837978';
-import {HandoffCountdown} from './handoff-countdown.js?v=916565837978';
-import {fitBoardTitles} from './board-type.js?v=916565837978';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=916565837978';
-import * as G from './engine.js?v=916565837978';
-import {ActivityInbox} from './activities.js?v=916565837978';
-import {purchaseQuizById} from './purchase-quizzes.js?v=916565837978';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=916565837978';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=916565837978';
-import {diceCube} from './dice.js?v=916565837978';
-import {CHARACTER_BIOS} from './character-bios.js?v=916565837978';
-import {needsLandscape} from './orientation.js?v=916565837978';
-import {createBgm} from './bgm.js?v=916565837978';
-import {PeerTransport} from './peer-transport.js?v=916565837978';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=916565837978';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=916565837978';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=916565837978';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=63cb1d4edf9f';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=63cb1d4edf9f';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=63cb1d4edf9f';
+import {formatModalSentences} from './modal-sentences.js?v=63cb1d4edf9f';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=63cb1d4edf9f';
+import {WORK_ARTWORK} from './work-artwork.js?v=63cb1d4edf9f';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=63cb1d4edf9f';
+import {RankingClient} from './ranking.js?v=63cb1d4edf9f';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=63cb1d4edf9f';
+import {HandoffCountdown} from './handoff-countdown.js?v=63cb1d4edf9f';
+import {fitBoardTitles} from './board-type.js?v=63cb1d4edf9f';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=63cb1d4edf9f';
+import * as G from './engine.js?v=63cb1d4edf9f';
+import {ActivityInbox} from './activities.js?v=63cb1d4edf9f';
+import {purchaseQuizById} from './purchase-quizzes.js?v=63cb1d4edf9f';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=63cb1d4edf9f';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=63cb1d4edf9f';
+import {diceCube} from './dice.js?v=63cb1d4edf9f';
+import {CHARACTER_BIOS} from './character-bios.js?v=63cb1d4edf9f';
+import {needsLandscape} from './orientation.js?v=63cb1d4edf9f';
+import {createBgm} from './bgm.js?v=63cb1d4edf9f';
+import {PeerTransport} from './peer-transport.js?v=63cb1d4edf9f';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=63cb1d4edf9f';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=63cb1d4edf9f';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=63cb1d4edf9f';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -437,7 +437,7 @@ function players(row){
 function collectionView(){return `<section class="collection-view"><div class="view-intro"><span class="eyebrow">THE MUSIC LIBRARY</span><h2>작품을 만나는 또 다른 방법</h2><p>시대와 작곡가를 알아가며 나만의 음악 컬렉션을 완성하세요.</p></div><div class="filters">${[{id:'all',name:'모든 시대'},...ERAS].map(e=>`<button data-action="filter" data-id="${e.id}" class="${filter===e.id?'selected':''}">${e.name}</button>`).join('')}</div><div class="work-grid">${WORKS.filter(w=>filter==='all'||w.era===filter).map(w=>{const o=state.ownership[w.id];return `<button class="work-card" data-action="work" data-id="${w.id}" style="--era:${era(w.era).color}"><div class="work-art"><span>${esc(w.composer)}</span><b>${w.composer==='바흐'?'𝄞':'♫'}</b><small>${esc(w.year)}</small></div><div class="work-details"><span>${era(w.era).name}</span><h3>${w.title}</h3><p>${o?`${esc(state.players[o.player].name)} 보유${o.level?' · 공연 기획':''}`:'아직 만나지 않은 컬렉션'}</p><div><strong>${w.price} MC</strong><span>이용료 ${G.fee(state,w)} MC ↗</span></div></div></button>`;}).join('')}</div></section>`;}
 function learning(){return `<section class="learning-view"><div class="view-intro"><span class="eyebrow">LEARN BEYOND THE BOARD</span><h2>음악의 가치를 발견하는 시간</h2><p>돈으로 셀 수 있는 것과, 숫자로 다 담을 수 없는 것.</p></div><div class="learning-grid"><article class="lesson dark"><span>01 / 음악사</span><h3>시대가 바뀌면<br>음악도 달라질까요?</h3><p>보드의 흐름을 따라 바로크에서 근현대까지 여행해요. 시대 구분은 편의를 위한 것이며 작곡가와 양식은 여러 시대에 걸쳐 이어집니다.</p></article><article class="lesson"><span>02 / 가치와 경제</span><h3>가격과 가치는<br>같은 말일까요?</h3><p>게임 가격은 전략을 위한 가상 수치예요. 작품의 예술적·역사적 가치를 나타내는 순위가 아닙니다. 인기, 접근성, 유통 환경은 음악의 경제 활동에 영향을 줍니다.</p></article><article class="lesson"><span>03 / 권리와 이용</span><h3>작품과 녹음에는<br>각자의 권리가 있어요.</h3><p>오래된 작품이라도 최근 연주나 녹음에는 별도의 권리가 있을 수 있어요. 실제 사용 전에는 작품, 음원, 이용 방식과 이용허락 조건을 확인해야 해요.</p></article></div><h3 class="subheading">네 시대, 하나의 음악사</h3><div class="era-timeline">${ERAS.map(e=>`<article style="--era:${e.color}"><span>${e.years}</span><h3>${e.name}</h3><p>${e.detail}</p></article>`).join('')}</div><div class="reflection"><span>함께 이야기해요</span><h3>“가장 비싼 작품이 가장 가치 있는 작품일까요?”</h3><p>오늘 선택한 작품 한 곡과 그 이유를 나눠 보세요. 경제적 가치, 역사적 가치, 나에게 주는 의미를 각각 생각해 보세요.</p></div><div class="source-links"><strong>저작권 학습 참고 자료</strong>${SOURCES.map(s=>`<a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.label} ↗</a>`).join('')}<small>일반 개념을 배우는 수업 자료입니다. 실제 이용 조건은 해당 권리와 이용 방식에 따라 확인하세요. 이 프로토타입에는 외부 녹음 음원을 포함하지 않았습니다.</small></div></section>`;}
 function playerChatBubble(playerId){const message=chatBubbles.get(playerId);return message?`<div class="player-chat-bubble" title="${esc(message.text)}"><span>${esc(message.text)}</span></div>`:'';}
-function updateChatBubbles(){document.querySelectorAll('[data-chat-player]').forEach(slot=>{slot.innerHTML=playerChatBubble(Number(slot.dataset.chatPlayer));});}
+function updateChatBubbles(){document.querySelectorAll('[data-chat-player]').forEach(slot=>{slot.innerHTML=playerChatBubble(Number(slot.dataset.chatPlayer));});queueBoardTypeFit();}
 function chatRows(){return chatMessages.map(m=>`<div class="chat-message ${m.playerId===session.playerId?'mine':''}"><strong>${esc(m.name)}</strong><p>${esc(m.text)}</p><time datetime="${new Date(m.sentAt).toISOString()}">${new Date(m.sentAt).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false})}</time></div>`).join('')||'<p class="chat-empty">같은 방 친구들과 음악 정보를 나눠 보세요.</p>';}
 function chatPanel(){return `<section class="room-chat" aria-label="음악 정보 나누기"><div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="채팅 메시지">${chatRows()}</div><form id="chat-form"><label class="visually-hidden" for="chat-input">음악 정보 나누기 메시지</label><div class="chat-compose"><input id="chat-input" name="message" maxlength="200" autocomplete="off" placeholder="${mobileGame?'음악정보나누기':'음악 정보 나누기 · 친구에게 메시지 보내기'}" value="${esc(chatDraft)}" ${!connected?'disabled':''}/><button class="primary" type="submit" ${!connected||chatSending?'disabled':''}>보내기</button></div></form></section>`;}
 function acceptChat(payload){

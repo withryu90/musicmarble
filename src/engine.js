@@ -1,6 +1,6 @@
-import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=1126e3b6e402';
-import {characterById,drawCharacterIds} from './characters.js?v=1126e3b6e402';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=1126e3b6e402';
+import { BOARD, WORKS, QUIZZES, EVENTS } from './data.js?v=7c61d48887b4';
+import {characterById,drawCharacterIds} from './characters.js?v=7c61d48887b4';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=7c61d48887b4';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
@@ -46,14 +46,14 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
   return {version:VERSION,players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
-// Retire Q6 without discarding an otherwise valid classroom save.
+// Retire removed questions without discarding an otherwise valid classroom save.
 export function migrateRetiredQuiz(state){
- const deck=state?.quizDeck,known=new Set(QUIZZES.map(q=>q.id));
- if(!Array.isArray(deck)||deck.length!==known.size+1||new Set(deck).size!==deck.length||!deck.includes('q6')||!deck.every(id=>id==='q6'||known.has(id)))return state;
+ const deck=state?.quizDeck,known=new Set(QUIZZES.map(q=>q.id)),retired=new Set(['q6','q7']);
+ if(!Array.isArray(deck)||deck.length<=known.size||new Set(deck).size!==deck.length||!deck.every(id=>known.has(id)||retired.has(id))||![...known].every(id=>deck.includes(id)))return state;
  const s=clone(state),cursor=s.quizCursor;
  s.quizDeck=deck.filter(id=>known.has(id));
  if(Number.isInteger(cursor)&&cursor>=0)s.quizCursor=Math.floor(cursor/deck.length)*s.quizDeck.length+deck.slice(0,cursor%deck.length).filter(id=>known.has(id)).length;
- if(s.quiz==='q6'){
+ if(retired.has(s.quiz)){
   if(s.phase==='quiz'){s.quiz=s.quizDeck[s.quizCursor%s.quizDeck.length];s.quizCursor++;}
   else if(s.phase==='feedback'){s.phase='action';s.quiz=null;s.feedback=null;}
  }

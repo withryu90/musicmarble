@@ -28,3 +28,12 @@ test('refresh prevention is active only in a mobile game and leaves pinch gestur
  lock.setActive(false);assert.equal(classes.size,0);assert.deepEqual(moves.at(-1),[0,100]);
  lock.destroy();assert.equal(handlers.size,0);
 });
+
+test('horizontal board scrolling can consume a diagonal drag without unlocking page refresh',async()=>{
+ const {canConsumeHorizontalDrag}=await import('../src/mobile-scroll-lock.js');
+ const viewport={scrollWidth:600,clientWidth:300,scrollLeft:100,parentElement:body};
+ const getStyle=()=>({overflowX:'auto'});
+ assert.equal(canConsumeHorizontalDrag(viewport,15,body,getStyle),true);
+ viewport.scrollLeft=0;assert.equal(canConsumeHorizontalDrag(viewport,15,body,getStyle),false);
+ assert.equal(canConsumeHorizontalDrag(viewport,-15,body,getStyle),true);
+});

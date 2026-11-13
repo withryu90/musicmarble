@@ -126,3 +126,18 @@ body.mobile-game-scroll-lock :is(.players-all,.player-chat-bubble>span,.modal-bo
 .game-shell[data-mobile="true"][data-tab="board"] main{padding:2px 34px 2px 4px}
 .game-shell[data-mobile="true"][data-tab="board"] .room-chat{position:absolute;bottom:2px;left:4px;width:calc((100% - 38px)/3);max-width:var(--mobile-composer-max);margin:0;z-index:12}
 .game-shell[data-mobile="true"]:not([data-tab="board"]) main{padding-right:34px}
+
+/* Native two-axis scrolling exposes every edge of a zoomed mobile board. */
+.game-shell[data-mobile="true"][data-tab="board"] .mobile-board-viewport{position:absolute;left:calc(var(--mobile-rail-width,190px) + 8px);right:0;top:0;bottom:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.game-shell[data-mobile="true"][data-tab="board"] .mobile-board-scrollspace{position:relative;min-width:100%;min-height:100%}
+.game-shell[data-mobile="true"][data-tab="board"] .mobile-board-viewport .board-scene{left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--board-zoom,1));touch-action:pan-x pan-y}
+.game-shell[data-mobile="true"][data-tab="board"] .mobile-board-viewport .board-wrap{touch-action:pan-x pan-y}
+/* Floating icons only: no painted rail or button boxes. */
+.game-shell[data-mobile="true"] .site-header .brand{left:auto;right:3px;top:4px;width:26px;height:26px}
+.game-shell[data-mobile="true"] .site-header .brand-icon{width:26px;height:26px}
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav{top:34px}
+.game-shell[data-mobile="true"] .site-header .header-actions{top:64px}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools{top:150px}
+.game-shell[data-mobile="true"] .mobile-page-menu summary,
+.game-shell[data-mobile="true"] .site-header .header-actions button,
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools button{border:0;background:transparent;box-shadow:none;border-radius:0;padding:0}

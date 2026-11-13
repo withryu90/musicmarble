@@ -44,3 +44,16 @@ test('explicit mobile links select the mobile layout even with desktop-mode brow
  assert.equal(isMobileGameEnvironment({...view,location:{search:'?v=latest'}},desktop),false);
  assert.equal(isMobileGameEnvironment(view,{userAgent:'Macintosh Safari',platform:'MacIntel',maxTouchPoints:1}),true);
 });
+
+test('scrollable zoom creates native overflow and keeps the scrolled position across rebinding',()=>{
+ const handlers=new Map(),props=new Map(),space={style:{}};
+ const viewport={clientWidth:450,clientHeight:300,scrollLeft:0,scrollTop:0,get scrollWidth(){return Number.parseFloat(space.style.width)||450;},get scrollHeight(){return Number.parseFloat(space.style.height)||300;},addEventListener:(k,fn)=>handlers.set(k,fn),removeEventListener:k=>handlers.delete(k),getBoundingClientRect:()=>({left:0,top:0,width:450,height:300})};
+ const scene={offsetWidth:300,offsetHeight:300,parentElement:space,closest:()=>viewport,style:{setProperty:(k,v)=>props.set(k,v)}};
+ const camera=new MobileBoardCamera();camera.bind(scene);camera.zoom(2);
+ assert.equal(viewport.scrollWidth,600);assert.equal(viewport.scrollHeight,600);
+ assert.equal(viewport.scrollLeft,75);assert.equal(viewport.scrollTop,150);
+ viewport.scrollLeft=150;viewport.scrollTop=300;handlers.get('scroll')();
+ camera.bind(scene);assert.equal(viewport.scrollLeft,150);assert.equal(viewport.scrollTop,300);
+ camera.reset();assert.equal(viewport.scrollWidth,450);assert.equal(viewport.scrollHeight,300);assert.equal(viewport.scrollLeft,0);assert.equal(viewport.scrollTop,0);
+ camera.bind(null);assert.equal(handlers.size,0);
+});

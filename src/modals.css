@@ -175,3 +175,42 @@ dialog#modal::backdrop{background:#164d7959}
 #modal .purchase-work-summary.has-work-art{position:relative;isolation:isolate;overflow:hidden;background:#eaf4fc}
 #modal .purchase-work-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:.82;filter:saturate(.8);z-index:-2;pointer-events:none}
 #modal .purchase-work-summary.has-work-art::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#eef7ff55,#f2f9ffd9 28%,#f2f9ffd9 72%,#eef7ff55),linear-gradient(0deg,#eaf4fc66,transparent 35%,transparent 70%,#eaf4fc44);pointer-events:none}
+
+/* A distinct end-of-game reveal, contained within the shared blue dialog. */
+#modal.bankruptcy-modal{max-width:560px}
+#modal .bankruptcy-scene{position:relative;isolation:isolate;overflow:hidden;text-align:center;padding:26px 20px 24px;margin-bottom:18px;border-radius:18px;border:1px solid #537493;background:radial-gradient(ellipse at 50% 40%,#334d73 0%,#142b49 55%,#0c1d34 100%);color:#fff;box-shadow:inset 0 0 50px #08152680}
+#modal .bankruptcy-kicker{display:block;position:relative;color:#b4c9e1;font-size:12px;letter-spacing:.16em}
+#modal .bankruptcy-title{position:relative;margin:6px 0 12px;color:#ff8a8e;font-size:clamp(48px,9vw,76px);line-height:1.05;letter-spacing:.16em;padding-left:.16em;text-shadow:0 4px 0 #541e3d}
+#modal .bankruptcy-player{position:relative;display:flex;align-items:center;justify-content:center;gap:12px}
+#modal .bankruptcy-player .character-avatar{filter:saturate(.65);width:56px;height:56px;border-color:#98abc5}
+#modal .bankruptcy-player>strong{font-size:clamp(19px,3vw,25px);color:#fff;overflow-wrap:anywhere}
+#modal .bankruptcy-balance{display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:8px;color:#ffb5b5}
+#modal .bankruptcy-balance strong{font-size:clamp(46px,8vw,68px);line-height:1.1;font-variant-numeric:tabular-nums}
+#modal .bankruptcy-balance span{font-size:18px;font-weight:800}
+#modal .bankruptcy-message{position:relative;color:#fff;font-weight:800;font-size:18px;margin:10px 0 8px}
+#modal .bankruptcy-detail{position:relative;color:#c1d2e6;font-size:14px;line-height:1.6;margin:0}
+#modal .bankruptcy-coins{position:absolute;inset:0;z-index:-1;pointer-events:none}
+#modal .bankruptcy-coins span{position:absolute;display:grid;place-items:center;width:48px;height:48px;border:3px double #a3b0c3;border-radius:50%;background:#5c6b83;color:#c1cbd8;font-size:12px;font-weight:800;opacity:.35;transform:rotate(-22deg)}
+#modal .bankruptcy-coins span:nth-child(1){left:8%;top:23%}
+#modal .bankruptcy-coins span:nth-child(2){right:7%;top:47%;transform:rotate(26deg)}
+#modal .bankruptcy-coins span:nth-child(3){left:15%;top:74%;width:35px;height:35px}
+#modal .notice.bankruptcy-result-summary{border-color:#e2b9c4;background:#fff0f2;color:#873b51}
+#modal .bankruptcy-result-summary>strong{color:#a4314a}
+@media(prefers-reduced-motion:no-preference){
+ #modal .bankruptcy-scene{animation:bankruptcy-reveal .65s ease-out both}
+ #modal .bankruptcy-title{animation:bankruptcy-stamp .7s cubic-bezier(.2,.8,.2,1) both}
+ #modal .bankruptcy-coins span{animation:bankruptcy-coin-fall 1.1s ease-out both}
+ #modal .bankruptcy-coins span:nth-child(2){animation-delay:.12s}
+ #modal .bankruptcy-coins span:nth-child(3){animation-delay:.24s}
+ @keyframes bankruptcy-reveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes bankruptcy-stamp{from{opacity:0;transform:scale(1.55)}to{opacity:1;transform:scale(1)}}
+ @keyframes bankruptcy-coin-fall{from{opacity:0;translate:0 -70px}to{opacity:.35;translate:0 0}}
+}
+@media(max-height:500px) and (orientation:landscape){
+ #modal .bankruptcy-scene{padding:12px;margin-bottom:10px}
+ #modal .bankruptcy-title{font-size:44px;margin:3px 0 6px}
+ #modal .bankruptcy-player .character-avatar{width:40px;height:40px}
+ #modal .bankruptcy-balance strong{font-size:40px}
+ #modal .bankruptcy-message{font-size:15px;margin:6px 0}
+ #modal .bankruptcy-detail{font-size:12px;line-height:1.4}
+}

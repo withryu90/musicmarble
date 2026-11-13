@@ -1,5 +1,5 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=a6d213222461',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=a6d213222461',import.meta.url).href};
+export const RECORDED_EFFECTS={applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=09fa422b0ac3',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=09fa422b0ac3',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison'];
 export function createSoundEffects({onPlaybackStart=()=>{},onPlaybackEnd=()=>{},createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
  let context=null,enabled=true,generation=0,primed=false,playbackId=0;const nodes=new Set(),seen=new Set(),buffers=new Map();
@@ -52,6 +52,7 @@ export function createSoundEffects({onPlaybackStart=()=>{},onPlaybackEnd=()=>{},
 }
 export function activitySound(item){
  if(['quiz-result','purchase-quiz-result'].includes(item.type)&&typeof item.correct==='boolean')return item.correct?'gain':'loss';
+ if(item.type==='bankruptcy')return 'loss';
  if(item.type==='history-event')return item.card.amount>=0?'gain':'loss';
  if(['prison-entry','prison-transfer'].includes(item.type))return 'prison';
  return null;

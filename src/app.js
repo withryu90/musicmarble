@@ -1,29 +1,29 @@
-import {createMusicDirector} from './music-director.js?v=a6d213222461';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=a6d213222461';
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=a6d213222461';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=a6d213222461';
-import {formatModalSentences} from './modal-sentences.js?v=a6d213222461';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a6d213222461';
-import {WORK_ARTWORK} from './work-artwork.js?v=a6d213222461';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=a6d213222461';
-import {RankingClient} from './ranking.js?v=a6d213222461';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a6d213222461';
-import {HandoffCountdown} from './handoff-countdown.js?v=a6d213222461';
-import {fitBoardTitles} from './board-type.js?v=a6d213222461';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=a6d213222461';
-import * as G from './engine.js?v=a6d213222461';
-import {ActivityInbox} from './activities.js?v=a6d213222461';
-import {purchaseQuizById} from './purchase-quizzes.js?v=a6d213222461';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a6d213222461';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a6d213222461';
-import {diceCube} from './dice.js?v=a6d213222461';
-import {CHARACTER_BIOS} from './character-bios.js?v=a6d213222461';
-import {needsLandscape} from './orientation.js?v=a6d213222461';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=a6d213222461';
-import {PeerTransport} from './peer-transport.js?v=a6d213222461';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=a6d213222461';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=a6d213222461';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=a6d213222461';
+import {createMusicDirector} from './music-director.js?v=09fa422b0ac3';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=09fa422b0ac3';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=09fa422b0ac3';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=09fa422b0ac3';
+import {formatModalSentences} from './modal-sentences.js?v=09fa422b0ac3';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=09fa422b0ac3';
+import {WORK_ARTWORK} from './work-artwork.js?v=09fa422b0ac3';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=09fa422b0ac3';
+import {RankingClient} from './ranking.js?v=09fa422b0ac3';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=09fa422b0ac3';
+import {HandoffCountdown} from './handoff-countdown.js?v=09fa422b0ac3';
+import {fitBoardTitles} from './board-type.js?v=09fa422b0ac3';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=09fa422b0ac3';
+import * as G from './engine.js?v=09fa422b0ac3';
+import {ActivityInbox} from './activities.js?v=09fa422b0ac3';
+import {purchaseQuizById} from './purchase-quizzes.js?v=09fa422b0ac3';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=09fa422b0ac3';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=09fa422b0ac3';
+import {diceCube} from './dice.js?v=09fa422b0ac3';
+import {CHARACTER_BIOS} from './character-bios.js?v=09fa422b0ac3';
+import {needsLandscape} from './orientation.js?v=09fa422b0ac3';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=09fa422b0ac3';
+import {PeerTransport} from './peer-transport.js?v=09fa422b0ac3';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=09fa422b0ac3';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=09fa422b0ac3';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=09fa422b0ac3';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -251,7 +251,9 @@ function showActivity(item){
  const effect=activitySound(item);if(effect)void soundEffects.play(effect,`${session.code}:${effect==='prison'?`prison:${state.turnNumber}:${item.actorId}`:`event:${item.id}`}`);
  const actor=state.players[item.actorId],other=state.players[item.otherId];
  const footer=item.type==='backward-entry'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
- if(item.type==='history-event'){
+ if(item.type==='bankruptcy'){
+  showModal('파산 · 게임 종료',`<section class="bankruptcy-scene"><div class="bankruptcy-coins" aria-hidden="true"><span>MC</span><span>MC</span><span>MC</span></div><span class="bankruptcy-kicker">음악 투자의 마지막 순간</span><h2 class="bankruptcy-title">파산</h2><div class="bankruptcy-player">${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><div class="bankruptcy-balance"><strong>0</strong><span>MC</span></div><p class="bankruptcy-message">뮤직코인이 모두 소진되었습니다.</p><p class="bankruptcy-detail">${esc(actor.name)} 님의 파산으로<br>2인 게임이 종료됩니다.</p></section><button class="primary full" data-action="activity-next">최종 결과 확인하기 →</button>`,'activity-modal bankruptcy-modal');
+ }else if(item.type==='history-event'){
   showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
   const purchaseResult=item.type==='purchase-quiz-result';
@@ -513,7 +515,7 @@ let modalFitFrame;
 new MutationObserver(()=>{cancelAnimationFrame(modalFitFrame);modalFitFrame=requestAnimationFrame(()=>{formatModalSentences($('#modal'));fitViewportDialog(document);});}).observe($('#modal'),{childList:true,subtree:true,characterData:true});
 function showModal(title,body,cls=''){
  handoffCountdown.stop();
- const hideResultTitle=cls.includes('quiz-result-notice')||cls.includes('leave-confirm-modal');
+ const hideResultTitle=cls.includes('quiz-result-notice')||cls.includes('leave-confirm-modal')||cls.includes('bankruptcy-modal');
  const d=$('#modal');
  if(hideResultTitle){d.removeAttribute('aria-labelledby');d.setAttribute('aria-label',title);}else{d.setAttribute('aria-labelledby','modal-title');d.removeAttribute('aria-label');}
  d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="m3.5 3.5 17 17m0-17-17 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>${hideResultTitle?'':`<h2 id="modal-title">${title}</h2>`}<div class="modal-body">${body}</div>`;
@@ -551,7 +553,7 @@ function fullscreenGuide(){
  showModal('주소창 없이 게임하기',`<div class="fullscreen-instructions"><p>iPhone Safari는 일반 웹페이지에서 주소창과 탭을 완전히 숨기는 기능이 제한되어 있어요. 홈 화면에서 앱으로 열면 브라우저 창 없이 플레이할 수 있어요.</p><ol><li>게임을 시작하기 전에 Safari의 <b>공유</b> 버튼을 눌러요.</li><li><b>홈 화면에 추가</b>를 선택해요.</li><li><b>웹 앱으로 열기</b>가 보이면 켜고 추가해요.</li><li>홈 화면의 <b>뮤직마블</b> 아이콘으로 실행한 뒤 휴대폰을 가로로 돌려요.</li></ol><p>Android Chrome도 브라우저 메뉴의 <b>홈 화면에 추가 / 앱 설치</b>로 실행할 수 있어요.</p></div><button class="primary full" data-action="close">확인</button>`,'fullscreen-guide-modal');
 }
 function settingsModal(){showModal('실시간 수업 정보',`<div class="notice">누구든 먼저 ${state.maxRounds}바퀴를 완주하면 즉시 종료해요.<br>${state.players.map(p=>`${esc(p.name)}: ${G.completedLaps(state,p)} / ${state.maxRounds}바퀴${G.hasFinished(state,p)?' · 완주':''}`).join('<br>')}<br><br>공유 코드 <b>${session.code}</b>같은 사이트에 접속한 뒤 이 코드를 입력하면 같은 방에 참가합니다.</div><p class="muted">게임 시작 후 새 참가자는 들어올 수 없습니다. 새로고침하면 시작 화면이 나옵니다. 「이전 게임 이어하기」를 눌러 재접속할 수 있습니다. 방장 화면을 닫으면 연결이 끊깁니다. 같은 브라우저의 이어하기로 복구할 수 있어요.</p><div class="settings-bottom"><button class="text-button" data-action="finish-confirm" ${state.phase==='finished'||session.playerId!==0?'disabled':''}>방장: 현재 수업 종료</button><button class="text-button" data-action="export">현재 결과 내려받기 ↗</button></div><button class="secondary full" data-action="copy-code">방 코드 복사</button><button class="text-button" data-action="leave-confirm">이 화면에서 나가기</button>`);}
-function results(){void soundEffects.play('applause',`finished:${snapshot?.gameId||session?.code}`);const ranking=[...state.players].sort((a,b)=>G.score(state,b)-G.score(state,a));showModal('여행 끝, 우리에게 남은 것',`${state.endReason?.type==='laps'?`<div class="notice"><strong>${esc(state.players[state.endReason.playerId].name)} 님이 가장 먼저 완주했어요!</strong><p>${state.maxRounds}바퀴를 완주하여 게임이 종료되었습니다.</p></div>`:''}${state.endReason?.type==='bankruptcy'?`<div class="notice"><strong>${esc(state.players[state.endReason.playerId].name)} 님이 파산했어요.</strong><p>보유 코인이 0 MC가 되어 2인 게임이 종료되었습니다.</p></div>`:''}<p class="muted">전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명 · ${state.round}라운드의 여정 · 동점은 공동 순위입니다. 점수는 게임 결과이며 음악적 능력을 평가하지 않습니다.</p><p id="ranking-save-status" class="ranking-save-status">${session?.playerId===0?esc(rankingClient.status(snapshot?.gameId)):'최종 점수는 방장 화면에서 전체 랭킹에 기록됩니다.'}</p><div class="results-list">${ranking.map(p=>{const rank=ranking.filter(x=>G.score(state,x)>G.score(state,p)).length+1;return `<div><span class="rank">${rank}</span>${characterSprite(p)}<div><strong>${esc(p.name)}</strong><small>코인 ${num(p.coins)} · 이용권 ${G.owned(state,p.id).length} · 퀴즈 ${p.knowledge}/${p.attempts}</small></div><b>${num(G.score(state,p))}<small>점</small></b></div>`;}).join('')}</div><p class="muted">총점 = 보유 코인 + 이용권 구입가 + 공연 기획비</p><div class="discussion"><b>함께 돌아보기</b><p>① 가장 기억에 남는 작품과 그 이유는?<br>② 음악의 가격과 가치는 어떻게 다를까요?<br>③ 실제 음원 이용 전에 무엇을 확인할까요?</p></div><button class="primary full" data-action="export">학습 결과 내려받기 ↓</button><button class="text-button" data-action="settings">수업 정보 보기 →</button>`);}
+function results(){if(state.endReason?.type!=='bankruptcy')void soundEffects.play('applause',`finished:${snapshot?.gameId||session?.code}`);const ranking=[...state.players].sort((a,b)=>G.score(state,b)-G.score(state,a));showModal('여행 끝, 우리에게 남은 것',`${state.endReason?.type==='laps'?`<div class="notice"><strong>${esc(state.players[state.endReason.playerId].name)} 님이 가장 먼저 완주했어요!</strong><p>${state.maxRounds}바퀴를 완주하여 게임이 종료되었습니다.</p></div>`:''}${state.endReason?.type==='bankruptcy'?`<div class="notice bankruptcy-result-summary"><strong>${esc(state.players[state.endReason.playerId].name)} 님 파산 · 게임 종료</strong><p>보유 코인이 0 MC가 되어 2인 게임이 종료되었습니다.</p></div>`:''}<p class="muted">전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명 · ${state.round}라운드의 여정 · 동점은 공동 순위입니다. 점수는 게임 결과이며 음악적 능력을 평가하지 않습니다.</p><p id="ranking-save-status" class="ranking-save-status">${session?.playerId===0?esc(rankingClient.status(snapshot?.gameId)):'최종 점수는 방장 화면에서 전체 랭킹에 기록됩니다.'}</p><div class="results-list">${ranking.map(p=>{const rank=ranking.filter(x=>G.score(state,x)>G.score(state,p)).length+1;return `<div><span class="rank">${rank}</span>${characterSprite(p)}<div><strong>${esc(p.name)}</strong><small>코인 ${num(p.coins)} · 이용권 ${G.owned(state,p.id).length} · 퀴즈 ${p.knowledge}/${p.attempts}</small></div><b>${num(G.score(state,p))}<small>점</small></b></div>`;}).join('')}</div><p class="muted">총점 = 보유 코인 + 이용권 구입가 + 공연 기획비</p><div class="discussion"><b>함께 돌아보기</b><p>① 가장 기억에 남는 작품과 그 이유는?<br>② 음악의 가격과 가치는 어떻게 다를까요?<br>③ 실제 음원 이용 전에 무엇을 확인할까요?</p></div><button class="primary full" data-action="export">학습 결과 내려받기 ↓</button><button class="text-button" data-action="settings">수업 정보 보기 →</button>`);}
 function exportResults(){const text=['뮤직마블 · 수업 결과',`기록 시각: ${new Date().toLocaleString('ko-KR')}`,`${state.round}/${state.maxRounds}라운드 · ${state.phase==='finished'?'종료':'진행 중'}`,`종료 조건: 누구든 먼저 ${state.maxRounds}바퀴 완주`,state.endReason?.type==='laps'?`종료 사유: ${state.players[state.endReason.playerId].name} 최초 ${state.maxRounds}바퀴 완주`:state.endReason?.type==='bankruptcy'?`종료 사유: ${state.players[state.endReason.playerId].name} 파산 (보유 코인 0 MC)`:'종료 사유: 완주 또는 수업 종료','총점 = 코인 + 이용권 원가 + 공연 기획비','',...state.players.map(p=>`${p.name}: ${G.completedLaps(state,p)}/${state.maxRounds}바퀴 | ${G.score(state,p)}점 | ${p.coins} MC | 퀴즈 정답 ${p.knowledge}/${p.attempts}\n작품: ${G.owned(state,p.id).map(w=>`${w.composer} ${w.title}`).join(', ')||'없음'}`),'','돌아보기','1. 기억에 남는 작품과 이유:','2. 음악의 가격과 가치의 차이:','3. 실제 음원 이용 전에 확인할 것:','','여행 기록',...state.log.slice().reverse().map(l=>`R${l.round} ${l.text}`),'','게임 이용권은 실제 저작권이나 음원 이용허락이 아닙니다.'].join('\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='뮤직마블-수업결과.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function soloSetup(){
  const nickname=$('#entry-form input[name="nickname"]')?.value||'';

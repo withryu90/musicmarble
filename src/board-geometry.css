@@ -54,14 +54,6 @@
 .board-area.is-flat .cell.pawn-moving-cell{z-index:12}
 .board-area.is-flat .tokens.token-stack{column-gap:2px;row-gap:2px}
 
-/* Keep the four special tiles and their illustrations free of shadows. */
-.board-area .cell:is(.transfer,.prison,.go-to-prison,.start){box-shadow:none}
-.board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .landmark,
-.board-area .cell.start .start-portal{filter:none}
-.board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .tile-copy,
-.board-area .cell:is(.transfer,.prison,.go-to-prison,.start) .tile-copy>*{text-shadow:none}
-.board-area .cell.start .tile-copy::before{box-shadow:none;text-shadow:none}
-
 /* Flat boards scale as one square, including their type and pawns. */
 .board-area.is-flat .board-wrap{padding:clamp(4px,.9vw,12px);overflow:visible}
 .board-area.is-flat .board{gap:clamp(2px,.4vw,5px)}
@@ -285,3 +277,11 @@
 
 /* Screen-space diamond hit areas avoid browser 3D hit-testing gaps on tile faces. */
 .board-area.is-3d .board-label::before{content:"";position:absolute;left:0;top:0;width:calc(var(--label-width)*.92);height:calc(var(--label-height)*.92);transform:translate(-50%,-50%);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);pointer-events:auto;cursor:pointer}
+
+/* Every tile face stays shadow-free in both views, including active/hover states. */
+.board-area .board .cell{box-shadow:none}
+.board-area .cell .landmark,.board-area .cell .start-portal{filter:none}
+.board-area .cell .tile-copy,.board-area .cell .tile-copy>*,
+.board-area.is-3d .board-label .tile-copy,
+.board-area.is-3d .board-label .tile-copy>*{text-shadow:none}
+.board-area .cell.start .tile-copy::before{box-shadow:none;text-shadow:none}

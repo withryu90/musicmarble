@@ -1,8 +1,8 @@
-import {randomInt,randomToken} from './random.js?v=91d3dc70dcfd';
-import * as G from './engine.js?v=91d3dc70dcfd';
-import {botDecision,applyBotDecision} from './bots.js?v=91d3dc70dcfd';
-import {activityChanges} from './activities.js?v=91d3dc70dcfd';
-import {drawCharacterIds,characterById} from './characters.js?v=91d3dc70dcfd';
+import {randomInt,randomToken} from './random.js?v=b870bcb62f9c';
+import * as G from './engine.js?v=b870bcb62f9c';
+import {botDecision,applyBotDecision} from './bots.js?v=b870bcb62f9c';
+import {activityChanges} from './activities.js?v=b870bcb62f9c';
+import {drawCharacterIds,characterById} from './characters.js?v=b870bcb62f9c';
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();}

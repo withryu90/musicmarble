@@ -90,3 +90,10 @@
 .game-shell[data-mobile="true"][data-tab="board"] .board-area .board-summary{left:45px;right:300px}
 .game-shell[data-mobile="true"][data-tab="board"] .room-chat{width:50%;align-self:flex-start}
 .game-shell[data-mobile="true"]:not([data-tab="board"]) main{padding-top:40px;padding-right:46px}
+
+/* Lock only an active mobile game, including Safari's root rubber-band gesture. */
+html.mobile-game-scroll-lock{height:100%;overflow:hidden;overscroll-behavior:none}
+body.mobile-game-scroll-lock{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+body.mobile-game-scroll-lock .game-shell{overscroll-behavior:none}
+body.mobile-game-scroll-lock .game-shell:not([data-tab="board"]){height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
+body.mobile-game-scroll-lock :is(.players-all,.player-chat-bubble>span,.modal-body,.chat-messages,.mobile-page-options){overscroll-behavior:contain}

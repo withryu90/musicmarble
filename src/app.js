@@ -1,27 +1,28 @@
-import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=cf0737ec845b';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=cf0737ec845b';
-import {formatModalSentences} from './modal-sentences.js?v=cf0737ec845b';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=cf0737ec845b';
-import {WORK_ARTWORK} from './work-artwork.js?v=cf0737ec845b';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=cf0737ec845b';
-import {RankingClient} from './ranking.js?v=cf0737ec845b';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=cf0737ec845b';
-import {HandoffCountdown} from './handoff-countdown.js?v=cf0737ec845b';
-import {fitBoardTitles} from './board-type.js?v=cf0737ec845b';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=cf0737ec845b';
-import * as G from './engine.js?v=cf0737ec845b';
-import {ActivityInbox} from './activities.js?v=cf0737ec845b';
-import {purchaseQuizById} from './purchase-quizzes.js?v=cf0737ec845b';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=cf0737ec845b';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=cf0737ec845b';
-import {diceCube} from './dice.js?v=cf0737ec845b';
-import {CHARACTER_BIOS} from './character-bios.js?v=cf0737ec845b';
-import {needsLandscape} from './orientation.js?v=cf0737ec845b';
-import {createBgm} from './bgm.js?v=cf0737ec845b';
-import {PeerTransport} from './peer-transport.js?v=cf0737ec845b';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=cf0737ec845b';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=cf0737ec845b';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=cf0737ec845b';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=f23127b20a77';
+import {shouldDrainTurnUpdates,turnPromptKey} from './turn-flow.js?v=f23127b20a77';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=f23127b20a77';
+import {formatModalSentences} from './modal-sentences.js?v=f23127b20a77';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=f23127b20a77';
+import {WORK_ARTWORK} from './work-artwork.js?v=f23127b20a77';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=f23127b20a77';
+import {RankingClient} from './ranking.js?v=f23127b20a77';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=f23127b20a77';
+import {HandoffCountdown} from './handoff-countdown.js?v=f23127b20a77';
+import {fitBoardTitles} from './board-type.js?v=f23127b20a77';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE} from './data.js?v=f23127b20a77';
+import * as G from './engine.js?v=f23127b20a77';
+import {ActivityInbox} from './activities.js?v=f23127b20a77';
+import {purchaseQuizById} from './purchase-quizzes.js?v=f23127b20a77';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=f23127b20a77';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=f23127b20a77';
+import {diceCube} from './dice.js?v=f23127b20a77';
+import {CHARACTER_BIOS} from './character-bios.js?v=f23127b20a77';
+import {needsLandscape} from './orientation.js?v=f23127b20a77';
+import {createBgm} from './bgm.js?v=f23127b20a77';
+import {PeerTransport} from './peer-transport.js?v=f23127b20a77';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=f23127b20a77';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=f23127b20a77';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=f23127b20a77';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -451,7 +452,9 @@ function acceptChat(payload){
  const log=$('#chat-messages');if(log){const atBottom=log.scrollHeight-log.scrollTop-log.clientHeight<45;log.innerHTML=chatRows();if(atBottom)log.scrollTop=log.scrollHeight;}
 }
 async function sendChat(){if(chatSending||!chatDraft.trim())return;const sent=chatDraft;chatSending=true;const button=$('#chat-form button');if(button)button.disabled=true;try{const payload=await request('chat',{code:session.code,message:sent});acceptChat(payload);if(chatDraft===sent){chatDraft='';if($('#chat-input'))$('#chat-input').value='';}}catch(error){notify(error.message);}finally{chatSending=false;if($('#chat-form button'))$('#chat-form button').disabled=!connected;}}
+const mobileScrollLock=installMobileScrollLock();
 function syncGameOrientation(){
+ mobileScrollLock.setActive(mobileGame&&Boolean(snapshot?.state));
  document.body.classList.toggle('portrait-game',needsLandscape(window.innerWidth,window.innerHeight,Boolean(snapshot?.state&&!participantIntroPending),navigator.maxTouchPoints>0||matchMedia('(any-pointer:coarse)').matches));
 }
 function updateFullscreenButton(){const button=$('[data-action="fullscreen"]');if(button){const active=isFullscreen(document)||isStandalone(window);button.setAttribute('aria-pressed',String(active));button.setAttribute('aria-label',isFullscreen(document)?'전체화면 해제':'전체화면');}}

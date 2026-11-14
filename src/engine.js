@@ -1,7 +1,7 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=9a7e46726799';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=9a7e46726799';
-import {characterById,drawCharacterIds} from './characters.js?v=9a7e46726799';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=9a7e46726799';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=3983b10e84b0';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=3983b10e84b0';
+import {characterById,drawCharacterIds} from './characters.js?v=3983b10e84b0';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=3983b10e84b0';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const QUIZ_TIME_LIMIT=10000;

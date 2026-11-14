@@ -1,9 +1,9 @@
-import {roomConfig} from './lobby-config.js?v=b7cb70991701';
-import {randomInt,randomToken} from './random.js?v=b7cb70991701';
-import * as G from './engine.js?v=b7cb70991701';
-import {botDecision,applyBotDecision} from './bots.js?v=b7cb70991701';
-import {activityChanges} from './activities.js?v=b7cb70991701';
-import {drawCharacterIds,characterById} from './characters.js?v=b7cb70991701';
+import {roomConfig} from './lobby-config.js?v=9017ee1bf9e5';
+import {randomInt,randomToken} from './random.js?v=9017ee1bf9e5';
+import * as G from './engine.js?v=9017ee1bf9e5';
+import {botDecision,applyBotDecision} from './bots.js?v=9017ee1bf9e5';
+import {activityChanges} from './activities.js?v=9017ee1bf9e5';
+import {drawCharacterIds,characterById} from './characters.js?v=9017ee1bf9e5';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
@@ -100,7 +100,7 @@ export class RoomService {
       }else{
         if(member.id!==state.turn)throw Error('지금은 다른 참가자의 차례입니다.');
         if(state.trade)throw Error('거래 응답을 먼저 기다려 주세요.');
-        const allowed={beginQuizTimer:s=>G.beginQuizTimer(s),expireQuiz:s=>G.expireQuiz(s),buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
+        const allowed={buyListeningHint:s=>G.buyListeningHint(s),refundListeningHint:s=>G.refundListeningHint(s),beginQuizTimer:s=>G.beginQuizTimer(s),expireQuiz:s=>G.expireQuiz(s),buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
         if(!Object.hasOwn(allowed,action))throw Error('지원하지 않는 동작입니다.');
         room.state=allowed[action](state,...args);
       }

@@ -1,5 +1,5 @@
-import {streamingOpportunity} from './engine.js?v=b7cb70991701';
-import {BOARD} from './data.js?v=b7cb70991701';
+import {streamingOpportunity} from './engine.js?v=9017ee1bf9e5';
+import {BOARD} from './data.js?v=9017ee1bf9e5';
 // Offer the handoff only after mandatory learning/purchase choices are resolved.
 export function canOfferTurnHandoff(state,playerId){
  if(!state||state.turn!==playerId||state.trade||!['action','jailed'].includes(state.phase))return false;

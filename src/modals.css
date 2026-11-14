@@ -44,6 +44,7 @@ dialog#modal::backdrop{background:#164d7959}
 #modal .activity-hero{display:flex;justify-content:center;align-items:center;gap:10px;padding:13px 0 8px;color:#21557c}
 .activity-symbol{display:grid;place-items:center;width:47px;height:47px;border-radius:14px;background:linear-gradient(145deg,#bfe3ff,#eef9ff);color:#247db2;font-size:29px;font-weight:700;box-shadow:inset 0 0 0 1px #b1d5ee}
 #modal .activity-description{text-align:center;font-size:13px;line-height:1.9;margin:10px 0 19px;word-break:keep-all}
+#modal .prison-emphasis,.arrival .prison-emphasis{font-weight:900;color:#123e62}
 .activity-ledger{border:1px solid #cde2f1;border-radius:12px;background:#f0f8ff;overflow:hidden}
 .activity-ledger>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid #dbeaf5}
 .activity-ledger>div:last-child{border:0}.activity-ledger>div>span{display:flex;align-items:center;gap:9px;min-width:0}.activity-ledger b{font-size:12px;word-break:keep-all}

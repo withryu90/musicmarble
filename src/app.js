@@ -1,34 +1,34 @@
-import {createListeningPlayer} from './listening-player.js?v=31f379138836';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=31f379138836';
-import {LobbyConfig} from './lobby-config.js?v=31f379138836';
-import {GameActions} from './game-actions.js?v=31f379138836';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=31f379138836';
-import {createMusicDirector} from './music-director.js?v=31f379138836';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=31f379138836';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=31f379138836';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=31f379138836';
-import {formatModalSentences} from './modal-sentences.js?v=31f379138836';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=31f379138836';
-import {WORK_ARTWORK} from './work-artwork.js?v=31f379138836';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=31f379138836';
-import {RankingClient} from './ranking.js?v=31f379138836';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=31f379138836';
-import {HandoffCountdown} from './handoff-countdown.js?v=31f379138836';
-import {fitBoardTitles} from './board-type.js?v=31f379138836';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=31f379138836';
-import * as G from './engine.js?v=31f379138836';
-import {ActivityInbox} from './activities.js?v=31f379138836';
-import {purchaseQuizById} from './purchase-quizzes.js?v=31f379138836';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=31f379138836';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=31f379138836';
-import {diceCube} from './dice.js?v=31f379138836';
-import {CHARACTER_BIOS} from './character-bios.js?v=31f379138836';
-import {needsLandscape} from './orientation.js?v=31f379138836';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=31f379138836';
-import {GameTransport} from './game-transport.js?v=31f379138836';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=31f379138836';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=31f379138836';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=31f379138836';
+import {createListeningPlayer} from './listening-player.js?v=491169de3448';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=491169de3448';
+import {LobbyConfig} from './lobby-config.js?v=491169de3448';
+import {GameActions} from './game-actions.js?v=491169de3448';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=491169de3448';
+import {createMusicDirector} from './music-director.js?v=491169de3448';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=491169de3448';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=491169de3448';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=491169de3448';
+import {formatModalSentences} from './modal-sentences.js?v=491169de3448';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=491169de3448';
+import {WORK_ARTWORK} from './work-artwork.js?v=491169de3448';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=491169de3448';
+import {RankingClient} from './ranking.js?v=491169de3448';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=491169de3448';
+import {HandoffCountdown} from './handoff-countdown.js?v=491169de3448';
+import {fitBoardTitles} from './board-type.js?v=491169de3448';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=491169de3448';
+import * as G from './engine.js?v=491169de3448';
+import {ActivityInbox} from './activities.js?v=491169de3448';
+import {purchaseQuizById} from './purchase-quizzes.js?v=491169de3448';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=491169de3448';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=491169de3448';
+import {diceCube} from './dice.js?v=491169de3448';
+import {CHARACTER_BIOS} from './character-bios.js?v=491169de3448';
+import {needsLandscape} from './orientation.js?v=491169de3448';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=491169de3448';
+import {GameTransport} from './game-transport.js?v=491169de3448';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=491169de3448';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=491169de3448';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=491169de3448';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -338,6 +338,9 @@ async function passHandoff(){
  }
 }
 function dismissActivity(){activeActivity=null;$('#modal').close();continueFlow();}
+function prisonDescription(){
+ return ['불법 스트리밍을 통해 음악을 감상한 죄','두 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다.','6이 나오면 즉시 탈출'].reduce((html,phrase)=>html.replace(esc(phrase),`<strong class="prison-emphasis">${esc(phrase)}</strong>`),esc(PRISON_MESSAGE));
+}
 function historyCard(e,actorId){
  const risk=e.amount<0,category=e.category||e.period||'음악사 사건 카드';
  const kind=category.includes('음악사')?'industry':risk?'risk':'opportunity';
@@ -365,7 +368,7 @@ function showActivity(item){
   const ownPurchaseQuestion=item.type==='purchase-quiz-result'&&item.actorId===session.playerId&&state.purchaseChallenge?.workId===item.workId?purchaseQuizById(state.purchaseChallenge.questionId):null;
  const verdict=item.type==='purchase-quiz-result'?quizVerdict(item.correct,null,ownPurchaseQuestion?(ownPurchaseQuestion.answer?'O · 맞다':'X · 아니다'):null):item.type==='quiz-result'?quizVerdict(item.correct):'';
  const limited=item.type==='rent'&&item.expected!==null&&item.amount<item.expected?`<p class="muted">기준 이용료 ${num(item.expected)} MC 중 잔액 한도에서 ${num(item.amount)} MC를 지급했습니다.</p>`:'';
-  showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${item.appId?streamingIcon(item.appId):symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult||item.type==='quiz-result'?'':`<p class="activity-description">${esc(item.type==='prison-entry'?PRISON_MESSAGE:item.text)}</p>`}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${footer}`,purchaseResult?'activity-modal quiz-result-notice':'activity-modal');
+  showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${item.appId?streamingIcon(item.appId):symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult||item.type==='quiz-result'?'':`<p class="activity-description">${item.type==='prison-entry'?prisonDescription():esc(item.text)}</p>`}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${footer}`,purchaseResult?'activity-modal quiz-result-notice':'activity-modal');
  }
  $('#modal').dataset.activity='true';
 }
@@ -536,7 +539,7 @@ function actionPanel(){
  let content='';
  if(state.phase==='roll')content=`<div class="roll-visual">${diceCube(state.dice||5)}<span>${p.skipTurns?`6이 나오면 즉시 탈출 · 남은 기회 ${p.skipTurns}번`:'다음 명곡은 어디에 있을까요?'}</span></div><button class="primary full" data-action="roll" ${busy?'disabled':''}>${busy?'여행하는 중…':p.skipTurns?'탈출 주사위 굴리기':'주사위 굴리기'} <span>↗</span></button>`;
  else if(state.phase==='backward-roll')content=`<div class="notice">주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다.</div><button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`;
- else if(state.phase==='jailed')content=`<div class="arrival"><span>불법 스트리밍 감옥</span><h3>${state.lastPrisonRoll?'이번 차례는 감옥에 머물러요':'6이 나오면 즉시 탈출!'}</h3><p>${state.lastPrisonRoll?(p.skipTurns?'다음 자기 차례에 한 번 더 탈출 주사위를 굴릴 수 있어요.':'두 번 도전을 마쳤어요. 다음 자기 차례부터 정상 이동해요.'):esc(PRISON_MESSAGE)}</p></div><button class="primary full" data-action="next">안내 확인하고 차례 마치기 →</button>`;
+ else if(state.phase==='jailed')content=`<div class="arrival"><span>불법 스트리밍 감옥</span><h3>${state.lastPrisonRoll?'이번 차례는 감옥에 머물러요':'6이 나오면 즉시 탈출!'}</h3><p>${state.lastPrisonRoll?(p.skipTurns?'다음 자기 차례에 한 번 더 탈출 주사위를 굴릴 수 있어요.':'두 번 도전을 마쳤어요. 다음 자기 차례부터 정상 이동해요.'):prisonDescription()}</p></div><button class="primary full" data-action="next">안내 확인하고 차례 마치기 →</button>`;
  else if(state.phase==='purchase-quiz'||state.phase==='purchase-feedback')content=`<div class="arrival"><span>음악 퀴즈</span><h3>${esc(c.title)}</h3><p>정답이면 뮤직코인을 내고 구입할 수 있어요. 오답이면 차감 없이 차례를 넘겨요.</p></div><button class="primary full" data-action="purchase-quiz-open">${state.phase==='purchase-quiz'?'음악 퀴즈 열기':'음악 퀴즈 해설 확인하기'} →</button>`;
  else if(state.phase==='quiz'||state.phase==='feedback')content=`<div class="arrival"><span>배움의 시간</span><h3>${state.phase==='quiz'?'함께 답을 골라 보세요':'답보다 중요한 해설'}</h3><p>퀴즈 정답 시 80 MC를 얻어요.</p></div><button class="primary full" data-action="quiz-open">${state.phase==='quiz'?'퀴즈 열기':'해설 확인하기'} →</button>`;
  else if(state.trade)content=`<div class="notice">거래 제안을 보냈어요. 상대 참가자의 응답을 기다려 주세요.</div><button class="primary full" data-action="trade-open">거래 제안 확인</button>`;

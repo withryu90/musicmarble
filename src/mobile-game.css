@@ -357,3 +357,14 @@ dialog#modal.mobile-music-modal{
 /* Emphasise active work on mobile while keeping waiting/typing labels light. */
 .game-shell[data-mobile="true"] .mobile-player-status{font-weight:400}
 .game-shell[data-mobile="true"] .mobile-player-status:is([data-status-label="퀴즈 중"],[data-status-label="진행 중"]){font-weight:800}
+
+/* Keep signed coin amounts centred and safely inside compact mobile card gems. */
+#modal.mobile-event-card-modal .card-value{
+ width:64px;height:62px;box-sizing:border-box;padding:5px;border-width:2px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;
+}
+#modal.mobile-event-card-modal .card-value strong{
+ flex:none;width:100%;min-width:0;margin:0;padding:0;font-size:18px;line-height:1.1;
+ letter-spacing:0;text-indent:0;text-align:center;white-space:nowrap;
+}
+#modal.mobile-event-card-modal .card-value small{flex:none;font-size:8px;line-height:1.1;text-align:center;letter-spacing:0;text-indent:0}

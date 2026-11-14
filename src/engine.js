@@ -1,8 +1,8 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=8065fed7efff';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=8065fed7efff';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=8065fed7efff';
-import {characterById,drawCharacterIds} from './characters.js?v=8065fed7efff';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=8065fed7efff';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=af0d51ee5537';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=af0d51ee5537';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=af0d51ee5537';
+import {characterById,drawCharacterIds} from './characters.js?v=af0d51ee5537';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=af0d51ee5537';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const QUIZ_TIME_LIMIT=10000;
@@ -204,13 +204,31 @@ export function buyListeningHint(state,now=Date.now()){
  const s=clone(state),remaining=Math.max(1,Math.min(QUIZ_TIME_LIMIT,(s.quizDeadline||now+QUIZ_TIME_LIMIT)-now));
  current(s).coins-=LISTENING_HINT_PRICE;s.purchaseChallenge.hintAttempts=(s.purchaseChallenge.hintAttempts||0)+1;
  const durationMs=listeningHintDurationMs(LISTENING_HINTS[s.purchaseChallenge.workId]);
- s.purchaseChallenge.hint={until:now+durationMs,remaining,refunded:false};s.quizDeadline=now+durationMs+remaining;
+ s.purchaseChallenge.hint={until:now+durationMs,remaining,audioRemainingMs:durationMs,paused:false,refunded:false};s.quizDeadline=now+durationMs+remaining;
+ return s;
+}
+// Pausing audio resumes the quiz clock; resuming audio preserves only unused time.
+export function pauseListeningHint(state,now=Date.now()){
+ const h=state.purchaseChallenge?.hint;
+ if(state.phase!=='purchase-quiz'||!h||h.refunded)throw Error('일시정지할 대표 선율이 없습니다.');
+ if(h.paused)return state;
+ if(now>=h.until)throw Error('대표 선율 재생이 끝났습니다.');
+ const s=clone(state),hint=s.purchaseChallenge.hint;
+ hint.audioRemainingMs=h.until-now;hint.paused=true;hint.until=0;s.quizDeadline=now+h.remaining;
+ return s;
+}
+export function resumeListeningHint(state,now=Date.now()){
+ const h=state.purchaseChallenge?.hint;
+ if(state.phase!=='purchase-quiz'||!h||h.refunded||!h.paused||!h.audioRemainingMs)throw Error('이어서 들을 대표 선율이 없습니다.');
+ if(!state.quizDeadline||now>=state.quizDeadline)throw Error('퀴즈 시간이 끝났습니다.');
+ const s=clone(state),hint=s.purchaseChallenge.hint;
+ hint.remaining=state.quizDeadline-now;hint.paused=false;hint.until=now+h.audioRemainingMs;s.quizDeadline=hint.until+hint.remaining;
  return s;
 }
 export function refundListeningHint(state,now=Date.now()){
  const h=state.purchaseChallenge?.hint;
  if(!h||h.refunded||!['purchase-quiz','purchase-feedback'].includes(state.phase))throw Error('환불할 감상 힌트가 없습니다.');
- const s=clone(state);s.purchaseChallenge.hint.refunded=true;s.purchaseChallenge.hint.until=0;current(s).coins+=LISTENING_HINT_PRICE;
+ const s=clone(state);s.purchaseChallenge.hint.refunded=true;s.purchaseChallenge.hint.until=0;s.purchaseChallenge.hint.paused=false;s.purchaseChallenge.hint.audioRemainingMs=0;current(s).coins+=LISTENING_HINT_PRICE;
  if(s.phase==='purchase-quiz')s.quizDeadline=now+h.remaining;
  return s;
 }
@@ -323,7 +341,7 @@ export function isValidSave(s){
     if(s.lastBackwardMove){const m=s.lastBackwardMove;if(BOARD[m.from]?.type!=='back-three'||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}
     if(s.phase==='backward-roll'&&(BOARD[current(s).position].type!=='back-three'||s.lastBackwardMove||s.trade))return false;
     if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>1||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
-    if(s.purchaseChallenge?.hint){const h=s.purchaseChallenge.hint;if(!Number.isSafeInteger(h.until)||h.until<0||!Number.isInteger(h.remaining)||h.remaining<1||h.remaining>QUIZ_TIME_LIMIT||typeof h.refunded!=='boolean'||![1,2].includes(s.purchaseChallenge.hintAttempts))return false;}
+    if(s.purchaseChallenge?.hint){const h=s.purchaseChallenge.hint;if(!Number.isSafeInteger(h.until)||h.until<0||!Number.isInteger(h.remaining)||h.remaining<1||h.remaining>QUIZ_TIME_LIMIT||typeof h.refunded!=='boolean'||![1,2].includes(s.purchaseChallenge.hintAttempts))return false;if(h.paused!==undefined&&typeof h.paused!=='boolean'||h.audioRemainingMs!==undefined&&(!Number.isSafeInteger(h.audioRemainingMs)||h.audioRemainingMs<0)||h.paused&&(h.until!==0||!h.audioRemainingMs))return false;}
     if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.timedOut===true?c.response!==null||c.correct!==false:c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
     if(['purchase-quiz','purchase-feedback'].includes(s.phase)&&(!s.purchaseChallenge||s.ownership[s.purchaseChallenge.workId]))return false;
     if(s.phase==='purchase-quiz'&&(s.purchaseChallenge.response!==null||s.purchaseChallenge.timedOut===true))return false;

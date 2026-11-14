@@ -1,34 +1,34 @@
-import {createListeningPlayer} from './listening-player.js?v=8065fed7efff';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=8065fed7efff';
-import {LobbyConfig} from './lobby-config.js?v=8065fed7efff';
-import {GameActions} from './game-actions.js?v=8065fed7efff';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=8065fed7efff';
-import {createMusicDirector} from './music-director.js?v=8065fed7efff';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=8065fed7efff';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=8065fed7efff';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=8065fed7efff';
-import {formatModalSentences} from './modal-sentences.js?v=8065fed7efff';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=8065fed7efff';
-import {WORK_ARTWORK} from './work-artwork.js?v=8065fed7efff';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=8065fed7efff';
-import {RankingClient} from './ranking.js?v=8065fed7efff';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=8065fed7efff';
-import {HandoffCountdown} from './handoff-countdown.js?v=8065fed7efff';
-import {fitBoardTitles} from './board-type.js?v=8065fed7efff';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=8065fed7efff';
-import * as G from './engine.js?v=8065fed7efff';
-import {ActivityInbox} from './activities.js?v=8065fed7efff';
-import {purchaseQuizById} from './purchase-quizzes.js?v=8065fed7efff';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=8065fed7efff';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=8065fed7efff';
-import {diceCube} from './dice.js?v=8065fed7efff';
-import {CHARACTER_BIOS} from './character-bios.js?v=8065fed7efff';
-import {needsLandscape} from './orientation.js?v=8065fed7efff';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=8065fed7efff';
-import {GameTransport} from './game-transport.js?v=8065fed7efff';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=8065fed7efff';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=8065fed7efff';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=8065fed7efff';
+import {createListeningPlayer} from './listening-player.js?v=af0d51ee5537';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=af0d51ee5537';
+import {LobbyConfig} from './lobby-config.js?v=af0d51ee5537';
+import {GameActions} from './game-actions.js?v=af0d51ee5537';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=af0d51ee5537';
+import {createMusicDirector} from './music-director.js?v=af0d51ee5537';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=af0d51ee5537';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=af0d51ee5537';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=af0d51ee5537';
+import {formatModalSentences} from './modal-sentences.js?v=af0d51ee5537';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=af0d51ee5537';
+import {WORK_ARTWORK} from './work-artwork.js?v=af0d51ee5537';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=af0d51ee5537';
+import {RankingClient} from './ranking.js?v=af0d51ee5537';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=af0d51ee5537';
+import {HandoffCountdown} from './handoff-countdown.js?v=af0d51ee5537';
+import {fitBoardTitles} from './board-type.js?v=af0d51ee5537';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=af0d51ee5537';
+import * as G from './engine.js?v=af0d51ee5537';
+import {ActivityInbox} from './activities.js?v=af0d51ee5537';
+import {purchaseQuizById} from './purchase-quizzes.js?v=af0d51ee5537';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=af0d51ee5537';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=af0d51ee5537';
+import {diceCube} from './dice.js?v=af0d51ee5537';
+import {CHARACTER_BIOS} from './character-bios.js?v=af0d51ee5537';
+import {needsLandscape} from './orientation.js?v=af0d51ee5537';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=af0d51ee5537';
+import {GameTransport} from './game-transport.js?v=af0d51ee5537';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=af0d51ee5537';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=af0d51ee5537';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=af0d51ee5537';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -70,14 +70,17 @@ function listeningHintPanel(id){
  const hint=LISTENING_HINTS[id];
  if(!hint)return '<p class="listening-unavailable">감상 힌트 음원을 준비하고 있어요.</p>';
  const credit=hint.original?`사용자 제공 원본 · ${esc(hint.originalFilename)} · <a href="${esc(hint.src)}" target="_blank" rel="noopener noreferrer">원본 음원</a>`:`${esc(hint.artist)} · <a href="${esc(hint.source)}" target="_blank" rel="noopener noreferrer">음원 출처</a> · <a href="${esc(hint.licenseUrl)}" target="_blank" rel="noopener noreferrer">${esc(hint.license)}</a>`;
- return `<section class="listening-hint"><button class="listening-hint-button" data-action="listening-hint" disabled>♫ 감상 힌트 준비 중…</button><small>문제당 1회 · 전체 ${Math.round(hint.duration*10)/10}초 재생 · 감상 중 퀴즈 시간 일시 정지</small><small>힌트비는 정답 여부와 관계없이 사용돼요.</small><small>${esc(hint.section)}</small><details class="listening-credit"><summary>음원 정보</summary><small>${credit} · 음원 전체 재생</small></details></section>`;
+ return `<section class="listening-hint"><button class="listening-hint-button" data-action="listening-hint" disabled>♫ 감상 힌트 준비 중…</button><button class="listening-hint-button listening-toggle" data-action="listening-toggle" hidden>⏸ 대표 선율 일시정지</button><small>일시정지하면 바로 답을 선택할 수 있어요.</small><small>문제당 1회 · 전체 ${Math.round(hint.duration*10)/10}초 재생 · 감상 중 퀴즈 시간 일시 정지</small><small>힌트비는 정답 여부와 관계없이 사용돼요.</small><small>${esc(hint.section)}</small><details class="listening-credit"><summary>음원 정보</summary><small>${credit} · 음원 전체 재생</small></details></section>`;
 }
 function updateListeningHint(){
  const button=$('[data-action="listening-hint"]');if(!button)return;
  const challenge=state.purchaseChallenge,hint=challenge?.hint,available=challenge&&listeningPlayer.status(challenge.workId),used=hint&&!hint.refunded;
+ const toggle=$('[data-action="listening-toggle"]');
+ if(toggle){const wasHidden=toggle.hidden;toggle.hidden=!(used&&(available?.playing||available?.paused||hint.paused||Date.now()<hint.until));toggle.disabled=listeningHintBusy||!myTurn()||!connected||(!bgmEnabled&&hint?.paused);toggle.textContent=listeningHintBusy?'연결 중…':hint?.paused?'▶ 대표 선율 이어서 듣기':'⏸ 대표 선율 일시정지';if(toggle.hidden!==wasHidden)fitViewportDialog(document);}
+
  if(listeningRefundPending===listeningQuestionKey()){button.disabled=listeningHintBusy;button.textContent='♫ 재생 실패 · 20 MC 환불 다시 시도';return;}
  button.disabled=listeningHintBusy||!!used||!bgmEnabled||available?.state!=='ready'||!G.canBuyListeningHint(state);
- button.textContent=listeningHintBusy?'♫ 감상 힌트 연결 중…':used?Date.now()<hint.until?'♫ 대표 선율 감상 중…':'♫ 감상 힌트 사용 완료':challenge?.hintAttempts>=2?'♫ 재생 연결을 확인한 뒤 다음 문제에서 이용해 주세요':!bgmEnabled?'♫ 소리를 켜면 힌트를 들을 수 있어요':available?.state==='error'?'♫ 음원을 불러오지 못했어요 · 코인 차감 없음':available?.state!=='ready'?'♫ 감상 힌트 준비 중…':G.current(state).coins<work(challenge.workId).price+LISTENING_HINT_PRICE?'♫ 작품 구입가 + 힌트비 20 MC가 필요해요':`♫ 감상 힌트 듣기 · ${LISTENING_HINT_PRICE} MC · 전체 재생`;
+ button.textContent=listeningHintBusy?'♫ 감상 힌트 연결 중…':used?hint.paused?'♫ 대표 선율 일시정지 중':Date.now()<hint.until?'♫ 대표 선율 감상 중…':'♫ 감상 힌트 사용 완료':challenge?.hintAttempts>=2?'♫ 재생 연결을 확인한 뒤 다음 문제에서 이용해 주세요':!bgmEnabled?'♫ 소리를 켜면 힌트를 들을 수 있어요':available?.state==='error'?'♫ 음원을 불러오지 못했어요 · 코인 차감 없음':available?.state!=='ready'?'♫ 감상 힌트 준비 중…':G.current(state).coins<work(challenge.workId).price+LISTENING_HINT_PRICE?'♫ 작품 구입가 + 힌트비 20 MC가 필요해요':`♫ 감상 힌트 듣기 · ${LISTENING_HINT_PRICE} MC · 전체 재생`;
 }
 async function refundListeningCharge(){await apply(G.refundListeningHint);return state.purchaseChallenge?.hint?.refunded===true;}
 async function buyAndPlayListeningHint(){
@@ -99,6 +102,22 @@ async function buyAndPlayListeningHint(){
    listeningRefundPending=listeningQuestionKey();const refunded=await refundListeningCharge();if(refunded)listeningRefundPending=null;notify(refunded?'재생하지 못해 감상 힌트 20 MC를 돌려드렸어요.':'재생하지 못했어요. 연결을 확인한 뒤 환불을 다시 시도해 주세요.');
   }
  }catch(error){notify(error.message);}finally{listeningHintBusy=false;updateListeningHint();}
+}
+async function toggleListeningHint(){
+ if(listeningHintBusy||!myTurn()||state.phase!=='purchase-quiz'||!state.purchaseChallenge?.hint||state.purchaseChallenge.hint.refunded)return;
+ const id=state.purchaseChallenge.workId,key=listeningQuestionKey(),resume=state.purchaseChallenge.hint.paused;
+ listeningHintBusy=true;updateListeningHint();
+ try{
+  if(resume){
+   if(!bgmEnabled)return;
+   await listeningPlayer.unlock();
+   if(await apply(G.resumeListeningHint)&&state.phase==='purchase-quiz'&&listeningQuestionKey()===key&&!state.purchaseChallenge.hint.paused){
+    try{listeningPlayer.play(id,{resume:true,offset:Math.max(0,LISTENING_HINTS[id].duration-state.purchaseChallenge.hint.audioRemainingMs/1000)});}catch{await apply(G.pauseListeningHint);notify('음원을 이어서 재생하지 못했어요. 다시 시도해 주세요.');}
+   }
+  }else{
+   listeningPlayer.pause();await apply(G.pauseListeningHint);
+  }
+ }catch(error){notify(error.message);}finally{listeningHintBusy=false;updateQuizClock();}
 }
 function bgmBell(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4M11 2V1h2v1"/><path class="bell-slash" d="M3 3 21 21"/></svg>`;}
 function updateBgmControls(){
@@ -755,8 +774,9 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  }
  if(a==='purchase-quiz'){closeModal();await apply(G.startPurchaseQuiz);}
  if(a==='purchase-quiz-open')purchaseQuizModal();
+ if(a==='listening-toggle'){await toggleListeningHint();return;}
  if(a==='listening-hint'){await buyAndPlayListeningHint();return;}
- if(a==='purchase-answer')await apply(G.answerPurchaseQuiz,el.dataset.value==='true');
+ if(a==='purchase-answer'){listeningPlayer.stop();await apply(G.answerPurchaseQuiz,el.dataset.value==='true');}
  if(a==='purchase-feedback-close'){closeModal();await apply(G.closePurchaseFeedback);}
  if(a==='purchase-confirm'){closeModal();await apply(G.purchaseAndNext);}
  if(a==='purchase-decline'){closeModal();await apply(G.skipPurchase);}

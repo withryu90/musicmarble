@@ -326,17 +326,20 @@ dialog#modal.mobile-music-modal{
 .game-shell[data-mobile="true"] .cell.streaming .ownership-dot{display:none}
 
 /* A short timer on the left; all quiz decisions form one ordered right column. */
-#modal.mobile-music-modal:not(.purchase-result-modal) .modal-body{display:grid;grid-template-columns:clamp(80px,19vw,128px) minmax(0,1fr);gap:5px 12px;align-items:start}
+#modal.mobile-music-modal:not(.purchase-result-modal) .modal-body{position:relative;--quiz-rule-width:clamp(140px,30vw,190px);display:grid;grid-template-columns:clamp(80px,19vw,128px) minmax(0,1fr);gap:5px 12px;align-items:start}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock{grid-column:1;grid-row:1;display:grid;grid-template-columns:auto auto;align-self:start;width:100%;max-width:128px;gap:3px 4px;margin:0;padding:5px 6px}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock strong{justify-self:end}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock progress{grid-column:1/-1;width:100%;min-width:0}
-#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-meta{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin:0}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-meta{max-width:calc(100% - var(--quiz-rule-width) - 8px);grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin:0}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-cost{order:-1;font-size:11px;font-weight:800}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-work{font-size:11px;line-height:1.3}
-#modal.mobile-music-modal:not(.purchase-result-modal) .purchase-quiz-rule{grid-column:1;grid-row:2/span 2;align-self:start;margin:0;font-size:10px;line-height:1.4}
+#modal.mobile-music-modal:not(.purchase-result-modal) .purchase-quiz-rule{position:absolute;top:0;right:0;width:var(--quiz-rule-width);margin:0;padding:3px 6px;font-size:9px;line-height:1.3}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-question{grid-column:2;grid-row:2;margin:0;font-size:14px;line-height:1.35}
 #modal.mobile-music-modal:not(.purchase-result-modal) .purchase-ox-options{grid-column:2;grid-row:3;margin:0;align-self:stretch}
-#modal.mobile-music-modal:not(.purchase-result-modal) .listening-hint{grid-column:1/-1;grid-row:4;margin:0}
+#modal.mobile-music-modal:not(.purchase-result-modal) .listening-hint{grid-column:1;grid-row:2/span 2;align-self:start;margin:0;width:100%}
+#modal.mobile-music-modal:not(.purchase-result-modal) .listening-player{grid-template-columns:1fr 1fr;gap:5px;padding:5px}
+#modal.mobile-music-modal:not(.purchase-result-modal) .listening-label{grid-column:1/-1;padding:4px 2px;text-align:center;font-size:10px;line-height:1.4}
+#modal.mobile-music-modal:not(.purchase-result-modal) .listening-control{justify-self:center}
 
 /* Home Screen web apps centre the participant group above the chat composer. */
 .game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] .board-area .players-all{justify-content:center;justify-content:safe center}

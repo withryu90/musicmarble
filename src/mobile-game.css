@@ -340,3 +340,11 @@ dialog#modal.mobile-music-modal{
 
 /* Home Screen web apps centre the participant group above the chat composer. */
 .game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] .board-area .players-all{justify-content:center;justify-content:safe center}
+
+/* Mobile status badges use the protected column to the right of each participant card. */
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{align-self:start}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .mobile-player-status{
+ position:static;display:table;max-width:100%;margin:2px 0 4px;padding:2px 5px;
+ font-size:8px;line-height:12px;text-align:center;white-space:normal;word-break:keep-all;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble>span{max-height:max(24px,calc(var(--mobile-bubble-max,64px) - 20px))}

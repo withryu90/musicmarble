@@ -1,4 +1,4 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=9017ee1bf9e5';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=5bde9cc70d71';
 export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 두 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 두 번 모두 6이 나오지 않으면 그 두 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
@@ -14,7 +14,8 @@ export const LEGACY_BOARD = [
   {id:'event-1',type:'event',title:'음악사 사건',subtitle:'역사의 한 장면'},
   w('vivaldi-spring','비발디','사계: 봄','1725 출판','baroque',200,40,'새소리와 폭풍을 떠올리게 하는 바이올린 협주곡. 음악이 장면을 묘사합니다.'),
   w('vivaldi-winter','비발디','사계: 겨울','1725 출판','baroque',200,40,'떨리는 듯한 리듬과 대비되는 느린 악장에서 겨울의 풍경을 상상해 보세요.'),
-  w('handel-water','헨델','수상 음악','1717','baroque',210,40,'바로크 시대의 관현악 모음곡. 춤곡의 리듬과 다채로운 악기 소리를 만나요.'),
+  // Keep this tile ID stable for saved games; its repertoire is now Rinaldo.
+  w('handel-water','헨델','울게 하소서','1711','baroque',210,40,'오페라 「리날도」 중 알미레나가 부르는 아리아. 애절한 선율로 슬픔과 자유를 향한 바람을 표현합니다.'),
   {id:'back-three',type:'back-three',title:'뒤로가기',subtitle:'추가 주사위만큼 뒤로'},
   w('mozart-serenade','모차르트','작은 밤의 음악','1787','classical',220,45,'아이네 클라이네 나흐트무지크. 명료한 선율과 균형 잡힌 구성이 돋보입니다.'),
   w('mozart-flute','모차르트','마술피리','1791','classical',240,50,'대사와 노래가 함께하는 징슈필. 다양한 인물의 성격을 음악으로 표현합니다.'),

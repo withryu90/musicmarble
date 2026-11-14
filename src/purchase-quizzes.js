@@ -1,6 +1,6 @@
 // Five OX questions per work; one random question per landing. Existing IDs stay stable.
 const pairs=[
- ['handel-water','「수상 음악」은 헨델이 작곡한 바로크 시대 음악이다.','「수상 음악」을 작곡한 사람은 쇼팽이다.','「수상 음악」은 헨델의 바로크 시대 관현악 모음곡입니다.'],
+ ['handel-water','「울게 하소서」는 헨델이 작곡한 바로크 시대 음악이다.','「울게 하소서」를 작곡한 사람은 쇼팽이다.','「울게 하소서」는 바로크 시대 작곡가 헨델의 오페라 「리날도」에 나오는 아리아입니다.'],
  ['haydn-surprise','「놀람 교향곡」은 하이든의 교향곡 제94번이다.','「놀람 교향곡」은 모차르트의 오페라이다.','「놀람 교향곡」은 하이든의 교향곡으로, 느린 악장의 갑작스러운 강한 화음으로 유명합니다.'],
  ['brahms-hungarian-5','「헝가리 무곡 제5번」은 브람스의 작품이다.','「헝가리 무곡 제5번」은 바흐의 바로크 시대 작품이다.','브람스는 낭만주의 시대 작곡가이며 「헝가리 무곡 제5번」에서 춤의 활력을 느낄 수 있습니다.'],
  ['ravel-bolero','라벨의 「볼레로」에서는 반복되는 리듬과 선율이 중요한 역할을 한다.','「볼레로」를 작곡한 사람은 비발디이다.','「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.'],
@@ -93,21 +93,21 @@ const additional={
  ],
  "handel-water": [
   [
-   "「수상 음악」은 1717년 템스강의 왕실 뱃놀이와 관련이 있다.",
-   true,
-   "헨델은 조지 1세의 템스강 뱃놀이를 위한 음악을 작곡했습니다. 이 공연은 1717년에 열렸습니다."
+    "「울게 하소서」는 오페라 「리날도」에 나오는 아리아이다.",
+    true,
+    "「울게 하소서」는 오페라 「리날도」의 등장인물 알미레나가 부르는 아리아입니다."
   ],
   [
-   "「수상 음악」에는 여러 춤곡이 모음곡 형태로 묶여 있다.",
-   true,
-   "「수상 음악」은 여러 곡을 묶은 관현악 모음곡으로, 다양한 춤곡 리듬을 들을 수 있습니다."
+    "「울게 하소서」에서 알미레나는 슬픔과 자유를 향한 바람을 노래한다.",
+    true,
+    "사로잡힌 알미레나는 애절한 선율로 자신의 슬픔을 표현하며 풀려나기를 바랍니다."
   ],
   [
-   "「수상 음악」은 독창과 합창이 중심인 오라토리오이다.",
-   false,
-   "「수상 음악」은 악기들이 연주하는 관현악 모음곡입니다. 헨델의 오라토리오 「메시아」와 구별합니다."
+    "「울게 하소서」의 원곡은 사람의 노래 없이 악기만 연주하는 관현악 모음곡이다.",
+    false,
+    "「울게 하소서」는 가수가 반주와 함께 부르는 오페라 아리아입니다. 악기만 연주하는 관현악 모음곡과 구별합니다."
   ]
- ],
+],
  "mozart-serenade": [
   [
    "「작은 밤의 음악」은 원래 현악기를 위한 작품이다.",
@@ -369,7 +369,7 @@ const sourceByWork={
  "bach-brandenburg": "https://www.laphil.com/works/brandenburg-concertos-complete",
  "vivaldi-spring": "https://www.laphil.com/works/the-four-seasons",
  "vivaldi-winter": "https://www.laphil.com/works/the-four-seasons",
- "handel-water": "https://www.laphil.com/works/water-music-suite-no-1-in-f",
+ "handel-water": "https://www.glyndebourne.com/opera-archive/explore-our-operas/explore-rinaldo/rinaldo-musical-highlights/",
  "mozart-serenade": "https://www.laphil.com/works/eine-kleine-nachtmusik",
  "mozart-flute": "https://www.metopera.org/fluteguide",
  "beethoven-5": "https://www.laphil.com/works/symphony-no-5-in-c-minor-op-67",

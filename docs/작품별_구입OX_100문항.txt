@@ -125,36 +125,36 @@
 해설: 「사계」는 봄·여름·가을·겨울의 순서입니다. 「겨울」은 네 번째 협주곡입니다.
 참고: https://www.laphil.com/works/the-four-seasons
 
-【헨델 · 수상 음악】
-21. 「수상 음악」은 헨델이 작곡한 바로크 시대 음악이다.
+【헨델 · 울게 하소서】
+21. 「울게 하소서」는 헨델이 작곡한 바로크 시대 음악이다.
 문항 ID: handel-water-ox-o
 정답: O
-해설: 「수상 음악」은 헨델의 바로크 시대 관현악 모음곡입니다.
-참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+해설: 「울게 하소서」는 바로크 시대 작곡가 헨델의 오페라 「리날도」에 나오는 아리아입니다.
+참고: https://www.glyndebourne.com/opera-archive/explore-our-operas/explore-rinaldo/rinaldo-musical-highlights/
 
-22. 「수상 음악」을 작곡한 사람은 쇼팽이다.
+22. 「울게 하소서」를 작곡한 사람은 쇼팽이다.
 문항 ID: handel-water-ox-x
 정답: X
-해설: 「수상 음악」은 헨델의 바로크 시대 관현악 모음곡입니다.
-참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+해설: 「울게 하소서」는 바로크 시대 작곡가 헨델의 오페라 「리날도」에 나오는 아리아입니다.
+참고: https://www.glyndebourne.com/opera-archive/explore-our-operas/explore-rinaldo/rinaldo-musical-highlights/
 
-23. 「수상 음악」은 1717년 템스강의 왕실 뱃놀이와 관련이 있다.
+23. 「울게 하소서」는 오페라 「리날도」에 나오는 아리아이다.
 문항 ID: handel-water-ox-3
 정답: O
-해설: 헨델은 조지 1세의 템스강 뱃놀이를 위한 음악을 작곡했습니다. 이 공연은 1717년에 열렸습니다.
-참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+해설: 「울게 하소서」는 오페라 「리날도」의 등장인물 알미레나가 부르는 아리아입니다.
+참고: https://www.glyndebourne.com/opera-archive/explore-our-operas/explore-rinaldo/rinaldo-musical-highlights/
 
-24. 「수상 음악」에는 여러 춤곡이 모음곡 형태로 묶여 있다.
+24. 「울게 하소서」에서 알미레나는 슬픔과 자유를 향한 바람을 노래한다.
 문항 ID: handel-water-ox-4
 정답: O
-해설: 「수상 음악」은 여러 곡을 묶은 관현악 모음곡으로, 다양한 춤곡 리듬을 들을 수 있습니다.
-참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+해설: 사로잡힌 알미레나는 애절한 선율로 자신의 슬픔을 표현하며 풀려나기를 바랍니다.
+참고: https://www.glyndebourne.com/opera-archive/explore-our-operas/explore-rinaldo/rinaldo-musical-highlights/
 
-25. 「수상 음악」은 독창과 합창이 중심인 오라토리오이다.
+25. 「울게 하소서」의 원곡은 사람의 노래 없이 악기만 연주하는 관현악 모음곡이다.
 문항 ID: handel-water-ox-5
 정답: X
-해설: 「수상 음악」은 악기들이 연주하는 관현악 모음곡입니다. 헨델의 오라토리오 「메시아」와 구별합니다.
-참고: https://www.laphil.com/works/water-music-suite-no-1-in-f
+해설: 「울게 하소서」는 가수가 반주와 함께 부르는 오페라 아리아입니다. 악기만 연주하는 관현악 모음곡과 구별합니다.
+참고: https://www.glyndebourne.com/opera-archive/explore-our-operas/explore-rinaldo/rinaldo-musical-highlights/
 
 【모차르트 · 작은 밤의 음악】
 26. 모차르트는 고전주의 시대를 대표하는 작곡가이다.
@@ -497,36 +497,36 @@
 해설: 「달빛」은 드뷔시의 피아노곡입니다. 베토벤 교향곡 제9번은 다른 작곡가의 별도 작품입니다.
 참고: https://www.laphil.com/works/clair-de-lune-from-suite-bergamasque
 
-【드뷔시 · 바다】
-81. 드뷔시의 「바다」는 관현악의 다양한 음색으로 바다의 모습을 표현한다.
-문항 ID: debussy-sea-ox-o
+【라벨 · 볼레로】
+81. 라벨의 「볼레로」에서는 반복되는 리듬과 선율이 중요한 역할을 한다.
+문항 ID: ravel-bolero-ox-o
 정답: O
-해설: 「바다」는 관현악 작품으로, 악기들의 다양한 음색과 움직임을 활용합니다.
-참고: https://www.laphil.com/works/la-mer
+해설: 「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
 
-82. 드뷔시의 「바다」의 원곡은 피아노 독주만을 위한 작품이다.
-문항 ID: debussy-sea-ox-x
+82. 「볼레로」를 작곡한 사람은 비발디이다.
+문항 ID: ravel-bolero-ox-x
 정답: X
-해설: 「바다」는 관현악 작품으로, 악기들의 다양한 음색과 움직임을 활용합니다.
-참고: https://www.laphil.com/works/la-mer
+해설: 「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
 
-83. 드뷔시의 「바다」는 세 부분으로 이루어진 관현악 작품이다.
-문항 ID: debussy-sea-ox-3
+83. 「볼레로」에서는 작은북이 반복되는 리듬을 꾸준히 연주한다.
+문항 ID: ravel-bolero-ox-3
 정답: O
-해설: 드뷔시는 「바다」를 세 개의 교향적 스케치로 구성했습니다. 각 부분은 바다의 서로 다른 모습을 떠올리게 합니다.
-참고: https://www.laphil.com/works/la-mer
+해설: 작은북의 일정한 리듬이 곡을 받쳐 줍니다. 반복되는 리듬 위로 여러 악기의 선율이 이어집니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
 
-84. 「바다」의 마지막 부분 제목은 「바람과 바다의 대화」이다.
-문항 ID: debussy-sea-ox-4
+84. 「볼레로」는 악기들이 더해지며 전체적으로 점점 크게 들리는 크레셴도가 중요하다.
+문항 ID: ravel-bolero-ox-4
 정답: O
-해설: 세 번째 부분은 「바람과 바다의 대화」입니다. 다양한 악기의 음색과 움직임이 어우러집니다.
-참고: https://www.laphil.com/works/la-mer
+해설: 처음의 작은 소리가 점차 커집니다. 악기 편성과 음색의 변화도 함께 들을 수 있습니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
 
-85. 「바다」는 가수 한 명이 악기 없이 부르도록 작곡된 무반주 가곡이다.
-문항 ID: debussy-sea-ox-5
+85. 「볼레로」에서는 처음부터 끝까지 같은 악기 한 대만 선율을 연주한다.
+문항 ID: ravel-bolero-ox-5
 정답: X
-해설: 「바다」는 큰 관현악단이 연주하는 기악 작품입니다. 여러 악기군의 음색 변화가 중요한 역할을 합니다.
-참고: https://www.laphil.com/works/la-mer
+해설: 선율은 여러 악기와 악기군으로 이어집니다. 같은 선율도 음색이 달라지면 새로운 느낌을 줍니다.
+참고: https://www.laphil.com/posts/get-to-know-ravel
 
 【스트라빈스키 · 불새】
 86. 스트라빈스키의 「불새」는 발레 음악이다.
@@ -590,33 +590,33 @@
 해설: 「봄의 제전」은 스트라빈스키의 발레 음악입니다. 비발디의 바이올린 협주곡 「사계: 봄」과는 다른 작품입니다.
 참고: https://www.laphil.com/works/the-rite-of-spring
 
-【라벨 · 볼레로】
-96. 라벨의 「볼레로」에서는 반복되는 리듬과 선율이 중요한 역할을 한다.
-문항 ID: ravel-bolero-ox-o
+【드뷔시 · 바다】
+96. 드뷔시의 「바다」는 관현악의 다양한 음색으로 바다의 모습을 표현한다.
+문항 ID: debussy-sea-ox-o
 정답: O
-해설: 「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.
-참고: https://www.laphil.com/posts/get-to-know-ravel
+해설: 「바다」는 관현악 작품으로, 악기들의 다양한 음색과 움직임을 활용합니다.
+참고: https://www.laphil.com/works/la-mer
 
-97. 「볼레로」를 작곡한 사람은 비발디이다.
-문항 ID: ravel-bolero-ox-x
+97. 드뷔시의 「바다」의 원곡은 피아노 독주만을 위한 작품이다.
+문항 ID: debussy-sea-ox-x
 정답: X
-해설: 「볼레로」는 라벨의 관현악곡으로, 반복되는 리듬과 선율에 악기 음색이 더해지며 점점 강해집니다.
-참고: https://www.laphil.com/posts/get-to-know-ravel
+해설: 「바다」는 관현악 작품으로, 악기들의 다양한 음색과 움직임을 활용합니다.
+참고: https://www.laphil.com/works/la-mer
 
-98. 「볼레로」에서는 작은북이 반복되는 리듬을 꾸준히 연주한다.
-문항 ID: ravel-bolero-ox-3
+98. 드뷔시의 「바다」는 세 부분으로 이루어진 관현악 작품이다.
+문항 ID: debussy-sea-ox-3
 정답: O
-해설: 작은북의 일정한 리듬이 곡을 받쳐 줍니다. 반복되는 리듬 위로 여러 악기의 선율이 이어집니다.
-참고: https://www.laphil.com/posts/get-to-know-ravel
+해설: 드뷔시는 「바다」를 세 개의 교향적 스케치로 구성했습니다. 각 부분은 바다의 서로 다른 모습을 떠올리게 합니다.
+참고: https://www.laphil.com/works/la-mer
 
-99. 「볼레로」는 악기들이 더해지며 전체적으로 점점 크게 들리는 크레셴도가 중요하다.
-문항 ID: ravel-bolero-ox-4
+99. 「바다」의 마지막 부분 제목은 「바람과 바다의 대화」이다.
+문항 ID: debussy-sea-ox-4
 정답: O
-해설: 처음의 작은 소리가 점차 커집니다. 악기 편성과 음색의 변화도 함께 들을 수 있습니다.
-참고: https://www.laphil.com/posts/get-to-know-ravel
+해설: 세 번째 부분은 「바람과 바다의 대화」입니다. 다양한 악기의 음색과 움직임이 어우러집니다.
+참고: https://www.laphil.com/works/la-mer
 
-100. 「볼레로」에서는 처음부터 끝까지 같은 악기 한 대만 선율을 연주한다.
-문항 ID: ravel-bolero-ox-5
+100. 「바다」는 가수 한 명이 악기 없이 부르도록 작곡된 무반주 가곡이다.
+문항 ID: debussy-sea-ox-5
 정답: X
-해설: 선율은 여러 악기와 악기군으로 이어집니다. 같은 선율도 음색이 달라지면 새로운 느낌을 줍니다.
-참고: https://www.laphil.com/posts/get-to-know-ravel
+해설: 「바다」는 큰 관현악단이 연주하는 기악 작품입니다. 여러 악기군의 음색 변화가 중요한 역할을 합니다.
+참고: https://www.laphil.com/works/la-mer

@@ -24,8 +24,8 @@ test('failed playback refunds once and allows only one retry without losing save
  assert.equal(retry.players[0].coins,1180);assert.equal(G.canBuyListeningHint(G.refundListeningHint(retry,5100)),false);
 });
 test('unverified recordings cannot be bought, and every enabled clip has documented reusable rights and five seconds of PCM audio',async()=>{
- assert.equal(Object.keys(LISTENING_HINTS).length,18);
- for(const id of ['stravinsky-firebird','stravinsky-spring'])assert.equal(G.canBuyListeningHint(purchase(id)),false);
+ assert.equal(Object.keys(LISTENING_HINTS).length,17);
+ for(const id of ['stravinsky-firebird','stravinsky-spring','handel-water'])assert.equal(G.canBuyListeningHint(purchase(id)),false);
  const credits=JSON.parse(await readFile(new URL('../src/assets/audio/hints/ATTRIBUTION.json',import.meta.url)));
  for(const [id,hint] of Object.entries(LISTENING_HINTS)){
   assert.ok(WORKS.some(w=>w.id===id));assert.match(hint.source,/^https:/);assert.match(hint.license,/CC BY|Public domain/);assert.ok(hint.artist&&hint.section);

@@ -3,7 +3,8 @@
   "modifications": "Five-second excerpt; mono PCM conversion, volume normalization and boundary fades. No pitch or tempo changes. CC BY-SA derivatives are distributed under their original listed CC BY-SA license. Individual audio licenses do not apply to application code.",
   "unavailable": [
     "stravinsky-firebird",
-    "stravinsky-spring"
+    "stravinsky-spring",
+    "handel-water"
   ],
   "recordings": {
     "bach-air": {
@@ -54,19 +55,6 @@
       "section": "겨울 1악장 도입 주제",
       "start": 0,
       "src": "./src/assets/audio/hints/vivaldi-winter.wav",
-      "duration": 5,
-      "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
-      "checkedAt": "2026-11-14"
-    },
-    "handel-water": {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Handel%27s_Water_Music_-_12._Alla_hornpipe_-_Chamber_Orchestra_-_United_States_Marine_Band.opus?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "source": "https://commons.wikimedia.org/wiki/File:Handel%27s_Water_Music_-_12._Alla_hornpipe_-_Chamber_Orchestra_-_United_States_Marine_Band.opus",
-      "license": "Public domain",
-      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
-      "artist": "United States Marine Band, Chamber Orchestra",
-      "section": "알라 혼파이프 주제",
-      "start": 0,
-      "src": "./src/assets/audio/hints/handel-water.wav",
       "duration": 5,
       "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
       "checkedAt": "2026-11-14"
@@ -242,5 +230,23 @@
       "checkedAt": "2026-11-14",
       "originalExcerptStart": 217.98
     }
+  },
+  "archivedRecordings": {
+    "handel-water": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Handel%27s_Water_Music_-_12._Alla_hornpipe_-_Chamber_Orchestra_-_United_States_Marine_Band.opus?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source": "https://commons.wikimedia.org/wiki/File:Handel%27s_Water_Music_-_12._Alla_hornpipe_-_Chamber_Orchestra_-_United_States_Marine_Band.opus",
+      "license": "Public domain",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "artist": "United States Marine Band, Chamber Orchestra",
+      "section": "알라 혼파이프 주제",
+      "start": 0,
+      "src": "./src/assets/audio/hints/handel-water.wav",
+      "duration": 5,
+      "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
+      "checkedAt": "2026-11-14"
+    }
+  },
+  "pendingRecordings": {
+    "handel-water": "Handel: Lascia ch’io pianga from Rinaldo — awaiting user recording; old Water Music clip disabled."
   }
 }

@@ -1,34 +1,34 @@
-import {createListeningPlayer} from './listening-player.js?v=9017ee1bf9e5';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=9017ee1bf9e5';
-import {LobbyConfig} from './lobby-config.js?v=9017ee1bf9e5';
-import {GameActions} from './game-actions.js?v=9017ee1bf9e5';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=9017ee1bf9e5';
-import {createMusicDirector} from './music-director.js?v=9017ee1bf9e5';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=9017ee1bf9e5';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=9017ee1bf9e5';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=9017ee1bf9e5';
-import {formatModalSentences} from './modal-sentences.js?v=9017ee1bf9e5';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=9017ee1bf9e5';
-import {WORK_ARTWORK} from './work-artwork.js?v=9017ee1bf9e5';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=9017ee1bf9e5';
-import {RankingClient} from './ranking.js?v=9017ee1bf9e5';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=9017ee1bf9e5';
-import {HandoffCountdown} from './handoff-countdown.js?v=9017ee1bf9e5';
-import {fitBoardTitles} from './board-type.js?v=9017ee1bf9e5';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=9017ee1bf9e5';
-import * as G from './engine.js?v=9017ee1bf9e5';
-import {ActivityInbox} from './activities.js?v=9017ee1bf9e5';
-import {purchaseQuizById} from './purchase-quizzes.js?v=9017ee1bf9e5';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9017ee1bf9e5';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9017ee1bf9e5';
-import {diceCube} from './dice.js?v=9017ee1bf9e5';
-import {CHARACTER_BIOS} from './character-bios.js?v=9017ee1bf9e5';
-import {needsLandscape} from './orientation.js?v=9017ee1bf9e5';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=9017ee1bf9e5';
-import {GameTransport} from './game-transport.js?v=9017ee1bf9e5';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=9017ee1bf9e5';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=9017ee1bf9e5';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=9017ee1bf9e5';
+import {createListeningPlayer} from './listening-player.js?v=5bde9cc70d71';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=5bde9cc70d71';
+import {LobbyConfig} from './lobby-config.js?v=5bde9cc70d71';
+import {GameActions} from './game-actions.js?v=5bde9cc70d71';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=5bde9cc70d71';
+import {createMusicDirector} from './music-director.js?v=5bde9cc70d71';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=5bde9cc70d71';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=5bde9cc70d71';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=5bde9cc70d71';
+import {formatModalSentences} from './modal-sentences.js?v=5bde9cc70d71';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5bde9cc70d71';
+import {WORK_ARTWORK} from './work-artwork.js?v=5bde9cc70d71';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=5bde9cc70d71';
+import {RankingClient} from './ranking.js?v=5bde9cc70d71';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5bde9cc70d71';
+import {HandoffCountdown} from './handoff-countdown.js?v=5bde9cc70d71';
+import {fitBoardTitles} from './board-type.js?v=5bde9cc70d71';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=5bde9cc70d71';
+import * as G from './engine.js?v=5bde9cc70d71';
+import {ActivityInbox} from './activities.js?v=5bde9cc70d71';
+import {purchaseQuizById} from './purchase-quizzes.js?v=5bde9cc70d71';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5bde9cc70d71';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5bde9cc70d71';
+import {diceCube} from './dice.js?v=5bde9cc70d71';
+import {CHARACTER_BIOS} from './character-bios.js?v=5bde9cc70d71';
+import {needsLandscape} from './orientation.js?v=5bde9cc70d71';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=5bde9cc70d71';
+import {GameTransport} from './game-transport.js?v=5bde9cc70d71';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen} from './fullscreen.js?v=5bde9cc70d71';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=5bde9cc70d71';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=5bde9cc70d71';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -68,7 +68,7 @@ let listeningHintBusy=false,listeningRefundPending=null;
 const listeningQuestionKey=()=>`${session?.code}:${state.turnNumber}:${state.purchaseChallenge?.questionId}`;
 function listeningHintPanel(id){
  const hint=LISTENING_HINTS[id];
- if(!hint)return '<p class="listening-unavailable">감상 힌트: 재사용 가능한 음원을 확인하고 있어요.</p>';
+ if(!hint)return `<p class="listening-unavailable">${id==='handel-water'?'감상 힌트: 「울게 하소서」 녹음본을 준비하고 있어요.':'감상 힌트: 재사용 가능한 음원을 확인하고 있어요.'}</p>`;
  return `<section class="listening-hint"><button class="listening-hint-button" data-action="listening-hint" disabled>♫ 감상 힌트 준비 중…</button><small>문제당 1회 · 5초 감상 중 퀴즈 시간 일시 정지</small><small>힌트비는 정답 여부와 관계없이 사용돼요.</small><small>${esc(hint.section)}</small><details class="listening-credit"><summary>음원 출처·이용 조건</summary><small>${esc(hint.artist)} · <a href="${esc(hint.source)}" target="_blank" rel="noopener noreferrer">음원 출처</a> · <a href="${esc(hint.licenseUrl)}" target="_blank" rel="noopener noreferrer">${esc(hint.license)}</a> · 5초 발췌·음량 조정</small></details></section>`;
 }
 function updateListeningHint(){
@@ -486,7 +486,7 @@ function boardTitle(cell){
   'go-to-prison':['감옥으로','가기'],
   'back-three':['뒤로가기'],
   'streaming-prison':boardView==='flat'?['불법','스트리밍','감옥']:['불법 스트리밍','감옥'],
-  'handel-water':['수상','음악'],
+  'handel-water':['울게','하소서'],
   'haydn-surprise':['놀람','교향곡'],
   'brahms-hungarian-5':['헝가리 무곡','제5번'],
   'bach-air':['G선상의','아리아'],

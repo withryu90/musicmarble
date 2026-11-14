@@ -344,10 +344,12 @@ dialog#modal.mobile-music-modal{
 /* Home Screen web apps centre the participant group above the chat composer. */
 .game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] .board-area .players-all{justify-content:center;justify-content:safe center}
 
-/* Mobile status badges use the protected column to the right of each participant card. */
-.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-slot{align-self:start}
+/* Give mobile status badges their own column inside slightly wider cards. */
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all{width:calc(clamp(150px,23vw,190px) + 84px)}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player{grid-template-columns:30px minmax(0,1fr) 36px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player{grid-template-columns:26px minmax(0,1fr) 36px}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .mobile-player-status{
- position:static;display:table;max-width:100%;margin:2px 0 4px;padding:2px 5px;
- font-size:8px;line-height:12px;text-align:center;white-space:normal;word-break:keep-all;
+ position:static;grid-column:3;grid-row:1;align-self:center;display:block;width:36px;
+ margin:0;padding:3px 1px;border:1px solid #b8d3e9;border-radius:7px;
+ background:#d8eafa;color:#3d6382;font-size:8px;line-height:12px;text-align:center;white-space:nowrap;
 }
-.game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble>span{max-height:max(24px,calc(var(--mobile-bubble-max,64px) - 20px))}

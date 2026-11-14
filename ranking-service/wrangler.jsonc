@@ -3,6 +3,7 @@
   "main": "worker.js",
   "compatibility_date": "2026-11-12",
   "workers_dev": true,
+  "triggers": {"crons": ["*/15 * * * *"]},
   "d1_databases": [
     {
       "binding": "DB",

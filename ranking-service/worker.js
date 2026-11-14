@@ -1,3 +1,4 @@
+import {onlineRoomRequest} from './lib/online-rooms.mjs';
 import {registerGame,submitGame,topRanking,nicknameAvailability} from './lib/ranking-core.mjs';
 const ALLOWED_ORIGINS=new Set(['https://withryu90.github.io']);
 const originAllowed=origin=>!origin||ALLOWED_ORIGINS.has(origin)||/^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(origin);
@@ -11,6 +12,10 @@ export default {async fetch(request,env){
  if(path==='/'&&request.method==='GET')return json({service:'뮤직마블 전체 랭킹',game:'https://withryu90.github.io/musicmarble/'});
  if(!env.DB)return json({error:'점수 저장소를 준비하고 있습니다.'},503);
  try{
+  if(path.startsWith('/api/game/')&&request.method==='POST'){
+   const content=await request.text();if(content.length>8192)return json({error:'요청이 너무 큽니다.'},413);
+   return json(await onlineRoomRequest(env.DB,path.slice('/api/game/'.length),JSON.parse(content)));
+  }
   if(path==='/api/ranking/top'&&request.method==='GET')return json(await topRanking(env.DB));
   if(request.method!=='POST'||!['/api/ranking/register','/api/ranking/submit','/api/ranking/nickname'].includes(path))return json({error:'요청을 찾을 수 없습니다.'},404);
   const content=await request.text();if(content.length>4096)return json({error:'요청이 너무 큽니다.'},413);const body=JSON.parse(content);
@@ -18,4 +23,6 @@ export default {async fetch(request,env){
   if(path==='/api/ranking/register')return json(await registerGame(env.DB,body));
   const secret=(request.headers.get('Authorization')||'').replace(/^Bearer /,'');return json(await submitGame(env.DB,body.gameId,secret,body));
  }catch(error){return json({error:error.status?error.message:request.method==='GET'?'랭킹을 불러오지 못했습니다.':error.message},error.status||400);}
+},async scheduled(event,env,context){
+ context.waitUntil(env.DB.prepare('DELETE FROM online_rooms WHERE expires_at <= ?').bind(Date.now()).run());
 }};

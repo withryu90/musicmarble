@@ -1,12 +1,12 @@
-import {roomConfig} from './lobby-config.js?v=3983b10e84b0';
-import {randomInt,randomToken} from './random.js?v=3983b10e84b0';
-import * as G from './engine.js?v=3983b10e84b0';
-import {botDecision,applyBotDecision} from './bots.js?v=3983b10e84b0';
-import {activityChanges} from './activities.js?v=3983b10e84b0';
-import {drawCharacterIds,characterById} from './characters.js?v=3983b10e84b0';
+import {roomConfig} from './lobby-config.js?v=b7cb70991701';
+import {randomInt,randomToken} from './random.js?v=b7cb70991701';
+import * as G from './engine.js?v=b7cb70991701';
+import {botDecision,applyBotDecision} from './bots.js?v=b7cb70991701';
+import {activityChanges} from './activities.js?v=b7cb70991701';
+import {drawCharacterIds,characterById} from './characters.js?v=b7cb70991701';
 const CODE_DIGITS='0123456789';
 export class RoomService {
-  constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
+  constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
   code(){let code;do{code=Array.from({length:6},()=>CODE_DIGITS[randomInt(CODE_DIGITS.length)]).join('');}while(this.rooms.has(code));return code;}
   nickname(value){if(typeof value!=='string'||!value.trim()||value.trim().length>16)throw Error('닉네임은 1–16자로 입력해 주세요.');return value.trim();}
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
@@ -46,6 +46,7 @@ export class RoomService {
     timer.unref?.();this.botTimers.set(room.code,timer);
   }
   scheduleQuiz(room){
+    if(!this.backgroundTimers)return;
     clearTimeout(this.quizTimers.get(room.code));this.quizTimers.delete(room.code);
     if(!room.state?.quizDeadline||!['quiz','purchase-quiz'].includes(room.state.phase))return;
     const timer=setTimeout(()=>{

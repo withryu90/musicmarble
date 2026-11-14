@@ -1,5 +1,5 @@
-import {RoomService} from './room-service.js?v=3983b10e84b0';
-import * as G from './engine.js?v=3983b10e84b0';
+import {RoomService} from './room-service.js?v=b7cb70991701';
+import * as G from './engine.js?v=b7cb70991701';
 export const PEER_PREFIX='musicmarble-rtc-v1-';
 const STORE='musicmarble.peer.host.v1';
 export function roomPeerId(code){if(typeof code!=='string'||!(/^[0-9]{6}$/.test(code)||/^[A-HJ-NP-Z2-9]{6}$/.test(code)))throw Error('공유 코드는 숫자 6자리로 입력해 주세요.');return PEER_PREFIX+code;}
@@ -15,7 +15,7 @@ let sdkPromise;
 async function loadPeer(){
  if(globalThis.Peer)return globalThis.Peer;
  if(!sdkPromise)sdkPromise=new Promise((resolve,reject)=>{
-  const script=document.createElement('script');script.src=new URL('./vendor/peerjs-1.5.5.min.js?v=3983b10e84b0',import.meta.url).href;
+  const script=document.createElement('script');script.src=new URL('./vendor/peerjs-1.5.5.min.js?v=b7cb70991701',import.meta.url).href;
   script.onload=()=>globalThis.Peer?resolve(globalThis.Peer):reject(Error('연결 도구를 불러오지 못했어요.'));
   script.onerror=()=>reject(Error('연결 도구를 불러오지 못했어요. 네트워크를 확인해 주세요.'));document.head.appendChild(script);
  }).catch(e=>{sdkPromise=null;throw e;});
@@ -80,12 +80,17 @@ export class PeerTransport{
   });
  }
  async connectGuest(code){
+  if(this.connecting?.code===code)return this.connecting.promise;
+  const promise=this.connectGuestOnce(code);this.connecting={code,promise};
+  try{return await promise;}finally{if(this.connecting?.promise===promise)this.connecting=null;}
+ }
+ async connectGuestOnce(code){
   const id=roomPeerId(code);if(this.connection?.open&&this.connection.peer===id)return;
   this.connection?.close();if(!this.peer||this.peer.destroyed)await this.openPeer();
-  const conn=this.peer.connect(id,{reliable:true,serialization:'json'});this.connection=conn;
+  const conn=this.peer.connect(id,{reliable:true,serialization:'binary'});this.connection=conn;
   return new Promise((resolve,reject)=>{
    const timer=setTimeout(()=>{conn.close();reject(Error('방장과 연결하지 못했어요. 방장 화면과 네트워크를 확인해 주세요.'));},this.timeout);
-   const fail=e=>{clearTimeout(timer);reject(Error(peerError(e)));};
+   const fail=e=>{clearTimeout(timer);this.peer?.off?.('error',peerFail);conn.close();reject(Error(peerError(e)));};
    conn.on('open',()=>{clearTimeout(timer);resolve();});conn.on('error',fail);
    const peerFail=e=>{if(e.type==='peer-unavailable')fail(e);};this.peer.on('error',peerFail);
    conn.on('data',packet=>{
@@ -93,7 +98,7 @@ export class PeerTransport{
     else if(packet?.kind==='snapshot')this.listener?.onSnapshot?.(packet.data);
     else if(packet?.kind==='chat')this.listener?.onChat?.(packet.data);
    });
-   conn.on('close',()=>{clearTimeout(timer);this.peer?.off?.('error',peerFail);for(const p of this.pending.values()){clearTimeout(p.timer);p.reject(Error('방장과 연결이 끊겼어요. 방장 화면을 열어 둔 뒤 이어하기를 눌러 주세요.'));}this.pending.clear();this.listener?.onDisconnect?.();});
+   conn.on('close',()=>{clearTimeout(timer);this.peer?.off?.('error',peerFail);if(this.connection!==conn)return;for(const p of this.pending.values()){clearTimeout(p.timer);p.reject(Error('방장과 연결이 끊겼어요. 방장 화면을 열어 둔 뒤 이어하기를 눌러 주세요.'));}this.pending.clear();this.listener?.onDisconnect?.();});
   });
  }
  rpc(path,body,session){

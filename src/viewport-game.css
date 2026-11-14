@@ -215,3 +215,6 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 /* Larger, readable desktop bubbles retain their protected seat-column bounds. */
 .game-shell[data-mobile="false"][data-tab="board"] .player-chat-bubble{padding:8px 10px;font-size:12px;line-height:21px}
 .game-shell[data-mobile="false"][data-tab="board"] .player-chat-bubble>span{line-height:21px}
+
+/* Desktop active statuses stand apart from the blue waiting and typing badges. */
+.game-shell[data-mobile="false"] .board-player-turn:is([data-status-label="진행 중"],[data-status-label="퀴즈 중"]){background:#ffe0b2;border-color:#e5b878;color:#714514;font-weight:800}

@@ -326,7 +326,7 @@ dialog#modal.mobile-music-modal{
 .game-shell[data-mobile="true"] .cell.streaming .ownership-dot{display:none}
 
 /* A short timer on the left; all quiz decisions form one ordered right column. */
-#modal.mobile-music-modal:not(.purchase-result-modal) .modal-body{position:relative;--quiz-rule-width:clamp(140px,30vw,190px);display:grid;grid-template-columns:clamp(80px,19vw,128px) minmax(0,1fr);gap:5px 12px;align-items:start}
+#modal.mobile-music-modal:not(.purchase-result-modal) .modal-body{position:relative;--quiz-rule-width:clamp(170px,35vw,220px);display:grid;grid-template-columns:clamp(80px,19vw,128px) minmax(0,1fr);gap:5px 12px;align-items:start}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock{grid-column:1;grid-row:1;display:grid;grid-template-columns:auto auto;align-self:start;width:100%;max-width:128px;gap:3px 4px;margin:0;padding:5px 6px}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock strong{justify-self:end}
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock progress{grid-column:1/-1;width:100%;min-width:0}

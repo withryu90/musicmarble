@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=50ac128f808f';
-import {createListeningPlayer} from './listening-player.js?v=50ac128f808f';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=50ac128f808f';
-import {LobbyConfig} from './lobby-config.js?v=50ac128f808f';
-import {GameActions} from './game-actions.js?v=50ac128f808f';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=50ac128f808f';
-import {createMusicDirector} from './music-director.js?v=50ac128f808f';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=50ac128f808f';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=50ac128f808f';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=50ac128f808f';
-import {formatModalSentences} from './modal-sentences.js?v=50ac128f808f';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=50ac128f808f';
-import {WORK_ARTWORK} from './work-artwork.js?v=50ac128f808f';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=50ac128f808f';
-import {RankingClient} from './ranking.js?v=50ac128f808f';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=50ac128f808f';
-import {HandoffCountdown} from './handoff-countdown.js?v=50ac128f808f';
-import {fitBoardTitles} from './board-type.js?v=50ac128f808f';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=50ac128f808f';
-import * as G from './engine.js?v=50ac128f808f';
-import {ActivityInbox} from './activities.js?v=50ac128f808f';
-import {purchaseQuizById} from './purchase-quizzes.js?v=50ac128f808f';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=50ac128f808f';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=50ac128f808f';
-import {diceCube} from './dice.js?v=50ac128f808f';
-import {CHARACTER_BIOS} from './character-bios.js?v=50ac128f808f';
-import {needsLandscape} from './orientation.js?v=50ac128f808f';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=50ac128f808f';
-import {GameTransport} from './game-transport.js?v=50ac128f808f';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=50ac128f808f';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=50ac128f808f';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=50ac128f808f';
+import {playerStatus} from './player-status.js?v=a3cb31aa44cd';
+import {createListeningPlayer} from './listening-player.js?v=a3cb31aa44cd';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=a3cb31aa44cd';
+import {LobbyConfig} from './lobby-config.js?v=a3cb31aa44cd';
+import {GameActions} from './game-actions.js?v=a3cb31aa44cd';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=a3cb31aa44cd';
+import {createMusicDirector} from './music-director.js?v=a3cb31aa44cd';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=a3cb31aa44cd';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=a3cb31aa44cd';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=a3cb31aa44cd';
+import {formatModalSentences} from './modal-sentences.js?v=a3cb31aa44cd';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a3cb31aa44cd';
+import {WORK_ARTWORK} from './work-artwork.js?v=a3cb31aa44cd';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=a3cb31aa44cd';
+import {RankingClient} from './ranking.js?v=a3cb31aa44cd';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a3cb31aa44cd';
+import {HandoffCountdown} from './handoff-countdown.js?v=a3cb31aa44cd';
+import {fitBoardTitles} from './board-type.js?v=a3cb31aa44cd';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=a3cb31aa44cd';
+import * as G from './engine.js?v=a3cb31aa44cd';
+import {ActivityInbox} from './activities.js?v=a3cb31aa44cd';
+import {purchaseQuizById} from './purchase-quizzes.js?v=a3cb31aa44cd';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a3cb31aa44cd';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a3cb31aa44cd';
+import {diceCube} from './dice.js?v=a3cb31aa44cd';
+import {CHARACTER_BIOS} from './character-bios.js?v=a3cb31aa44cd';
+import {needsLandscape} from './orientation.js?v=a3cb31aa44cd';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=a3cb31aa44cd';
+import {GameTransport} from './game-transport.js?v=a3cb31aa44cd';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=a3cb31aa44cd';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=a3cb31aa44cd';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=a3cb31aa44cd';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -713,7 +713,7 @@ function purchaseQuizModal(){
  if(answered){
   showModal(challenge.correct?'이용권을 구입할 수 있어요':'이번 구입 기회는 종료됐어요',`${quizVerdict(challenge.correct)}${challenge.timedOut?'<p class="quiz-timeout">시간이 초과되어 오답으로 처리됐어요.<br>코인은 차감되지 않아요.</p>':''}<section class="purchase-work-summary ${challenge.correct?'has-work-art':''}" aria-label="작품 구입 정보">${challenge.correct&&WORK_ARTWORK[w.id]?`<img class="purchase-work-art" src="${WORK_ARTWORK[w.id]}" alt="" aria-hidden="true" decoding="async"/>`:''}<p class="purchase-composer">${esc(w.composer)}</p><h3>${esc(w.title)}</h3><div class="purchase-price"><span>구입가</span><strong>${w.price.toLocaleString()} <small>MC</small></strong></div></section><button class="primary full purchase-confirm-cta" data-action="${challenge.correct?'purchase-confirm':'purchase-feedback-close'}">${challenge.correct?'구입하고 차례 넘기기 →':'차감 없이 다음 차례로 →'}</button>${challenge.correct?'<button class="text-button full" data-action="purchase-decline">구입하지 않고 차례 넘기기 →</button>':''}`,'purchase-quiz-modal purchase-result-modal');
  }else{
-  showModal('음악 퀴즈',`${quizClock()}<div class="quiz-meta">${pill(`${esc(w.composer)} · ${esc(w.title)}`,'quiz-work')}${pill(`구입가 ${w.price} MC`,'quiz-cost')}</div><p class="purchase-quiz-rule">정답이면 뮤직코인으로 이용권을 구입할 수 있어요.<br>오답이어도 코인 차감은 없습니다.</p><h3 class="quiz-question">${esc(q.question)}</h3><div class="purchase-ox-options">${options.map(o=>`<button data-action="purchase-answer" data-value="${o.value}" aria-label="${o.label} · ${o.meaning}"><strong>${o.label}</strong><span>${o.meaning}</span></button>`).join('')}</div>${listeningHintPanel(w.id)}`,'purchase-quiz-modal');
+  showModal('음악 퀴즈',`${quizClock()}<div class="quiz-meta">${pill(`${esc(w.composer)} · ${esc(w.title)}`,'quiz-work')}${pill(`구입가 ${w.price} MC`,'quiz-cost')}</div><p class="purchase-quiz-rule">정답 시 뮤직코인으로 이용권 구입 가능<br>오답 시 차감 없음</p><h3 class="quiz-question">${esc(q.question)}</h3><div class="purchase-ox-options">${options.map(o=>`<button data-action="purchase-answer" data-value="${o.value}" aria-label="${o.label} · ${o.meaning}"><strong>${o.label}</strong><span>${o.meaning}</span></button>`).join('')}</div>${listeningHintPanel(w.id)}`,'purchase-quiz-modal');
  }
  $('#modal').dataset.auto='true';if(!answered){startQuizClock();void listeningPlayer.prepare(w.id);updateListeningHint();}
 }

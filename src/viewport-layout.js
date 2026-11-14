@@ -1,4 +1,4 @@
-import {unzoomedViewportHeight} from './mobile-board.js?v=a3b83ada8c86';
+import {unzoomedViewportHeight} from './mobile-board.js?v=98f0d6747076';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);
@@ -56,7 +56,7 @@ export function fitViewportDialog(root=document){
  dialog.style.setProperty('--modal-scale','1');body.style.maxHeight='none';body.style.overflow='visible';
  const natural=dialog.scrollHeight+4;
  // Short game dialogs fit as a whole; long reference lists retain readable text inside the dialog.
- if(natural<=height*1.55){dialog.style.setProperty('--modal-scale',String(Math.min(1,height/natural)));}
+ if((mobile&&dialog.classList.contains('mobile-music-modal'))||natural<=height*1.55){dialog.style.setProperty('--modal-scale',String(Math.min(1,height/natural)));}
  else{
   const chrome=natural-body.scrollHeight;
   body.style.maxHeight=`${Math.max(80,height-chrome)}px`;body.style.overflow='auto';

@@ -40,3 +40,11 @@ test('mobile player rail reserves the actual composer position, including short 
   assert.ok(properties['--viewport-scene-width']);
  }
 });
+
+test('mobile music quiz keeps its bottom controls inside one scaled panel rather than a scrolling body',async()=>{
+ const {fitViewportDialog}=await import('../src/viewport-layout.js');const props={};
+ const body={style:{},scrollHeight:440};
+ const dialog={scrollHeight:500,style:{setProperty:(k,v)=>props[k]=v},classList:{contains:c=>c==='mobile-music-modal'},querySelector:()=>body};
+ const root={defaultView:{innerHeight:260},querySelector:selector=>selector==='#modal[open]'?dialog:{}};
+ fitViewportDialog(root);assert.equal(body.style.overflow,'visible');assert.equal(body.style.maxHeight,'none');assert.ok(Number(props['--modal-scale'])*504<=244+.01);
+});

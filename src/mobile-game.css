@@ -353,3 +353,7 @@ dialog#modal.mobile-music-modal{
  margin:0;padding:3px 1px;border:1px solid #b8d3e9;border-radius:7px;
  background:#d8eafa;color:#3d6382;font-size:8px;line-height:12px;text-align:center;white-space:nowrap;
 }
+
+/* Emphasise active work on mobile while keeping waiting/typing labels light. */
+.game-shell[data-mobile="true"] .mobile-player-status{font-weight:400}
+.game-shell[data-mobile="true"] .mobile-player-status:is([data-status-label="퀴즈 중"],[data-status-label="진행 중"]){font-weight:800}

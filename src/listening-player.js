@@ -1,4 +1,4 @@
-import {LISTENING_HINTS} from './listening-hints.js?v=e7c3587e1cc1';
+import {LISTENING_HINTS} from './listening-hints.js?v=8065fed7efff';
 export function createListeningPlayer({hints=LISTENING_HINTS,fetchFn=globalThis.fetch.bind(globalThis),createContext=()=>new (window.AudioContext||window.webkitAudioContext)(),onChange=()=>{},onStart=()=>{},onEnd=()=>{}}={}){
  let context=null,source=null,playing=null,finish=null;const cache=new Map();
  const ctx=()=>context||(context=createContext());
@@ -18,7 +18,7 @@ export function createListeningPlayer({hints=LISTENING_HINTS,fetchFn=globalThis.
  function stop(){if(source){try{source.stop();}catch{}finish?.();}}
  function play(id){
   if(cache.get(id)?.state!=='ready'||context?.state!=='running')throw Error('음원을 재생하지 못했어요.');
-  stop();const node=context.createBufferSource(),gain=context.createGain();node.buffer=cache.get(id).buffer;gain.gain.value=.65;node.connect(gain);gain.connect(context.destination);
+  stop();const node=context.createBufferSource(),gain=context.createGain();node.buffer=cache.get(id).buffer;gain.gain.value=hints[id].original?1:.65;node.connect(gain);gain.connect(context.destination);
   source=node;playing=id;let ended=false;
   const done=()=>{if(ended)return;ended=true;node.disconnect();gain.disconnect();if(source===node){source=null;playing=null;finish=null;onEnd(id);onChange();}};
   finish=done;node.onended=done;

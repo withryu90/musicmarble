@@ -27,3 +27,16 @@ test('mobile fitting exposes the actual visual viewport height for safe-area men
  fitViewportBoard(root);assert.equal(shell.style.height,'320px');assert.equal(values['--game-viewport-height'],'320px');
  root.defaultView.visualViewport={height:160,scale:2};fitViewportBoard(root);assert.equal(values['--game-viewport-height'],'320px');
 });
+
+test('mobile player rail reserves the actual composer position, including short viewports and taller input rows',async()=>{
+ const {fitViewportBoard}=await import('../src/viewport-layout.js');
+ for(const [height,stageBottom,composerTop] of [[390,386,350],[260,256,218],[260,256,188]]){
+  const properties={};const surround={clientWidth:640,clientHeight:height-4,getBoundingClientRect:()=>({bottom:stageBottom})};
+  const area={style:{setProperty:(k,v)=>properties[k]=v},classList:{contains:()=>false},querySelector:selector=>selector==='.board-surround'?surround:selector==='.players-all'?{offsetWidth:194}:null,querySelectorAll:()=>[]};
+  const composer={getBoundingClientRect:()=>({top:composerTop})};
+  const shell={dataset:{mobile:'true'},style:{setProperty(){}},querySelector:selector=>selector==='.board-area'?area:selector==='.room-chat'?composer:null};
+  fitViewportBoard({defaultView:{innerHeight:height},querySelector:()=>shell});
+  const railBottom=stageBottom-Number.parseFloat(properties['--mobile-player-bottom']);assert.ok(railBottom<=composerTop-6);
+  assert.ok(properties['--viewport-scene-width']);
+ }
+});

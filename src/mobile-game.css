@@ -248,3 +248,28 @@ dialog#modal.mobile-learning-modal{
 #modal.mobile-learning-modal .quiz-explanation p{font-size:10px;line-height:1.5;margin-top:5px}
 #modal.mobile-learning-modal .muted,#modal.mobile-learning-modal .quiz-timeout{font-size:10px;line-height:1.4;margin:6px 0}
 #modal.mobile-learning-modal .modal-body>.primary{min-height:32px;padding:7px 10px;margin-top:8px;font-size:12px}
+
+/* Reserve the measured composer area instead of letting the fourth card sit behind it. */
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all{
+ bottom:var(--mobile-player-bottom,44px);height:auto;min-height:0;padding:2px 0 6px;
+ overflow-y:auto;overflow-x:hidden;justify-content:flex-start;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player .seat-turn-controls>button{
+ height:24px;min-height:24px;padding:1px 4px;font-size:9px;line-height:1.1;gap:4px;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .seat-dice-icon,
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .seat-dice-icon .red-dice{width:16px;height:16px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"]{gap:2px;padding-top:1px;padding-bottom:6px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player{
+ padding:3px 4px;gap:1px 4px;grid-template-columns:26px minmax(0,1fr);border-radius:8px;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player-portrait .character-avatar{width:25px;height:25px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player-name{gap:3px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player-name strong{font-size:10px;line-height:1.15}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player-coins b{font-size:14px;line-height:1.05}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player-laps,
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player-prison{font-size:8px;line-height:1.1;margin-top:1px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .seat-badge{font-size:7px;padding:0 3px;line-height:1.2}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .seat-turn-controls{gap:2px;margin:0}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .board-player .seat-turn-controls>button{height:22px;min-height:22px}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all[data-player-count="4"] .player-app-badges{margin-top:2px;gap:1px}

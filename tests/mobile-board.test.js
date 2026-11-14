@@ -63,3 +63,17 @@ test("installed app camera keeps its 120 percent default when reset",()=>{
  assert.equal(camera.state.scale,1.2);camera.zoom(1.25);assert.equal(camera.state.scale,1.5);
  camera.reset();assert.equal(camera.state.scale,1.2);assert.equal(new MobileBoardCamera().state.scale,1);
 });
+
+test('zoom buttons move in exact five percentage point steps, including after pinch and at limits',()=>{
+ const camera=new MobileBoardCamera();
+ camera.zoomStep(1);assert.equal(camera.state.scale,1.05);
+ camera.zoomStep(1);assert.equal(camera.state.scale,1.1);
+ camera.zoomStep(-1);assert.equal(camera.state.scale,1.05);
+ camera.zoomStep(-1);assert.equal(camera.state.scale,1);
+ camera.zoomStep(-1);assert.equal(camera.state.scale,1);
+ camera.set({scale:1.237,x:0,y:0});camera.zoomStep(1);assert.equal(camera.state.scale,1.25);
+ camera.set({scale:1.237,x:0,y:0});camera.zoomStep(-1);assert.equal(camera.state.scale,1.2);
+ for(let i=0;i<100;i++)camera.zoomStep(1);assert.equal(camera.state.scale,3);
+ for(let i=0;i<100;i++)camera.zoomStep(-1);assert.equal(camera.state.scale,1);
+ const app=new MobileBoardCamera(()=>{},1.2);app.zoomStep(1);assert.equal(app.state.scale,1.25);app.zoomStep(-1);assert.equal(app.state.scale,1.2);
+});

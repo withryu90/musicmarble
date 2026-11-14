@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=40ccbdfae5f2';
-import {createListeningPlayer} from './listening-player.js?v=40ccbdfae5f2';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=40ccbdfae5f2';
-import {LobbyConfig} from './lobby-config.js?v=40ccbdfae5f2';
-import {GameActions} from './game-actions.js?v=40ccbdfae5f2';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=40ccbdfae5f2';
-import {createMusicDirector} from './music-director.js?v=40ccbdfae5f2';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=40ccbdfae5f2';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=40ccbdfae5f2';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=40ccbdfae5f2';
-import {formatModalSentences} from './modal-sentences.js?v=40ccbdfae5f2';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=40ccbdfae5f2';
-import {WORK_ARTWORK} from './work-artwork.js?v=40ccbdfae5f2';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=40ccbdfae5f2';
-import {RankingClient} from './ranking.js?v=40ccbdfae5f2';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=40ccbdfae5f2';
-import {HandoffCountdown} from './handoff-countdown.js?v=40ccbdfae5f2';
-import {fitBoardTitles} from './board-type.js?v=40ccbdfae5f2';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=40ccbdfae5f2';
-import * as G from './engine.js?v=40ccbdfae5f2';
-import {ActivityInbox} from './activities.js?v=40ccbdfae5f2';
-import {purchaseQuizById} from './purchase-quizzes.js?v=40ccbdfae5f2';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=40ccbdfae5f2';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=40ccbdfae5f2';
-import {diceCube} from './dice.js?v=40ccbdfae5f2';
-import {CHARACTER_BIOS} from './character-bios.js?v=40ccbdfae5f2';
-import {needsLandscape} from './orientation.js?v=40ccbdfae5f2';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=40ccbdfae5f2';
-import {GameTransport} from './game-transport.js?v=40ccbdfae5f2';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=40ccbdfae5f2';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=40ccbdfae5f2';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=40ccbdfae5f2';
+import {playerStatus} from './player-status.js?v=bded6318cb93';
+import {createListeningPlayer} from './listening-player.js?v=bded6318cb93';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=bded6318cb93';
+import {LobbyConfig} from './lobby-config.js?v=bded6318cb93';
+import {GameActions} from './game-actions.js?v=bded6318cb93';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=bded6318cb93';
+import {createMusicDirector} from './music-director.js?v=bded6318cb93';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=bded6318cb93';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=bded6318cb93';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=bded6318cb93';
+import {formatModalSentences} from './modal-sentences.js?v=bded6318cb93';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=bded6318cb93';
+import {WORK_ARTWORK} from './work-artwork.js?v=bded6318cb93';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=bded6318cb93';
+import {RankingClient} from './ranking.js?v=bded6318cb93';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=bded6318cb93';
+import {HandoffCountdown} from './handoff-countdown.js?v=bded6318cb93';
+import {fitBoardTitles} from './board-type.js?v=bded6318cb93';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=bded6318cb93';
+import * as G from './engine.js?v=bded6318cb93';
+import {ActivityInbox} from './activities.js?v=bded6318cb93';
+import {purchaseQuizById} from './purchase-quizzes.js?v=bded6318cb93';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=bded6318cb93';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=bded6318cb93';
+import {diceCube} from './dice.js?v=bded6318cb93';
+import {CHARACTER_BIOS} from './character-bios.js?v=bded6318cb93';
+import {needsLandscape} from './orientation.js?v=bded6318cb93';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=bded6318cb93';
+import {GameTransport} from './game-transport.js?v=bded6318cb93';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=bded6318cb93';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=bded6318cb93';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=bded6318cb93';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -771,8 +771,8 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='handoff-next'){await passHandoff();return;}
  if(a==='handoff-open'){if(myTurn()&&canOfferTurnHandoff(state,session.playerId))turnHandoffModal();return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
- if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoom(1.25);return;}
- if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoom(.8);return;}
+ if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoomStep(1);return;}
+ if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoomStep(-1);return;}
  if(mobileGame&&a==='board-zoom-reset'){mobileCamera.reset();return;}
  if(a==='home'){tab='board';render();}
  if(a==='tab'){tab=el.dataset.tab;render();}

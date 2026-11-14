@@ -48,6 +48,7 @@ export class MobileBoardCamera{
   this.apply();
  }
  set(state){if(this.viewport){this.state=state;this.apply();return;}this.state=constrainedCamera(state,this.scene?.offsetWidth||1,this.scene?.offsetHeight||1);this.apply();}
+ zoomStep(direction){const units=this.state.scale*20,next=(direction>0?Math.floor(units+1e-8)+1:Math.ceil(units-1e-8)-1)/20;this.set(zoomAt(this.state,next,{x:0,y:0}));}
  zoom(factor){this.set(zoomAt(this.state,this.state.scale*factor,{x:0,y:0}));}
  reset(){this.state={scale:this.defaultScale,x:0,y:0};this.apply();}
  apply(){

@@ -1,4 +1,4 @@
-import {unzoomedViewportHeight} from './mobile-board.js?v=5e6b39a24ec4';
+import {unzoomedViewportHeight} from './mobile-board.js?v=9a7e46726799';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);
@@ -14,7 +14,7 @@ export function mobileSceneSize(width,height,railWidth,flat=false){
 }
 export function fitViewportBoard(root=document){
  const shell=root.querySelector('.game-shell[data-tab="board"]');if(!shell)return;
- const view=root.defaultView,mobile=shell.dataset.mobile==='true';if(view)shell.style.height=`${mobile?unzoomedViewportHeight(view.visualViewport?.height||view.innerHeight,view.visualViewport?.scale):view.visualViewport?.height||view.innerHeight}px`;
+ const view=root.defaultView,mobile=shell.dataset.mobile==='true';if(view){const height=mobile?unzoomedViewportHeight(view.visualViewport?.height||view.innerHeight,view.visualViewport?.scale):view.visualViewport?.height||view.innerHeight;shell.style.height=`${height}px`;shell.style.setProperty('--game-viewport-height',`${height}px`);}
  const area=shell.querySelector('.board-area'),surround=area?.querySelector('.board-surround'),seat=area?.querySelector('.board-seat');
  if(!area||!surround)return;
  const rail=mobile?area.querySelector('.players-all')?.offsetWidth||0:0;

@@ -19,3 +19,11 @@ test('mobile board uses space to the right of one rail in either view',async()=>
   assert.ok(Math.abs(s.height/s.width-(flat?1:.672))<.001);
  }
 });
+
+test('mobile fitting exposes the actual visual viewport height for safe-area menu sizing',async()=>{
+ const {fitViewportBoard}=await import('../src/viewport-layout.js');const values={};
+ const shell={dataset:{mobile:'true'},style:{setProperty:(k,v)=>values[k]=v},querySelector:()=>null};
+ const root={defaultView:{innerHeight:390,visualViewport:{height:320,scale:1}},querySelector:()=>shell};
+ fitViewportBoard(root);assert.equal(shell.style.height,'320px');assert.equal(values['--game-viewport-height'],'320px');
+ root.defaultView.visualViewport={height:160,scale:2};fitViewportBoard(root);assert.equal(values['--game-viewport-height'],'320px');
+});

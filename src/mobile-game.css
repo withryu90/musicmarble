@@ -173,3 +173,53 @@ body.mobile-game-scroll-lock{background:transparent}
 .game-shell[data-mobile="true"][data-tab="board"] .players-all .player-chat-bubble>span{max-height:var(--mobile-bubble-max,64px);line-height:16px;white-space:pre-wrap;overflow:auto}
 
 .game-shell[data-mobile="true"] .player-app-badges{width:28px;gap:2px;margin-top:4px}
+
+/* Safari home-screen apps share one safe, border-box viewport with browser play. */
+body.mobile-game-scroll-lock{padding:0}
+.game-shell[data-mobile="true"][data-tab="board"]{
+ position:fixed;inset:0;width:100%;box-sizing:border-box;
+ padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+}
+.game-shell[data-mobile="true"]{
+ --mobile-control-size:clamp(16px,calc((var(--game-viewport-height,100dvh) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 24px)/9),26px);
+ --mobile-control-step:calc(var(--mobile-control-size) + 2px);
+}
+/* Content-sized rows avoid the flex-basis:auto / height:100% expansion cycle. */
+.game-shell[data-mobile="true"][data-tab="board"] .board-area .players-all .board-seat{
+ flex:0 0 auto;height:auto;min-height:0;align-items:start;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .board-player{
+ height:auto;min-height:0;align-content:start;align-self:start;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .players-all .seat-turn-controls:empty{display:none}
+/* Nine controls fit vertically inside the safe viewport, including compact phones. */
+.game-shell[data-mobile="true"] .site-header .brand,
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav,
+.game-shell[data-mobile="true"] .site-header .header-actions,
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools{
+ right:calc(env(safe-area-inset-right,0px) + 3px);width:var(--mobile-control-size);
+}
+.game-shell[data-mobile="true"] .site-header .brand{
+ top:calc(env(safe-area-inset-top,0px) + 3px);height:var(--mobile-control-size);
+}
+.game-shell[data-mobile="true"] .site-header .brand-icon{width:var(--mobile-control-size);height:var(--mobile-control-size)}
+.game-shell[data-mobile="true"] .site-header nav.mobile-page-nav{
+ top:calc(env(safe-area-inset-top,0px) + 3px + var(--mobile-control-step));height:var(--mobile-control-size);
+}
+.game-shell[data-mobile="true"] .site-header .header-actions{
+ top:calc(env(safe-area-inset-top,0px) + 3px + 2 * var(--mobile-control-step));gap:2px;
+}
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools{
+ top:calc(env(safe-area-inset-top,0px) + 3px + 5 * var(--mobile-control-step));gap:2px;
+}
+.game-shell[data-mobile="true"] .mobile-page-menu summary,
+.game-shell[data-mobile="true"] .site-header .header-actions button,
+.game-shell[data-mobile="true"][data-tab="board"] .board-tools button{
+ flex:0 0 var(--mobile-control-size);width:var(--mobile-control-size);min-width:var(--mobile-control-size);
+ height:var(--mobile-control-size);min-height:var(--mobile-control-size);max-height:var(--mobile-control-size);
+ padding:0;box-sizing:border-box;
+}
+.game-shell[data-mobile="true"] :is(.header-control-icon,.bgm-bell svg,.mobile-page-menu summary svg){width:min(20px,var(--mobile-control-size));height:min(20px,var(--mobile-control-size))}
+.game-shell[data-mobile="true"][data-tab="board"] .room-chat{
+ bottom:2px;left:4px;
+}

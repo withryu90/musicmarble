@@ -357,7 +357,7 @@
 /* A transparent inner half reveals the same surface used before purchase. */
 .board-area .cell.work.owned{background:linear-gradient(to var(--owner-inward),var(--owner) 0%,var(--owner) 50%,transparent 50%,transparent 100%),var(--tile-surface,linear-gradient(#fffefa,#fffefa))}
 .board-area .cell.work.owned .ownership-dot{display:none}
-/* The player colour itself is the HUD background, with dark readable details. */
+/* Each seat uses its own background and contrasting text colour. */
 .board-player,.board-player.active{background:var(--player-color);border-color:#ffffffb3;color:var(--player-ink,#07111a)}
 .board-player .seat-number{color:var(--player-ink,#263e4b)}
 .board-player-character,.board-player-coins>span,.board-player-coins b,.board-player-assets,.board-player-assets b,.board-player-prison{color:var(--player-ink,#07111a)}
@@ -460,7 +460,7 @@
 /* Streaming fixtures occupy the opposite side of each hall, independently of rent. */
 .streaming-tile-icon{display:inline-flex;width:18px;height:18px;vertical-align:middle}
 .streaming-tile-icon svg,.streaming-markers svg{display:block;width:100%;height:100%}
-.board-area .cell.streaming{background:linear-gradient(135deg,#f4fbff,#d9edff);border-top-color:var(--tile)}
+.board-area .cell.streaming{--tile-surface:linear-gradient(135deg,#f0f2f3,#cbd2d7);background:var(--tile-surface);border-top-color:#a4afb6}
 .board-area.is-flat .cell.streaming .cell-top{height:20cqw}
 .board-area.is-flat .streaming-tile-icon{width:18cqw;height:18cqw}
 .streaming-markers{position:absolute;right:4%;bottom:4%;width:30%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;z-index:4;pointer-events:none}

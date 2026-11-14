@@ -323,3 +323,9 @@ dialog#modal.mobile-music-modal{
  #modal.mobile-music-modal.purchase-result-modal .purchase-confirm-cta{grid-column:1;grid-row:3}
  #modal.mobile-music-modal.purchase-result-modal .text-button{grid-column:1;grid-row:4;margin:0}
 }
+
+/* Installed streaming apps show only their logo, without a player-colour backing. */
+.game-shell[data-mobile="true"] .streaming-markers>span{
+ border:0;outline:0;border-radius:0;background:transparent;box-shadow:none;
+}
+.game-shell[data-mobile="true"] .cell.streaming .ownership-dot{display:none}

@@ -1,34 +1,35 @@
-import {createListeningPlayer} from './listening-player.js?v=b2bc9b112185';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=b2bc9b112185';
-import {LobbyConfig} from './lobby-config.js?v=b2bc9b112185';
-import {GameActions} from './game-actions.js?v=b2bc9b112185';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=b2bc9b112185';
-import {createMusicDirector} from './music-director.js?v=b2bc9b112185';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=b2bc9b112185';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=b2bc9b112185';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=b2bc9b112185';
-import {formatModalSentences} from './modal-sentences.js?v=b2bc9b112185';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=b2bc9b112185';
-import {WORK_ARTWORK} from './work-artwork.js?v=b2bc9b112185';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=b2bc9b112185';
-import {RankingClient} from './ranking.js?v=b2bc9b112185';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=b2bc9b112185';
-import {HandoffCountdown} from './handoff-countdown.js?v=b2bc9b112185';
-import {fitBoardTitles} from './board-type.js?v=b2bc9b112185';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=b2bc9b112185';
-import * as G from './engine.js?v=b2bc9b112185';
-import {ActivityInbox} from './activities.js?v=b2bc9b112185';
-import {purchaseQuizById} from './purchase-quizzes.js?v=b2bc9b112185';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=b2bc9b112185';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=b2bc9b112185';
-import {diceCube} from './dice.js?v=b2bc9b112185';
-import {CHARACTER_BIOS} from './character-bios.js?v=b2bc9b112185';
-import {needsLandscape} from './orientation.js?v=b2bc9b112185';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=b2bc9b112185';
-import {GameTransport} from './game-transport.js?v=b2bc9b112185';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=b2bc9b112185';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=b2bc9b112185';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=b2bc9b112185';
+import {playerStatus} from './player-status.js?v=40ccbdfae5f2';
+import {createListeningPlayer} from './listening-player.js?v=40ccbdfae5f2';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=40ccbdfae5f2';
+import {LobbyConfig} from './lobby-config.js?v=40ccbdfae5f2';
+import {GameActions} from './game-actions.js?v=40ccbdfae5f2';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=40ccbdfae5f2';
+import {createMusicDirector} from './music-director.js?v=40ccbdfae5f2';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=40ccbdfae5f2';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=40ccbdfae5f2';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=40ccbdfae5f2';
+import {formatModalSentences} from './modal-sentences.js?v=40ccbdfae5f2';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=40ccbdfae5f2';
+import {WORK_ARTWORK} from './work-artwork.js?v=40ccbdfae5f2';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=40ccbdfae5f2';
+import {RankingClient} from './ranking.js?v=40ccbdfae5f2';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=40ccbdfae5f2';
+import {HandoffCountdown} from './handoff-countdown.js?v=40ccbdfae5f2';
+import {fitBoardTitles} from './board-type.js?v=40ccbdfae5f2';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=40ccbdfae5f2';
+import * as G from './engine.js?v=40ccbdfae5f2';
+import {ActivityInbox} from './activities.js?v=40ccbdfae5f2';
+import {purchaseQuizById} from './purchase-quizzes.js?v=40ccbdfae5f2';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=40ccbdfae5f2';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=40ccbdfae5f2';
+import {diceCube} from './dice.js?v=40ccbdfae5f2';
+import {CHARACTER_BIOS} from './character-bios.js?v=40ccbdfae5f2';
+import {needsLandscape} from './orientation.js?v=40ccbdfae5f2';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=40ccbdfae5f2';
+import {GameTransport} from './game-transport.js?v=40ccbdfae5f2';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=40ccbdfae5f2';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=40ccbdfae5f2';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=40ccbdfae5f2';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -171,7 +172,21 @@ const handoffCountdown=new HandoffCountdown();
 let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
 const chatBubbles=new Map(),chatBubbleTimers=new Map();
-let chatInitialized=false;
+let chatInitialized=false,chatPayloadSeq=-1;
+let playerTyping={},localTypingUntil=0,typingLastSent=0,typingSentActive=false,typingFlight=null;
+function statusForPlayer(id){return playerStatus(state,id,{typingUntil:id===session?.playerId?localTypingUntil:playerTyping[id]||0,presentation:dicePresentation});}
+function updatePlayerStatuses(){if(!snapshot?.state)return;document.querySelectorAll('[data-player-status]').forEach(node=>{const text=statusForPlayer(Number(node.dataset.playerStatus));if(node.textContent!==text)node.textContent=text;});}
+function publishTyping(active){
+ if(!session||!snapshot?.state)return;
+ localTypingUntil=active?Date.now()+6500:0;updatePlayerStatuses();
+ if(typingFlight)return;
+ if(active&&typingSentActive&&Date.now()-typingLastSent<3000)return;
+ if(!active&&!typingSentActive)return;
+ const who={...session};typingLastSent=Date.now();typingSentActive=active;
+ typingFlight=peerTransport.request('typing',{active},who).then(payload=>{if(session?.code===who.code)acceptChat(payload);}).catch(()=>{}).finally(()=>{typingFlight=null;if(session?.code===who.code&&(localTypingUntil>Date.now())!==active)publishTyping(localTypingUntil>Date.now());});
+}
+setInterval(()=>{if(localTypingUntil&&localTypingUntil<=Date.now())publishTyping(false);updatePlayerStatuses();},500);
+
 function resetActivityFlow(){listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
@@ -378,7 +393,7 @@ function showActivity(item){
  $('#modal').dataset.activity='true';
 }
 function connect(){
- if(chatRoom!==session.code){chatRoom=session.code;chatMessages=[];chatDraft='';chatInitialized=false;chatBubbles.clear();for(const timer of chatBubbleTimers.values())clearTimeout(timer);chatBubbleTimers.clear();}
+ if(chatRoom!==session.code){chatRoom=session.code;chatPayloadSeq=-1;playerTyping={};localTypingUntil=0;typingSentActive=false;typingLastSent=0;chatMessages=[];chatDraft='';chatInitialized=false;chatBubbles.clear();for(const timer of chatBubbleTimers.values())clearTimeout(timer);chatBubbleTimers.clear();}
 
  events?.close();events=peerTransport.subscribe(session,{
   onSnapshot:data=>{connected=true;receive(data);},
@@ -572,7 +587,7 @@ function playerStreamingBadges(player){
 }
 function players(row){
  const seats=['top-left','top-right','bottom-left','bottom-right'];
- return `<section class="board-players players-${row}" data-player-count="${state.players.length}" aria-label="함께 여행하는 친구 · ${row==='all'?'왼쪽':row==='top'?'위쪽':'아래쪽'}"><h3 class="board-players-heading">함께 여행하는 친구 · ${state.players.length} PLAYERS</h3>${state.players.map((p,i)=>({p,i})).filter(({i})=>row==='all'||seats[i].startsWith(row)).sort((a,b)=>row==='all'?a.i-b.i:Number(seats[a.i].endsWith('right'))-Number(seats[b.i].endsWith('right'))).map(({p,i})=>`<div class="board-seat seat-${seats[i]}"><article class="board-player seat-${seats[i]} ${p.id===state.turn&&state.phase!=='finished'?'active':''} ${p.id===session.playerId?'is-me':''}" style="--player-color:${playerColor(p)};--player-ink:${playerInk(p)}" aria-label="${esc(p.name)} 참가자 정보"><div class="board-player-portrait"><span class="board-player-avatar">${characterSprite(p)}<span class="seat-number">${i+1}</span></span>${playerStreamingBadges(p)}</div><div class="board-player-info"><div class="board-player-name"><strong>${esc(p.name)}</strong>${p.id===session.playerId?'<span class="seat-badge">나</span>':''}</div><small class="board-player-character">${esc(characterFor(p).name)}</small><div class="board-player-coins"><span>보유 코인</span><b>${num(p.coins)} <small>MC</small></b></div><div class="board-player-assets"><span>총자산</span><b>${num(G.score(state,p))} MC</b><span>이용권 ${G.owned(state,p.id).length}</span></div><small class="board-player-laps">완주 ${lapProgressText(p)}${G.hasFinished(state,p)?' · 완주':''}</small>${p.skipTurns?`<small class="board-player-prison">감옥 탈출 기회 ${p.skipTurns}번</small>`:''}</div>${p.id===session.playerId?`<div class="seat-turn-controls">${seatControls()}</div>`:''}${p.id===state.turn&&state.phase!=='finished'?'<span class="board-player-turn">진행 중</span>':''}</article><div class="player-chat-slot" data-chat-player="${p.id}">${playerChatBubble(p.id)}</div></div>`).join('')}</section>`;
+ return `<section class="board-players players-${row}" data-player-count="${state.players.length}" aria-label="함께 여행하는 친구 · ${row==='all'?'왼쪽':row==='top'?'위쪽':'아래쪽'}"><h3 class="board-players-heading">함께 여행하는 친구 · ${state.players.length} PLAYERS</h3>${state.players.map((p,i)=>({p,i})).filter(({i})=>row==='all'||seats[i].startsWith(row)).sort((a,b)=>row==='all'?a.i-b.i:Number(seats[a.i].endsWith('right'))-Number(seats[b.i].endsWith('right'))).map(({p,i})=>`<div class="board-seat seat-${seats[i]}"><article class="board-player seat-${seats[i]} ${p.id===state.turn&&state.phase!=='finished'?'active':''} ${p.id===session.playerId?'is-me':''}" style="--player-color:${playerColor(p)};--player-ink:${playerInk(p)}" aria-label="${esc(p.name)} 참가자 정보"><div class="board-player-portrait"><span class="board-player-avatar">${characterSprite(p)}<span class="seat-number">${i+1}</span></span>${playerStreamingBadges(p)}</div><div class="board-player-info"><div class="board-player-name"><strong>${esc(p.name)}</strong>${p.id===session.playerId?'<span class="seat-badge">나</span>':''}</div><small class="board-player-character">${esc(characterFor(p).name)}</small><div class="board-player-coins"><span>보유 코인</span><b>${num(p.coins)} <small>MC</small></b></div><div class="board-player-assets"><span>총자산</span><b>${num(G.score(state,p))} MC</b><span>이용권 ${G.owned(state,p.id).length}</span></div><small class="board-player-laps">완주 ${lapProgressText(p)}${G.hasFinished(state,p)?' · 완주':''}</small>${p.skipTurns?`<small class="board-player-prison">감옥 탈출 기회 ${p.skipTurns}번</small>`:''}</div>${p.id===session.playerId?`<div class="seat-turn-controls">${seatControls()}</div>`:''}<span class="board-player-turn" data-player-status="${p.id}">${statusForPlayer(p.id)}</span></article><div class="player-chat-slot" data-chat-player="${p.id}">${playerChatBubble(p.id)}</div></div>`).join('')}</section>`;
 }
 
 function collectionView(){return `<section class="collection-view"><div class="view-intro"><span class="eyebrow">THE MUSIC LIBRARY</span><h2>작품을 만나는 또 다른 방법</h2><p>시대와 작곡가를 알아가며 나만의 음악 컬렉션을 완성하세요.</p></div><div class="streaming-portfolio">${STREAMING_APPS.map(app=>`<div>${streamingIcon(app.id)}<strong>${app.name}</strong><small>${state.platformOwners?.[app.id]===undefined?'독점 없음':esc(state.players[state.platformOwners[app.id]].name)}</small></div>`).join('')}</div><div class="filters">${[{id:'all',name:'모든 시대'},...ERAS].map(e=>`<button data-action="filter" data-id="${e.id}" class="${filter===e.id?'selected':''}">${e.name}</button>`).join('')}</div><div class="work-grid">${WORKS.filter(w=>filter==='all'||w.era===filter).map(w=>{const o=state.ownership[w.id];return `<button class="work-card" data-action="work" data-id="${w.id}" style="--era:${era(w.era).color}"><div class="work-art"><span>${esc(w.composer)}</span><b>${w.composer==='바흐'?'𝄞':'♫'}</b><small>${esc(w.year)}</small></div><div class="work-details"><span>${era(w.era).name}</span><h3>${w.title}</h3><p>${o?`${esc(state.players[o.player].name)} 보유${o.level?' · 공연 기획':''}`:'아직 만나지 않은 컬렉션'}</p><div><strong>${w.price} MC</strong><span>이용료 ${G.fee(state,w)} MC ↗</span></div></div></button>`;}).join('')}</div></section>`;}
@@ -583,8 +598,11 @@ function chatRows(){return chatMessages.map(m=>`<div class="chat-message ${m.pla
 function chatPanel(){return `<section class="room-chat" aria-label="음악 정보 나누기"><div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="채팅 메시지">${chatRows()}</div><form id="chat-form"><label class="visually-hidden" for="chat-input">음악 정보 나누기 메시지</label><div class="chat-compose"><input id="chat-input" name="message" maxlength="200" autocomplete="off" placeholder="${mobileGame?'음악정보나누기':'음악 정보 나누기 · 친구에게 메시지 보내기'}" value="${esc(chatDraft)}" ${!connected?'disabled':''}/><button class="primary" type="submit" ${!connected||chatSending?'disabled':''}>보내기</button></div></form></section>`;}
 function acceptChat(payload){
  if(payload.code!==session?.code||!Array.isArray(payload.messages))return;
+ if(Number.isInteger(payload.chatSeq)&&payload.chatSeq<chatPayloadSeq)return;
+ if(Number.isInteger(payload.chatSeq))chatPayloadSeq=payload.chatSeq;
  const previousId=chatMessages.at(-1)?.id??0;
  if((payload.messages.at(-1)?.id??0)<previousId)return;
+ playerTyping=payload.typing||{};updatePlayerStatuses();
  if(chatInitialized)for(const message of payload.messages.filter(m=>m.id>previousId)){
   chatBubbles.set(message.playerId,message);clearTimeout(chatBubbleTimers.get(message.playerId));
   chatBubbleTimers.set(message.playerId,setTimeout(()=>{chatBubbles.delete(message.playerId);chatBubbleTimers.delete(message.playerId);updateChatBubbles();},8000));
@@ -592,7 +610,7 @@ function acceptChat(payload){
  chatInitialized=true;chatMessages=payload.messages;updateChatBubbles();
  const log=$('#chat-messages');if(log){const atBottom=log.scrollHeight-log.scrollTop-log.clientHeight<45;log.innerHTML=chatRows();if(atBottom)log.scrollTop=log.scrollHeight;}
 }
-async function sendChat(){if(chatSending||!chatDraft.trim())return;const sent=chatDraft;chatSending=true;const button=$('#chat-form button');if(button)button.disabled=true;try{const payload=await request('chat',{code:session.code,message:sent});acceptChat(payload);if(chatDraft===sent){chatDraft='';if($('#chat-input'))$('#chat-input').value='';}}catch(error){notify(error.message);}finally{chatSending=false;if($('#chat-form button'))$('#chat-form button').disabled=!connected;}}
+async function sendChat(){if(chatSending||!chatDraft.trim())return;const sent=chatDraft;publishTyping(false);chatSending=true;const button=$('#chat-form button');if(button)button.disabled=true;try{const payload=await request('chat',{code:session.code,message:sent});acceptChat(payload);if(chatDraft===sent){chatDraft='';if($('#chat-input'))$('#chat-input').value='';}}catch(error){notify(error.message);}finally{chatSending=false;if($('#chat-form button'))$('#chat-form button').disabled=!connected;}}
 const mobileScrollLock=installMobileScrollLock();
 function syncGameOrientation(){
  mobileScrollLock.setActive(mobileGame&&Boolean(snapshot?.state));
@@ -828,7 +846,9 @@ $('#app').addEventListener('change',e=>{
  const config=lobbyConfig.update(snapshot,{[e.target.name]:Number(e.target.value)});
  void request('action',{code:session.code,action:'configure',args:[config],revision:snapshot.revision}).then(receive).catch(error=>notify(error.message));
 });
-$('#app').addEventListener('input',e=>{if(e.target.id==='chat-input')chatDraft=e.target.value;});
+$('#app').addEventListener('input',e=>{if(e.target.id==='chat-input'){chatDraft=e.target.value;publishTyping(Boolean(chatDraft.trim()));}});
+$('#app').addEventListener('focusout',e=>{if(e.target.id==='chat-input')publishTyping(false);});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)publishTyping(false);});
 $('#app').addEventListener('submit',async e=>{e.preventDefault();if(e.target.id==='chat-form'){await sendChat();return;}const f=new FormData(e.target);if(e.target.id==='entry-form'){const intent=e.submitter?.value||'create';await enter(intent,String(f.get('nickname')),String(f.get('code')).trim().toUpperCase(),String(f.get('characterId')));}if(e.target.id==='start-form'){try{const next=await request('action',{code:session.code,action:'start',args:[lobbyConfig.update(snapshot,{rounds:Number(f.get('rounds')),coins:Number(f.get('coins'))})],revision:snapshot.revision});receive(next);}catch(error){notify(error.message);}}});
 // Always show the entrance; stored participation is restored only on explicit resume.
 render();

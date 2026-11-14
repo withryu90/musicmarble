@@ -71,3 +71,26 @@ test('expired rooms are inaccessible and invalid creation keys cannot be used',a
   await assert.rejects(onlineRoomRequest(db,'create',{nickname:'확인',requestId:'predictable'}));
  }finally{db.close();}
 });
+
+test('typing crosses HTTPS devices without a game revision change, and clears on sending',async()=>{
+ const db=database();try{
+ const {host,guest}=await setup(db);await act(db,host,'start');const before=await read(db,host);
+ await onlineRoomRequest(db,'typing',{...guest,active:true});
+ const received=await read(db,host);assert.ok(received.typing[guest.playerId]>Date.now());
+ assert.equal(received.revision,before.revision);assert.deepEqual(received.state,before.state);
+ await onlineRoomRequest(db,'chat',{...guest,message:'음악 정보'});
+ assert.equal((await read(db,host)).typing[guest.playerId],0);
+ await assert.rejects(onlineRoomRequest(db,'typing',{...guest,token:'wrong',active:true}),e=>e.status===403);
+ }finally{db.close();}
+});
+
+test('a concurrent typing write retries an uncommitted game action without losing either update',async()=>{
+ const db=database();try{
+ const {host,guest}=await setup(db);await act(db,host,'start');const before=await read(db,host);
+ const original=db.prepare.bind(db);let conflict=true;
+ db.prepare=sql=>{const query=original(sql);if(sql.startsWith('UPDATE online_rooms SET payload')){
+ const run=query.run.bind(query);query.run=async()=>{if(conflict){conflict=false;await onlineRoomRequest(db,'typing',{...guest,active:true});return {changes:0};}return run();};}return query;};
+ const next=await onlineRoomRequest(db,'action',{...host,action:'roll',args:[],revision:before.revision});
+ assert.equal(next.revision,before.revision+1);assert.ok((await read(db,guest)).typing[guest.playerId]>Date.now());
+ }finally{db.close();}
+});

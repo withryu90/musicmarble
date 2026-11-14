@@ -1,9 +1,9 @@
-import {roomConfig} from './lobby-config.js?v=b2bc9b112185';
-import {randomInt,randomToken} from './random.js?v=b2bc9b112185';
-import * as G from './engine.js?v=b2bc9b112185';
-import {botDecision,applyBotDecision} from './bots.js?v=b2bc9b112185';
-import {activityChanges} from './activities.js?v=b2bc9b112185';
-import {drawCharacterIds,characterById} from './characters.js?v=b2bc9b112185';
+import {roomConfig} from './lobby-config.js?v=40ccbdfae5f2';
+import {randomInt,randomToken} from './random.js?v=40ccbdfae5f2';
+import * as G from './engine.js?v=40ccbdfae5f2';
+import {botDecision,applyBotDecision} from './bots.js?v=40ccbdfae5f2';
+import {activityChanges} from './activities.js?v=40ccbdfae5f2';
+import {drawCharacterIds,characterById} from './characters.js?v=40ccbdfae5f2';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
@@ -60,15 +60,23 @@ export class RoomService {
   close(){for(const timer of this.quizTimers.values())clearTimeout(timer);this.quizTimers.clear();for(const timer of this.botTimers.values())clearTimeout(timer);this.botTimers.clear();}
   get(code){const normalized=String(code||'').trim().toUpperCase();const room=this.rooms.get(normalized);if(!room)throw Error('방을 찾을 수 없습니다. 코드를 확인해 주세요.');return room;}
   authenticate(code,token){const room=this.get(code),member=room.members.find(m=>!m.isBot&&typeof token==='string'&&m.token===token);if(!member)throw Error('참가 정보를 확인할 수 없습니다. 같은 브라우저의 이어하기를 이용해 주세요.');return {room,member};}
+  chatPayload(room){return {code:room.code,messages:room.messages??[],typing:room.typing??{},chatSeq:room.chatSeq??0};}
+  typing(code,token,active){
+    const {room,member}=this.authenticate(code,token);
+    if(typeof active!=='boolean')throw Error('채팅 상태를 확인해 주세요.');
+    room.typing??={};room.typing[member.id]=active?Date.now()+7000:0;
+    room.chatSeq=(room.chatSeq??0)+1;
+    const payload=this.chatPayload(room);room.chatListeners?.forEach(fn=>fn(payload));return payload;
+  }
   chat(code,token,message){
     const {room,member}=this.authenticate(code,token);
     if(typeof message!=='string'||!message.trim()||message.trim().length>200||/[\x00-\x08\x0b-\x1f\x7f]/.test(message))throw Error('채팅은 1–200자로 입력해 주세요.');
     const now=Date.now();if(member.lastChatAt!==undefined&&now-member.lastChatAt<800)throw Error('잠시 후 다시 보내 주세요.');
-    member.lastChatAt=now;room.chatSeq=(room.chatSeq??0)+1;
+    member.lastChatAt=now;if(room.typing)room.typing[member.id]=0;room.chatSeq=(room.chatSeq??0)+1;
     room.messages=[...(room.messages??[]),{id:room.chatSeq,playerId:member.id,name:member.name,characterId:member.characterId,text:message.trim(),sentAt:now}].slice(-100);
-    room.updatedAt=now;const payload={code:room.code,messages:room.messages};room.chatListeners?.forEach(fn=>fn(payload));return payload;
+    room.updatedAt=now;const payload=this.chatPayload(room);room.chatListeners?.forEach(fn=>fn(payload));return payload;
   }
-  subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn({code:room.code,messages:room.messages??[]});return ()=>room.chatListeners.delete(fn);}
+  subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn(this.chatPayload(room));return ()=>room.chatListeners.delete(fn);}
   snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
   broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
   act(code,token,{action,args=[],revision}={}){

@@ -35,6 +35,7 @@ export function makeServer({root=resolve(fileURLToPath(new URL('..',import.meta.
        if(url.pathname==='/api/join')return json(201,service.join(input.code,input.nickname,input.characterId));
        const token=req.headers.authorization?.replace(/^Bearer /,'');
        if(url.pathname==='/api/resume'){const {room,member}=service.authenticate(input.code,token);return json(200,{...service.snapshot(room),playerId:member.id});}
+       if(url.pathname==='/api/typing')return json(200,service.typing(input.code,token,input.active));
        if(url.pathname==='/api/chat')return json(200,service.chat(input.code,token,input.message));
        if(url.pathname==='/api/action')return json(200,service.act(input.code,token,input));
        return json(404,{error:'경로를 찾을 수 없습니다.'});

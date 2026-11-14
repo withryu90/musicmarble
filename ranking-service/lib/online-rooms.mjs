@@ -10,9 +10,9 @@ function serviceFor(payload){
  if(payload){const room=JSON.parse(payload);room.listeners=new Set();room.chatListeners=new Set();room.publishedState=room.state?structuredClone(room.state):null;service.rooms.set(room.code,room);}
  return service;
 }
-const snapshot=(service,room)=>({...service.snapshot(room),messages:room.messages||[],chatSeq:room.chatSeq||0});
+const snapshot=(service,room)=>({...service.snapshot(room),...service.chatPayload(room)});
 const changed=result=>Number(result.meta?.changes??result.changes??0);
-export async function onlineRoomRequest(db,path,body,now=Date.now()){
+export async function onlineRoomRequest(db,path,body,now=Date.now(),attempt=0){
  if(path==='create'){
   if(typeof body.requestId!=='string'||!/^[a-f0-9]{64}$/.test(body.requestId))fail('방 생성 정보를 확인해 주세요.');
   const existing=await db.prepare('SELECT * FROM online_rooms WHERE create_key = ? AND expires_at > ?').bind(body.requestId,now).first();
@@ -44,12 +44,14 @@ export async function onlineRoomRequest(db,path,body,now=Date.now()){
    if(expired&&expired!==room.state){room.state=expired;service.broadcast(room);}
    result={...snapshot(service,room),playerId:member.id};
   }else if(path==='action')result=service.act(body.code,body.token,body);
+  else if(path==='typing')result=service.typing(body.code,body.token,body.active);
   else if(path==='chat')result=service.chat(body.code,body.token,body.message);
   else fail('지원하지 않는 요청입니다.',404);
  }
  const payload=encode(room);
  if(payload!==row.payload){
   const updated=await db.prepare('UPDATE online_rooms SET payload = ?, version = version + 1, expires_at = ? WHERE code = ? AND version = ?').bind(payload,now+TTL,room.code,row.version).run();
+  if(!changed(updated)&&attempt<3)return onlineRoomRequest(db,path,body,now,attempt+1);
   if(!changed(updated))fail('게임 상태가 갱신되었습니다. 화면을 확인하고 다시 시도해 주세요.',409);
  }
  return result;

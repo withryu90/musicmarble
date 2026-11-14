@@ -1,13 +1,13 @@
-import {roomConfig} from './lobby-config.js?v=6f170e1ca2c2';
-import {randomInt,randomToken} from './random.js?v=6f170e1ca2c2';
-import * as G from './engine.js?v=6f170e1ca2c2';
-import {botDecision,applyBotDecision} from './bots.js?v=6f170e1ca2c2';
-import {activityChanges} from './activities.js?v=6f170e1ca2c2';
-import {drawCharacterIds,characterById} from './characters.js?v=6f170e1ca2c2';
-const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+import {roomConfig} from './lobby-config.js?v=5e6b39a24ec4';
+import {randomInt,randomToken} from './random.js?v=5e6b39a24ec4';
+import * as G from './engine.js?v=5e6b39a24ec4';
+import {botDecision,applyBotDecision} from './bots.js?v=5e6b39a24ec4';
+import {activityChanges} from './activities.js?v=5e6b39a24ec4';
+import {drawCharacterIds,characterById} from './characters.js?v=5e6b39a24ec4';
+const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random}={}){this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
-  code(){let code;do{code=Array.from({length:6},()=>ALPHABET[randomInt(ALPHABET.length)]).join('');}while(this.rooms.has(code));return code;}
+  code(){let code;do{code=Array.from({length:6},()=>CODE_DIGITS[randomInt(CODE_DIGITS.length)]).join('');}while(this.rooms.has(code));return code;}
   nickname(value){if(typeof value!=='string'||!value.trim()||value.trim().length>16)throw Error('닉네임은 1–16자로 입력해 주세요.');return value.trim();}
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
   create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,gameId:randomToken(),createdAt:Date.now(),members:[],config:roomConfig(),state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}

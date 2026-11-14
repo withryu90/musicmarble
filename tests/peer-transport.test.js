@@ -18,7 +18,7 @@ const storage=()=>{const map=new Map();return {getItem:k=>map.get(k)||null,setIt
 const transport=(store=storage())=>new PeerTransport({PeerClass:FakePeer,storage:store,timeout:300,botDelay:5});
 const tick=()=>new Promise(r=>setTimeout(r,10));
 test('Peer IDs are safe ASCII and pattern errors become a clear connection message',()=>{
- assert.equal(roomPeerId('ABC234'),'musicmarble-rtc-v1-ABC234');for(const code of ['abc234','ABC','ABC/23','ABC 23'])assert.throws(()=>roomPeerId(code));assert.doesNotMatch(peerError(Error('The string did not match the expected pattern.')),/string did not match/);
+ assert.equal(roomPeerId('ABC234'),'musicmarble-rtc-v1-ABC234');assert.equal(roomPeerId('001109'),'musicmarble-rtc-v1-001109');for(const code of ['abc234','ABC','ABC/23','ABC 23'])assert.throws(()=>roomPeerId(code));assert.doesNotMatch(peerError(Error('The string did not match the expected pattern.')),/string did not match/);
 });
 test('four peers share start, authorized rolls and chat while another room stays isolated',async()=>{
  const peers=Array.from({length:5},()=>transport());let owner,others=[],hostSnapshot,guestSnapshot,foreignSnapshot,chat;

@@ -11,3 +11,12 @@ test('trade acceptance is authorized by receiver and blocks unrelated actions',(
 test('SSE subscriptions receive updates, unsubscribe and reconnect retain seat',()=>{const s=setup(),updates=[];const stop=s.service.subscribe(s.a.code,s.a.token,x=>updates.push(x.revision));act(s,s.a,'start');assert.equal(updates.length,2);stop();act(s,s.a,'roll');assert.equal(updates.length,2);assert.equal(s.service.authenticate(s.a.code,s.a.token).member.id,0);});
 test('25 independent rooms / 100 players update without cross-room state leakage',()=>{const service=new RoomService(),rooms=[];for(let r=0;r<25;r++){const host=service.create(`host${r}`);for(let p=1;p<4;p++)service.join(host.code,`p${p}`);const room=service.get(host.code);service.act(host.code,host.token,{action:'start',revision:room.revision});rooms.push({host,room});}const original=rooms[1].room.state;const first=rooms[0];service.act(first.host.code,first.host.token,{action:'roll',revision:first.room.revision});assert.equal(service.rooms.size,25);assert.equal(rooms.reduce((sum,x)=>sum+x.room.members.length,0),100);assert.equal(rooms[1].room.state,original);assert.equal(rooms[1].room.state.dice,null);assert.ok(rooms[0].room.state.dice);});
 test('inactive rooms expire after 24h but active rooms survive',()=>{const s=setup();s.room.updatedAt=0;const stop=s.service.subscribe(s.a.code,s.a.token,()=>{});s.service.cleanup(100000000);assert.equal(s.service.rooms.size,1);stop();s.service.cleanup(100000000);assert.equal(s.service.rooms.size,0);});
+
+test('new shared codes have exactly six digits, remain strings and isolate rooms',()=>{
+ const service=new RoomService();try{
+  const codes=[];for(let i=0;i<100;i++){const session=service.create(`참가자${i}`);assert.match(session.code,/^[0-9]{6}$/);codes.push(session.code);}
+  assert.equal(new Set(codes).size,100);
+  const room=service.get(codes[0]);const guest=service.join(codes[0],'코드참가자');assert.equal(guest.code,codes[0]);assert.equal(room.members.length,2);
+  assert.equal(service.get(codes[1]).members.length,1);
+ }finally{service.close();}
+});

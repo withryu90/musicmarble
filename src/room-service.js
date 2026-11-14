@@ -1,9 +1,9 @@
-import {roomConfig} from './lobby-config.js?v=3c11515d1029';
-import {randomInt,randomToken} from './random.js?v=3c11515d1029';
-import * as G from './engine.js?v=3c11515d1029';
-import {botDecision,applyBotDecision} from './bots.js?v=3c11515d1029';
-import {activityChanges} from './activities.js?v=3c11515d1029';
-import {drawCharacterIds,characterById} from './characters.js?v=3c11515d1029';
+import {roomConfig} from './lobby-config.js?v=c3cfd19232f6';
+import {randomInt,randomToken} from './random.js?v=c3cfd19232f6';
+import * as G from './engine.js?v=c3cfd19232f6';
+import {botDecision,applyBotDecision} from './bots.js?v=c3cfd19232f6';
+import {activityChanges} from './activities.js?v=c3cfd19232f6';
+import {drawCharacterIds,characterById} from './characters.js?v=c3cfd19232f6';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}

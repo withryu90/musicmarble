@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=3c11515d1029';
-export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 두 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 두 번 모두 6이 나오지 않으면 그 두 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=c3cfd19232f6';
+export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 세 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 세 번 모두 6이 나오지 않으면 그 세 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
   {id:'classical', name:'고전주의', years:'약 1750–1820', color:'#729b91', detail:'균형과 명료한 형식, 교향곡과 소나타가 꽃핀 시대'},
@@ -19,7 +19,7 @@ export const LEGACY_BOARD = [
   {id:'back-three',type:'back-three',title:'뒤로가기',subtitle:'추가 주사위만큼 뒤로'},
   w('mozart-serenade','모차르트','작은 밤의 음악','1787','classical',220,45,'아이네 클라이네 나흐트무지크. 명료한 선율과 균형 잡힌 구성이 돋보입니다.'),
   w('mozart-flute','모차르트','마술피리','1791','classical',240,50,'대사와 노래가 함께하는 징슈필. 다양한 인물의 성격을 음악으로 표현합니다.'),
-  {id:'streaming-prison',type:'prison',title:'불법 스트리밍 감옥',subtitle:'6으로 탈출 · 기회 2번'},
+  {id:'streaming-prison',type:'prison',title:'불법 스트리밍 감옥',subtitle:'6으로 탈출 · 기회 3번'},
   w('beethoven-5','베토벤','교향곡 제5번','1808 초연','classical',280,55,'짧은 네 음의 동기가 작품 전체를 이끕니다. 베토벤은 고전과 낭만을 잇는 작곡가입니다.'),
   w('beethoven-9','베토벤','교향곡 제9번','1824 초연','classical',300,60,'마지막 악장에 독창과 합창을 더해 교향곡의 표현 범위를 넓혔습니다.'),
   w('haydn-surprise','하이든','놀람 교향곡','1791','classical',260,50,'교향곡 제94번. 조용한 선율 속 갑작스러운 강한 화음으로 재치 있는 대비를 들려줍니다.'),

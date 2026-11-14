@@ -127,7 +127,7 @@ test('HTTPS bail payment persists across devices and authorizes one next-turn no
  const db=database();try{
  const {host,guest}=await setup(db);await act(db,host,'start');
  const row=db.sqlite.prepare('SELECT * FROM online_rooms WHERE code = ?').get(host.code),room=JSON.parse(row.payload);
- room.state.phase='jailed';room.state.players[0].position=11;room.state.players[0].skipTurns=2;
+ room.state.phase='jailed';room.state.players[0].position=11;room.state.players[0].skipTurns=3;
  db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);
  await assert.rejects(act(db,guest,'payBail'));
  const paid=await act(db,host,'payBail');assert.equal(paid.state.players[0].coins,800);assert.equal(paid.state.phase,'jailed');

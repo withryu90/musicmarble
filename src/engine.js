@@ -1,11 +1,12 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=3c11515d1029';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=3c11515d1029';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=3c11515d1029';
-import {characterById,drawCharacterIds} from './characters.js?v=3c11515d1029';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=3c11515d1029';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=c3cfd19232f6';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=c3cfd19232f6';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=c3cfd19232f6';
+import {characterById,drawCharacterIds} from './characters.js?v=c3cfd19232f6';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=c3cfd19232f6';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
+export const PRISON_ATTEMPTS=3;
 export const QUIZ_TIME_LIMIT=10000;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
 export const current=s=>s.players[s.turn];
@@ -115,7 +116,7 @@ export function roll(state,dice,rng=Math.random){
     if(BOARD[p.position].type!=='prison')throw Error('감옥 위치를 확인해 주세요.');
     const escaped=dice===6;p.skipTurns=escaped?0:p.skipTurns-1;
     s.lastPrisonRoll={dice,escaped,remaining:p.skipTurns};
-    log(s,`${p.name}: 탈출 주사위 ${dice} — ${escaped?'탈출 성공! 6칸 이동':p.skipTurns?'탈출 실패, 다음 자기 차례에 한 번 더 도전':'두 번 도전 완료, 다음 자기 차례부터 정상 이동'}`);
+    log(s,`${p.name}: 탈출 주사위 ${dice} — ${escaped?'탈출 성공! 6칸 이동':p.skipTurns?'탈출 실패, 다음 자기 차례에 한 번 더 도전':'세 번 도전 완료, 다음 자기 차례부터 정상 이동'}`);
     if(!escaped){s.phase='jailed';return s;}
   }
   const next=p.position+dice;if(next>=BOARD.length){p.coins+=200;p.laps=completedLaps(s,p)+1;updateProgress(s);log(s,`${p.name}: 한 바퀴 완주! +200 MC (${p.laps}/${s.maxRounds}바퀴)`);if(hasFinished(s,p)){const moveSteps=BOARD.length-p.position;p.position=0;return finishByLaps(s,p,moveSteps);}}p.position=next%BOARD.length;
@@ -155,7 +156,7 @@ function resolveArrival(s,p,rng){
       s.lastPrisonTransfer={from:p.position,to:destination};p.position=destination;
       log(s,`${p.name}: 감옥으로 가기 → 불법 스트리밍 감옥으로 즉시 이동`);
     }
-    p.skipTurns=2;p.bailPaid=false;s.phase='jailed';log(s,`${p.name}: 불법 스트리밍 감옥에 도착 — 다음 두 자기 차례에 6으로 탈출 도전`);
+    p.skipTurns=PRISON_ATTEMPTS;p.bailPaid=false;s.phase='jailed';log(s,`${p.name}: 불법 스트리밍 감옥에 도착 — 다음 세 자기 차례에 6으로 탈출 도전`);
   }else if(cell.type==='transfer'){
     const works=owned(s,p.id);
     if(!works.length){s.lastAssignment={from:p.id,skipped:true};log(s,`${p.name}: 저작권 양도 — 보유 작품이 없어 통과`);}
@@ -373,9 +374,9 @@ export function isValidSave(s){
     if(s.quizDeadline!=null&&(!Number.isSafeInteger(s.quizDeadline)||s.quizDeadline<1||!['quiz','purchase-quiz'].includes(s.phase)))return false;
     if(s.phase==='feedback'&&(!s.feedback||typeof s.feedback.correct!=='boolean'||(s.feedback.timedOut===true?s.feedback.correct!==false||s.feedback.index!==-1:!Number.isInteger(s.feedback.index)||s.feedback.index<0||s.feedback.index>2)))return false;
     if(s.trade&&(!WORKS.some(w=>w.id===s.trade.workId)||s.ownership[s.trade.workId]?.player!==s.trade.from||s.trade.from!==s.turn||!s.players[s.trade.to]||s.trade.to===s.trade.from||!Number.isInteger(s.trade.price)||s.trade.price<1||s.trade.price>10000||s.phase!=='action'))return false;
-    if(s.players.some(p=>p.skipTurns!==undefined&&(!Number.isInteger(p.skipTurns)||p.skipTurns<0||p.skipTurns>2)))return false;
+    if(s.players.some(p=>p.skipTurns!==undefined&&(!Number.isInteger(p.skipTurns)||p.skipTurns<0||p.skipTurns>PRISON_ATTEMPTS)))return false;
     if(s.lastPrisonTransfer&&(!Number.isInteger(s.lastPrisonTransfer.from)||BOARD[s.lastPrisonTransfer.from]?.type!=='go-to-prison'||BOARD[s.lastPrisonTransfer.to]?.type!=='prison'||current(s).position!==s.lastPrisonTransfer.to))return false;
-    if(s.phase==='jailed'&&(BOARD[current(s).position].type!=='prison'||(!s.lastPrisonRoll&&current(s).skipTurns!==2&&!current(s).bailPaid)))return false;
+    if(s.phase==='jailed'&&(BOARD[current(s).position].type!=='prison'||(!s.lastPrisonRoll&&![2,PRISON_ATTEMPTS].includes(current(s).skipTurns)&&!current(s).bailPaid)))return false;
     if(s.players.some(p=>(p.skipTurns??0)>0&&BOARD[p.position].type!=='prison'))return false;
     if(s.players.some(p=>p.bailPaid!==undefined&&(typeof p.bailPaid!=='boolean'||p.bailPaid&&(BOARD[p.position].type!=='prison'||p.skipTurns!==0))))return false;
     if(s.lastBail!=null&&(s.lastBail.playerId!==s.turn||s.lastBail.amount!==BAIL_AMOUNT||!current(s).bailPaid||!['jailed','finished'].includes(s.phase)))return false;
@@ -387,7 +388,7 @@ export function isValidSave(s){
     }
     if(s.lastBackwardMove){const m=s.lastBackwardMove;if(BOARD[m.from]?.type!=='back-three'||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}
     if(s.phase==='backward-roll'&&(BOARD[current(s).position].type!=='back-three'||s.lastBackwardMove||s.trade))return false;
-    if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>1||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
+    if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>=PRISON_ATTEMPTS||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
     if(s.purchaseChallenge?.hint){const h=s.purchaseChallenge.hint;if(!Number.isSafeInteger(h.until)||h.until<0||!Number.isInteger(h.remaining)||h.remaining<1||h.remaining>QUIZ_TIME_LIMIT||typeof h.refunded!=='boolean'||![1,2].includes(s.purchaseChallenge.hintAttempts))return false;if(h.paused!==undefined&&typeof h.paused!=='boolean'||h.audioRemainingMs!==undefined&&(!Number.isSafeInteger(h.audioRemainingMs)||h.audioRemainingMs<0)||h.paused&&(h.until!==0||!h.audioRemainingMs))return false;}
     if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.timedOut===true?c.response!==null||c.correct!==false:c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
     if(['purchase-quiz','purchase-feedback'].includes(s.phase)&&(!s.purchaseChallenge||s.ownership[s.purchaseChallenge.workId]))return false;

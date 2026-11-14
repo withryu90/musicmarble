@@ -294,8 +294,10 @@ dialog#modal.mobile-music-modal{
 #modal.mobile-music-modal .purchase-ox-options button{min-height:40px;padding:5px;gap:1px;border-radius:9px}
 #modal.mobile-music-modal .purchase-ox-options button strong{font-size:26px;line-height:1}
 #modal.mobile-music-modal .purchase-ox-options button span{font-size:9px;line-height:1.2}
-#modal.mobile-music-modal .listening-hint{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 0}
-#modal.mobile-music-modal .listening-hint-button{flex:1 1 200px;min-height:30px;padding:5px 8px;font-size:10px;line-height:1.3}
+#modal.mobile-music-modal .listening-hint{margin:6px 0 0}
+#modal.mobile-music-modal .listening-player{grid-template-columns:minmax(0,1fr) 28px 28px;gap:4px;padding:3px}
+#modal.mobile-music-modal .listening-label{padding:3px 6px;font-size:10px}
+#modal.mobile-music-modal .listening-control{width:28px;min-width:28px;height:28px;min-height:28px;padding:7px}
 #modal.mobile-music-modal .quiz-verdict{padding:6px;margin:4px 0}
 #modal.mobile-music-modal .quiz-verdict-heading{gap:5px}
 #modal.mobile-music-modal .quiz-verdict-heading>strong{font-size:19px}
@@ -309,13 +311,6 @@ dialog#modal.mobile-music-modal{
 #modal.mobile-music-modal .modal-body>.primary{min-height:32px;padding:6px 8px;font-size:12px}
 #modal.mobile-music-modal .modal-body>.text-button{padding:4px;font-size:10px;margin-top:3px}
 @media(orientation:landscape){
- #modal.mobile-music-modal:not(.purchase-result-modal) .modal-body{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 10px;align-items:center}
- #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock{grid-column:1/-1;grid-row:1;margin:0}
- #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-meta{grid-column:1/-1;grid-row:2;margin:0}
- #modal.mobile-music-modal:not(.purchase-result-modal) .purchase-quiz-rule{grid-column:1;grid-row:3;margin:0}
- #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-question{grid-column:1;grid-row:4;margin:0}
- #modal.mobile-music-modal:not(.purchase-result-modal) .purchase-ox-options{grid-column:2;grid-row:3/span 2;margin:0;align-self:stretch}
- #modal.mobile-music-modal:not(.purchase-result-modal) .listening-hint{grid-column:1/-1;grid-row:5;margin:0}
  #modal.mobile-music-modal.purchase-result-modal .modal-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:5px 10px;align-items:center}
  #modal.mobile-music-modal.purchase-result-modal .quiz-verdict{grid-column:1;grid-row:1;margin:0}
  #modal.mobile-music-modal.purchase-result-modal .quiz-timeout{grid-column:1;grid-row:2}
@@ -329,3 +324,16 @@ dialog#modal.mobile-music-modal{
  border:0;outline:0;border-radius:0;background:transparent;box-shadow:none;
 }
 .game-shell[data-mobile="true"] .cell.streaming .ownership-dot{display:none}
+
+/* A short timer on the left; all quiz decisions form one ordered right column. */
+#modal.mobile-music-modal:not(.purchase-result-modal) .modal-body{display:grid;grid-template-columns:clamp(80px,19vw,128px) minmax(0,1fr);gap:5px 12px;align-items:start}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock{grid-column:1;grid-row:1;display:grid;grid-template-columns:auto auto;align-self:start;width:100%;max-width:128px;gap:3px 4px;margin:0;padding:5px 6px}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock strong{justify-self:end}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-clock progress{grid-column:1/-1;width:100%;min-width:0}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-meta{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin:0}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-cost{order:-1;font-size:11px;font-weight:800}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-work{font-size:11px;line-height:1.3}
+#modal.mobile-music-modal:not(.purchase-result-modal) .purchase-quiz-rule{grid-column:1;grid-row:2/span 2;align-self:start;margin:0;font-size:10px;line-height:1.4}
+#modal.mobile-music-modal:not(.purchase-result-modal) .quiz-question{grid-column:2;grid-row:2;margin:0;font-size:14px;line-height:1.35}
+#modal.mobile-music-modal:not(.purchase-result-modal) .purchase-ox-options{grid-column:2;grid-row:3;margin:0;align-self:stretch}
+#modal.mobile-music-modal:not(.purchase-result-modal) .listening-hint{grid-column:1/-1;grid-row:4;margin:0}

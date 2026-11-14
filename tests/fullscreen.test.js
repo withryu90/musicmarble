@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {enterFullscreen,toggleFullscreen,isStandalone} from '../src/fullscreen.js';
+import {enterFullscreen,toggleFullscreen,isStandalone,isInstalledWebApp} from '../src/fullscreen.js';
 const browser={navigator:{},matchMedia:()=>({matches:false})};
 test('supported browser requests fullscreen with navigation hidden and can exit',async()=>{
  let options,exits=0;const doc={documentElement:{async requestFullscreen(value){options=value;}}};
@@ -23,4 +23,11 @@ test('manifest launches under the GitHub Pages project path and all PNG icons ha
  for(const icon of [...manifest.icons,{src:'./assets/app-icons/apple-touch-icon.png',sizes:'180x180'}]){
   const bytes=readFileSync(new URL('../src/'+icon.src.slice(2),import.meta.url));const [width,height]=icon.sizes.split('x').map(Number);assert.equal(bytes.readUInt32BE(16),width);assert.equal(bytes.readUInt32BE(20),height);
  }
+});
+
+test("installed app layout excludes ordinary browser fullscreen",()=>{
+ assert.equal(isInstalledWebApp(browser),false);
+ assert.equal(isInstalledWebApp({...browser,navigator:{standalone:true}}),true);
+ assert.equal(isInstalledWebApp({...browser,matchMedia:q=>({matches:q==='(display-mode: standalone)'})}),true);
+ assert.equal(isInstalledWebApp({...browser,matchMedia:q=>({matches:q==='(display-mode: fullscreen)'})}),false);
 });

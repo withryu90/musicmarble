@@ -1,3 +1,4 @@
+export function isInstalledWebApp(win){return Boolean(win.navigator?.standalone||win.matchMedia?.('(display-mode: standalone)').matches);}
 export function isStandalone(win){return Boolean(win.navigator?.standalone||win.matchMedia?.('(display-mode: standalone)').matches||win.matchMedia?.('(display-mode: fullscreen)').matches);}
 export function isFullscreen(doc){return Boolean(doc.fullscreenElement||doc.webkitFullscreenElement);}
 export async function enterFullscreen(doc,win){

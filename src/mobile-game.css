@@ -337,3 +337,6 @@ dialog#modal.mobile-music-modal{
 #modal.mobile-music-modal:not(.purchase-result-modal) .quiz-question{grid-column:2;grid-row:2;margin:0;font-size:14px;line-height:1.35}
 #modal.mobile-music-modal:not(.purchase-result-modal) .purchase-ox-options{grid-column:2;grid-row:3;margin:0;align-self:stretch}
 #modal.mobile-music-modal:not(.purchase-result-modal) .listening-hint{grid-column:1/-1;grid-row:4;margin:0}
+
+/* Home Screen web apps centre the participant group above the chat composer. */
+.game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] .board-area .players-all{justify-content:center;justify-content:safe center}

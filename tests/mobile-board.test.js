@@ -57,3 +57,9 @@ test('scrollable zoom creates native overflow and keeps the scrolled position ac
  camera.reset();assert.equal(viewport.scrollWidth,450);assert.equal(viewport.scrollHeight,300);assert.equal(viewport.scrollLeft,0);assert.equal(viewport.scrollTop,0);
  camera.bind(null);assert.equal(handlers.size,0);
 });
+
+test("installed app camera keeps its 120 percent default when reset",()=>{
+ const camera=new MobileBoardCamera(()=>{},1.2);
+ assert.equal(camera.state.scale,1.2);camera.zoom(1.25);assert.equal(camera.state.scale,1.5);
+ camera.reset();assert.equal(camera.state.scale,1.2);assert.equal(new MobileBoardCamera().state.scale,1);
+});

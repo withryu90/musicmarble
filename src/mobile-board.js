@@ -16,7 +16,7 @@ export function constrainedCamera(state,width,height){
  return {...state,x:Math.max(-x,Math.min(x,state.x)),y:Math.max(-y,Math.min(y,state.y))};
 }
 export class MobileBoardCamera{
- constructor(onChange=()=>{}){this.state={scale:1,x:0,y:0};this.onChange=onChange;this.cleanup=()=>{};}
+ constructor(onChange=()=>{},defaultScale=1){this.defaultScale=Math.max(1,Math.min(3,defaultScale));this.state={scale:this.defaultScale,x:0,y:0};this.onChange=onChange;this.cleanup=()=>{};}
  bind(scene){
   this.cleanup();this.scene=scene;this.viewport=scene?.closest?.('.mobile-board-viewport');if(!scene)return;
   if(this.viewport){this.bindScrollable();return;}
@@ -49,7 +49,7 @@ export class MobileBoardCamera{
  }
  set(state){if(this.viewport){this.state=state;this.apply();return;}this.state=constrainedCamera(state,this.scene?.offsetWidth||1,this.scene?.offsetHeight||1);this.apply();}
  zoom(factor){this.set(zoomAt(this.state,this.state.scale*factor,{x:0,y:0}));}
- reset(){this.state={scale:1,x:0,y:0};this.apply();}
+ reset(){this.state={scale:this.defaultScale,x:0,y:0};this.apply();}
  apply(){
   if(this.viewport){this.applyScrollable();return;}
   if(this.scene){this.state=constrainedCamera(this.state,this.scene.offsetWidth,this.scene.offsetHeight);this.scene.style.setProperty('--board-zoom',this.state.scale);this.scene.style.setProperty('--board-pan-x',`${this.state.x}px`);this.scene.style.setProperty('--board-pan-y',`${this.state.y}px`);}

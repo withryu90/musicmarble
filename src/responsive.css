@@ -224,7 +224,7 @@ body.portrait-game{overflow:hidden}
  #modal .card-description{min-height:105px;padding:18px 10px 10px}
  #modal .card-description p{font-size:11px;line-height:1.65}
  #modal .card-effect{font-size:15px;margin-top:8px;padding:4px 8px}
- #modal .card-value{width:68px;height:65px;padding:9px 6px 12px}
+ #modal .card-value{width:68px;height:65px;padding:6px}
  #modal .card-value strong{font-size:21px}
  #modal .participant-intro-description{font-size:11px;line-height:1.6}
  #modal .participant-intro-list{gap:8px;margin:12px 0}

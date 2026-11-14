@@ -266,13 +266,13 @@ dialog#modal::backdrop{background:#164d7959}
 .quiz-clock.is-urgent progress{accent-color:#cf394d}
 .quiz-timeout{text-align:center;color:#b42b3c;font-weight:700;line-height:1.6}
 
-.listening-hint{margin:10px 0;padding:9px 11px;background:#e8f5ff;border:1px solid #bfdef4;border-radius:10px;display:grid;gap:4px;text-align:center}
-#modal .listening-hint-button{padding:9px 12px;min-height:36px;border:0;border-radius:8px;background:#246da3;color:#fff;font-size:13px;font-weight:800}
+.listening-hint{margin:12px 0 0;padding:0;display:grid;gap:6px;text-align:center}
+#modal .listening-hint-button{padding:11px 14px;min-height:40px;border:1px solid #d8a5ba;border-radius:9px;background:#e8bdce;color:#61394a;font-size:13px;font-weight:800}
 #modal .listening-hint-button:disabled{opacity:.6}
 #modal .listening-hint small{font-size:10px;line-height:1.4}
 #modal .listening-credit{font-size:8px;color:#64839c}
 #modal .listening-credit a{color:#326f9b;text-decoration:underline}
 #modal .listening-unavailable{font-size:10px;color:#7b8c9c;text-align:center;margin:8px 0}
 
-#modal .listening-toggle{background:#f6fbff;color:#245d8a;border:1px solid #90bbdb}
+#modal .listening-toggle{background:#fbf1f5;color:#81516a;border:1px solid #dab3c4}
 #modal .listening-toggle[hidden]{display:none}

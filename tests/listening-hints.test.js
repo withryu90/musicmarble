@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import * as G from '../src/engine.js';
+import {purchaseQuizById} from '../src/purchase-quizzes.js';
 import {BOARD,WORKS} from '../src/data.js';
 import {LISTENING_HINTS,listeningHintDurationMs} from '../src/listening-hints.js';
 import {RoomService} from '../src/room-service.js';
@@ -13,7 +14,7 @@ test('paid hint charges once, retains purchase funds and preserves the remaining
  const deadline=11000+listeningHintDurationMs(LISTENING_HINTS['bach-air']);assert.equal(next.quizDeadline,deadline);assert.equal(next.purchaseChallenge.hint.remaining,7000);
  assert.equal(G.expireQuiz(next,deadline-1),next);assert.equal(G.expireQuiz(next,deadline).purchaseChallenge.timedOut,true);
  assert.ok(G.isValidSave(next));assert.throws(()=>G.buyListeningHint(next,5000));
- const future=G.buyListeningHint(G.beginQuizTimer(purchase()),Date.now());assert.throws(()=>G.answerPurchaseQuiz(future,true));
+ const future=G.buyListeningHint(G.beginQuizTimer(purchase()),Date.now());assert.equal(G.answerPurchaseQuiz(future,true).phase,'purchase-feedback');
  const poor=purchase();poor.players[0].coins=179;assert.equal(G.canBuyListeningHint(poor),false);assert.throws(()=>G.buyListeningHint(poor));
  poor.players[0].coins=180;assert.equal(G.canBuyListeningHint(poor),true);
  assert.throws(()=>G.buyListeningHint(s,11000));assert.equal(G.canBuyListeningHint(G.createGame({names:['A','B']})),false);
@@ -60,4 +61,16 @@ test('pausing enables an immediate answer; resume preserves only unused quiz and
  const resumed=G.resumeListeningHint(paused,5500);assert.equal(resumed.players[0].coins,1180);assert.equal(resumed.purchaseChallenge.hint.remaining,7000);assert.equal(resumed.quizDeadline,5500+duration-1500+7000);assert.ok(G.isValidSave(resumed));
  const again=G.pauseListeningHint(resumed,6500);assert.equal(again.quizDeadline,13500);assert.equal(again.purchaseChallenge.hint.audioRemainingMs,duration-2500);assert.equal(again.players[0].coins,1180);
  assert.throws(()=>G.resumeListeningHint(again,13500));assert.throws(()=>G.resumeListeningHint(G.expireQuiz(again,13500),13501));assert.throws(()=>G.pauseListeningHint(purchase()));assert.throws(()=>G.resumeListeningHint(paid,3000));
+});
+
+test('answers during active playback are graded immediately, retain the hint charge and cannot be submitted twice',()=>{
+ for(const correct of [true,false]){
+ const paid=G.buyListeningHint(G.beginQuizTimer(purchase()),Date.now());
+ assert.ok(paid.purchaseChallenge.hint.until>Date.now());
+ const answer=correct?purchaseQuizById(paid.purchaseChallenge.questionId).answer:!purchaseQuizById(paid.purchaseChallenge.questionId).answer;
+ const result=G.answerPurchaseQuiz(paid,answer);
+ assert.equal(result.phase,'purchase-feedback');assert.equal(result.purchaseChallenge.correct,correct);
+ assert.equal(result.players[0].coins,1180);assert.equal(result.quizDeadline,null);assert.ok(G.isValidSave(result));
+ assert.throws(()=>G.answerPurchaseQuiz(result,answer));
+ }
 });

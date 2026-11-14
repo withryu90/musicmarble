@@ -108,3 +108,17 @@ test('HTTPS room rehydration preserves question history across repeat visits',as
  assert.equal(new Set(seen).size,5);
  }finally{db.close();}
 });
+
+test('HTTPS player can answer the music quiz while the paid recording is still playing',async()=>{
+ const db=database();try{
+ const {host,guest}=await setup(db);await act(db,host,'start');
+ const row=db.sqlite.prepare('SELECT * FROM online_rooms WHERE code = ?').get(host.code),room=JSON.parse(row.payload);
+ room.state.phase='action';room.state.players[0].position=1;
+ db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);
+ await act(db,host,'startPurchaseQuiz');await act(db,host,'beginQuizTimer');
+ const paid=await act(db,host,'buyListeningHint');assert.ok(paid.state.purchaseChallenge.hint.until>Date.now());
+ await assert.rejects(act(db,guest,'answerPurchaseQuiz',[true]));
+ const answer=purchaseQuizById(paid.state.purchaseChallenge.questionId).answer;
+ const result=await act(db,host,'answerPurchaseQuiz',[answer]);assert.equal(result.state.purchaseChallenge.correct,true);assert.equal(result.state.phase,'purchase-feedback');assert.equal(result.state.players[0].coins,1180);
+ }finally{db.close();}
+});

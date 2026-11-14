@@ -1,8 +1,8 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=1ae6333d08df';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=1ae6333d08df';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=1ae6333d08df';
-import {characterById,drawCharacterIds} from './characters.js?v=1ae6333d08df';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=1ae6333d08df';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=50ac128f808f';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=50ac128f808f';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=50ac128f808f';
+import {characterById,drawCharacterIds} from './characters.js?v=50ac128f808f';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=50ac128f808f';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const QUIZ_TIME_LIMIT=10000;
@@ -266,7 +266,6 @@ export function refundListeningHint(state,now=Date.now()){
  return s;
 }
 export function answerPurchaseQuiz(state,response){
- if(state.purchaseChallenge?.hint&&!state.purchaseChallenge.hint.refunded&&Date.now()<state.purchaseChallenge.hint.until)throw Error('감상 힌트가 끝나면 답을 선택해 주세요.');
  if(state.phase!=='purchase-quiz'||!state.purchaseChallenge||typeof response!=='boolean')throw Error('O 또는 X를 선택해 주세요.');
  const s=clone(state),challenge=s.purchaseChallenge,q=purchaseQuizById(challenge.questionId);
  if(!q||q.workId!==BOARD[current(s).position].id)throw Error('음악 퀴즈 정보를 확인해 주세요.');

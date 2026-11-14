@@ -41,23 +41,13 @@ Soft music-box/marimba-style sine synthesis, warm chords and bass.
 No third-party recording, melody, sample or soundfont was copied.
 Stereo 22.05 kHz 16-bit PCM WAV; circular echoes preserve the loop boundary.
 
-Concert opening: beethoven-ode-concert-orchestra.wav
-Composition: Ludwig van Beethoven, Symphony No. 9, Op. 125, IV, Ode to Joy.
-Actual performance: Neues Symphonie-Orchester (Berlin), Bruno Seidler-Winkler,
-conductor. Deutsche Grammophon recording, circa 1922–1923.
-First published December 1923 (Grammophon 69607–69613); US issue November 1924
-(Vocalion 35050–35056). The original composition and historical sound recording
-are out of copyright in the US and their country of origin at publication time
-of this game update (2026). No modern re-recording or arrangement is used.
-Source and transfer: The Shellackophile collection, Internet Archive:
-https://archive.org/details/69607-13-beethoven-9-s-w-iv
-Source file: 69607-13 Beethoven 9 S-W (iv).mp3 (public original-shellac transfer).
-Recording date/publication information supplied by the source item's metadata.
-Sound recording term reference (1923–1946: 100 years):
-https://ask.loc.gov/recorded-sound/faq/313179
-Editing: source 217.98–230.00 seconds (12.02 seconds), original D-major key,
-original tempo; downsampled to stereo 22.05 kHz 16-bit PCM WAV, normalized to
-70% peak, with 25 ms fade-in / 180 ms fade-out. Historical surface noise retained.
-No synthesis, soundfont, added instruments, pitch shift or time stretch.
-Excerpt preparation: scripts/render-concert-ode.py.
+Concert opening: concert-opening.m4a
+Source: user-supplied recording, original filename: 용산동 2.m4a
+Original AAC/M4A file, stereo 48 kHz, approximately 13.89 seconds.
+No trimming, re-encoding, time stretching or pitch changes.
+Playback gain: 0.85 (original file unchanged).
+SHA-256: da698fa5b1b3ba5e6d2e8e44549e779a6d0f9a06699c2e562f5acc3c41b1926c
+File size: 236291 bytes.
+User-provided audio; no public-domain or open-licence designation is asserted.
+Replaces the former historical Beethoven Ode to Joy concert effect.
 Plays once per concert notice alongside BGM; the global bell mutes both.

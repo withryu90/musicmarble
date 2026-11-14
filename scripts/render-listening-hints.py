@@ -13,7 +13,7 @@ DEST=ROOT/'src/assets/audio/hints'
 ROWS=json.loads((DEST/'ATTRIBUTION.json').read_text())['recordings']
 CACHE=Path(tempfile.gettempdir())/'musicmarble-hint-originals'
 CACHE.mkdir(exist_ok=True)
-LOCAL={'beethoven-5':'beethoven-fate-prison.wav','beethoven-9':'beethoven-ode-concert-orchestra.wav'}
+LOCAL={'beethoven-5':'beethoven-fate-prison.wav','beethoven-9':'hints/originals/beethoven-9.m4a'}
 for key in sys.argv[1:] or ROWS:
  row=ROWS[key]
  if row.get('original'):

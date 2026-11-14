@@ -1,5 +1,5 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={concert:new URL('./assets/audio/beethoven-ode-concert-orchestra.wav?v=f2ba077cdc98',import.meta.url).href,applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=f2ba077cdc98',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=f2ba077cdc98',import.meta.url).href};
+export const RECORDED_EFFECTS={concert:new URL('./assets/audio/concert-opening.m4a?v=900051164f46',import.meta.url).href,applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=900051164f46',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=900051164f46',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison','concert'];
 export function createSoundEffects({onPlaybackStart=()=>{},onPlaybackEnd=()=>{},createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
  let context=null,enabled=true,generation=0,primed=false,playbackId=0;const nodes=new Set(),seen=new Set(),buffers=new Map();
@@ -43,7 +43,7 @@ export function createSoundEffects({onPlaybackStart=()=>{},onPlaybackEnd=()=>{},
    const recording=RECORDED_EFFECTS[name]?await loadRecording(ctx,name):null;
    if(ctx.state!=='running'||!enabled||!isVisible()||stamp!==generation||(key&&seen.has(key)))return false;
    if(key){seen.add(key);if(seen.size>200)seen.delete(seen.values().next().value);}
-   if(recording){const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=recording;gain.gain.value=.7;source.connect(gain);gain.connect(ctx.destination);const start=ctx.currentTime+.015,id=++playbackId;try{onPlaybackStart(name,id);}catch{}try{source.start(start);track(source,start+recording.duration+.02,[gain],()=>{try{onPlaybackEnd(name,id);}catch{}});}catch(error){try{onPlaybackEnd(name,id);}catch{}source.disconnect();gain.disconnect();throw error;}}
+   if(recording){const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=recording;gain.gain.value=name==='concert'?.85:.7;source.connect(gain);gain.connect(ctx.destination);const start=ctx.currentTime+.015,id=++playbackId;try{onPlaybackStart(name,id);}catch{}try{source.start(start);track(source,start+recording.duration+.02,[gain],()=>{try{onPlaybackEnd(name,id);}catch{}});}catch(error){try{onPlaybackEnd(name,id);}catch{}source.disconnect();gain.disconnect();throw error;}}
    else synthesize(ctx,name);return true;
   }catch{return false;}
  }

@@ -52,7 +52,7 @@ test('recordings are loaded once, cancelled on mute, and failures can retry',asy
 });
 test('bundled crowd applause and fate motif are valid short stereo recordings',async()=>{
  const {readFile}=await import('node:fs/promises');
- for(const url of Object.values(RECORDED_EFFECTS)){const data=await readFile(new URL(url));assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WAVE');assert.equal(data.readUInt16LE(22),2);assert.ok(data.length>100000);}
+ for(const url of [RECORDED_EFFECTS.applause,RECORDED_EFFECTS.prison]){const data=await readFile(new URL(url));assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WAVE');assert.equal(data.readUInt16LE(22),2);assert.ok(data.length>100000);}
 });
 test('real prison excerpt contains both opening motifs in the requested pitch order',async()=>{
  const {readFile}=await import('node:fs/promises'),data=await readFile(new URL(RECORDED_EFFECTS.prison));
@@ -98,28 +98,18 @@ test('failed prison scheduling releases the BGM suspension',async()=>{
  assert.equal(await sfx.play('prison'),false);assert.deepEqual(events,['start','end']);
 });
 
-test('concert notices select Ode to Joy and replayed room snapshots cannot duplicate it',async()=>{
+test('concert notices select the supplied recording and replayed room snapshots cannot duplicate it',async()=>{
  assert.equal(activitySound({type:'concert'}),'concert');const ctx=context(),sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});
  assert.equal(await sfx.play('concert','ROOM:event:42'),true);const voices=ctx.voices.length;
  assert.equal(await sfx.play('concert','ROOM:event:42'),false);assert.equal(ctx.voices.length,voices);
  sfx.setEnabled(false);assert.equal(await sfx.play('concert','ROOM:event:43'),false);
 });
-test('real orchestral concert excerpt retains the requested two phrases in its original D-major key',async()=>{
- const {readFile}=await import('node:fs/promises'),data=await readFile(new URL(RECORDED_EFFECTS.concert));
- const rate=data.readUInt32LE(24),frames=(data.length-44)/4;assert.equal(rate,22050);assert.ok(frames/rate>12&&frames/rate<12.1);
- // Actual historical orchestration has accompaniment; the melody should rank among
- // the strongest pitch classes at nearly every note, rather than sound like pure tones.
- const phrase=[6,6,7,9,9,7,6,4,2,2,4,6,6,4,4,6,6,7,9,9,7,6,4,2,2,4,6,4,2,2];
- const lengths=[1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2,1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2];
- let beat=0,matched=0;
- for(let n=0;n<phrase.length;n++){
-  const start=Math.round((.12+(beat+lengths[n]*.32)*.38)*rate),samples=[];
-  for(let i=0;i<Math.round(.14*rate)&&start+i<frames;i+=10)samples.push((data.readInt16LE(44+(start+i)*4)+data.readInt16LE(46+(start+i)*4))/65536);
-  const power=Array(12).fill(0);
-  for(let midi=42;midi<84;midi++){const hz=440*2**((midi-69)/12);let re=0,im=0;for(let i=0;i<samples.length;i++){const phase=2*Math.PI*hz*i/(rate/10);re+=samples[i]*Math.cos(phase);im+=samples[i]*Math.sin(phase);}power[midi%12]+=re*re+im*im;}
-  if(power.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]).slice(0,3).some(x=>x[1]===phrase[n]))matched++;
-  beat+=lengths[n];
- }
- assert.ok(matched>=27,`${matched}/30 orchestral melody notes identified`);
- let peak=0;for(let i=44;i<data.length;i+=2)peak=Math.max(peak,Math.abs(data.readInt16LE(i)));assert.ok(peak>10000&&peak<25000);assert.equal(data.readInt16LE(data.length-2),0);
+test('concert uses the unedited supplied AAC recording at a moderate playback gain',async()=>{
+ const {readFile}=await import('node:fs/promises'),{createHash}=await import('node:crypto');
+ const data=await readFile(new URL(RECORDED_EFFECTS.concert));
+ assert.equal(data.toString('ascii',4,8),'ftyp');assert.equal(data.length,236291);
+ assert.equal(createHash('sha256').update(data).digest('hex'),'da698fa5b1b3ba5e6d2e8e44549e779a6d0f9a06699c2e562f5acc3c41b1926c');
+ const ctx=context(),gains=[];ctx.createGain=()=>{const node={gain:param(),connect(){},disconnect(){}};gains.push(node);return node;};
+ const sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});assert.equal(await sfx.play('concert'),true);assert.equal(gains.at(-1).gain.value,.85);
+ await sfx.play('prison');assert.equal(gains.at(-1).gain.value,.7);
 });

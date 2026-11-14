@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=039638e6e41a';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=039638e6e41a';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=1477e2c29975';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=1477e2c29975';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -24,7 +24,7 @@ export function activityChanges(before,after){
   if(after.lastEvent)add('history-event',after.lastEvent.title,{card:{...after.lastEvent},changes:[coin(actor,after.lastEvent.actual)],text:after.lastEvent.text});
   if(after.lastConcert){const c=after.lastConcert;add('concert','음악회 개최 · 티켓 안내',{concert:structuredClone(c),changes:[...c.tickets.map(t=>coin(t.playerId,-t.amount)),coin(c.hostId,c.total)],text:`${after.players[c.hostId].name} 님이 음악회를 개최했습니다. 참가자마다 좌석을 무작위로 배정하고 티켓비를 개최자에게 지급했습니다.`});}
  }
- for(const app of STREAMING_APPS)if(before.platformOwners?.[app.id]===undefined&&after.platformOwners?.[app.id]!==undefined)add('streaming-purchase','스트리밍 앱 점유권 구입',{actorId:after.platformOwners[app.id],appId:app.id,changes:[coin(after.platformOwners[app.id],-STREAMING_RIGHTS_PRICE)],text:`${app.name} 점유권을 구입했습니다. 어떤 작품 칸이든 도착하면 자동 스트리밍을 설치할 수 있습니다.`});
+ for(const app of STREAMING_APPS)if(before.platformOwners?.[app.id]===undefined&&after.platformOwners?.[app.id]!==undefined)add('streaming-purchase','스트리밍 앱 독점',{actorId:after.platformOwners[app.id],appId:app.id,changes:[coin(after.platformOwners[app.id],-STREAMING_RIGHTS_PRICE)],text:`${app.name} 앱을 독점했습니다. 어떤 작품 칸이든 도착하면 자동 스트리밍을 설치할 수 있습니다.`});
  for(const [workId,apps] of Object.entries(after.streamingInstallations||{}))for(const [appId,owner] of Object.entries(apps))if(before.streamingInstallations?.[workId]?.[appId]===undefined)add('streaming-install','자동 스트리밍 설치',{actorId:owner,appId,workId,changes:[coin(owner,-STREAMING_INSTALL_PRICE)],text:`${WORKS.find(w=>w.id===workId).title}에 ${STREAMING_APPS.find(a=>a.id===appId).name} 자동 스트리밍을 설치했습니다. 다음 방문부터 방문자가 설치자에게 30 MC를 지급합니다. 설치자 본인은 추가 비용이 없습니다.`});
  for(const w of WORKS){
   const previous=before.ownership[w.id],next=after.ownership[w.id];

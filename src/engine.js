@@ -1,8 +1,8 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=039638e6e41a';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=039638e6e41a';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=039638e6e41a';
-import {characterById,drawCharacterIds} from './characters.js?v=039638e6e41a';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=039638e6e41a';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=1477e2c29975';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=1477e2c29975';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=1477e2c29975';
+import {characterById,drawCharacterIds} from './characters.js?v=1477e2c29975';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=1477e2c29975';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const QUIZ_TIME_LIMIT=10000;
@@ -159,9 +159,9 @@ export function streamingOptions(s){
 }
 export const streamingOpportunity=s=>canBuyPlatform(s)||streamingOptions(s).length>0;
 export function buyPlatform(state){
- if(!canBuyPlatform(state))throw Error('도착한 스트리밍 앱 칸에서만 비어 있는 점유권을 구입할 수 있습니다. (200 MC)');
+ if(!canBuyPlatform(state))throw Error('도착한 스트리밍 앱 칸에서 아직 독점되지 않은 앱을 독점할 수 있습니다. (200 MC)');
  const s=clone(state),p=current(s),c=BOARD[p.position];s.platformOwners??={};s.platformOwners[c.id]=p.id;p.coins-=STREAMING_RIGHTS_PRICE;s.streamingHandled=true;
- log(s,`${p.name}: ${streamingApp(c.id).name} 점유권 구입, -${STREAMING_RIGHTS_PRICE} MC`);return checkBankruptcy(s);
+ log(s,`${p.name}: ${streamingApp(c.id).name} 앱 독점, -${STREAMING_RIGHTS_PRICE} MC`);return checkBankruptcy(s);
 }
 export function installStreaming(state,appId){
  if(!streamingOptions(state).some(app=>app.id===appId))throw Error('도착한 작품 칸에 내 앱의 자동 스트리밍을 설치해 주세요. (50 MC, 앱별 1회)');

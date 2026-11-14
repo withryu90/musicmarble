@@ -1,8 +1,8 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,LISTENING_HINT_MS} from './listening-hints.js?v=5bde9cc70d71';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=5bde9cc70d71';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=5bde9cc70d71';
-import {characterById,drawCharacterIds} from './characters.js?v=5bde9cc70d71';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=5bde9cc70d71';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=e7c3587e1cc1';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=e7c3587e1cc1';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=e7c3587e1cc1';
+import {characterById,drawCharacterIds} from './characters.js?v=e7c3587e1cc1';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=e7c3587e1cc1';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const QUIZ_TIME_LIMIT=10000;
@@ -174,8 +174,8 @@ export function skipStreaming(state){
 }
 export function startPurchaseQuiz(state,rng=Math.random){
  const s=clone(state),p=current(s),w=BOARD[p.position];
- if(s.phase!=='action'||s.trade||w.type!=='work'||s.ownership[w.id])throw Error('도착한 빈 작품 칸에서만 구입 OX 퀴즈를 풀 수 있습니다.');
- if(s.purchaseChallenge)throw Error('구입 OX 퀴즈는 도착할 때 한 번만 도전할 수 있습니다.');
+ if(s.phase!=='action'||s.trade||w.type!=='work'||s.ownership[w.id])throw Error('도착한 빈 작품 칸에서만 감상 퀴즈를 풀 수 있습니다.');
+ if(s.purchaseChallenge)throw Error('감상 퀴즈는 도착할 때 한 번만 도전할 수 있습니다.');
  if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
  const questions=PURCHASE_QUIZZES.filter(q=>q.workId===w.id),q=questions[Math.floor(rng()*questions.length)];
  s.quizDeadline=null;s.purchaseChallenge={workId:w.id,questionId:q.id,response:null,correct:null};s.phase='purchase-quiz';return s;
@@ -196,14 +196,15 @@ export function expireQuiz(state,now=Date.now()){
 }
 export function canBuyListeningHint(s){
  const c=s.purchaseChallenge,p=current(s),w=BOARD[p.position];
- return s.phase==='purchase-quiz'&&!!c&&!!LISTENING_HINTS[c.workId]&&(!c.hint||c.hint.refunded)&& (c.hintAttempts||0)<2&&p.coins>=w.price+LISTENING_HINT_PRICE;
+ return s.phase==='purchase-quiz'&&!!c&&listeningHintDurationMs(LISTENING_HINTS[c.workId])>0&&(!c.hint||c.hint.refunded)&& (c.hintAttempts||0)<2&&p.coins>=w.price+LISTENING_HINT_PRICE;
 }
 export function buyListeningHint(state,now=Date.now()){
  if(!canBuyListeningHint(state))throw Error('현재 감상 힌트를 구입할 수 없습니다.');
  if(state.quizDeadline&&state.quizDeadline<=now)throw Error('퀴즈 시간이 끝났습니다.');
  const s=clone(state),remaining=Math.max(1,Math.min(QUIZ_TIME_LIMIT,(s.quizDeadline||now+QUIZ_TIME_LIMIT)-now));
  current(s).coins-=LISTENING_HINT_PRICE;s.purchaseChallenge.hintAttempts=(s.purchaseChallenge.hintAttempts||0)+1;
- s.purchaseChallenge.hint={until:now+LISTENING_HINT_MS,remaining,refunded:false};s.quizDeadline=now+LISTENING_HINT_MS+remaining;
+ const durationMs=listeningHintDurationMs(LISTENING_HINTS[s.purchaseChallenge.workId]);
+ s.purchaseChallenge.hint={until:now+durationMs,remaining,refunded:false};s.quizDeadline=now+durationMs+remaining;
  return s;
 }
 export function refundListeningHint(state,now=Date.now()){
@@ -217,18 +218,18 @@ export function answerPurchaseQuiz(state,response){
  if(state.purchaseChallenge?.hint&&!state.purchaseChallenge.hint.refunded&&Date.now()<state.purchaseChallenge.hint.until)throw Error('감상 힌트가 끝나면 답을 선택해 주세요.');
  if(state.phase!=='purchase-quiz'||!state.purchaseChallenge||typeof response!=='boolean')throw Error('O 또는 X를 선택해 주세요.');
  const s=clone(state),challenge=s.purchaseChallenge,q=purchaseQuizById(challenge.questionId);
- if(!q||q.workId!==BOARD[current(s).position].id)throw Error('구입 퀴즈 정보를 확인해 주세요.');
+ if(!q||q.workId!==BOARD[current(s).position].id)throw Error('감상 퀴즈 정보를 확인해 주세요.');
  s.quizDeadline=null;challenge.response=response;challenge.correct=response===q.answer;s.phase='purchase-feedback';
- log(s,`${current(s).name}: 구입 OX 퀴즈 ${challenge.correct?'정답 — 이용권 구입 가능':'오답 — 코인 차감 없이 구입 기회 종료'}`);return s;
+ log(s,`${current(s).name}: 감상 퀴즈 ${challenge.correct?'정답 — 이용권 구입 가능':'오답 — 코인 차감 없이 구입 기회 종료'}`);return s;
 }
 export function closePurchaseFeedback(state){
- if(state.phase!=='purchase-feedback'||typeof state.purchaseChallenge?.correct!=='boolean')throw Error('구입 OX 퀴즈 해설을 먼저 확인해 주세요.');
+ if(state.phase!=='purchase-feedback'||typeof state.purchaseChallenge?.correct!=='boolean')throw Error('감상 퀴즈 해설을 먼저 확인해 주세요.');
  const s=clone(state);s.phase='action';return s.purchaseChallenge.correct?s:nextTurn(s);
 }
 export function buy(state){
   const s=clone(state),p=current(s),w=BOARD[p.position];
   if(s.phase!=='action'||w.type!=='work'||s.ownership[w.id])throw Error('구입할 수 있는 작품이 아닙니다.');
-  if(s.purchaseChallenge?.workId!==w.id||s.purchaseChallenge.correct!==true)throw Error('이용권 구입 OX 퀴즈를 먼저 맞혀야 합니다.');
+  if(s.purchaseChallenge?.workId!==w.id||s.purchaseChallenge.correct!==true)throw Error('감상 퀴즈를 먼저 맞혀야 합니다.');
   if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
   p.coins-=w.price;s.ownership[w.id]={player:p.id,level:0};s.purchased=true;log(s,`${p.name}: ${w.composer} 「${w.title}」 이용권 구입 (${w.price} MC)`);return checkBankruptcy(s);
 }

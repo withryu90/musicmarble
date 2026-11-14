@@ -1,7 +1,7 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {WORKS} from '../src/data.js';
 import {PURCHASE_QUIZZES} from '../src/purchase-quizzes.js';
-const lines=[`뮤직마블 · 작품별 구입 OX 퀴즈 ${PURCHASE_QUIZZES.length}문항`,'20작품 × 각 5문항 · O=맞다 / X=아니다',''];
+const lines=[`뮤직마블 · 작품별 감상 퀴즈 ${PURCHASE_QUIZZES.length}문항`,'20작품 × 각 5문항 · O=맞다 / X=아니다',''];
 let number=0;
 for(const work of WORKS){
  lines.push(`【${work.composer} · ${work.title}】`);

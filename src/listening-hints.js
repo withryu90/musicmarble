@@ -1,5 +1,6 @@
 export const LISTENING_HINT_PRICE=20;
-export const LISTENING_HINT_MS=5000;
+// Duration is registered from the complete audio file, never supplied by clients.
+export function listeningHintDurationMs(hint){return Number.isFinite(hint?.duration)&&hint.duration>0?Math.ceil(hint.duration*1000):0;}
 // Clip derivatives retain the license specified per recording.
 export const LISTENING_HINTS={
   "bach-air": {
@@ -10,7 +11,7 @@ export const LISTENING_HINTS={
     "artist": "United States Air Force Strings",
     "section": "현악 합주의 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/bach-air.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/bach-air.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -23,7 +24,7 @@ export const LISTENING_HINTS={
     "artist": "Advent Chamber Orchestra / Al Goldstein Collection",
     "section": "제3번 1악장 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/bach-brandenburg.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/bach-brandenburg.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -36,7 +37,7 @@ export const LISTENING_HINTS={
     "artist": "John Harrison, Wichita State University Chamber Players",
     "section": "봄 1악장 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/vivaldi-spring.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/vivaldi-spring.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -49,7 +50,7 @@ export const LISTENING_HINTS={
     "artist": "John Harrison, Wichita State University Chamber Players",
     "section": "겨울 1악장 도입 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/vivaldi-winter.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/vivaldi-winter.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -62,7 +63,7 @@ export const LISTENING_HINTS={
     "artist": "Advent Chamber Orchestra / Al Goldstein Collection",
     "section": "1악장 도입 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/mozart-serenade.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/mozart-serenade.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -75,7 +76,7 @@ export const LISTENING_HINTS={
     "artist": "Sandra Partridge / Trisdee na Patalung / Siam Philharmonic Orchestra",
     "section": "밤의 여왕 아리아 주제",
     "start": 11,
-    "src": "./src/assets/audio/hints/mozart-flute.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/mozart-flute.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -88,7 +89,7 @@ export const LISTENING_HINTS={
     "artist": "Michael Jackson (IMSLP recording contributor)",
     "section": "질주하는 피아노 반주 동기",
     "start": 0,
-    "src": "./src/assets/audio/hints/schubert-king.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/schubert-king.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -101,7 +102,7 @@ export const LISTENING_HINTS={
     "artist": "Frank Levy / Musopen",
     "section": "녹턴의 주선율",
     "start": 5,
-    "src": "./src/assets/audio/hints/chopin-nocturne.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/chopin-nocturne.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -114,7 +115,7 @@ export const LISTENING_HINTS={
     "artist": "Luke Faulkner / Musopen",
     "section": "폴로네즈의 주제 구간",
     "start": 45,
-    "src": "./src/assets/audio/hints/chopin-polonaises.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/chopin-polonaises.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -127,7 +128,7 @@ export const LISTENING_HINTS={
     "artist": "JMC,Han",
     "section": "피아노 연주 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/brahms-hungarian-5.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/brahms-hungarian-5.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -140,7 +141,7 @@ export const LISTENING_HINTS={
     "artist": "Laurens Goedhart",
     "section": "달빛의 도입 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/debussy-moon.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/debussy-moon.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -153,7 +154,7 @@ export const LISTENING_HINTS={
     "artist": "Omega13a",
     "section": "반복되는 플루트 선율 · 디지털 관현악 연주",
     "start": 6,
-    "src": "./src/assets/audio/hints/ravel-bolero.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/ravel-bolero.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -166,7 +167,7 @@ export const LISTENING_HINTS={
     "artist": "United States Air Force Concert Band",
     "section": "1악장 후반의 관악 주제",
     "start": 510,
-    "src": "./src/assets/audio/hints/debussy-sea.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/debussy-sea.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -179,7 +180,7 @@ export const LISTENING_HINTS={
     "artist": "한국저작권위원회 / 주식회사유앤피플 / 여주대학교 김민기·김중희",
     "section": "2악장 주제 · 국악 편곡",
     "start": 0,
-    "src": "./src/assets/audio/hints/haydn-surprise.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/haydn-surprise.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -192,7 +193,7 @@ export const LISTENING_HINTS={
     "artist": "Paul De Bra (Professor P)",
     "section": "4악장 송어 주제 · 아코디언 편곡",
     "start": 0,
-    "src": "./src/assets/audio/hints/schubert-trout.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/schubert-trout.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14"
@@ -205,7 +206,7 @@ export const LISTENING_HINTS={
     "artist": "Skidmore College Orchestra / Anthony G. Holland",
     "section": "1악장 운명 동기",
     "start": 0,
-    "src": "./src/assets/audio/hints/beethoven-5.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/beethoven-5.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14",
@@ -219,7 +220,7 @@ export const LISTENING_HINTS={
     "artist": "Neues Symphonie-Orchester Berlin / Bruno Seidler-Winkler (1923)",
     "section": "4악장 환희의 송가 주제",
     "start": 0,
-    "src": "./src/assets/audio/hints/beethoven-9.wav?v=5bde9cc70d71",
+    "src": "./src/assets/audio/hints/beethoven-9.wav?v=e7c3587e1cc1",
     "duration": 5,
     "edited": "5-second excerpt, mono 22.05 kHz PCM, volume normalization, short boundary fades",
     "checkedAt": "2026-11-14",

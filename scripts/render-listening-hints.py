@@ -16,6 +16,9 @@ CACHE.mkdir(exist_ok=True)
 LOCAL={'beethoven-5':'beethoven-fate-prison.wav','beethoven-9':'beethoven-ode-concert-orchestra.wav'}
 for key in sys.argv[1:] or ROWS:
  row=ROWS[key]
+ if row.get('original'):
+  print(key,'supplied original preserved; no editing',flush=True)
+  continue
  if key in LOCAL:original=DEST.parent/LOCAL[key]
  else:
   original=CACHE/(key+'.audio')

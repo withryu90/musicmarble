@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import * as G from '../src/engine.js';
 import {BOARD,WORKS} from '../src/data.js';
-import {LISTENING_HINTS} from '../src/listening-hints.js';
+import {LISTENING_HINTS,listeningHintDurationMs} from '../src/listening-hints.js';
 import {RoomService} from '../src/room-service.js';
 const purchase=(id='bach-air')=>{const s=G.createGame({names:['가온','나래']});s.players[0].position=BOARD.findIndex(t=>t.id===id);s.phase='action';return G.startPurchaseQuiz(s,()=>0);};
 test('paid hint charges once, retains purchase funds and freezes the remaining question time for five seconds',()=>{
@@ -42,4 +42,9 @@ test('shared room hint requests use server time and enforce the acting player',(
   const now=Date.now();rooms.act(a.code,a.token,{action:'buyListeningHint',args:[1],revision:room.revision});assert.ok(room.state.purchaseChallenge.hint.until>=now+5000);assert.equal(room.state.players[0].coins,1180);
   rooms.act(a.code,a.token,{action:'refundListeningHint',args:[1],revision:room.revision});assert.equal(room.state.players[0].coins,1200);
  }finally{rooms.close();}
+});
+
+test('question pause uses the registered full recording length, including fractional seconds',()=>{
+ for(const [seconds,ms] of [[1.25,1250],[5,5000],[12.8,12800],[35.42,35420]])assert.equal(listeningHintDurationMs({duration:seconds}),ms);
+ for(const duration of [0,-1,NaN,Infinity,undefined])assert.equal(listeningHintDurationMs({duration}),0);
 });

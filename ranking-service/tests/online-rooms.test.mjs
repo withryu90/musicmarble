@@ -94,3 +94,17 @@ test('a concurrent typing write retries an uncommitted game action without losin
  assert.equal(next.revision,before.revision+1);assert.ok((await read(db,guest)).typing[guest.playerId]>Date.now());
  }finally{db.close();}
 });
+
+test('HTTPS room rehydration preserves question history across repeat visits',async()=>{
+ const db=database();try{
+ const {host}=await setup(db);await act(db,host,'start');const seen=[];
+ for(let visit=0;visit<5;visit++){
+ const row=db.sqlite.prepare('SELECT * FROM online_rooms WHERE code = ?').get(host.code),room=JSON.parse(row.payload);
+ room.state.turn=0;room.state.phase='action';room.state.players[0].position=1;room.state.purchaseChallenge=null;
+ db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);
+ const drawn=await act(db,host,'startPurchaseQuiz');seen.push(drawn.state.purchaseChallenge.questionId);
+ const resumed=await read(db,host);assert.deepEqual(resumed.state.quizHistory,drawn.state.quizHistory);
+ }
+ assert.equal(new Set(seen).size,5);
+ }finally{db.close();}
+});

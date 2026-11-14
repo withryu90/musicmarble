@@ -22,7 +22,7 @@ test('concurrent room refreshes share one request and mutations are never retrie
 test('polling delivers new snapshots and chats, recovers a network interruption and stops on unsubscribe',async()=>{
  let calls=0;const updates=[],chats=[],errors=[];const http=new HttpTransport({interval:1,fetchFn:async()=>{calls++;if(calls===2||calls===3)throw Error('offline');return Response.json({code:'012345',revision:1,chatSeq:1,messages:[{text:'음악 정보'}]});}});
  const sub=http.subscribe({code:'012345',token:'private'},{onSnapshot:s=>updates.push(s),onChat:s=>chats.push(s),onDisconnect:e=>errors.push(e)});
- await tick();sub.close();const count=calls;await tick();assert.equal(calls,count);assert.ok(updates.length>=2);assert.equal(chats.length,1);assert.equal(errors.length,1);
+ for(let i=0;i<100&&updates.length<2;i++)await tick();sub.close();const count=calls;await tick();assert.equal(calls,count);assert.ok(updates.length>=2);assert.equal(chats.length,1);assert.equal(errors.length,1);
 });
 test('new shared games use HTTPS, solo and existing saved games keep their transport',async()=>{
  const calls=[];const fake=name=>({connection:null,close(){},request:async(path)=>{calls.push(`${name}:${path}`);return {transport:name==='http'?'https':undefined};},subscribe(){calls.push(`${name}:subscribe`);return {close(){}};}});

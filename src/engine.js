@@ -1,8 +1,8 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=091e82af2513';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=091e82af2513';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=091e82af2513';
-import {characterById,drawCharacterIds} from './characters.js?v=091e82af2513';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=091e82af2513';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=99a6c7386756';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=99a6c7386756';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=99a6c7386756';
+import {characterById,drawCharacterIds} from './characters.js?v=99a6c7386756';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=99a6c7386756';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const QUIZ_TIME_LIMIT=10000;
@@ -47,7 +47,7 @@ export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=
   if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
-  return {version:VERSION,boardLayout:2,platformOwners:{},streamingInstallations:{},streamingHandled:false,lastStreamingRevenue:[],players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,lastConcert:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
+  return {version:VERSION,boardLayout:2,quizHistory:{},platformOwners:{},streamingInstallations:{},streamingHandled:false,lastStreamingRevenue:[],players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,lastConcert:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
 }
 // Resume only complete recognized quiz banks; remove retired topics without changing scores.
 export function migrateRetiredQuiz(state){
@@ -67,9 +67,42 @@ export function migrateRetiredQuiz(state){
  }
  return s;
 }
+// Persist bounded per-player counts, so reconnects and server restarts keep question variety.
+function rememberQuestion(s,playerId,bank,id){
+ const record=s.quizHistory[playerId]??={counts:{},last:{}};
+ record.counts[id]=(record.counts[id]||0)+1;record.last[bank]=id;
+}
+function ensureQuizHistory(s){
+ if(s.quizHistory!==undefined)return;
+ s.quizHistory={};
+ // Older saves cannot recover past questions, but can retain the one currently shown.
+ if(['quiz','feedback'].includes(s.phase)&&QUIZZES.some(q=>q.id===s.quiz))rememberQuestion(s,s.turn,'learning',s.quiz);
+ const q=purchaseQuizById(s.purchaseChallenge?.questionId);
+ if(q)rememberQuestion(s,s.turn,q.workId,q.id);
+}
+function drawQuestion(s,bank,ids,rng){
+ ensureQuizHistory(s);
+ const record=s.quizHistory[s.turn],count=id=>record?.counts[id]||0;
+ const least=Math.min(...ids.map(count));let pool=ids.filter(id=>count(id)===least);
+ if(pool.length>1)pool=pool.filter(id=>id!==record?.last[bank]);
+ const total=id=>Object.values(s.quizHistory).reduce((sum,p)=>sum+(p.counts[id]||0),0);
+ const roomLeast=Math.min(...pool.map(total));pool=pool.filter(id=>total(id)===roomLeast);
+ const id=pool[rng?Math.min(pool.length-1,Math.floor(rng()*pool.length)):0];
+ rememberQuestion(s,s.turn,bank,id);return id;
+}
+function validQuizHistory(s){
+ if(s.quizHistory===undefined)return true;
+ const object=value=>value&&typeof value==='object'&&!Array.isArray(value);
+ const known=new Set([...QUIZZES,...PURCHASE_QUIZZES].map(q=>q.id));
+ return object(s.quizHistory)&&Object.entries(s.quizHistory).every(([player,record])=>
+  /^\d$/.test(player)&&s.players[Number(player)]&&object(record)&&object(record.counts)&&object(record.last)&&
+  Object.entries(record.counts).every(([id,count])=>known.has(id)&&Number.isSafeInteger(count)&&count>0)&&
+  Object.entries(record.last).every(([bank,id])=>record.counts[id]>0&&(bank==='learning'?QUIZZES.some(q=>q.id===id):PURCHASE_QUIZZES.some(q=>q.workId===bank&&q.id===id))));
+}
 function openQuiz(s){
   const pool=s.quizDeck.filter(id=>QUIZZES.some(q=>q.id===id));
-  s.quizDeadline=null;s.quiz=pool[s.quizCursor%pool.length];s.quizCursor++;s.phase='quiz';s.quizUsed=true;
+  const offset=s.quizCursor%pool.length;
+  s.quiz=drawQuestion(s,'learning',[...pool.slice(offset),...pool.slice(0,offset)]);s.quizDeadline=null;s.quizCursor++;s.phase='quiz';s.quizUsed=true;
 }
 export function roll(state,dice,rng=Math.random){
   if(state.phase==='backward-roll')return rollBackward(state,dice,rng);
@@ -177,18 +210,18 @@ export function startPurchaseQuiz(state,rng=Math.random){
  if(s.phase!=='action'||s.trade||w.type!=='work'||s.ownership[w.id])throw Error('도착한 빈 작품 칸에서만 음악 퀴즈를 풀 수 있습니다.');
  if(s.purchaseChallenge)throw Error('음악 퀴즈는 도착할 때 한 번만 도전할 수 있습니다.');
  if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
- const questions=PURCHASE_QUIZZES.filter(q=>q.workId===w.id),q=questions[Math.floor(rng()*questions.length)];
- s.quizDeadline=null;s.purchaseChallenge={workId:w.id,questionId:q.id,response:null,correct:null};s.phase='purchase-quiz';return s;
+ const ids=PURCHASE_QUIZZES.filter(q=>q.workId===w.id).map(q=>q.id),questionId=drawQuestion(s,w.id,ids,rng);
+ s.quizDeadline=null;s.purchaseChallenge={workId:w.id,questionId,response:null,correct:null};s.phase='purchase-quiz';return s;
 }
 // The clock starts when the participant actually sees the question, after movement.
 export function beginQuizTimer(state,now=Date.now()){
  if(!['quiz','purchase-quiz'].includes(state.phase))throw Error('진행 중인 퀴즈가 없습니다.');
  if(state.quizDeadline)return state;
- const s=clone(state);s.quizDeadline=now+QUIZ_TIME_LIMIT;return s;
+ const s=clone(state);ensureQuizHistory(s);s.quizDeadline=now+QUIZ_TIME_LIMIT;return s;
 }
 export function expireQuiz(state,now=Date.now()){
  if(!['quiz','purchase-quiz'].includes(state.phase)||!state.quizDeadline||now<state.quizDeadline)return state;
- const s=clone(state);s.quizDeadline=null;
+ const s=clone(state);ensureQuizHistory(s);s.quizDeadline=null;
  if(s.phase==='purchase-quiz'){
   s.purchaseChallenge.response=null;s.purchaseChallenge.correct=false;s.purchaseChallenge.timedOut=true;s.phase='purchase-feedback';
  }else{current(s).attempts++;s.feedback={correct:false,index:-1,timedOut:true};s.phase='feedback';}
@@ -237,12 +270,12 @@ export function answerPurchaseQuiz(state,response){
  if(state.phase!=='purchase-quiz'||!state.purchaseChallenge||typeof response!=='boolean')throw Error('O 또는 X를 선택해 주세요.');
  const s=clone(state),challenge=s.purchaseChallenge,q=purchaseQuizById(challenge.questionId);
  if(!q||q.workId!==BOARD[current(s).position].id)throw Error('음악 퀴즈 정보를 확인해 주세요.');
- s.quizDeadline=null;challenge.response=response;challenge.correct=response===q.answer;s.phase='purchase-feedback';
+ ensureQuizHistory(s);s.quizDeadline=null;challenge.response=response;challenge.correct=response===q.answer;s.phase='purchase-feedback';
  log(s,`${current(s).name}: 음악 퀴즈 ${challenge.correct?'정답 — 이용권 구입 가능':'오답 — 코인 차감 없이 구입 기회 종료'}`);return s;
 }
 export function closePurchaseFeedback(state){
  if(state.phase!=='purchase-feedback'||typeof state.purchaseChallenge?.correct!=='boolean')throw Error('음악 퀴즈 해설을 먼저 확인해 주세요.');
- const s=clone(state);s.phase='action';return s.purchaseChallenge.correct?s:nextTurn(s);
+ const s=clone(state);ensureQuizHistory(s);s.phase='action';return s.purchaseChallenge.correct?s:nextTurn(s);
 }
 export function buy(state){
   const s=clone(state),p=current(s),w=BOARD[p.position];
@@ -275,9 +308,9 @@ export function answerQuiz(state,index){
   if(state.phase!=='quiz')throw Error('진행 중인 퀴즈가 없습니다.');
   const s=clone(state),q=QUIZZES.find(q=>q.id===s.quiz),p=current(s);
   if(!Number.isInteger(index)||index<0||index>=q.options.length)throw Error('답을 선택해 주세요.');
-  s.quizDeadline=null;p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
+  ensureQuizHistory(s);s.quizDeadline=null;p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
 }
-export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);s.phase='action';s.quiz=null;s.feedback=null;return s;}
+export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);ensureQuizHistory(s);s.phase='action';s.quiz=null;s.feedback=null;return s;}
 export function nextTurn(state){
   if(!['action','jailed'].includes(state.phase)||state.trade)throw Error('진행 중인 활동을 먼저 마쳐 주세요.');
   const s=checkBankruptcy(clone(state));if(s.phase==='finished')return s;s.turnNumber=(s.turnNumber??0)+1;s.lastSkipped=[];
@@ -309,6 +342,7 @@ export function isValidSave(s){
     if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
     if(s.boardLayout!==undefined&&s.boardLayout!==2)return false;
+    if(!validQuizHistory(s))return false;
     if(s.streamingHandled!==undefined&&typeof s.streamingHandled!=='boolean')return false;
     if(s.platformOwners!==undefined&&(!s.platformOwners||typeof s.platformOwners!=='object'||Array.isArray(s.platformOwners)||!Object.entries(s.platformOwners).every(([app,id])=>streamingApp(app)&&Number.isInteger(id)&&s.players[id])))return false;
     if(s.streamingInstallations!==undefined&&(!s.streamingInstallations||typeof s.streamingInstallations!=='object'||Array.isArray(s.streamingInstallations)||!Object.entries(s.streamingInstallations).every(([id,apps])=>WORKS.some(w=>w.id===id)&&apps&&typeof apps==='object'&&!Array.isArray(apps)&&Object.entries(apps).every(([app,owner])=>streamingApp(app)&&Number.isInteger(owner)&&s.players[owner]&&s.platformOwners?.[app]===owner))))return false;

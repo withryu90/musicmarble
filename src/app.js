@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=900051164f46';
-import {createListeningPlayer} from './listening-player.js?v=900051164f46';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=900051164f46';
-import {LobbyConfig} from './lobby-config.js?v=900051164f46';
-import {GameActions} from './game-actions.js?v=900051164f46';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=900051164f46';
-import {createMusicDirector} from './music-director.js?v=900051164f46';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=900051164f46';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=900051164f46';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=900051164f46';
-import {formatModalSentences} from './modal-sentences.js?v=900051164f46';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=900051164f46';
-import {WORK_ARTWORK} from './work-artwork.js?v=900051164f46';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=900051164f46';
-import {RankingClient} from './ranking.js?v=900051164f46';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=900051164f46';
-import {HandoffCountdown} from './handoff-countdown.js?v=900051164f46';
-import {fitBoardTitles} from './board-type.js?v=900051164f46';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=900051164f46';
-import * as G from './engine.js?v=900051164f46';
-import {ActivityInbox} from './activities.js?v=900051164f46';
-import {purchaseQuizById} from './purchase-quizzes.js?v=900051164f46';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=900051164f46';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=900051164f46';
-import {diceCube} from './dice.js?v=900051164f46';
-import {CHARACTER_BIOS} from './character-bios.js?v=900051164f46';
-import {needsLandscape} from './orientation.js?v=900051164f46';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=900051164f46';
-import {GameTransport} from './game-transport.js?v=900051164f46';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=900051164f46';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=900051164f46';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=900051164f46';
+import {playerStatus} from './player-status.js?v=3c11515d1029';
+import {createListeningPlayer} from './listening-player.js?v=3c11515d1029';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=3c11515d1029';
+import {LobbyConfig} from './lobby-config.js?v=3c11515d1029';
+import {GameActions} from './game-actions.js?v=3c11515d1029';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=3c11515d1029';
+import {createMusicDirector} from './music-director.js?v=3c11515d1029';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=3c11515d1029';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=3c11515d1029';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=3c11515d1029';
+import {formatModalSentences} from './modal-sentences.js?v=3c11515d1029';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=3c11515d1029';
+import {WORK_ARTWORK} from './work-artwork.js?v=3c11515d1029';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=3c11515d1029';
+import {RankingClient} from './ranking.js?v=3c11515d1029';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=3c11515d1029';
+import {HandoffCountdown} from './handoff-countdown.js?v=3c11515d1029';
+import {fitBoardTitles} from './board-type.js?v=3c11515d1029';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=3c11515d1029';
+import * as G from './engine.js?v=3c11515d1029';
+import {ActivityInbox} from './activities.js?v=3c11515d1029';
+import {purchaseQuizById} from './purchase-quizzes.js?v=3c11515d1029';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=3c11515d1029';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=3c11515d1029';
+import {diceCube} from './dice.js?v=3c11515d1029';
+import {CHARACTER_BIOS} from './character-bios.js?v=3c11515d1029';
+import {needsLandscape} from './orientation.js?v=3c11515d1029';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=3c11515d1029';
+import {GameTransport} from './game-transport.js?v=3c11515d1029';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=3c11515d1029';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=3c11515d1029';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=3c11515d1029';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -336,9 +336,14 @@ function concertPlanningModal(){
  showModal('도착한 작품으로 공연을 기획할까요?',`<div class="notice"><small>현재 도착한 작품</small><h3>${esc(w.composer)} · 「${esc(w.title)}」</h3></div><p class="concert-planning-intro">이 작품에 100 MC로 공연을 기획합니다. 기본 이용료가 20 MC 올라가고, 현재 칸에 작은 공연장이 세워져요. 작품마다 한 번만 가능합니다.</p><button class="concert-cta full" data-action="upgrade" ${!G.canUpgrade(state,w.id)?'disabled':''}>${concertPlanningIcon()}<span><strong>100 MC로 공연 기획하기</strong><small>현재 도착한 작품에 적용</small></span></button><button class="secondary full" data-action="next">공연하지 않고 차례 넘기기 →</button><button class="text-button full" data-action="close">취소하고 보드로 돌아가기</button>`,'concert-planning-modal');
 }
 function concertHall(){return `<span class="concert-hall" role="img" aria-label="공연 기획 완료 · 작은 공연장"><svg viewBox="0 0 80 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 59 53 68 75 55 30 47Z" fill="#3e6581"/><path d="M16 27 51 35 51 59 16 51Z" fill="#f8e7bb"/><path d="M51 35 68 25 68 49 51 59Z" fill="#c99b50"/><path d="M9 26 45 7 74 23 51 37Z" fill="#436d99"/><path d="M9 26 45 7 51 16 20 30Z" fill="#638fb6"/><path d="M22 34 27 35 27 52 22 51ZM42 38 47 39 47 56 42 55Z" fill="#fff9e9"/><path d="M30 40Q35 31 40 42V55L30 53Z" fill="#29537d"/><path d="M34 41H38V53H34Z" fill="#91cce6"/><path d="M54 38 59 35V43L54 46ZM62 33 66 31V39L62 42Z" fill="#fff1b6"/><path d="M11 54 50 63 71 51V56L51 68 11 59Z" fill="#e3c17e"/><path d="M47 15V25C41 23 39 29 44 30 48 30 50 28 50 25V18L57 16V12Z" fill="#ffdf78"/></svg></span>`;}
+function bailOffer(){
+ const p=G.current(state);
+ if(!myTurn()||state.phase!=='jailed'||!p.skipTurns||p.bailPaid)return '';
+ return `<section class="bail-offer"><p>보석금을 내고 석방되겠습니까?</p><button class="primary full" data-action="pay-bail" ${G.canPayBail(state)?'':'disabled'}>보석금 ${G.BAIL_AMOUNT} MC 내기</button><small>지불하면 이번 차례는 마치고,<br>다음 자기 차례에 일반 주사위로 바로 탈출합니다.</small>${p.coins<G.BAIL_AMOUNT?'<small>보석금을 내기 위한 뮤직코인이 부족해요.</small>':''}</section>`;
+}
 function turnHandoffModal(){
  const next=state.players[G.nextPlayerIndex(state)],finishing=!!G.firstFinisher(state),continuing=!finishing&&next.id===state.turn;
- showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'':continuing?'다른 참가자들은 모두 완주했어요. 10초 후 나의 다음 차례로 자동으로 넘어갑니다.':'10초 후 다음 참가자에게 자동으로 차례를 넘깁니다.'}</p>${finishing?'':concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
+ showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'':continuing?'다른 참가자들은 모두 완주했어요. 10초 후 나의 다음 차례로 자동으로 넘어갑니다.':'10초 후 다음 참가자에게 자동으로 차례를 넘깁니다.'}</p>${finishing?'':bailOffer()+concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +80 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
  $('#modal').dataset.auto='true';
  if(!finishing){
   const code=session.code,turn=state.turn,turnNumber=state.turnNumber;
@@ -383,14 +388,14 @@ function showActivity(item){
   showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
   const purchaseResult=item.type==='purchase-quiz-result';
-  const symbols={'backward-entry':'⚄','first-finish':'⚑',bankruptcy:'⚑','backward-move':'↶',purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
+  const symbols={'backward-entry':'⚄','first-finish':'⚑',bankruptcy:'⚑','backward-move':'↶',purchase:'♫',rent:'⇄',sale:'↩',upgrade:'♬','quiz-result':'?','bail-paid':'⚖','prison-transfer':'↪','prison-entry':'▥','prison-skip':'▥','prison-roll':'⚄','start-bonus':'↻',concert:'♪','trade-complete':'⇄','trade-offer':'↗','trade-cancelled':'–','copyright-transfer':'©','copyright-transfer-skipped':'©'};
   const ledger=(item.changes||[]).map(c=>`<div><span>${characterSprite(state.players[c.playerId])}<b>${esc(state.players[c.playerId].name)}</b></span><strong class="${c.amount<0?'debit':'credit'}">${c.amount>0?'+':''}${num(c.amount)} <small>MC</small></strong></div>`).join('');
   const assignment=item.type==='copyright-transfer'?`<div class="activity-assignment"><div>${characterSprite(actor)}<b>${esc(actor.name)}</b><small>양도하는 참가자</small></div><span aria-hidden="true">→</span><div>${characterSprite(other)}<b>${esc(other.name)}</b><small>양도받는 참가자</small></div></div><p class="assignment-price">작품 구입가 ${num(item.amount)} MC 기준 · 무상 양도</p>`:'';
   const amount=item.type==='trade-offer'?`<div class="activity-proposal">${esc(actor.name)} → ${esc(other.name)}<strong>${num(item.amount)} MC</strong></div>`:'';
   const ownPurchaseQuestion=item.type==='purchase-quiz-result'&&item.actorId===session.playerId&&state.purchaseChallenge?.workId===item.workId?purchaseQuizById(state.purchaseChallenge.questionId):null;
  const verdict=item.type==='purchase-quiz-result'?quizVerdict(item.correct,null,ownPurchaseQuestion?(ownPurchaseQuestion.answer?'O · 맞다':'X · 아니다'):null):item.type==='quiz-result'?quizVerdict(item.correct):'';
  const limited=item.type==='rent'&&item.expected!==null&&item.amount<item.expected?`<p class="muted">기준 이용료 ${num(item.expected)} MC 중 잔액 한도에서 ${num(item.amount)} MC를 지급했습니다.</p>`:'';
-  showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${item.appId?streamingIcon(item.appId):symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult||item.type==='quiz-result'?'':`<p class="activity-description">${item.type==='prison-entry'?prisonDescription():esc(item.text)}</p>`}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${footer}`,purchaseResult?'activity-modal quiz-result-notice':'activity-modal');
+  showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${item.appId?streamingIcon(item.appId):symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult||item.type==='quiz-result'?'':`<p class="activity-description">${item.type==='prison-entry'?prisonDescription():esc(item.text)}</p>`}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${['prison-entry','prison-roll'].includes(item.type)&&item.actorId===state.turn?bailOffer():''}${footer}`,purchaseResult?'activity-modal quiz-result-notice':'activity-modal');
  }
  $('#modal').dataset.activity='true';
 }
@@ -561,7 +566,7 @@ function actionPanel(){
  let content='';
  if(state.phase==='roll')content=`<div class="roll-visual">${diceCube(state.dice||5)}<span>${p.skipTurns?`6이 나오면 즉시 탈출 · 남은 기회 ${p.skipTurns}번`:'다음 명곡은 어디에 있을까요?'}</span></div><button class="primary full" data-action="roll" ${busy?'disabled':''}>${busy?'여행하는 중…':p.skipTurns?'탈출 주사위 굴리기':'주사위 굴리기'} <span>↗</span></button>`;
  else if(state.phase==='backward-roll')content=`<div class="notice">주사위를 한 번 더 굴려 나온 숫자만큼 뒤로 이동합니다.</div><button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`;
- else if(state.phase==='jailed')content=`<div class="arrival"><span>불법 스트리밍 감옥</span><h3>${state.lastPrisonRoll?'이번 차례는 감옥에 머물러요':'6이 나오면 즉시 탈출!'}</h3><p>${state.lastPrisonRoll?(p.skipTurns?'다음 자기 차례에 한 번 더 탈출 주사위를 굴릴 수 있어요.':'두 번 도전을 마쳤어요. 다음 자기 차례부터 정상 이동해요.'):prisonDescription()}</p></div><button class="primary full" data-action="next">안내 확인하고 차례 마치기 →</button>`;
+ else if(state.phase==='jailed')content=`<div class="arrival"><span>불법 스트리밍 감옥</span><h3>${p.bailPaid?'보석금 납부 완료 · 다음 차례 석방':state.lastPrisonRoll?'이번 차례는 감옥에 머물러요':'6이 나오면 즉시 탈출!'}</h3><p>${p.bailPaid?'다음 자기 차례에 주사위를 굴려 나온 칸 수만큼 바로 이동합니다.':state.lastPrisonRoll?(p.skipTurns?'다음 자기 차례에 한 번 더 탈출 주사위를 굴릴 수 있어요.':'두 번 도전을 마쳤어요. 다음 자기 차례부터 정상 이동해요.'):prisonDescription()}</p></div>${bailOffer()}<button class="primary full" data-action="next">안내 확인하고 차례 마치기 →</button>`;
  else if(state.phase==='purchase-quiz'||state.phase==='purchase-feedback')content=`<div class="arrival"><span>음악 퀴즈</span><h3>${esc(c.title)}</h3><p>정답이면 뮤직코인을 내고 구입할 수 있어요. 오답이면 차감 없이 차례를 넘겨요.</p></div><button class="primary full" data-action="purchase-quiz-open">${state.phase==='purchase-quiz'?'음악 퀴즈 열기':'음악 퀴즈 해설 확인하기'} →</button>`;
  else if(state.phase==='quiz'||state.phase==='feedback')content=`<div class="arrival"><span>배움의 시간</span><h3>${state.phase==='quiz'?'함께 답을 골라 보세요':'답보다 중요한 해설'}</h3><p>퀴즈 정답 시 80 MC를 얻어요.</p></div><button class="primary full" data-action="quiz-open">${state.phase==='quiz'?'퀴즈 열기':'해설 확인하기'} →</button>`;
  else if(state.trade)content=`<div class="notice">거래 제안을 보냈어요. 상대 참가자의 응답을 기다려 주세요.</div><button class="primary full" data-action="trade-open">거래 제안 확인</button>`;
@@ -769,6 +774,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();return;}
  const mobileViewAction=mobileGame&&['board-zoom-in','board-zoom-out','board-zoom-reset','home','tab','filter','fullscreen','close','help','settings','history','export'].includes(a);
  if(busy&&!mobileViewAction)return;
+ if(a==='pay-bail'){handoffCountdown.stop();activeActivity=null;$('#modal').close();busy=true;try{await apply(G.payBail);}finally{busy=false;render();continueFlow();}return;}
  if(a==='streaming-open'){streamingModal();return;}
  if(['streaming-buy','streaming-install','streaming-skip'].includes(a)){const appId=el.dataset.app;$('#modal').close();await apply(a==='streaming-buy'?G.buyPlatform:a==='streaming-install'?G.installStreaming:G.skipStreaming,...(a==='streaming-install'?[appId]:[]));return;}
  if(a==='handoff-next'){await passHandoff();return;}

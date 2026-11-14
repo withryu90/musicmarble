@@ -276,3 +276,7 @@ dialog#modal::backdrop{background:#164d7959}
 
 #modal.streaming-modal .streaming-intro{font-weight:800;color:#173e62}
 #modal.streaming-modal .streaming-availability{text-align:center;font-size:11px;color:#53748d;margin:10px 0}
+
+#modal .bail-offer{margin:12px 0;padding:12px;border:1px solid #b7d8ef;border-radius:12px;background:#eaf5ff;text-align:center}
+#modal .bail-offer>p{margin:0 0 9px;font-weight:800;color:#173e62}
+#modal .bail-offer>small{display:block;margin-top:8px;font-size:11px;line-height:1.5;color:#466b89}

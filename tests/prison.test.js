@@ -37,3 +37,36 @@ test('legacy saves default to no prison and invalid attempts or locations are re
 test('room APIs enforce current-player and revision checks for escape rolls',()=>{
  const service=new RoomService();try{const a=service.create('A'),b=service.join(a.code,'B'),room=service.get(a.code);service.act(a.code,a.token,{action:'start',revision:room.revision});room.state=backToA(arrive());service.broadcast(room);const revision=room.revision;assert.throws(()=>service.act(b.code,b.token,{action:'roll',revision}));service.act(a.code,a.token,{action:'roll',revision});assert.equal(room.state.lastPrisonRoll.dice,room.state.dice);assert.throws(()=>service.act(a.code,a.token,{action:'roll',revision}));assert.ok(service.snapshot(room).activities.some(n=>n.type==='prison-roll'));}finally{service.close();}
 });
+
+test('bail deducts 400 once, stays this turn and frees any next dice roll after restoring the save',()=>{
+ for(const via of [false,true])for(const dice of [1,2,3,4,5,6]){
+ const initial=arrive(via),paid=G.payBail(initial);
+ assert.equal(initial.players[0].coins,1200);assert.equal(paid.players[0].coins,800);
+ assert.equal(paid.phase,'jailed');assert.equal(paid.turn,0);assert.equal(paid.players[0].position,11);
+ assert.equal(paid.players[0].skipTurns,0);assert.equal(paid.players[0].bailPaid,true);assert.ok(G.isValidSave(paid));
+ assert.throws(()=>G.payBail(paid));assert.throws(()=>G.roll(paid,dice));
+ const restored=JSON.parse(JSON.stringify(paid)),ready=backToA(restored),moved=G.roll(ready,dice);
+ assert.equal(moved.players[0].position,11+dice);assert.equal(moved.players[0].bailPaid,false);assert.equal(moved.lastPrisonRoll,null);assert.equal(moved.lastBail,null);assert.ok(G.isValidSave(moved));
+ const notices=activityChanges(initial,paid);assert.equal(notices.filter(n=>n.type==='bail-paid').length,1);assert.deepEqual(notices.at(-1).changes,[{playerId:0,amount:-400}]);
+ assert.equal(activityChanges(paid,structuredClone(paid)).some(n=>n.type==='bail-paid'),false);
+ }
+});
+test('bail rejects insufficient funds and invalid contexts, and can release after one failed escape',()=>{
+ const poor=arrive();poor.players[0].coins=399;assert.equal(G.canPayBail(poor),false);assert.throws(()=>G.payBail(poor));assert.equal(poor.players[0].coins,399);
+ assert.throws(()=>G.payBail(game()));const next=G.nextTurn(arrive());assert.throws(()=>G.payBail(next));
+ let s=G.roll(backToA(arrive()),2);s=G.payBail(s);assert.equal(s.lastPrisonRoll,null);assert.ok(G.isValidSave(s));assert.equal(G.roll(backToA(s),1).players[0].position,12);
+ const invalid=game();invalid.players[0].bailPaid=true;assert.equal(G.isValidSave(invalid),false);
+});
+test('bail preserves the existing duel bankruptcy rule and bots may choose the same optional release',()=>{
+ const s=arrive();s.players[0].coins=400;const paid=G.payBail(s);assert.equal(paid.phase,'finished');assert.equal(paid.endReason.type,'bankruptcy');assert.ok(G.isValidSave(paid));
+ const bot=arrive();bot.players[0].isBot=true;const choice=botDecision(bot,{},()=>0);assert.equal(choice.action,'payBail');const result=applyBotDecision(bot,choice);assert.equal(result.players[0].coins,800);assert.equal(botDecision(result,{},()=>0).action,'nextTurn');
+});
+test('room bail API authenticates the current prisoner and rejects stale or repeated payments',()=>{
+ const rooms=new RoomService({backgroundTimers:false});try{
+ const a=rooms.create('A'),b=rooms.join(a.code,'B'),room=rooms.get(a.code);room.state=arrive();rooms.broadcast(room);
+ const revision=room.revision;assert.throws(()=>rooms.act(b.code,b.token,{action:'payBail',revision}));
+ rooms.act(a.code,a.token,{action:'payBail',revision});assert.equal(room.state.players[0].coins,800);
+ assert.throws(()=>rooms.act(a.code,a.token,{action:'payBail',revision}));assert.throws(()=>rooms.act(a.code,a.token,{action:'payBail',revision:room.revision}));
+ assert.equal(room.state.players[0].coins,800);assert.equal(rooms.snapshot(room).activities.filter(a=>a.type==='bail-paid').length,1);
+ }finally{rooms.close();}
+});

@@ -1,6 +1,6 @@
-import {BOARD,WORKS,QUIZZES} from './data.js?v=900051164f46';
-import * as G from './engine.js?v=900051164f46';
-import {purchaseQuizById} from './purchase-quizzes.js?v=900051164f46';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=3c11515d1029';
+import * as G from './engine.js?v=3c11515d1029';
+import {purchaseQuizById} from './purchase-quizzes.js?v=3c11515d1029';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
 export function botDecision(state,previous={},random=Math.random){
@@ -18,7 +18,7 @@ export function botDecision(state,previous={},random=Math.random){
   }
   const p=G.current(state);if(!p.isBot)return null;
   if(['roll','backward-roll'].includes(state.phase))return decide('roll');
-  if(state.phase==='jailed')return decide('nextTurn');
+  if(state.phase==='jailed')return decide(!state.lastPrisonRoll&&G.canPayBail(state)&&p.coins>=G.BAIL_AMOUNT+600&&random()<.3?'payBail':'nextTurn');
   if(state.phase==='purchase-quiz'){const q=purchaseQuizById(state.purchaseChallenge.questionId);return decide('answerPurchaseQuiz',[random()<.65?q.answer:!q.answer]);}
   if(state.phase==='purchase-feedback')return decide('closePurchaseFeedback');
   if(state.phase==='quiz'){
@@ -50,7 +50,7 @@ export function botDecision(state,previous={},random=Math.random){
 export function applyBotDecision(state,decision,dice){
   if(!decision)return state;
   if(decision.action==='roll')return G.roll(state,dice);
-  const actions={buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
+  const actions={payBail:G.payBail,buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
   if(!Object.hasOwn(actions,decision.action))throw Error('잘못된 봇 동작입니다.');
   return actions[decision.action](state,...decision.args);
 }

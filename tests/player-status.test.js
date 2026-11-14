@@ -4,15 +4,21 @@ import {playerStatus} from '../src/player-status.js';
 import {RoomService} from '../src/room-service.js';
 const state={phase:'roll',turn:0,players:[{id:0},{id:1}]};
 test('player badges distinguish waiting, quizzes, feedback, listening, moving and typing',()=>{
- assert.equal(playerStatus(state,0),'주사위 준비 중');assert.equal(playerStatus(state,1),'대기 중');
- assert.equal(playerStatus({...state,phase:'quiz'},0),'배움 퀴즈 푸는 중');
- assert.equal(playerStatus({...state,phase:'purchase-quiz'},0),'음악 퀴즈 푸는 중');
- assert.equal(playerStatus({...state,phase:'purchase-quiz',purchaseChallenge:{hint:{until:2000}}},0,{now:1000}),'대표 선율 듣는 중');
- assert.equal(playerStatus({...state,phase:'feedback'},0),'퀴즈 결과 확인 중');
- assert.equal(playerStatus(state,0,{presentation:{playerId:0,moving:true}}),'이동 중');
+ assert.equal(playerStatus(state,0),'진행 중');assert.equal(playerStatus(state,1),'대기 중');
+ assert.equal(playerStatus({...state,phase:'quiz'},0),'퀴즈 중');
+ assert.equal(playerStatus({...state,phase:'purchase-quiz'},0),'퀴즈 중');
+ assert.equal(playerStatus({...state,phase:'purchase-quiz',purchaseChallenge:{hint:{until:2000}}},0,{now:1000}),'퀴즈 중');
+ assert.equal(playerStatus({...state,phase:'feedback'},0),'진행 중');
+ assert.equal(playerStatus(state,0,{presentation:{playerId:0,moving:true}}),'진행 중');
  assert.equal(playerStatus(state,1,{typingUntil:2000,now:1000}),'채팅 중');
  assert.equal(playerStatus(state,1,{typingUntil:999,now:1000}),'대기 중');
- assert.equal(playerStatus({...state,phase:'finished'},1,{typingUntil:2000,now:1000}),'게임 종료');
+ assert.equal(playerStatus({...state,phase:'finished'},1,{typingUntil:2000,now:1000}),'대기 중');
+});
+test('purchase, trade, dice and other actions all use the same progress label',()=>{
+ for(const phase of ['action','feedback','purchase-feedback','roll','backward-roll','jailed'])assert.equal(playerStatus({...state,phase},0),'진행 중');
+ assert.equal(playerStatus({...state,trade:{from:0,to:1}},1),'진행 중');
+ assert.equal(playerStatus(state,0,{presentation:{playerId:0,moving:false}}),'진행 중');
+ assert.equal(playerStatus({...state,phase:'purchase-quiz'},0,{typingUntil:2000,now:1000}),'채팅 중');
 });
 test('authenticated typing is room scoped, expires and never changes the game revision or content',()=>{
  const service=new RoomService({backgroundTimers:false});try{

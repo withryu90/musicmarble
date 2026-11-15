@@ -104,11 +104,11 @@ test('concert notices select the supplied recording and replayed room snapshots 
  assert.equal(await sfx.play('concert','ROOM:event:42'),false);assert.equal(ctx.voices.length,voices);
  sfx.setEnabled(false);assert.equal(await sfx.play('concert','ROOM:event:43'),false);
 });
-test('concert uses the unedited supplied AAC recording at a moderate playback gain',async()=>{
+test('concert uses the shortened fade-out AAC recording at a moderate playback gain',async()=>{
  const {readFile}=await import('node:fs/promises'),{createHash}=await import('node:crypto');
  const data=await readFile(new URL(RECORDED_EFFECTS.concert));
- assert.equal(data.toString('ascii',4,8),'ftyp');assert.equal(data.length,236291);
- assert.equal(createHash('sha256').update(data).digest('hex'),'da698fa5b1b3ba5e6d2e8e44549e779a6d0f9a06699c2e562f5acc3c41b1926c');
+ assert.equal(data.toString('ascii',4,8),'ftyp');assert.equal(data.length,132393);
+ assert.equal(createHash('sha256').update(data).digest('hex'),'06e679c51f3aa90a4ee41d76502558a84b14af3d6bd47ae45d429428353d6b92');
  const ctx=context(),gains=[];ctx.createGain=()=>{const node={gain:param(),connect(){},disconnect(){}};gains.push(node);return node;};
  const sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});assert.equal(await sfx.play('concert'),true);assert.equal(gains.at(-1).gain.value,.85);
  await sfx.play('prison');assert.equal(gains.at(-1).gain.value,.7);

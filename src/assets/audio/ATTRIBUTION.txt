@@ -43,11 +43,12 @@ Stereo 22.05 kHz 16-bit PCM WAV; circular echoes preserve the loop boundary.
 
 Concert opening: concert-opening.m4a
 Source: user-supplied recording, original filename: 용산동 2.m4a
-Original AAC/M4A file, stereo 48 kHz, approximately 13.89 seconds.
-No trimming, re-encoding, time stretching or pitch changes.
-Playback gain: 0.85 (original file unchanged).
-SHA-256: da698fa5b1b3ba5e6d2e8e44549e779a6d0f9a06699c2e562f5acc3c41b1926c
-File size: 236291 bytes.
+Excerpt: first 6.5 seconds; final 1.5 seconds fade out (5.0–6.5 seconds).
+Re-encoded AAC, stereo 48 kHz, 160 kbps. No time stretching or pitch changes.
+Original source retained outside the game assets (approximately 13.89 seconds).
+Playback gain: 0.85.
+SHA-256 of edited asset: 06e679c51f3aa90a4ee41d76502558a84b14af3d6bd47ae45d429428353d6b92
+File size: 132393 bytes.
 User-provided audio; no public-domain or open-licence designation is asserted.
 Replaces the former historical Beethoven Ode to Joy concert effect.
 Plays once per concert notice alongside BGM; the global bell mutes both.

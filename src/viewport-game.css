@@ -223,9 +223,9 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 .game-shell[data-mobile="false"][data-tab="board"] .board-area .board-scene{
  transform:translate(-50%,-50%) translate(var(--board-pan-x,0px),var(--board-pan-y,0px)) scale(var(--board-zoom,1));transform-origin:center;touch-action:none;
 }
-.game-shell[data-mobile="false"][data-tab="board"] .board-tools .mobile-board-zoom{display:flex;align-items:center;gap:2px}
-.game-shell[data-mobile="false"][data-tab="board"] .mobile-board-zoom button{display:grid;place-items:center;min-width:28px;height:24px;padding:2px 5px;color:#245d82;background:#f1f8fc;border:1px solid #bad9eb;border-radius:6px;font-size:13px;line-height:1}
-.game-shell[data-mobile="false"][data-tab="board"] .mobile-board-zoom [data-action="board-zoom-reset"]{min-width:46px;font-size:11px}
+.game-shell[data-mobile="false"][data-tab="board"] .board-tools .mobile-board-zoom{display:flex;align-items:center;gap:1px}
+.game-shell[data-mobile="false"][data-tab="board"] .mobile-board-zoom button{display:grid;place-items:center;min-width:22px;height:20px;min-height:20px;padding:1px 3px;color:#245d82;background:#f1f8fc;border:1px solid #bad9eb;border-radius:4px;font-size:11px;line-height:1}
+.game-shell[data-mobile="false"][data-tab="board"] .mobile-board-zoom [data-action="board-zoom-reset"]{min-width:38px;font-size:10px}
 
 /* The transparent progress banner must never intercept board-control clicks. */
 .game-shell[data-mobile="false"][data-tab="board"] .board-toolbar{position:relative;z-index:20;isolation:isolate}

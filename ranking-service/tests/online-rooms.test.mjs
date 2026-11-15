@@ -50,7 +50,7 @@ test('quiz expiration is processed on server reads without a host timer or dupli
  const db=database();try{
   const {host}=await setup(db);await act(db,host,'start');await act(db,host,'roll');
   let row=db.sqlite.prepare('SELECT * FROM online_rooms WHERE code = ?').get(host.code),room=JSON.parse(row.payload);
-  room.state.phase='action';room.state.quizUsed=false;db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);
+  room.state.phase='action';room.state.players[0].position=1;room.state.quizUsed=false;db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);
   await act(db,host,'startQuiz');await act(db,host,'beginQuizTimer');
   row=db.sqlite.prepare('SELECT * FROM online_rooms WHERE code = ?').get(host.code);room=JSON.parse(row.payload);room.state.quizDeadline=Date.now()-1;
   db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);

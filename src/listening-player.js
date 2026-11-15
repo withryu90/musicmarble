@@ -1,4 +1,9 @@
-import {LISTENING_HINTS} from './listening-hints.js?v=d60475243316';
+import {LISTENING_HINTS} from './listening-hints.js?v=749829219847';
+// Derive the end envelope from the original timeline, including after pause/resume.
+export function listeningFadeEnvelope(duration,offset=0,volume=1){
+ const fade=Math.min(1.5,duration*.3),remaining=duration-offset;
+ return {gain:volume*Math.min(1,remaining/fade),hold:Math.max(0,remaining-fade),remaining};
+}
 export function createListeningPlayer({hints=LISTENING_HINTS,fetchFn=globalThis.fetch.bind(globalThis),createContext=()=>new (window.AudioContext||window.webkitAudioContext)(),onChange=()=>{},onStart=()=>{},onEnd=()=>{}}={}){
  let context=null,source=null,playing=null,finish=null;const cache=new Map();
  const ctx=()=>context||(context=createContext());
@@ -22,8 +27,12 @@ export function createListeningPlayer({hints=LISTENING_HINTS,fetchFn=globalThis.
   if(cache.get(id)?.state!=='ready'||context?.state!=='running')throw Error('음원을 재생하지 못했어요.');
   const entry=cache.get(id),from=resume?(entry.paused?entry.offset:offset):0;
   if(!Number.isFinite(from)||from<0||from>=entry.buffer.duration)throw Error('재생할 구간이 남아 있지 않아요.');
-  stop();const node=context.createBufferSource(),gain=context.createGain();node.buffer=entry.buffer;gain.gain.value=hints[id].original?1:.65;node.connect(gain);gain.connect(context.destination);
-  const started=context.currentTime||0;entry.offset=from;entry.paused=false;
+  stop();const node=context.createBufferSource(),gain=context.createGain();node.buffer=entry.buffer;node.connect(gain);gain.connect(context.destination);
+  const started=context.currentTime||0,volume=hints[id].original?1:.65,envelope=listeningFadeEnvelope(entry.buffer.duration,from,volume);
+  gain.gain.setValueAtTime(envelope.gain,started);
+  if(envelope.hold>0)gain.gain.setValueAtTime(volume,started+envelope.hold);
+  gain.gain.linearRampToValueAtTime(0,started+envelope.remaining);
+  entry.offset=from;entry.paused=false;
   source=node;playing=id;let ended=false;
   const done=(reason='ended')=>{if(ended)return;ended=true;node.disconnect();gain.disconnect();if(source===node){entry.offset=reason==='pause'?Math.min(entry.buffer.duration,from+Math.max(0,(context.currentTime||0)-started)):reason==='ended'?entry.buffer.duration:0;entry.paused=reason==='pause'&&entry.offset<entry.buffer.duration;source=null;playing=null;finish=null;onEnd(id);onChange();}};
   finish=done;node.onended=()=>done();

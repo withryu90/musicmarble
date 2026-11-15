@@ -9,6 +9,9 @@ dialog#modal::backdrop{background:#164d7959}
 #modal p,#modal .guide li,#modal .guide p{color:#5b7e9a}
 #modal .eyebrow,#modal .guide li::marker{color:#2388c0}
 #modal .guide li>b{color:#225a83}
+/* Keep list markers inside the scrollable dialog at every text size. */
+#modal .guide{padding-inline-start:2.6em;padding-inline-end:.25em;list-style-position:outside}
+#modal .guide li{padding-inline-start:.35em}
 #modal .muted,#modal small,#modal .work-modal-meta>span:last-child{color:#6b8aa3}
 #modal .icon-button{color:#2887be;background:#edf8ff;border-color:#cce7f7}
 #modal .primary{background:linear-gradient(180deg,#269cde,#1287cd);color:#fff;border:1px solid #1286c9;border-bottom:3px solid #086aab;border-radius:11px;font-weight:700;box-shadow:0 3px 8px #148bca1a}

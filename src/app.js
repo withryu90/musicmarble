@@ -1,36 +1,36 @@
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=9f3ef2e2b87b';
-import {playerStatus} from './player-status.js?v=9f3ef2e2b87b';
-import {createListeningPlayer} from './listening-player.js?v=9f3ef2e2b87b';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=9f3ef2e2b87b';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=9f3ef2e2b87b';
-import {GameActions} from './game-actions.js?v=9f3ef2e2b87b';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=9f3ef2e2b87b';
-import {createMusicDirector} from './music-director.js?v=9f3ef2e2b87b';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=9f3ef2e2b87b';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=9f3ef2e2b87b';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=9f3ef2e2b87b';
-import {formatModalSentences} from './modal-sentences.js?v=9f3ef2e2b87b';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=9f3ef2e2b87b';
-import {WORK_ARTWORK} from './work-artwork.js?v=9f3ef2e2b87b';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=9f3ef2e2b87b';
-import {RankingClient} from './ranking.js?v=9f3ef2e2b87b';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=9f3ef2e2b87b';
-import {HandoffCountdown} from './handoff-countdown.js?v=9f3ef2e2b87b';
-import {fitBoardTitles} from './board-type.js?v=9f3ef2e2b87b';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=9f3ef2e2b87b';
-import * as G from './engine.js?v=9f3ef2e2b87b';
-import {ActivityInbox,visibleActivities} from './activities.js?v=9f3ef2e2b87b';
-import {purchaseQuizById} from './purchase-quizzes.js?v=9f3ef2e2b87b';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9f3ef2e2b87b';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9f3ef2e2b87b';
-import {diceCube} from './dice.js?v=9f3ef2e2b87b';
-import {CHARACTER_BIOS} from './character-bios.js?v=9f3ef2e2b87b';
-import {needsLandscape} from './orientation.js?v=9f3ef2e2b87b';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=9f3ef2e2b87b';
-import {GameTransport} from './game-transport.js?v=9f3ef2e2b87b';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=9f3ef2e2b87b';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=9f3ef2e2b87b';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=9f3ef2e2b87b';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=8e61fac21b67';
+import {playerStatus} from './player-status.js?v=8e61fac21b67';
+import {createListeningPlayer} from './listening-player.js?v=8e61fac21b67';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=8e61fac21b67';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=8e61fac21b67';
+import {GameActions} from './game-actions.js?v=8e61fac21b67';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=8e61fac21b67';
+import {createMusicDirector} from './music-director.js?v=8e61fac21b67';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=8e61fac21b67';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=8e61fac21b67';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=8e61fac21b67';
+import {formatModalSentences} from './modal-sentences.js?v=8e61fac21b67';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=8e61fac21b67';
+import {WORK_ARTWORK} from './work-artwork.js?v=8e61fac21b67';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=8e61fac21b67';
+import {RankingClient} from './ranking.js?v=8e61fac21b67';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=8e61fac21b67';
+import {HandoffCountdown} from './handoff-countdown.js?v=8e61fac21b67';
+import {fitBoardTitles} from './board-type.js?v=8e61fac21b67';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=8e61fac21b67';
+import * as G from './engine.js?v=8e61fac21b67';
+import {ActivityInbox,visibleActivities} from './activities.js?v=8e61fac21b67';
+import {purchaseQuizById} from './purchase-quizzes.js?v=8e61fac21b67';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=8e61fac21b67';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=8e61fac21b67';
+import {diceCube} from './dice.js?v=8e61fac21b67';
+import {CHARACTER_BIOS} from './character-bios.js?v=8e61fac21b67';
+import {needsLandscape} from './orientation.js?v=8e61fac21b67';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=8e61fac21b67';
+import {GameTransport} from './game-transport.js?v=8e61fac21b67';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=8e61fac21b67';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=8e61fac21b67';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=8e61fac21b67';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -361,7 +361,7 @@ function bailOffer(){
 }
 function turnHandoffModal(){
  const next=state.players[G.nextPlayerIndex(state)],finishing=!!G.firstFinisher(state),continuing=!finishing&&next.id===state.turn;
- showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'':continuing?'다른 참가자들은 모두 완주했어요. 10초 후 나의 다음 차례로 자동으로 넘어갑니다.':'10초 후 다음 참가자에게 자동으로 차례를 넘깁니다.'}</p>${finishing?'':bailOffer()+concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +30 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
+ showModal(finishing?'여행을 마무리해요':continuing?'다음 차례를 이어가요':'다음 참가자에게 차례를 넘겨요',`<div class="handoff-next-player">${characterSprite(next)}<div><small>${finishing?'설정한 여행을 모두 마쳤어요.':continuing?'남은 여행을 이어갈 참가자':'다음 참가자'}</small><strong>${finishing?'우리의 여행 결과':esc(next.name)}</strong></div></div><p class="handoff-description">${finishing?'':continuing?'다른 참가자들은 모두 완주했어요. 10초 후 나의 다음 차례로 자동으로 넘어갑니다.':'10초 후 다음 참가자에게 자동으로 차례를 넘깁니다.'}</p>${finishing?'':concertPlanningButton()}<button class="primary full" data-action="handoff-next">${finishing?'여행 결과 보기 →':continuing?'나의 다음 차례 계속하기 →':'다음 참가자에게 차례 넘기기 →'}</button>${state.phase==='action'&&!state.quizUsed&&!finishing?'<button class="secondary full" data-action="handoff-quiz">차례를 넘기기 전에 배움 퀴즈 풀기 · +30 MC</button>':''}<button class="text-button full" data-action="close">보드에서 더 살펴보기</button>`,'turn-handoff-modal');
  $('#modal').dataset.auto='true';
  if(!finishing){
   const code=session.code,turn=state.turn,turnNumber=state.turnNumber;
@@ -397,7 +397,7 @@ function showActivity(item){
  const effect=activitySound(item);if(effect)void soundEffects.play(effect,`${session.code}:${effect==='prison'?`prison:${state.turnNumber}:${item.actorId}`:`event:${item.id}`}`);
  const actor=state.players[item.actorId],other=state.players[item.otherId];
  if(item.type==='streaming-arrival'){streamingModal(item.appId);$('#modal').dataset.activity='true';return;}
- const footer=item.type==='backward-entry'&&item.actorId===state.turn&&state.phase==='backward-roll'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
+ const footer=item.type==='backward-entry'&&item.actorId===state.turn&&state.phase==='backward-roll'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">${item.type==='prison-entry'&&myTurn()&&G.canPayBail(state)?'보석금을 내지 않고 계속하기 →':`확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}`}</button></div>`;
  if(item.type==='bankruptcy'){
   showModal('파산 · 게임 종료',`<section class="bankruptcy-scene"><div class="bankruptcy-coins" aria-hidden="true"><span>MC</span><span>MC</span><span>MC</span></div><span class="bankruptcy-kicker">음악 투자의 마지막 순간</span><h2 class="bankruptcy-title">파산</h2><div class="bankruptcy-player">${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><div class="bankruptcy-balance"><strong>0</strong><span>MC</span></div><p class="bankruptcy-message">뮤직코인이 모두 소진되었습니다.</p><p class="bankruptcy-detail">${esc(actor.name)} 님의 파산으로<br>2인 게임이 종료됩니다.</p></section><button class="primary full" data-action="activity-next">최종 결과 확인하기 →</button>`,'activity-modal bankruptcy-modal');
  }else if(item.type==='concert'&&item.concert){

@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=45d8fd27e4ab';
-import {createListeningPlayer} from './listening-player.js?v=45d8fd27e4ab';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=45d8fd27e4ab';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=45d8fd27e4ab';
-import {GameActions} from './game-actions.js?v=45d8fd27e4ab';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=45d8fd27e4ab';
-import {createMusicDirector} from './music-director.js?v=45d8fd27e4ab';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=45d8fd27e4ab';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=45d8fd27e4ab';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=45d8fd27e4ab';
-import {formatModalSentences} from './modal-sentences.js?v=45d8fd27e4ab';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=45d8fd27e4ab';
-import {WORK_ARTWORK} from './work-artwork.js?v=45d8fd27e4ab';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=45d8fd27e4ab';
-import {RankingClient} from './ranking.js?v=45d8fd27e4ab';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=45d8fd27e4ab';
-import {HandoffCountdown} from './handoff-countdown.js?v=45d8fd27e4ab';
-import {fitBoardTitles} from './board-type.js?v=45d8fd27e4ab';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=45d8fd27e4ab';
-import * as G from './engine.js?v=45d8fd27e4ab';
-import {ActivityInbox,visibleActivities} from './activities.js?v=45d8fd27e4ab';
-import {purchaseQuizById} from './purchase-quizzes.js?v=45d8fd27e4ab';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=45d8fd27e4ab';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=45d8fd27e4ab';
-import {diceCube} from './dice.js?v=45d8fd27e4ab';
-import {CHARACTER_BIOS} from './character-bios.js?v=45d8fd27e4ab';
-import {needsLandscape} from './orientation.js?v=45d8fd27e4ab';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=45d8fd27e4ab';
-import {GameTransport} from './game-transport.js?v=45d8fd27e4ab';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=45d8fd27e4ab';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=45d8fd27e4ab';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=45d8fd27e4ab';
+import {playerStatus} from './player-status.js?v=a8ede83aad11';
+import {createListeningPlayer} from './listening-player.js?v=a8ede83aad11';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=a8ede83aad11';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=a8ede83aad11';
+import {GameActions} from './game-actions.js?v=a8ede83aad11';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=a8ede83aad11';
+import {createMusicDirector} from './music-director.js?v=a8ede83aad11';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=a8ede83aad11';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=a8ede83aad11';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=a8ede83aad11';
+import {formatModalSentences} from './modal-sentences.js?v=a8ede83aad11';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a8ede83aad11';
+import {WORK_ARTWORK} from './work-artwork.js?v=a8ede83aad11';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=a8ede83aad11';
+import {RankingClient} from './ranking.js?v=a8ede83aad11';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a8ede83aad11';
+import {HandoffCountdown} from './handoff-countdown.js?v=a8ede83aad11';
+import {fitBoardTitles} from './board-type.js?v=a8ede83aad11';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=a8ede83aad11';
+import * as G from './engine.js?v=a8ede83aad11';
+import {ActivityInbox,visibleActivities} from './activities.js?v=a8ede83aad11';
+import {purchaseQuizById} from './purchase-quizzes.js?v=a8ede83aad11';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a8ede83aad11';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a8ede83aad11';
+import {diceCube} from './dice.js?v=a8ede83aad11';
+import {CHARACTER_BIOS} from './character-bios.js?v=a8ede83aad11';
+import {needsLandscape} from './orientation.js?v=a8ede83aad11';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=a8ede83aad11';
+import {GameTransport} from './game-transport.js?v=a8ede83aad11';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=a8ede83aad11';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=a8ede83aad11';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=a8ede83aad11';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -248,6 +248,7 @@ function animateBoardMovement(p){
  p.timer=setTimeout(advance,720);
 }
 function receive(next){
+ if(!session?.code||next.code!==session.code)return;
  rememberRoomSnapshot(next);
  if(participantIntroPending&&snapshot?.state){if(next.revision>snapshot.revision&&!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);return;}
  if(snapshot&&next.revision<snapshot.revision)return;
@@ -802,6 +803,12 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='ranking-refresh'){void rankingClient.refresh(true);return;}
  // View controls do not change the shared game state and remain usable in motion.
  if(a==='board-view'){boardView=boardView==='3d'?'flat':'3d';render();return;}
+ if(a==='home'){
+  showModal('메인화면으로 돌아가겠습니까?',`<p>같은 브라우저에서 「이전 게임 이어하기」를 누르면 돌아올 수 있어요.</p><button class="primary full" data-action="leave">메인화면으로 이동</button><button class="secondary full" data-action="close">게임 계속하기</button>`,'home-confirm-modal');return;
+ }
+ if(a==='close'&&$('#modal').classList.contains('home-confirm-modal')){closeModal();return;}
+ if(a==='leave'){events?.close();connected=false;snapshot=null;session=null;resetActivityFlow();$('#modal').close();render();return;}
+
  const mobileViewAction=mobileGame&&['board-zoom-in','board-zoom-out','board-zoom-reset','home','tab','filter','fullscreen','close','help','settings','history','export'].includes(a);
  if(busy&&!mobileViewAction)return;
  if(a==='pay-bail'){handoffCountdown.stop();activeActivity=null;$('#modal').close();busy=true;try{await apply(G.payBail);}finally{busy=false;render();continueFlow();}return;}
@@ -813,7 +820,6 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoomStep(1);return;}
  if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoomStep(-1);return;}
  if(mobileGame&&a==='board-zoom-reset'){mobileCamera.reset();return;}
- if(a==='home'){tab='board';render();}
  if(a==='tab'){tab=el.dataset.tab;render();}
  if(a==='filter'){filter=el.dataset.id;render();}
  if(a==='enter-board'){closeModal();if(navigator.maxTouchPoints>0||matchMedia('(any-pointer:coarse)').matches)void enterFullscreen(document,window);return;}
@@ -868,7 +874,6 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='copy-code'){try{await navigator.clipboard.writeText(session.code);notify('공유 코드를 복사했어요. 사이트 주소도 함께 보내 주세요.');}catch{notify(`공유 코드: ${session.code}`);}}
  if(a==='leave-confirm')showModal('이 화면에서 나갈까요?',`<p>같은 브라우저에서 「이전 게임 이어하기」를 누르면 돌아올 수 있어요.</p><button class="primary full" data-action="leave">첫 화면으로 이동</button><button class="text-button" data-action="close">돌아가기</button>`,'leave-confirm-modal');
  if(a==='resume'){try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}await resume();}
- if(a==='leave'){events?.close();connected=false;snapshot=null;session=null;resetActivityFlow();$('#modal').close();render();}
 
 }
 function tradeModal(){const t=state.trade;if(!t)return;const receiver=session.playerId===t.to,proposer=session.playerId===t.from;

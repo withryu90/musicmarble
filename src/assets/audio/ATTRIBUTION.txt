@@ -42,13 +42,14 @@ No third-party recording, melody, sample or soundfont was copied.
 Stereo 22.05 kHz 16-bit PCM WAV; circular echoes preserve the loop boundary.
 
 Concert opening: concert-opening.m4a
-Source: user-supplied recording, original filename: 용산동 2.m4a
-Excerpt: first 6.5 seconds; final 1.5 seconds fade out (5.0–6.5 seconds).
+Source: user-supplied recording, original filename: 카르멘.m4a
+Excerpt: first 6.5 seconds; final 1.5 seconds fade out (5–6.5 seconds).
 Re-encoded AAC, stereo 48 kHz, 160 kbps. No time stretching or pitch changes.
-Original source retained outside the game assets (approximately 13.89 seconds).
+Original source retained outside the game assets (7.529 seconds).
+SHA-256 of supplied source: 211dd35bf87b4f14e99ad1ac3ec3e18acb7382151ed562cac8660e36d9c3a9c6
 Playback gain: 0.85.
-SHA-256 of edited asset: 06e679c51f3aa90a4ee41d76502558a84b14af3d6bd47ae45d429428353d6b92
-File size: 132393 bytes.
+SHA-256 of edited asset: 957cd17d3c1d08c79766f58d058dfc10ced5873e3acb09529e8aa91782f390bb
+File size: 132985 bytes.
 User-provided audio; no public-domain or open-licence designation is asserted.
-Replaces the former historical Beethoven Ode to Joy concert effect.
+Replaces the former user-supplied 용산동 2 concert effect.
 Plays once per concert notice alongside BGM; the global bell mutes both.

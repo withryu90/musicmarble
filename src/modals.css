@@ -351,3 +351,6 @@ dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close
 
 .streaming-owned-owner{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0 22px;text-align:center}
 .streaming-owned-owner p{color:#315b79;font-size:16px;font-weight:500}.streaming-owned-owner p strong{font-weight:800;color:#174b72}
+
+.game-shell .header-actions .developer-mode-button{display:grid;place-items:center;padding:0;line-height:1;text-align:center;flex-shrink:0}
+.game-shell .developer-mode-button .developer-tool-icon{display:grid;place-items:center;width:18px;height:18px;margin:0;padding:0;font-size:16px;line-height:1;pointer-events:none}

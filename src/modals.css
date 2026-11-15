@@ -348,3 +348,6 @@ dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close
 @media(max-width:520px){.developer-grid{gap:8px}.developer-form{padding:8px}}
 
 .concert-reading-time{text-align:center;font-weight:700;color:#244b70;background:#edf5ffdc;border-radius:8px;padding:10px;margin:12px 0 0;font-size:12px}
+
+.streaming-owned-owner{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0 22px;text-align:center}
+.streaming-owned-owner p{color:#315b79;font-size:16px;font-weight:500}.streaming-owned-owner p strong{font-weight:800;color:#174b72}

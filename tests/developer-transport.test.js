@@ -18,10 +18,11 @@ test('fixed dice uses actual engine result and rejects invalid numbers and stale
  await assert.rejects(transport.request('action',{action:'roll',revision:0},session));await assert.rejects(debug('set-dice',{dice:7}));
  s=await debug('ready');assert.equal(s.rollPresentation,null);assert.equal(s.state.phase,'roll');await debug('set-dice',{dice:null});assert.equal(transport.snapshot().developerDice,null);
 });
-for(const kind of ['music','music-correct','music-wrong','learning','gain','loss','prison','concert','streaming','work-swap','finished','bankruptcy'])test(`developer preview: ${kind}`,async t=>{
+for(const kind of ['music','music-correct','music-wrong','learning','gain','loss','prison','concert','streaming','streaming-owned','work-swap','finished','bankruptcy'])test(`developer preview: ${kind}`,async t=>{
  const {t:transport,debug}=setup();t.after(()=>transport.close());const s=await debug('scenario',{kind});assert.ok(G.isValidSave(s.state));assert.equal(s.gameId,null);
  if(kind==='gain')assert.ok(s.state.lastEvent.actual>0);if(kind==='loss')assert.ok(s.state.lastEvent.actual<0);
  if(kind==='music-correct'||kind==='music-wrong')assert.equal(s.state.purchaseChallenge.correct,kind==='music-correct');
+ if(kind==='streaming-owned'){assert.notEqual(s.state.platformOwners[BOARD[s.state.players[s.state.turn].position].id],s.state.turn);assert.equal(s.activities.at(-1).type,'streaming-arrival');}
  if(kind==='learning')assert.equal(s.state.phase,'quiz');if(kind==='finished'||kind==='bankruptcy')assert.equal(s.state.phase,'finished');
  const reset=await debug('reset');assert.equal(reset.state.players.length,4);assert.equal(reset.state.phase,'roll');
 });

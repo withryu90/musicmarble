@@ -93,3 +93,12 @@ test('declining or installing on a vacant work leaves its separate purchase OX o
   assert.equal(next.streamingHandled,true);assert.equal(next.purchaseChallenge,null);const quiz=G.startPurchaseQuiz(next);assert.equal(quiz.phase,'purchase-quiz');assert.ok(G.isValidSave(quiz));
  }
 });
+
+test('visiting another players acquired app allows immediate passing or optional learning without any coin charge',()=>{
+ for(const app of STREAMING_APPS.filter(a=>a.id!=='spotify')){
+  const s=game();s.platformOwners[app.id]=0;const visit=landing(s,app.id,1),balances=visit.players.map(p=>p.coins);
+  assert.equal(G.canBuyPlatform(visit),false);assert.equal(canOfferTurnHandoff(visit,1),true);assert.equal(canOfferTurnHandoff(visit,0),false);assert.equal(G.canStartLearningQuiz(visit),true);
+  const passed=G.nextTurn(visit);assert.equal(passed.turn,2);assert.equal(passed.phase,'roll');assert.deepEqual(passed.players.map(p=>p.coins),balances);assert.equal(passed.platformOwners[app.id],0);
+  assert.equal(G.startQuiz(visit).phase,'quiz');
+ }
+});

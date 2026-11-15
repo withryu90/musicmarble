@@ -1,8 +1,8 @@
-import * as G from './engine.js?v=e74d34b16d4b';
-import {BOARD,WORKS,EVENTS} from './data.js?v=e74d34b16d4b';
-import {purchaseQuizById} from './purchase-quizzes.js?v=e74d34b16d4b';
-import {RoomService} from './room-service.js?v=e74d34b16d4b';
-import {createRollPresentation} from './roll-presentation.js?v=e74d34b16d4b';
+import * as G from './engine.js?v=1aabec9056bf';
+import {BOARD,WORKS,EVENTS} from './data.js?v=1aabec9056bf';
+import {purchaseQuizById} from './purchase-quizzes.js?v=1aabec9056bf';
+import {RoomService} from './room-service.js?v=1aabec9056bf';
+import {createRollPresentation} from './roll-presentation.js?v=1aabec9056bf';
 
 // This service exists only in this browser. No developer action is sent to a server.
 export class DeveloperTransport{
@@ -58,10 +58,11 @@ export class DeveloperTransport{
     if(kind==='music-correct'||kind==='music-wrong'){const answer=purchaseQuizById(s.purchaseChallenge.questionId).answer;s=G.answerPurchaseQuiz(s,kind==='music-correct'?answer:!answer);}
    }else if(kind==='gain'||kind==='loss'){
     const cursor=s.eventCursor%s.eventDeck.length,target=s.eventDeck.indexOf(EVENTS.findIndex(e=>kind==='gain'?e.amount>0:e.amount<0));[s.eventDeck[cursor],s.eventDeck[target]]=[s.eventDeck[target],s.eventDeck[cursor]];s=this.jump(s,BOARD.findIndex(c=>c.type==='event'));
-   }else if(kind==='prison'||kind==='concert'||kind==='streaming'||kind==='work-swap'){
+   }else if(kind==='prison'||kind==='concert'||kind==='streaming'||kind==='streaming-owned'||kind==='work-swap'){
     if(kind==='work-swap'){s.ownership[WORKS[0].id]={player:s.turn,level:1};s.ownership[WORKS[1].id]={player:(s.turn+1)%s.players.length,level:0};}
     if(kind==='streaming')delete s.platformOwners[BOARD.find(c=>c.type==='streaming').id];
-    s=this.jump(s,BOARD.findIndex(c=>c.type===kind));
+    if(kind==='streaming-owned')s.platformOwners[BOARD.find(c=>c.type==='streaming').id]=(s.turn+1)%s.players.length;
+    s=this.jump(s,BOARD.findIndex(c=>c.type===(kind==='streaming-owned'?'streaming':kind)));
    }else if(kind==='finished')s=G.finishGame(s);
    else if(kind==='bankruptcy'){
     const names=this.room.members.slice(0,2).map(m=>m.name),characterIds=this.room.members.slice(0,2).map(m=>m.characterId);
@@ -72,6 +73,7 @@ export class DeveloperTransport{
   this.room.state=s;this.room.rollPresentation=null;this.room.synchronizeRolls=false;this.debugRevision++;
   // Manual edits should not masquerade as real purchases or completed cash trades.
   if(action!=='jump'&&action!=='scenario')this.room.publishedState=structuredClone(s);
+  if(action==='scenario'&&args.kind==='streaming-owned'){this.room.rollPresentation=createRollPresentation(this.room.publishedState,s,`dev-preview:${this.debugRevision}`,Date.now()-60000);this.room.rollPresentation.activityAfterId=this.room.activitySeq||0;}
   this.service.broadcast(this.room);return this.snapshot();
  }
  async request(path,body={},session){

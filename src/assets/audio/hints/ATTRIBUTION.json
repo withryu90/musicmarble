@@ -19,17 +19,17 @@
     },
     "bach-brandenburg": {
       "src": "./src/assets/audio/hints/originals/bach-brandenburg.m4a",
-      "duration": 6.505333333333334,
+      "duration": 9.321333333333333,
       "original": true,
-      "originalFilename": "2 바흐 브란덴부르크 협주곡.m4a",
-      "bytes": 115429,
-      "sha256": "956db918f0c2da610cf5877cc9f60643adbffbd280138e75de5785fd5626c40d",
+      "originalFilename": "바흐 브란덴부르크 협주곡.m4a",
+      "bytes": 178558,
+      "sha256": "3fa0d472988292d32ce2b16199ef2e0c128e97e9c6d7cda9fdcb6af4a4f3f4a7",
       "artist": "사용자 제공 음원",
       "source": "./src/assets/audio/hints/originals/bach-brandenburg.m4a",
       "sourceType": "user-provided",
       "section": "제공된 원본 음원 전체 감상",
       "edited": false,
-      "receivedAt": "2026-11-14",
+      "receivedAt": "2026-11-15",
       "rights": "게임에 적용하도록 사용자가 제공한 음원. 별도의 공개 라이선스는 지정되지 않았습니다."
     },
     "vivaldi-spring": {

@@ -1,36 +1,36 @@
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=640c9e8355cb';
-import {playerStatus} from './player-status.js?v=640c9e8355cb';
-import {createListeningPlayer} from './listening-player.js?v=640c9e8355cb';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=640c9e8355cb';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=640c9e8355cb';
-import {GameActions} from './game-actions.js?v=640c9e8355cb';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=640c9e8355cb';
-import {createMusicDirector} from './music-director.js?v=640c9e8355cb';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=640c9e8355cb';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=640c9e8355cb';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=640c9e8355cb';
-import {formatModalSentences} from './modal-sentences.js?v=640c9e8355cb';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=640c9e8355cb';
-import {WORK_ARTWORK} from './work-artwork.js?v=640c9e8355cb';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=640c9e8355cb';
-import {RankingClient} from './ranking.js?v=640c9e8355cb';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=640c9e8355cb';
-import {HandoffCountdown} from './handoff-countdown.js?v=640c9e8355cb';
-import {fitBoardTitles} from './board-type.js?v=640c9e8355cb';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=640c9e8355cb';
-import * as G from './engine.js?v=640c9e8355cb';
-import {ActivityInbox,visibleActivities} from './activities.js?v=640c9e8355cb';
-import {purchaseQuizById} from './purchase-quizzes.js?v=640c9e8355cb';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=640c9e8355cb';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=640c9e8355cb';
-import {diceCube} from './dice.js?v=640c9e8355cb';
-import {CHARACTER_BIOS} from './character-bios.js?v=640c9e8355cb';
-import {needsLandscape} from './orientation.js?v=640c9e8355cb';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=640c9e8355cb';
-import {GameTransport} from './game-transport.js?v=640c9e8355cb';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=640c9e8355cb';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=640c9e8355cb';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=640c9e8355cb';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=759b686def01';
+import {playerStatus} from './player-status.js?v=759b686def01';
+import {createListeningPlayer} from './listening-player.js?v=759b686def01';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=759b686def01';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=759b686def01';
+import {GameActions} from './game-actions.js?v=759b686def01';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=759b686def01';
+import {createMusicDirector} from './music-director.js?v=759b686def01';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=759b686def01';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=759b686def01';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=759b686def01';
+import {formatModalSentences} from './modal-sentences.js?v=759b686def01';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=759b686def01';
+import {WORK_ARTWORK} from './work-artwork.js?v=759b686def01';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=759b686def01';
+import {RankingClient} from './ranking.js?v=759b686def01';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=759b686def01';
+import {HandoffCountdown} from './handoff-countdown.js?v=759b686def01';
+import {fitBoardTitles} from './board-type.js?v=759b686def01';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=759b686def01';
+import * as G from './engine.js?v=759b686def01';
+import {ActivityInbox,visibleActivities} from './activities.js?v=759b686def01';
+import {purchaseQuizById} from './purchase-quizzes.js?v=759b686def01';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=759b686def01';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=759b686def01';
+import {diceCube} from './dice.js?v=759b686def01';
+import {CHARACTER_BIOS} from './character-bios.js?v=759b686def01';
+import {needsLandscape} from './orientation.js?v=759b686def01';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=759b686def01';
+import {GameTransport} from './game-transport.js?v=759b686def01';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=759b686def01';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=759b686def01';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=759b686def01';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -169,6 +169,7 @@ function remember(){try{localStorage.setItem(key,JSON.stringify(session));}catch
 let dicePresentation=null,lastPresentedRoll=null;
 const activityInbox=new ActivityInbox();
 const prisonNoticeAcks=new Map();
+let pendingDice=null;
 let activeActivity=null,deferredSnapshots=[],participantIntroPending=false;
 let autoPurchaseKey=null,lastHandoffKey=null;
 const handoffCountdown=new HandoffCountdown();
@@ -191,19 +192,34 @@ function publishTyping(active){
 setInterval(()=>{if(localTypingUntil&&localTypingUntil<=Date.now())publishTyping(false);updatePlayerStatuses();},500);
 
 function resetActivityFlow(){lastPresentedRoll=null;prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function clearPendingDice(){if(!pendingDice)return;clearInterval(pendingDice.ticker);pendingDice.element.remove();pendingDice=null;}
+function makeDiceOverlay(player){
+ const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');
+ element.innerHTML=`<div class="dice-stage"><span class="eyebrow">MUSIC MARBLE</span><h2>${esc(player.name)}의 주사위</h2><div class="rolling-die">${diceCube(1)}</div><strong class="dice-result">${mobileGame?'주사위를 굴려요…':'주사위를 굴리고 있어요…'}</strong><p>어떤 명곡을 만나게 될까요?</p></div>`;
+ document.body.append(element);return element;
+}
+function animateRollingFaces(element){let face=1;return setInterval(()=>{face=face%6+1;element.querySelector('.rolling-die').innerHTML=diceCube(face);},150);}
+function showPendingDice(player){
+ clearPendingDice();const element=makeDiceOverlay(player);element.classList.add('dice-immediate');
+ pendingDice={element,playerId:player.id,code:session.code,turnNumber:state.turnNumber,ticker:animateRollingFaces(element)};
+ void soundEffects.play('dice');
+}
 function stopDicePresentation(){
+ clearPendingDice();
  if(!dicePresentation)return;
  clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);clearTimeout(dicePresentation.startTimer);
  dicePresentation.element.remove();dicePresentation=null;busy=false;
 }
 function startDicePresentation(player,plan,clockOffset=0){
- const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');element.hidden=true;
- element.innerHTML=`<div class="dice-stage"><span class="eyebrow">MUSIC MARBLE</span><h2>${esc(player.name)}의 주사위</h2><div class="rolling-die">${diceCube(1)}</div><strong class="dice-result">${mobileGame?'주사위를 굴려요…':'주사위를 굴리고 있어요…'}</strong><p>어떤 명곡을 만나게 될까요?</p></div>`;
- document.body.append(element);busy=true;lastPresentedRoll=plan.id;
- const p={element,playerId:player.id,plan,now:()=>Date.now()+clockOffset,next:null,result:null,updates:[],resultSnapshot:null,before:structuredClone(plan.before),isBackwardRoll:plan.before.phase==='backward-roll',moving:false,step:0,ticker:null,timer:null,startTimer:null};dicePresentation=p;
+ const immediate=!!pendingDice&&pendingDice.code===session?.code&&pendingDice.playerId===player.id&&pendingDice.turnNumber===plan.turnNumber;
+ let element;
+ if(immediate){element=pendingDice.element;clearInterval(pendingDice.ticker);pendingDice=null;}
+ else{clearPendingDice();element=makeDiceOverlay(player);element.hidden=true;}
+ busy=true;lastPresentedRoll=plan.id;
+ const p={element,playerId:player.id,plan,now:()=>Date.now()+clockOffset,next:null,result:null,updates:[],resultSnapshot:null,before:structuredClone(plan.before),isBackwardRoll:plan.before.phase==='backward-roll',moving:false,step:0,ticker:immediate?animateRollingFaces(element):null,timer:null,startTimer:null};dicePresentation=p;
  p.startTimer=setTimeout(()=>{
   if(dicePresentation!==p)return;element.hidden=false;
-  if(p.now()<plan.resultAt){void soundEffects.play('dice');let face=1;p.ticker=setInterval(()=>{face=face%6+1;element.querySelector('.rolling-die').innerHTML=diceCube(face);},150);}
+  if(p.now()<plan.resultAt){if(!immediate)void soundEffects.play('dice');if(!p.ticker)p.ticker=animateRollingFaces(element);}
  },Math.max(0,plan.startAt-p.now()));
 }
 function presentDiceResult(next){
@@ -301,7 +317,7 @@ function commitSnapshot(next){
 }
 function statePromptKey(){return turnPromptKey(snapshot?.state?state:null);}
 function continueFlow(){
- if(dicePresentation||activeActivity||!snapshot?.state)return;
+ if(pendingDice||dicePresentation||activeActivity||!snapshot?.state)return;
  const d=$('#modal'),auto=statePromptKey();
  while(deferredSnapshots.length&&deferredSnapshots[0].revision<=snapshot.revision)deferredSnapshots.shift();
  if(shouldDrainTurnUpdates({deferred:deferredSnapshots.length,pending:activityInbox.pending.length,active:!!activeActivity,intro:participantIntroPending,dice:!!dicePresentation})&&(!d.open||d.dataset.auto==='true')){
@@ -899,8 +915,8 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
   if(a==='roll-backward'&&state.phase!=='backward-roll')return;
   if(activeActivity&&activeActivity.type!=='backward-entry')return;
   if(a==='roll-backward'){activeActivity=null;$('#modal').close();}
-  busy=true;render();
-  try{const next=await request('action',{code:session.code,action:'roll',args:[],synchronize:true,revision:snapshot.revision});receive(next);if(!dicePresentation){busy=false;render();continueFlow();}}
+  busy=true;$('#modal').close();showPendingDice(G.current(state));render();
+  try{const next=await request('action',{code:session.code,action:'roll',args:[],synchronize:true,revision:snapshot.revision});receive(next);if(!dicePresentation){clearPendingDice();busy=false;render();continueFlow();}}
   catch(error){const latest=dicePresentation?.next;stopDicePresentation();busy=false;if(latest)commitSnapshot(latest);else render();notify(error.message);}
  }
  if(a==='purchase-quiz'){closeModal();await apply(G.startPurchaseQuiz);}

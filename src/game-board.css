@@ -499,3 +499,6 @@
 .swap-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:18px 0}
 .swap-pair section{padding:14px 10px;background:#edf5ff;border:1px solid #bfd6eb;border-radius:12px;text-align:center}
 .swap-pair small,.swap-pair strong{display:block}.swap-pair strong{margin-top:8px;line-height:1.6}.swap-pair>span{font-size:26px;color:#7661ae}
+
+/* Respond to the local roll tap before waiting for the shared server timeline. */
+.dice-overlay.dice-immediate:not(.dice-closing),.dice-immediate:not(.dice-closing) .dice-stage{animation:none}

@@ -142,6 +142,8 @@ test('HTTPS bail payment persists across devices and authorizes one next-turn no
 test('HTTPS learning quiz pays 30 MC once and shares the same amount with the room',async()=>{
  const db=database();try{
  const {host}=await setup(db);await act(db,host,'start');await act(db,host,'roll');
+ const row=db.sqlite.prepare('SELECT payload FROM online_rooms WHERE code=?').get(host.code),room=JSON.parse(row.payload);room.state.players[0].position=1;
+ db.sqlite.prepare('UPDATE online_rooms SET payload=? WHERE code=?').run(JSON.stringify(room),host.code);
  const shown=await act(db,host,'startQuiz'),before=shown.state.players[0].coins;
  const answer=QUIZZES.find(q=>q.id===shown.state.quiz).answer,result=await act(db,host,'answerQuiz',[answer]);
  assert.equal(result.state.players[0].coins,before+30);assert.equal(result.activities.at(-1).changes[0].amount,30);

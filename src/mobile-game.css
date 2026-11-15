@@ -368,3 +368,27 @@ dialog#modal.mobile-music-modal{
  letter-spacing:0;text-indent:0;text-align:center;white-space:nowrap;
 }
 #modal.mobile-event-card-modal .card-value small{flex:none;font-size:8px;line-height:1.1;text-align:center;letter-spacing:0;text-indent:0}
+
+/* Home-screen web apps use one top-left row, leaving browser play unchanged. */
+.game-shell[data-mobile="true"][data-web-app="true"]{--web-app-control-size:30px}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header{
+ display:flex;position:relative;inset:auto;z-index:45;flex:0 0 auto;align-items:center;justify-content:flex-start;flex-wrap:nowrap;
+ width:100%;max-width:100%;height:calc(var(--web-app-control-size) + 8px);min-height:calc(var(--web-app-control-size) + 8px);
+ margin:0;padding:4px;gap:4px;background:transparent;border:0;box-shadow:none;
+}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header :is(.brand,nav.mobile-page-nav,.header-actions,.board-tools){
+ position:relative;inset:auto;flex:0 0 auto;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
+ width:auto;max-width:none;height:var(--web-app-control-size);min-height:0;margin:0;padding:0;gap:4px;
+}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header .brand{width:var(--web-app-control-size)}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header .brand-icon{width:var(--web-app-control-size);height:var(--web-app-control-size)}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header nav.mobile-page-nav{order:0;align-self:center;flex:none}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header :is(.mobile-page-menu summary,.header-actions button,.board-tools button){
+ display:flex;align-items:center;justify-content:center;flex:0 0 var(--web-app-control-size);width:var(--web-app-control-size);min-width:var(--web-app-control-size);
+ height:var(--web-app-control-size);min-height:var(--web-app-control-size);max-height:var(--web-app-control-size);padding:0;margin:0;line-height:1;
+ border:0;background:transparent;box-shadow:none;
+}
+.game-shell[data-mobile="true"][data-web-app="true"] .site-header .board-tools .mobile-board-zoom{display:contents}
+.game-shell[data-mobile="true"][data-web-app="true"] .mobile-page-options{top:calc(100% + 6px);left:0;right:auto}
+.game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] main{padding:0 4px 4px 0}
+@media(max-height:300px){.game-shell[data-mobile="true"][data-web-app="true"]{--web-app-control-size:26px}}

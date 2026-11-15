@@ -8,7 +8,8 @@ import {visibleActivities} from '../src/activities.js';
 const game=()=>G.createGame({names:['A','B','C']});
 test('different delivery times and device clocks follow one shared dice, movement and result schedule',()=>{
  const before=game(),after=G.roll(before,6),plan=createRollPresentation(before,after,'roll-1',100000);
- assert.equal(plan.startAt,102800);assert.equal(plan.resultAt-plan.startAt,2200);
+ assert.equal(plan.startAt,101200);assert.equal(plan.resultAt-plan.startAt,1000);
+ assert.equal(plan.resultAt-100000,2200);assert.equal(plan.closeAt-plan.resultAt,1600);assert.equal(plan.moveAt-plan.closeAt,400);
  assert.deepEqual(plan.path,[1,2,3,4,5,6]);
  for(const time of [plan.startAt-1,plan.startAt,plan.resultAt,plan.closeAt,plan.moveAt,plan.moveAt+720,plan.finishAt]){
   const expected=presentationStage(plan,time),step=presentedSteps(plan,time);

@@ -1,6 +1,6 @@
-import {movementPath,backwardPath} from './movement.js?v=9ae361b2692b';
-import {BOARD} from './data.js?v=9ae361b2692b';
-export const ROLL_TIMING=Object.freeze({lead:2800,roll:2200,result:2400,close:600,step:720,arrival:680});
+import {movementPath,backwardPath} from './movement.js?v=f8839a7e60f5';
+import {BOARD} from './data.js?v=f8839a7e60f5';
+export const ROLL_TIMING=Object.freeze({lead:1200,roll:1000,result:1600,close:400,step:720,arrival:680});
 export function rollPath(before,after){
  const actor=before.turn,dice=after.dice,backward=before.phase==='backward-roll';
  if(after.lastPrisonRoll&&!after.lastPrisonRoll.escaped)return [];

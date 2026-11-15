@@ -302,3 +302,13 @@
 .board-area.is-3d .board-label .tile-copy,
 .board-area.is-3d .board-label .tile-copy>*{text-shadow:none}
 .board-area .cell.start .tile-copy::before{box-shadow:none;text-shadow:none}
+
+/* Clip the atlas before compositing the upright pawn. Avoid GPU drop-shadow
+   filters on atlas backgrounds: mobile WebKit can paint only part of a frame. */
+.board-character .character-sprite.pawn-portrait{
+ overflow:hidden;background:none;filter:none;transform:none;isolation:isolate;
+}
+.pawn-portrait>img{
+ position:absolute;display:block;width:300%;height:200%;max-width:none;
+ margin:0;padding:0;border:0;object-fit:fill;pointer-events:none;
+}

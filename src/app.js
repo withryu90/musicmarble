@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=5ce1d3d1d651';
-import {createListeningPlayer} from './listening-player.js?v=5ce1d3d1d651';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=5ce1d3d1d651';
-import {LobbyConfig} from './lobby-config.js?v=5ce1d3d1d651';
-import {GameActions} from './game-actions.js?v=5ce1d3d1d651';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=5ce1d3d1d651';
-import {createMusicDirector} from './music-director.js?v=5ce1d3d1d651';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=5ce1d3d1d651';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=5ce1d3d1d651';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=5ce1d3d1d651';
-import {formatModalSentences} from './modal-sentences.js?v=5ce1d3d1d651';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5ce1d3d1d651';
-import {WORK_ARTWORK} from './work-artwork.js?v=5ce1d3d1d651';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=5ce1d3d1d651';
-import {RankingClient} from './ranking.js?v=5ce1d3d1d651';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5ce1d3d1d651';
-import {HandoffCountdown} from './handoff-countdown.js?v=5ce1d3d1d651';
-import {fitBoardTitles} from './board-type.js?v=5ce1d3d1d651';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=5ce1d3d1d651';
-import * as G from './engine.js?v=5ce1d3d1d651';
-import {ActivityInbox} from './activities.js?v=5ce1d3d1d651';
-import {purchaseQuizById} from './purchase-quizzes.js?v=5ce1d3d1d651';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5ce1d3d1d651';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5ce1d3d1d651';
-import {diceCube} from './dice.js?v=5ce1d3d1d651';
-import {CHARACTER_BIOS} from './character-bios.js?v=5ce1d3d1d651';
-import {needsLandscape} from './orientation.js?v=5ce1d3d1d651';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=5ce1d3d1d651';
-import {GameTransport} from './game-transport.js?v=5ce1d3d1d651';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=5ce1d3d1d651';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=5ce1d3d1d651';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=5ce1d3d1d651';
+import {playerStatus} from './player-status.js?v=5dabf278aa53';
+import {createListeningPlayer} from './listening-player.js?v=5dabf278aa53';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=5dabf278aa53';
+import {LobbyConfig} from './lobby-config.js?v=5dabf278aa53';
+import {GameActions} from './game-actions.js?v=5dabf278aa53';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=5dabf278aa53';
+import {createMusicDirector} from './music-director.js?v=5dabf278aa53';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=5dabf278aa53';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=5dabf278aa53';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=5dabf278aa53';
+import {formatModalSentences} from './modal-sentences.js?v=5dabf278aa53';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5dabf278aa53';
+import {WORK_ARTWORK} from './work-artwork.js?v=5dabf278aa53';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=5dabf278aa53';
+import {RankingClient} from './ranking.js?v=5dabf278aa53';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5dabf278aa53';
+import {HandoffCountdown} from './handoff-countdown.js?v=5dabf278aa53';
+import {fitBoardTitles} from './board-type.js?v=5dabf278aa53';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=5dabf278aa53';
+import * as G from './engine.js?v=5dabf278aa53';
+import {ActivityInbox} from './activities.js?v=5dabf278aa53';
+import {purchaseQuizById} from './purchase-quizzes.js?v=5dabf278aa53';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5dabf278aa53';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5dabf278aa53';
+import {diceCube} from './dice.js?v=5dabf278aa53';
+import {CHARACTER_BIOS} from './character-bios.js?v=5dabf278aa53';
+import {needsLandscape} from './orientation.js?v=5dabf278aa53';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=5dabf278aa53';
+import {GameTransport} from './game-transport.js?v=5dabf278aa53';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=5dabf278aa53';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=5dabf278aa53';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=5dabf278aa53';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -464,7 +464,11 @@ async function apply(fn,...args){
 function pill(text,cls=''){return `<span class="pill ${cls}">${text}</span>`;}
 function characterSprite(person,extra=''){
  const c=characterFor(person),color=playerColor(person);
- return `<span class="character-avatar ${extra} ${c.layout==='single'?'character-single':''} ${c.portrait?'character-bust':''}" style="--team:${color};--character-image:url('${new URL(c.asset,document.baseURI).href}');--character-x:${(c.slot%3)*50}%;--character-y:${Math.floor(c.slot/3)*100}%" role="img" aria-label="${esc(c.name)} 캐릭터"><span class="character-sprite"></span></span>`;
+ // Board portraits use a clipped image element rather than a filtered CSS atlas.
+ // This avoids partial background tiles in mobile WebKit during movement/zoom.
+ const boardAtlas=extra==='board-character'&&c.layout!=='single';
+ const portrait=boardAtlas?`<span class="character-sprite pawn-portrait"><img src="${new URL(c.asset,document.baseURI).href}" alt="" draggable="false" style="left:${-(c.slot%3)*100}%;top:${-Math.floor(c.slot/3)*100}%"></span>`:'<span class="character-sprite"></span>';
+ return `<span class="character-avatar ${extra} ${c.layout==='single'?'character-single':''} ${c.portrait?'character-bust':''}" style="--team:${color};--character-image:url('${new URL(c.asset,document.baseURI).href}');--character-x:${(c.slot%3)*50}%;--character-y:${Math.floor(c.slot/3)*100}%" role="img" aria-label="${esc(c.name)} 캐릭터">${portrait}</span>`;
 }
 function bonusCharacterLabel(character){return character.bonus?'<span class="bonus-character-label">*보너스 캐릭터</span>':'';}
 function rankingRows(){

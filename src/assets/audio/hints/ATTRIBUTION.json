@@ -259,17 +259,17 @@
     },
     "stravinsky-firebird": {
       "src": "./src/assets/audio/hints/originals/stravinsky-firebird.m4a",
-      "duration": 6.078666666666667,
+      "duration": 10.345333333333333,
       "original": true,
-      "originalFilename": "18 스트라빈스키 불새.m4a",
-      "bytes": 105728,
-      "sha256": "de7485c757b60abd86ca5aa46c075c68b7649f16a6f536a8613d5cd710467628",
+      "originalFilename": "용산동 9.m4a",
+      "bytes": 183695,
+      "sha256": "d50dff1d5718f1a07daa662d25aefe04026c5198cc044f4ec0cd6e7543cea743",
       "artist": "사용자 제공 음원",
       "source": "./src/assets/audio/hints/originals/stravinsky-firebird.m4a",
       "sourceType": "user-provided",
       "section": "제공된 원본 음원 전체 감상",
       "edited": false,
-      "receivedAt": "2026-11-14",
+      "receivedAt": "2026-11-15",
       "rights": "게임에 적용하도록 사용자가 제공한 음원. 별도의 공개 라이선스는 지정되지 않았습니다."
     },
     "stravinsky-spring": {

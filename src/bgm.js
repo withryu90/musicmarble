@@ -1,5 +1,5 @@
-export const BGM_SOURCE='./src/assets/audio/mozart-k525-chiptune.m4a?v=ebf415bbf46e';
-export const GAME_BGM_SOURCE='./src/assets/audio/music-garden-loop.wav?v=ebf415bbf46e';
+export const BGM_SOURCE='./src/assets/audio/mozart-k525-chiptune.m4a?v=b3b8094c875b';
+export const GAME_BGM_SOURCE='./src/assets/audio/music-garden-loop.wav?v=b3b8094c875b';
 export function createBgm({source=BGM_SOURCE,AudioClass=Audio,createContext=()=>{const C=window.AudioContext||window.webkitAudioContext;return C?new C():null;},onChange=()=>{},volume=.25}={}){
  let currentSource=source,audio=null,context=null,gain=null,currentVolume=Math.min(1,Math.max(0,volume)),error=false,blocked=false,wanted=false;
  const status=()=>({source:currentSource,playing:Boolean(audio&&!audio.paused&&!error&&(!context||context.state==='running')),volume:currentVolume,error,blocked});

@@ -107,8 +107,8 @@ test('concert notices select the supplied recording and replayed room snapshots 
 test('concert uses the shortened fade-out AAC recording at a moderate playback gain',async()=>{
  const {readFile}=await import('node:fs/promises'),{createHash}=await import('node:crypto');
  const data=await readFile(new URL(RECORDED_EFFECTS.concert));
- assert.equal(data.toString('ascii',4,8),'ftyp');assert.equal(data.length,132985);
- assert.equal(createHash('sha256').update(data).digest('hex'),'957cd17d3c1d08c79766f58d058dfc10ced5873e3acb09529e8aa91782f390bb');
+ assert.equal(data.toString('ascii',4,8),'ftyp');assert.equal(data.length,131969);
+ assert.equal(createHash('sha256').update(data).digest('hex'),'49aedfa0a16454ec119eca6b121bb3f7b7b86f18f4fa7a01068b4290664531ff');
  const ctx=context(),gains=[];ctx.createGain=()=>{const node={gain:param(),connect(){},disconnect(){}};gains.push(node);return node;};
  const sfx=createSoundEffects({createContext:()=>ctx,fetchAudio});assert.equal(await sfx.play('concert'),true);assert.equal(gains.at(-1).gain.value,.85);
  await sfx.play('prison');assert.equal(gains.at(-1).gain.value,.7);

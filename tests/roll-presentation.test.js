@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as G from '../src/engine.js';
 import {BOARD} from '../src/data.js';
-import {createRollPresentation,presentationStage,presentedSteps,shouldPresentRoll,ROLL_TIMING} from '../src/roll-presentation.js';
+import {createRollPresentation,presentationStage,presentedSteps,shouldPresentRoll,rollSnapshotMatches,ROLL_TIMING} from '../src/roll-presentation.js';
 import {RoomService} from '../src/room-service.js';
 import {visibleActivities} from '../src/activities.js';
 const game=()=>G.createGame({names:['A','B','C']});
@@ -66,4 +66,14 @@ test('vacant works and streaming apps have one shared arrival popup without repe
    assert.ok(notice.synchronizedArrival);const count=room.activities.length;service.broadcast(room);assert.equal(room.activities.length,count);
   }finally{service.close();}
  }
+});
+
+test('a work arrival animation cannot be paired with a delayed backward-roll snapshot',()=>{
+ const start=game();start.players[0].position=4;const work=G.roll(start,1),plan=createRollPresentation(start,work,'work-roll',1000);
+ const backStart=game();backStart.players[0].position=7;const backwards=G.roll(backStart,1);
+ const correct={state:work,rollPresentation:plan},mixed={state:backwards,rollPresentation:plan};
+ assert.equal(rollSnapshotMatches(plan,correct),true);assert.equal(shouldPresentRoll(correct,null,plan.startAt),true);
+ assert.equal(rollSnapshotMatches(plan,mixed),false);assert.equal(shouldPresentRoll(mixed,null,plan.startAt),false);
+ assert.equal(rollSnapshotMatches(plan,{state:work,rollPresentation:{...plan,id:'another-roll'}}),false);
+ assert.equal(rollSnapshotMatches(plan,{state:{...work,turnNumber:1},rollPresentation:plan}),false);
 });

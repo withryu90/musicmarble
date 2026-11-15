@@ -22,6 +22,6 @@ test('stale presentation recovers without cutting short normal movement, partici
 });
 
 test('read-only menus and popup closing stay available during progress on desktop and mobile',()=>{
- for(const action of ['history','help','settings','fullscreen','tab','board-view','board-zoom-in','board-zoom-out','board-zoom-reset','close','export','cell','work','home'])assert.equal(canUseDuringProgress(action),true,action);
- for(const action of ['roll','roll-backward','purchase-confirm','purchase-answer','answer','next','handoff-next','upgrade','streaming-buy','swap-confirm','pay-bail'])assert.equal(canUseDuringProgress(action),false,action);
+ for(const action of ['history','help','settings','fullscreen','tab','board-view','board-zoom-in','board-zoom-out','board-zoom-reset','close','export','home'])assert.equal(canUseDuringProgress(action),true,action);
+ for(const action of ['cell','work','event','roll','roll-backward','purchase-confirm','purchase-answer','answer','next','handoff-next','upgrade','streaming-buy','swap-confirm','pay-bail'])assert.equal(canUseDuringProgress(action),false,action);
 });

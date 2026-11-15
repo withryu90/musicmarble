@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {activityChanges,ActivityInbox} from '../src/activities.js';
+import {activityChanges,ActivityInbox,visibleActivities,backwardEntryApplies} from '../src/activities.js';
 import * as G from '../src/engine.js';
 import {buyQualified} from '../test-support/purchases.js';
-import {EVENTS,QUIZZES} from '../src/data.js';
+import {EVENTS,QUIZZES,BOARD} from '../src/data.js';
 import {RoomService} from '../server/rooms.js';
 import {purchaseQuizById} from '../src/purchase-quizzes.js';
 const game=()=>G.createGame({names:['하나','둘','셋']});
@@ -55,4 +55,18 @@ test('public learning and purchase quiz notices disclose only verdicts, never an
  for(const correct of [true,false]){const index=correct?q.answer:(q.answer+1)%q.options.length,answered=G.answerQuiz(started,index),notice=activityChanges(started,answered)[0];assert.equal(notice.correct,correct);assert.match(notice.title,correct?/맞혔/:/틀렸/);for(const key of ['selectedAnswer','correctAnswer','explanation','questionId'])assert.equal(Object.hasOwn(notice,key),false);assert.equal(notice.text,correct?'배움퀴즈를 맞혔습니다.':'배움퀴즈를 틀렸습니다.');}
  const challenge=G.startPurchaseQuiz(G.roll(game(),1),()=>0),purchase=purchaseQuizById(challenge.purchaseChallenge.questionId);
  for(const correct of [true,false]){const response=correct?purchase.answer:!purchase.answer,answered=G.answerPurchaseQuiz(challenge,response),notice=activityChanges(challenge,answered)[0];assert.equal(notice.correct,correct);assert.equal(Object.hasOwn(notice,'selectedAnswer'),false);assert.equal(Object.hasOwn(notice,'correctAnswer'),false);assert.equal(Object.hasOwn(notice,'explanation'),false);assert.equal(Object.hasOwn(notice,'questionId'),false);assert.equal(notice.text,correct?'음악 퀴즈를 맞혔습니다.':'음악 퀴즈를 틀렸습니다.');assert.match(notice.title,correct?/정답/:/오답/);}
+});
+
+test('a delayed backward-entry notice is discarded after reversing onto a work or starting another turn',()=>{
+ const start=game();start.players[0].position=7;const entered=G.roll(start,1),item={id:4,type:'backward-entry',actorId:0,turnNumber:entered.turnNumber};
+ assert.equal(backwardEntryApplies(item,entered),true);assert.deepEqual(visibleActivities({state:entered,activities:[item]},0),[item]);assert.deepEqual(visibleActivities({state:entered,activities:[item]},1),[item]);
+ const work=G.roll(entered,3);assert.equal(BOARD[work.players[0].position].type,'work');assert.equal(backwardEntryApplies(item,work),false);
+ const arrived={id:5,type:'work-arrival',actorId:0,workId:BOARD[work.players[0].position].id};
+ const inbox=new ActivityInbox();inbox.accept('ROOM',[]);inbox.accept('ROOM',visibleActivities({state:work,activities:[item,arrived]},0));assert.deepEqual(inbox.pending,[arrived]);
+ assert.equal(backwardEntryApplies(item,{...entered,turnNumber:entered.turnNumber+2}),false);assert.equal(backwardEntryApplies({...item,actorId:1},entered),false);
+});
+test('even a backward-roll phase cannot open the backward popup from a work tile',()=>{
+ const s=game();s.phase='backward-roll';s.players[0].position=1;assert.equal(backwardEntryApplies({type:'backward-entry',actorId:0,turnNumber:0},s),false);
+ s.players[0].position=8;assert.equal(backwardEntryApplies({type:'backward-entry',actorId:0,turnNumber:0},s),true);
+ s.lastBackwardMove={from:8,to:5,steps:3};assert.equal(backwardEntryApplies({type:'backward-entry',actorId:0,turnNumber:0},s),false);
 });

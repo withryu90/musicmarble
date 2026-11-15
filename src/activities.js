@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=185e7e10d5b0';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=185e7e10d5b0';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=a25692d047e4';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=a25692d047e4';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -61,8 +61,14 @@ export class ActivityInbox{
 
 // Do not consume a journal ID before the imprisoned player has seen it.
 // Keep later notices queued behind it, and release old turns/bots without an ack.
+export function backwardEntryApplies(item,state){
+ const player=state?.players?.[state.turn];
+ return item?.type==='backward-entry'&&state?.phase==='backward-roll'&&item.actorId===state.turn
+  &&(item.turnNumber===undefined||item.turnNumber===(state.turnNumber??0))
+  &&BOARD[player?.position]?.type==='back-three'&&!state.lastBackwardMove;
+}
 export function visibleActivities(snapshot,playerId){
- const items=[...(snapshot.activities||[])].sort((a,b)=>a.id-b.id),s=snapshot.state;
+ const s=snapshot.state,items=[...(snapshot.activities||[])].sort((a,b)=>a.id-b.id).filter(item=>item.type!=='backward-entry'||backwardEntryApplies(item,s));
  const blocked=items.findIndex(item=>item.actorFirst&&!item.synchronizedArrival&&!item.actorSeen&&item.actorId!==playerId&&!s?.players[item.actorId]?.isBot&&item.actorId===s?.turn&&item.turnNumber===s?.turnNumber);
  return blocked<0?items:items.slice(0,blocked);
 }

@@ -1,5 +1,5 @@
-import {movementPath,backwardPath} from './movement.js?v=185e7e10d5b0';
-import {BOARD} from './data.js?v=185e7e10d5b0';
+import {movementPath,backwardPath} from './movement.js?v=a25692d047e4';
+import {BOARD} from './data.js?v=a25692d047e4';
 export const ROLL_TIMING=Object.freeze({lead:1200,roll:1000,result:1600,close:400,step:720,arrival:680});
 export function rollPath(before,after){
  const actor=before.turn,dice=after.dice,backward=before.phase==='backward-roll';
@@ -19,7 +19,14 @@ export function presentationStage(plan,now){
  if(now<plan.startAt)return 'waiting';if(now<plan.resultAt)return 'rolling';if(now<plan.closeAt)return 'result';if(now<plan.moveAt)return 'closing';if(now<plan.finishAt)return 'moving';return 'finished';
 }
 export function presentedSteps(plan,now){return Math.max(0,Math.min(plan.path.length,Math.floor((now-plan.moveAt)/ROLL_TIMING.step)));}
-export function shouldPresentRoll(snapshot,lastId,now){const p=snapshot?.rollPresentation;return !!p&&p.id!==lastId&&p.finishAt>now&&p.turnNumber===snapshot.state?.turnNumber&&p.actorId===snapshot.state?.turn;}
+export function rollSnapshotMatches(plan,snapshot){
+ const s=snapshot?.state,actor=plan?.actorId,player=s?.players?.[actor],before=plan?.before?.players?.[actor];
+ if(!player||!before||!Array.isArray(plan.path)||s.turn!==actor||s.turnNumber!==plan.turnNumber||s.dice!==plan.dice)return false;
+ if(snapshot.rollPresentation&&snapshot.rollPresentation.id!==plan.id)return false;
+ if(player.position!==(plan.path.at(-1)??before.position))return false;
+ return s.phase!=='backward-roll'||BOARD[player.position]?.type==='back-three';
+}
+export function shouldPresentRoll(snapshot,lastId,now){const p=snapshot?.rollPresentation;return !!p&&p.id!==lastId&&p.finishAt>now&&rollSnapshotMatches(p,snapshot);}
 
 export function rollArrivalNotice(state){
  const cell=BOARD[state.players[state.turn].position];

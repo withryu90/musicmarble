@@ -1,36 +1,37 @@
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=3f166a30e8b7';
-import {playerStatus} from './player-status.js?v=3f166a30e8b7';
-import {createListeningPlayer} from './listening-player.js?v=3f166a30e8b7';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=3f166a30e8b7';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=3f166a30e8b7';
-import {GameActions} from './game-actions.js?v=3f166a30e8b7';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=3f166a30e8b7';
-import {createMusicDirector} from './music-director.js?v=3f166a30e8b7';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=3f166a30e8b7';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=3f166a30e8b7';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=3f166a30e8b7';
-import {formatModalSentences} from './modal-sentences.js?v=3f166a30e8b7';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=3f166a30e8b7';
-import {WORK_ARTWORK} from './work-artwork.js?v=3f166a30e8b7';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=3f166a30e8b7';
-import {RankingClient} from './ranking.js?v=3f166a30e8b7';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=3f166a30e8b7';
-import {HandoffCountdown} from './handoff-countdown.js?v=3f166a30e8b7';
-import {fitBoardTitles} from './board-type.js?v=3f166a30e8b7';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=3f166a30e8b7';
-import * as G from './engine.js?v=3f166a30e8b7';
-import {ActivityInbox,visibleActivities} from './activities.js?v=3f166a30e8b7';
-import {purchaseQuizById} from './purchase-quizzes.js?v=3f166a30e8b7';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=3f166a30e8b7';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=3f166a30e8b7';
-import {diceCube} from './dice.js?v=3f166a30e8b7';
-import {CHARACTER_BIOS} from './character-bios.js?v=3f166a30e8b7';
-import {needsLandscape} from './orientation.js?v=3f166a30e8b7';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=3f166a30e8b7';
-import {GameTransport} from './game-transport.js?v=3f166a30e8b7';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=3f166a30e8b7';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=3f166a30e8b7';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=3f166a30e8b7';
+import {ConcertNoticeWindow} from './concert-notice.js?v=4584d1ea786a';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=4584d1ea786a';
+import {playerStatus} from './player-status.js?v=4584d1ea786a';
+import {createListeningPlayer} from './listening-player.js?v=4584d1ea786a';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=4584d1ea786a';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=4584d1ea786a';
+import {GameActions} from './game-actions.js?v=4584d1ea786a';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=4584d1ea786a';
+import {createMusicDirector} from './music-director.js?v=4584d1ea786a';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=4584d1ea786a';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=4584d1ea786a';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=4584d1ea786a';
+import {formatModalSentences} from './modal-sentences.js?v=4584d1ea786a';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=4584d1ea786a';
+import {WORK_ARTWORK} from './work-artwork.js?v=4584d1ea786a';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=4584d1ea786a';
+import {RankingClient} from './ranking.js?v=4584d1ea786a';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=4584d1ea786a';
+import {HandoffCountdown} from './handoff-countdown.js?v=4584d1ea786a';
+import {fitBoardTitles} from './board-type.js?v=4584d1ea786a';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=4584d1ea786a';
+import * as G from './engine.js?v=4584d1ea786a';
+import {ActivityInbox,visibleActivities} from './activities.js?v=4584d1ea786a';
+import {purchaseQuizById} from './purchase-quizzes.js?v=4584d1ea786a';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=4584d1ea786a';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=4584d1ea786a';
+import {diceCube} from './dice.js?v=4584d1ea786a';
+import {CHARACTER_BIOS} from './character-bios.js?v=4584d1ea786a';
+import {needsLandscape} from './orientation.js?v=4584d1ea786a';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=4584d1ea786a';
+import {GameTransport} from './game-transport.js?v=4584d1ea786a';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=4584d1ea786a';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=4584d1ea786a';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=4584d1ea786a';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -175,6 +176,7 @@ let pendingDice=null;
 let activeActivity=null,deferredSnapshots=[],participantIntroPending=false;
 let autoPurchaseKey=null,lastHandoffKey=null;
 const handoffCountdown=new HandoffCountdown();
+const concertNotice=new ConcertNoticeWindow();
 let galleryReturnCharacter=null;
 let chatMessages=[],chatDraft='',chatSending=false,chatRoom=null;
 const chatBubbles=new Map(),chatBubbleTimers=new Map();
@@ -193,7 +195,7 @@ function publishTyping(active){
 }
 setInterval(()=>{if(localTypingUntil&&localTypingUntil<=Date.now())publishTyping(false);updatePlayerStatuses();},500);
 
-function resetActivityFlow(){lastPresentedRoll=null;prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';}mobileCamera.reset();handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){concertNotice.stop();lastPresentedRoll=null;prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';}mobileCamera.reset();handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function clearPendingDice(){if(!pendingDice)return;clearInterval(pendingDice.ticker);pendingDice.element.remove();pendingDice=null;}
 function makeDiceOverlay(player){
  const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');
@@ -271,6 +273,7 @@ function receive(next){
  if(isDeveloperGame()){
   session.playerId=next.playerId??next.state?.turn??0;
   if(snapshot?.developer&&next.debugRevision!==snapshot.debugRevision){
+   concertNotice.stop();
    stopDicePresentation();handoffCountdown.stop();busy=false;participantIntroPending=false;activeActivity=null;deferredSnapshots=[];activityInbox.pending=[];
    activityInbox.seen=Math.max(activityInbox.seen,snapshot.activities?.at(-1)?.id||0);
    lastAuto='';lastHandoffKey=null;lastPresentedRoll=null;lastSwapPrompt='';swapSelection=null;
@@ -279,7 +282,7 @@ function receive(next){
  }
  if(next.state?.players[session.playerId]?.withdrawn){handleForcedRemoval('연결이 60초 이상 끊겨 이 게임에서 자동 퇴장되었습니다.');return;}
  if(next.state&&snapshot?.state&&next.state.players.some(p=>p.withdrawn&&!snapshot.state.players[p.id]?.withdrawn)){
-  stopDicePresentation();busy=false;activeActivity=null;activityInbox.pending=[];deferredSnapshots=[];handoffCountdown.stop();lastHandoffKey=null;
+  concertNotice.stop();stopDicePresentation();busy=false;activeActivity=null;activityInbox.pending=[];deferredSnapshots=[];handoffCountdown.stop();lastHandoffKey=null;
   const d=$('#modal');if(d.open&&(d.dataset.auto==='true'||d.dataset.activity==='true'))d.close();
  }
  if(!Number.isFinite(next.serverTimeOffset))next.serverTimeOffset=Number.isFinite(next.serverNow)?next.serverNow-Date.now():0;
@@ -292,6 +295,9 @@ function receive(next){
    stopDicePresentation();commitSnapshot(next);return;
   }
   presentDiceResult(next);return;
+ }
+ if(concertNotice.active){
+  queueConcertUpdate(next);return;
  }
  if(shouldPresentRoll(next,lastPresentedRoll,Date.now()+next.serverTimeOffset)){
   activeActivity=null;activityInbox.pending=[];deferredSnapshots=[];
@@ -439,7 +445,24 @@ async function passHandoff(){
   busy=false;render();continueFlow();
  }
 }
-function dismissActivity(){activeActivity=null;$('#modal').close();continueFlow();}
+function dismissActivity(){if(concertNotice.active)return;activeActivity=null;$('#modal').close();continueFlow();}
+
+function queueConcertUpdate(next){
+ if(next.revision>snapshot.revision&&!deferredSnapshots.some(s=>s.revision===next.revision)){
+  deferredSnapshots.push(next);deferredSnapshots.sort((a,b)=>a.revision-b.revision);
+ }
+}
+function updateConcertNotice(){
+ if(!concertNotice.active)return;
+ const done=concertNotice.tick(Date.now(),!document.hidden);
+ const label=$('#modal [data-concert-countdown]');
+ if(label){const text=`안내를 읽어 주세요 · ${concertNotice.seconds}초 후 자동으로 닫힙니다.`;if(label.textContent!==text)label.textContent=text;}
+ if(done){concertNotice.stop();lastPresentationProgressAt=Date.now();dismissActivity();}
+}
+setInterval(updateConcertNotice,250);
+document.addEventListener('visibilitychange',updateConcertNotice);
+$('#modal').addEventListener('cancel',e=>{if(concertNotice.active)e.preventDefault();});
+
 function prisonDescription(){
  return ['불법 스트리밍을 통해 음악을 감상한 죄','세 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다.','6이 나오면 즉시 탈출'].reduce((html,phrase)=>html.replace(esc(phrase),`<strong class="prison-emphasis">${esc(phrase)}</strong>`),esc(PRISON_MESSAGE));
 }
@@ -459,7 +482,7 @@ function showActivity(item){
   showModal('파산 · 게임 종료',`<section class="bankruptcy-scene"><div class="bankruptcy-coins" aria-hidden="true"><span>MC</span><span>MC</span><span>MC</span></div><span class="bankruptcy-kicker">음악 투자의 마지막 순간</span><h2 class="bankruptcy-title">파산</h2><div class="bankruptcy-player">${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><div class="bankruptcy-balance"><strong>0</strong><span>MC</span></div><p class="bankruptcy-message">뮤직코인이 모두 소진되었습니다.</p><p class="bankruptcy-detail">${esc(actor.name)} 님의 파산으로<br>2인 게임이 종료됩니다.</p></section><button class="primary full" data-action="activity-next">최종 결과 확인하기 →</button>`,'activity-modal bankruptcy-modal');
  }else if(item.type==='concert'&&item.concert){
   const c=item.concert;
-  showModal('음악회 개최',`<div class="concert-host"><span aria-hidden="true">♬</span>${characterSprite(actor)}<strong>${esc(actor.name)} 님의 음악회</strong></div><p class="concert-invitation">막이 오릅니다! 여러분의 좌석을 확인해 주세요.</p><div class="concert-tickets">${c.tickets.map(t=>{const guest=state.players[t.playerId],seat=CONCERT_SEATS.find(s=>s.id===t.seatId);return `<div class="concert-ticket seat-${seat.id}"><div class="concert-ticket-guest">${characterSprite(guest)}<strong>${esc(guest.name)}</strong></div><b class="concert-seat">${seat.name}</b><div class="concert-ticket-price"><strong>${num(t.amount)} <small>MC</small></strong><span>티켓비 지불${t.amount<t.price?` · 정가 ${t.price} MC 중 잔액 한도`:''}</span></div></div>`;}).join('')}</div><div class="concert-income"><span>개최자 티켓 수입</span><strong>+${num(c.total)} MC</strong></div><p class="concert-seat-guide">좌석 무작위 배정 · S석 50 / R석 100 / VIP석 150 MC</p>${footer}`,'activity-modal concert-tickets-modal');
+  showModal('음악회 개최',`<div class="concert-host"><span aria-hidden="true">♬</span>${characterSprite(actor)}<strong>${esc(actor.name)} 님의 음악회</strong></div><p class="concert-invitation">막이 오릅니다! 여러분의 좌석을 확인해 주세요.</p><div class="concert-tickets">${c.tickets.map(t=>{const guest=state.players[t.playerId],seat=CONCERT_SEATS.find(s=>s.id===t.seatId);return `<div class="concert-ticket seat-${seat.id}"><div class="concert-ticket-guest">${characterSprite(guest)}<strong>${esc(guest.name)}</strong></div><b class="concert-seat">${seat.name}</b><div class="concert-ticket-price"><strong>${num(t.amount)} <small>MC</small></strong><span>티켓비 지불${t.amount<t.price?` · 정가 ${t.price} MC 중 잔액 한도`:''}</span></div></div>`;}).join('')}</div><div class="concert-income"><span>개최자 티켓 수입</span><strong>+${num(c.total)} MC</strong></div><p class="concert-seat-guide">좌석 무작위 배정 · S석 50 / R석 100 / VIP석 150 MC</p><p class="concert-reading-time" data-concert-countdown role="timer">안내를 읽어 주세요 · 12초 후 자동으로 닫힙니다.</p>`,'activity-modal concert-tickets-modal');
  }else if(item.type==='history-event'){
   showModal('음악사 사건 카드',`<p class="activity-audience">${esc(actor.name)} 님이 사건 카드를 뽑았습니다.</p>${historyCard(item.card,item.actorId)}<details class="card-reflection"><summary>함께 생각해요</summary><p>${esc(item.card.prompt)}</p></details>${footer}`,'activity-modal event-card-modal');
  }else{
@@ -474,6 +497,10 @@ function showActivity(item){
   showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${item.appId?streamingIcon(item.appId):symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult||item.type==='quiz-result'?'':`<p class="activity-description">${item.type==='prison-entry'?prisonDescription():esc(item.text)}</p>`}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${['prison-entry','prison-roll'].includes(item.type)&&item.actorId===state.turn?bailOffer():''}${footer}`,purchaseResult?'activity-modal quiz-result-notice':['prison-entry','prison-transfer'].includes(item.type)?'activity-modal prison-arrival-modal':'activity-modal');
  }
  $('#modal').dataset.activity='true';
+ if(item.type==='concert'){
+  concertNotice.start(Date.now(),!document.hidden);
+  $('#modal').querySelector('.modal-header [data-action="close"]').disabled=true;
+ }
  if(item.actorFirst&&!item.synchronizedArrival&&item.actorId===session?.playerId&&!item.actorSeen){
   const who={...session};
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
@@ -517,7 +544,8 @@ async function syncRoom(){
   if(session?.code!==who.code||session?.token!==who.token)return;
   const reconnect=!connected||previousConnection!==peerTransport.connection;connected=true;rememberRoomSnapshot(next);
   const lagging=next.revision>snapshot.revision;
-  if(shouldPresentRoll(next,lastPresentedRoll,next.serverNow??Date.now())){receive(next);}
+  if(concertNotice.active){queueConcertUpdate(next);}
+  else if(shouldPresentRoll(next,lastPresentedRoll,next.serverNow??Date.now())){receive(next);}
   else if(shouldRecoverPresentation({latestRevision:next.revision,presentedRevision:snapshot.revision,lastProgressAt:lastPresentationProgressAt,intro:participantIntroPending})){
    stopDicePresentation();handoffCountdown.stop();activeActivity=null;deferredSnapshots=[];
    if($('#modal').open)$('#modal').close();
@@ -808,7 +836,7 @@ function showModal(title,body,cls=''){
  syncModalHeader();
  fitViewportDialog(document);
 }
-function closeModal(){handoffCountdown.stop();if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
+function closeModal(){if(concertNotice.active)return;handoffCountdown.stop();if($('#modal').classList.contains('character-bio-modal')){characterGallery();return;}if(participantIntroPending){participantIntroPending=false;$('#modal').close();render();continueFlow();return;}if(activeActivity){dismissActivity();return;}$('#modal').close();continueFlow();}
 function quizClock(){const seconds=G.quizTimeLimit(state)/1000;return `<div class="quiz-clock" role="timer" aria-label="퀴즈 남은 시간"><span>남은 시간</span><strong data-quiz-seconds>${seconds}초</strong><progress data-quiz-progress max="${seconds}" value="${seconds}" aria-label="남은 시간"></progress></div>`;}
 let quizClockRequest=false;
 function startQuizClock(){

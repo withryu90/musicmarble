@@ -346,3 +346,5 @@ dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close
 .game-shell .developer-mode-button{color:#6a438d!important;background:#f1e7ff!important}
 .game-shell[data-mobile="true"][data-developer="true"][data-tab="board"] .board-tools{top:calc(env(safe-area-inset-top,0px) + 3px + 6 * var(--mobile-control-step))}
 @media(max-width:520px){.developer-grid{gap:8px}.developer-form{padding:8px}}
+
+.concert-reading-time{text-align:center;font-weight:700;color:#244b70;background:#edf5ffdc;border-radius:8px;padding:10px;margin:12px 0 0;font-size:12px}

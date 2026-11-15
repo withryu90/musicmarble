@@ -1,9 +1,13 @@
-import {PeerTransport} from './peer-transport.js?v=9ed1bc03de92';
-import {HttpTransport} from './http-transport.js?v=9ed1bc03de92';
+import {DeveloperTransport} from './developer-transport.js?v=a51a3ecad93a';
+import {PeerTransport} from './peer-transport.js?v=a51a3ecad93a';
+import {HttpTransport} from './http-transport.js?v=a51a3ecad93a';
 export class GameTransport{
- constructor({peer=new PeerTransport(),http=new HttpTransport()}={}){Object.assign(this,{peer,http});}
- get connection(){return this.peer.connection;}
+ constructor({peer=new PeerTransport(),http=new HttpTransport(),developer=new DeveloperTransport()}={}){Object.assign(this,{peer,http,developer});}
+ get connection(){return this.developer.connection||this.peer.connection;}
  async request(path,body={},session){
+  if(path==='create-developer'){this.close();return this.developer.request(path,body);}
+  if(session?.transport==='developer')return this.developer.request(path,body,session);
+  if(path==='developer')throw Error('테스트 게임에서만 사용할 수 있어요.');
   if(path==='create'){this.close();return this.http.request(path,body);}
   if(path==='create-solo'){this.close();return this.peer.request(path,body,session);}
   if(path==='join'){
@@ -15,6 +19,6 @@ export class GameTransport{
   }
   return session?.transport==='https'?this.http.request(path,body,session):this.peer.request(path,body,session);
  }
- subscribe(session,listener){return (session?.transport==='https'?this.http:this.peer).subscribe(session,listener);}
- close(){this.peer.close();this.http.close();}
+ subscribe(session,listener){return (session?.transport==='developer'?this.developer:session?.transport==='https'?this.http:this.peer).subscribe(session,listener);}
+ close(){this.peer.close();this.http.close();this.developer.close();}
 }

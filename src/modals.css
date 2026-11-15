@@ -335,3 +335,14 @@ dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close
  width:100%;min-width:0;min-height:38px;height:auto;margin:0;padding:8px 10px;
  font-size:12px;line-height:1.4;text-align:center;word-break:keep-all;
 }
+
+#modal.developer-modal{width:min(680px,calc(100vw - 24px))}
+#modal .developer-notice strong{color:#63468b}#modal .developer-notice p{font-size:12px;line-height:1.6;margin-top:6px}
+.developer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.developer-form{display:flex;flex-direction:column;gap:8px;min-width:0;padding:12px;background:#f5f8ff;border:1px solid #d8e2f0;border-radius:12px}
+#modal .developer-form label{display:grid;gap:6px;margin:0;font-size:12px}#modal .developer-form :is(input,select){width:100%;min-width:0;padding:8px;font-size:12px}
+.developer-form button{padding:9px 10px;font-size:12px}.developer-wide{grid-column:1/-1}
+.developer-shortcuts{display:flex;flex-wrap:wrap;gap:8px}.developer-shortcuts button{flex:1;padding:9px;font-size:11px}
+.game-shell .developer-mode-button{color:#6a438d!important;background:#f1e7ff!important}
+.game-shell[data-mobile="true"][data-developer="true"][data-tab="board"] .board-tools{top:calc(env(safe-area-inset-top,0px) + 3px + 6 * var(--mobile-control-step))}
+@media(max-width:520px){.developer-grid{gap:8px}.developer-form{padding:8px}}

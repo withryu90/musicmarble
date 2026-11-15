@@ -29,6 +29,7 @@ export class RankingClient{
   try{const data=await this.request('top');if(!Array.isArray(data.entries)||data.entries.length>10||!data.entries.every(p=>typeof p.nickname==='string'&&p.nickname.length<=16&&Number.isSafeInteger(p.score)&&p.score>=0))throw Error('랭킹 응답을 확인하지 못했어요.');this.entries=data.entries.map((p,i)=>({...p,rank:i+1}));this.loaded=true;this.lastFetch=Date.now();}catch{this.error='랭킹을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';}finally{this.loading=false;this.onChange();}
  }
  observe(snapshot,session,score){
+  if(snapshot?.developer||snapshot?.mode==='developer'||session?.transport==='developer')return;
   const state=snapshot?.state,id=snapshot?.gameId;if(!state||!id)return;
   if(snapshot.rankingRecorded){const record=this.records[id];if(record){record.done=true;record.error='';this.save();}void this.refresh();return;}
   if(state.players.some(p=>p.withdrawn)){const record=this.records[id];if(record){record.awaitServer=true;delete record.scores;this.save();}return;}

@@ -1,4 +1,4 @@
-import {unzoomedViewportHeight} from './mobile-board.js?v=1aabec9056bf';
+import {unzoomedViewportHeight} from './mobile-board.js?v=28a7deece9d0';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);
@@ -50,16 +50,18 @@ export function fitViewportBoard(root=document){
 export function fitViewportDialog(root=document){
  const dialog=root.querySelector('#modal[open]');if(!dialog)return;
  const view=root.defaultView,body=dialog.querySelector('.modal-body');if(!view||!body)return;
- const mobile=root.querySelector('.game-shell[data-mobile="true"]');
+ const mobile=dialog.dataset?.mobileGame==='true'||!!root.querySelector('.game-shell[data-mobile="true"]');
  const visibleHeight=mobile?unzoomedViewportHeight(view.visualViewport?.height||view.innerHeight,view.visualViewport?.scale):view.visualViewport?.height||view.innerHeight;
  const height=Math.max(180,visibleHeight-16);
  dialog.style.setProperty('--modal-center-y',`${(view.visualViewport?.offsetTop||0)+visibleHeight/2}px`);
  dialog.style.setProperty('--modal-scale','1');body.style.maxHeight='none';body.style.overflow='visible';
- const natural=dialog.scrollHeight+4;
+ const natural=dialog.scrollHeight+4;let scale=1;
  // Short game dialogs fit as a whole; long reference lists retain readable text inside the dialog.
- if((mobile&&dialog.classList.contains('mobile-music-modal'))||natural<=height*1.55){dialog.style.setProperty('--modal-scale',String(Math.min(1,height/natural)));}
+ if((mobile&&dialog.classList.contains('mobile-music-modal'))||natural<=height*1.55){scale=Math.min(1,height/natural);}
  else{
   const chrome=natural-body.scrollHeight;
   body.style.maxHeight=`${Math.max(80,height-chrome)}px`;body.style.overflow='auto';
  }
+ // Keep the existing fit, then reduce every in-game mobile dialog by 10%.
+ dialog.style.setProperty('--modal-scale',String(scale*(mobile?.9:1)));
 }

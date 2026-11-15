@@ -48,3 +48,18 @@ test('mobile music quiz keeps its bottom controls inside one scaled panel rather
  const root={defaultView:{innerHeight:260},querySelector:selector=>selector==='#modal[open]'?dialog:{}};
  fitViewportDialog(root);assert.equal(body.style.overflow,'visible');assert.equal(body.style.maxHeight,'none');assert.ok(Number(props['--modal-scale'])*504<=244+.01);
 });
+
+test('mobile game dialogs are 90% of the existing fitted size without cumulative shrinkage',async()=>{
+ const {fitViewportDialog}=await import('../src/viewport-layout.js');
+ function panel(mobile,natural,quiz=false){
+  const props={},body={style:{},scrollHeight:natural-60};
+  const dialog={scrollHeight:natural,style:{setProperty:(k,v)=>props[k]=v},classList:{contains:()=>quiz},querySelector:()=>body};
+  const root={defaultView:{innerHeight:400},querySelector:selector=>selector==='#modal[open]'?dialog:mobile?{}:null};
+  fitViewportDialog(root);const first=Number(props['--modal-scale']);fitViewportDialog(root);assert.equal(Number(props['--modal-scale']),first);
+  return {scale:first,body};
+ }
+ for(const natural of [200,500,900])assert.equal(panel(true,natural).scale,panel(false,natural).scale*.9);
+ assert.equal(panel(true,700,true).scale,384/704*.9);
+ assert.equal(panel(false,200).scale,1);assert.equal(panel(false,900).scale,1);
+ assert.equal(panel(true,900).body.style.overflow,'auto');
+});

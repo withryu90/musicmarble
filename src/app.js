@@ -1,37 +1,37 @@
-import {ConcertNoticeWindow} from './concert-notice.js?v=1aabec9056bf';
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=1aabec9056bf';
-import {playerStatus} from './player-status.js?v=1aabec9056bf';
-import {createListeningPlayer} from './listening-player.js?v=1aabec9056bf';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=1aabec9056bf';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=1aabec9056bf';
-import {GameActions} from './game-actions.js?v=1aabec9056bf';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=1aabec9056bf';
-import {createMusicDirector} from './music-director.js?v=1aabec9056bf';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=1aabec9056bf';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation,canUseDuringProgress} from './turn-flow.js?v=1aabec9056bf';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=1aabec9056bf';
-import {formatModalSentences} from './modal-sentences.js?v=1aabec9056bf';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=1aabec9056bf';
-import {WORK_ARTWORK} from './work-artwork.js?v=1aabec9056bf';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=1aabec9056bf';
-import {RankingClient} from './ranking.js?v=1aabec9056bf';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=1aabec9056bf';
-import {HandoffCountdown} from './handoff-countdown.js?v=1aabec9056bf';
-import {fitBoardTitles} from './board-type.js?v=1aabec9056bf';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=1aabec9056bf';
-import * as G from './engine.js?v=1aabec9056bf';
-import {ActivityInbox,visibleActivities} from './activities.js?v=1aabec9056bf';
-import {purchaseQuizById} from './purchase-quizzes.js?v=1aabec9056bf';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=1aabec9056bf';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=1aabec9056bf';
-import {diceCube} from './dice.js?v=1aabec9056bf';
-import {CHARACTER_BIOS} from './character-bios.js?v=1aabec9056bf';
-import {needsLandscape} from './orientation.js?v=1aabec9056bf';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=1aabec9056bf';
-import {GameTransport} from './game-transport.js?v=1aabec9056bf';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=1aabec9056bf';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=1aabec9056bf';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=1aabec9056bf';
+import {ConcertNoticeWindow} from './concert-notice.js?v=28a7deece9d0';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=28a7deece9d0';
+import {playerStatus} from './player-status.js?v=28a7deece9d0';
+import {createListeningPlayer} from './listening-player.js?v=28a7deece9d0';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=28a7deece9d0';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=28a7deece9d0';
+import {GameActions} from './game-actions.js?v=28a7deece9d0';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=28a7deece9d0';
+import {createMusicDirector} from './music-director.js?v=28a7deece9d0';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=28a7deece9d0';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation,canUseDuringProgress} from './turn-flow.js?v=28a7deece9d0';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=28a7deece9d0';
+import {formatModalSentences} from './modal-sentences.js?v=28a7deece9d0';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=28a7deece9d0';
+import {WORK_ARTWORK} from './work-artwork.js?v=28a7deece9d0';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=28a7deece9d0';
+import {RankingClient} from './ranking.js?v=28a7deece9d0';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=28a7deece9d0';
+import {HandoffCountdown} from './handoff-countdown.js?v=28a7deece9d0';
+import {fitBoardTitles} from './board-type.js?v=28a7deece9d0';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=28a7deece9d0';
+import * as G from './engine.js?v=28a7deece9d0';
+import {ActivityInbox,visibleActivities} from './activities.js?v=28a7deece9d0';
+import {purchaseQuizById} from './purchase-quizzes.js?v=28a7deece9d0';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=28a7deece9d0';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=28a7deece9d0';
+import {diceCube} from './dice.js?v=28a7deece9d0';
+import {CHARACTER_BIOS} from './character-bios.js?v=28a7deece9d0';
+import {needsLandscape} from './orientation.js?v=28a7deece9d0';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=28a7deece9d0';
+import {GameTransport} from './game-transport.js?v=28a7deece9d0';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=28a7deece9d0';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=28a7deece9d0';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=28a7deece9d0';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -200,6 +200,7 @@ function clearPendingDice(){if(!pendingDice)return;clearInterval(pendingDice.tic
 function makeDiceOverlay(player){
  const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');
  element.innerHTML=`<div class="dice-stage"><span class="eyebrow">MUSIC MARBLE</span><h2>${esc(player.name)}의 주사위</h2><div class="rolling-die">${diceCube(1)}</div><strong class="dice-result">${mobileGame?'주사위를 굴려요…':'주사위를 굴리고 있어요…'}</strong><p>어떤 명곡을 만나게 될까요?</p></div>`;
+ if(mobileGame){const frame=document.createElement('div');frame.className='dice-stage-scale';frame.append(element.firstElementChild);element.append(frame);}
  document.body.append(element);return element;
 }
 function animateRollingFaces(element){let face=1;return setInterval(()=>{face=face%6+1;element.querySelector('.rolling-die').innerHTML=diceCube(face);},150);}
@@ -836,7 +837,7 @@ function showModal(title,body,cls=''){
  if(mobileGame&&cls.includes('purchase-quiz-modal'))cls+=' mobile-music-modal';
  handoffCountdown.stop();
  const hideResultTitle=cls.includes('quiz-result-notice')||cls.includes('leave-confirm-modal')||cls.includes('bankruptcy-modal');
- const d=$('#modal');
+ const d=$('#modal');d.dataset.mobileGame=String(mobileGame&&!!snapshot?.state);
  if(hideResultTitle){d.removeAttribute('aria-labelledby');d.setAttribute('aria-label',title);}else{d.setAttribute('aria-labelledby','modal-title');d.removeAttribute('aria-label');}
  d.dataset.auto='false';d.dataset.activity='false';d.className=cls;d.innerHTML=`<div class="modal-header"><span class="eyebrow">MUSIC MARBLE</span><button class="icon-button" data-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="m3.5 3.5 17 17m0-17-17 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button></div>${hideResultTitle?'':`<h2 id="modal-title">${title}</h2>`}<div class="modal-body">${body}</div>`;
  if(d.classList.contains('learning-feedback-modal'))d.querySelector('.quiz-verdict-answers')?.remove();

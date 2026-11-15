@@ -392,3 +392,6 @@ dialog#modal.mobile-music-modal{
 .game-shell[data-mobile="true"][data-web-app="true"] .mobile-page-options{top:calc(100% + 6px);left:0;right:auto}
 .game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] main{padding:0 4px 4px 0}
 @media(max-height:300px){.game-shell[data-mobile="true"][data-web-app="true"]{--web-app-control-size:26px}}
+
+/* Match the extra 10% reduction used by all mobile game dialogs. */
+.mobile-dice-overlay .dice-stage-scale{transform:scale(.9);transform-origin:center;max-width:100%}

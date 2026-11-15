@@ -160,3 +160,17 @@ test('persisted ten-question rooms expand on resume without losing the active qu
   assert.equal((await read(db,guest)).state.quizDeck.length,30);
  }finally{db.close();}
 });
+
+test('prison arrival receipts persist and are restricted to the imprisoned participant',async()=>{
+ const db=database();try{
+  const {host,guest}=await setup(db);await act(db,host,'start');
+  const row=db.sqlite.prepare('SELECT payload FROM online_rooms WHERE code=?').get(host.code),room=JSON.parse(row.payload);
+  room.state.phase='jailed';room.state.players[0].position=11;room.state.players[0].skipTurns=3;
+  room.activities=[{id:1,type:'prison-entry',actorFirst:true,actorId:0,turnNumber:0}];room.activitySeq=1;
+  db.sqlite.prepare('UPDATE online_rooms SET payload=? WHERE code=?').run(JSON.stringify(room),host.code);
+  await assert.rejects(onlineRoomRequest(db,'action',{...guest,action:'acknowledgePrisonNotice',args:[1]}));
+  const acknowledged=await onlineRoomRequest(db,'action',{...host,action:'acknowledgePrisonNotice',args:[1]});
+  assert.equal(acknowledged.activities[0].actorSeen,true);assert.equal(acknowledged.state.phase,'jailed');
+  assert.equal((await read(db,guest)).activities[0].actorSeen,true);
+ }finally{db.close();}
+});

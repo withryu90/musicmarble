@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=842cfd056074';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=842cfd056074';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=7cfe5526d1e6';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=7cfe5526d1e6';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -18,9 +18,9 @@ export function activityChanges(before,after){
    if(t.skipped)add('copyright-transfer-skipped','양도할 작품 없음',{actorId:t.from,changes:[],text:'보유한 작품이 없어 저작권 양도 없이 이 칸을 통과했습니다.'});
    else{const w=WORKS.find(w=>w.id===t.workId);add('copyright-transfer','저작권 양도',{actorId:t.from,otherId:t.to,workId:t.workId,amount:t.price,changes:[],text:`${after.players[t.from].name} 님의 최고가 작품 ${w.composer} 「${w.title}」의 게임 속 가상 저작재산권을 ${after.players[t.to].name} 님에게 무상 양도했습니다.`,assignment:{...t}});}
   }
-  if(after.lastPrisonTransfer)add('prison-transfer','감옥으로 이동',{changes:[],text:'「감옥으로 가기」 칸에 도착하여 불법 스트리밍 감옥으로 이동합니다. 다음 세 번의 자기 차례에 주사위 6으로 탈출에 도전합니다.'});
+  if(after.lastPrisonTransfer)add('prison-transfer','감옥으로 이동',{actorFirst:true,changes:[],text:'「감옥으로 가기」 칸에 도착하여 불법 스트리밍 감옥으로 이동합니다. 다음 세 번의 자기 차례에 주사위 6으로 탈출에 도전합니다.'});
   if(after.lastPrisonRoll){const r=after.lastPrisonRoll;add('prison-roll',r.escaped?'감옥 탈출 성공!':r.remaining?'감옥 탈출 실패':'감옥 대기 종료',{changes:[],escaped:r.escaped,text:r.escaped?'주사위 6! 감옥에서 즉시 탈출하여 6칸 이동합니다.':r.remaining?`주사위 ${r.dice}. 감옥에 머뭅니다. 남은 탈출 기회는 ${r.remaining}번입니다.`:`주사위 ${r.dice}. 세 번의 도전을 마쳤습니다. 이번 차례는 감옥에 머물고 다음 자기 차례부터 정상 이동합니다.`});}
-  if(!after.lastPrisonRoll&&BOARD[after.players[actor].position].type==='prison')add('prison-entry','불법 스트리밍 감옥',{changes:[],text:PRISON_MESSAGE});
+  if(!after.lastPrisonRoll&&BOARD[after.players[actor].position].type==='prison')add('prison-entry','불법 스트리밍 감옥',{actorFirst:true,changes:[],text:PRISON_MESSAGE});
   if(after.lastEvent)add('history-event',after.lastEvent.title,{card:{...after.lastEvent},changes:[coin(actor,after.lastEvent.actual)],text:after.lastEvent.text});
   if(after.lastConcert){const c=after.lastConcert;add('concert','음악회 개최 · 티켓 안내',{concert:structuredClone(c),changes:[...c.tickets.map(t=>coin(t.playerId,-t.amount)),coin(c.hostId,c.total)],text:`${after.players[c.hostId].name} 님이 음악회를 개최했습니다. 참가자마다 좌석을 무작위로 배정하고 티켓비를 개최자에게 지급했습니다.`});}
  }
@@ -53,4 +53,12 @@ export class ActivityInbox{
   for(const item of ordered)if(item.id>this.seen){this.pending.push(item);this.seen=item.id;}
  }
  take(){return this.pending.shift()??null;}
+}
+
+// Do not consume a journal ID before the imprisoned player has seen it.
+// Keep later notices queued behind it, and release old turns/bots without an ack.
+export function visibleActivities(snapshot,playerId){
+ const items=[...(snapshot.activities||[])].sort((a,b)=>a.id-b.id),s=snapshot.state;
+ const blocked=items.findIndex(item=>item.actorFirst&&!item.actorSeen&&item.actorId!==playerId&&!s?.players[item.actorId]?.isBot&&item.actorId===s?.turn&&item.turnNumber===s?.turnNumber);
+ return blocked<0?items:items.slice(0,blocked);
 }

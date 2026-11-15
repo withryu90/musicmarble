@@ -1,9 +1,9 @@
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=842cfd056074';
-import {randomInt,randomToken} from './random.js?v=842cfd056074';
-import * as G from './engine.js?v=842cfd056074';
-import {botDecision,applyBotDecision} from './bots.js?v=842cfd056074';
-import {activityChanges} from './activities.js?v=842cfd056074';
-import {drawCharacterIds,characterById} from './characters.js?v=842cfd056074';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=7cfe5526d1e6';
+import {randomInt,randomToken} from './random.js?v=7cfe5526d1e6';
+import * as G from './engine.js?v=7cfe5526d1e6';
+import {botDecision,applyBotDecision} from './bots.js?v=7cfe5526d1e6';
+import {activityChanges} from './activities.js?v=7cfe5526d1e6';
+import {drawCharacterIds,characterById} from './characters.js?v=7cfe5526d1e6';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
@@ -78,9 +78,16 @@ export class RoomService {
   }
   subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn(this.chatPayload(room));return ()=>room.chatListeners.delete(fn);}
   snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
-  broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
+  broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,turnNumber:room.state?.turnNumber,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
   act(code,token,{action,args=[],revision}={}){
     const {room,member}=this.authenticate(code,token);
+    // A presentation receipt is idempotent and independent of gameplay revisions.
+    if(action==='acknowledgePrisonNotice'){
+      const notice=Array.isArray(args)&&room.activities?.find(n=>n.id===args[0]);
+      if(!notice||!notice.actorFirst||!['prison-entry','prison-transfer'].includes(notice.type)||notice.actorId!==member.id)throw Error('본인의 감옥 안내만 확인할 수 있습니다.');
+      if(!notice.actorSeen){notice.actorSeen=true;this.broadcast(room);}
+      return this.snapshot(room);
+    }
     if(room.state){const expired=G.expireQuiz(room.state);if(expired!==room.state){room.state=expired;this.broadcast(room);if(['answerQuiz','answerPurchaseQuiz','beginQuizTimer','expireQuiz'].includes(action))return this.snapshot(room);}}
     if(revision!==room.revision)throw Error('게임 상태가 갱신되었습니다. 화면을 확인하고 다시 시도해 주세요.');
     if(!Array.isArray(args))throw Error('잘못된 요청입니다.');

@@ -1,5 +1,5 @@
 // Count visible reading time on each device, independently of shared turn timing.
-export const CONCERT_NOTICE_MS=12000;
+export const CONCERT_NOTICE_MS=8000;
 export class ConcertNoticeWindow{
  constructor(){this.stop();}
  start(now=Date.now(),visible=true){this.remaining=CONCERT_NOTICE_MS;this.last=now;this.visible=visible;this.active=true;}

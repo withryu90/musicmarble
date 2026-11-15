@@ -229,17 +229,17 @@
     },
     "debussy-moon": {
       "src": "./src/assets/audio/hints/originals/debussy-moon.m4a",
-      "duration": 9.492,
+      "duration": 9.406666666666666,
       "original": true,
-      "originalFilename": "16 드뷔시 달빛.m4a",
-      "bytes": 165138,
-      "sha256": "5c00e61d555db6afcdd193dc3244f3adde56bb44defe8d8c1bf3da9ea91edc27",
+      "originalFilename": "용산동 3.m4a",
+      "bytes": 157313,
+      "sha256": "f4a52ce1e839936764ac3a8af03e6915a1eff0825ad0c01c29f75b35a153059b",
       "artist": "사용자 제공 음원",
       "source": "./src/assets/audio/hints/originals/debussy-moon.m4a",
       "sourceType": "user-provided",
       "section": "제공된 원본 음원 전체 감상",
       "edited": false,
-      "receivedAt": "2026-11-14",
+      "receivedAt": "2026-11-15",
       "rights": "게임에 적용하도록 사용자가 제공한 음원. 별도의 공개 라이선스는 지정되지 않았습니다."
     },
     "ravel-bolero": {

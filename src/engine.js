@@ -1,8 +1,8 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=c3cfd19232f6';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=c3cfd19232f6';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=c3cfd19232f6';
-import {characterById,drawCharacterIds} from './characters.js?v=c3cfd19232f6';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=c3cfd19232f6';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=6db3d8f8c118';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=6db3d8f8c118';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=6db3d8f8c118';
+import {characterById,drawCharacterIds} from './characters.js?v=6db3d8f8c118';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=6db3d8f8c118';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -320,7 +320,7 @@ export function answerQuiz(state,index){
   if(state.phase!=='quiz')throw Error('진행 중인 퀴즈가 없습니다.');
   const s=clone(state),q=QUIZZES.find(q=>q.id===s.quiz),p=current(s);
   if(!Number.isInteger(index)||index<0||index>=q.options.length)throw Error('답을 선택해 주세요.');
-  ensureQuizHistory(s);s.quizDeadline=null;p.attempts++;const correct=q.answer===index;if(correct){p.coins+=80;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +80 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
+  ensureQuizHistory(s);s.quizDeadline=null;p.attempts++;const correct=q.answer===index;if(correct){p.coins+=30;p.knowledge++;}s.feedback={correct,index};s.phase='feedback';log(s,`${p.name}: 퀴즈 ${correct?'정답! +30 MC':'도전 완료. 해설을 함께 읽어 보세요.'}`);return s;
 }
 export function closeFeedback(state){if(state.phase!=='feedback')throw Error('해설을 먼저 확인해 주세요.');const s=clone(state);ensureQuizHistory(s);s.phase='action';s.quiz=null;s.feedback=null;return s;}
 export function nextTurn(state){

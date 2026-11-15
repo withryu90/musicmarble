@@ -9,10 +9,10 @@ test('learning bank contains only ten sourced copyright and creators-rights ques
  assert.equal(QUIZZES.length,10);assert.equal(new Set(QUIZZES.map(q=>q.id)).size,10);assert.equal(new Set(QUIZZES.map(q=>q.question)).size,10);
  for(const q of QUIZZES){assert.equal(q.kind,'copyright');assert.ok(!history.includes(q.id)&&!retired.includes(q.id));assert.ok(q.question&&q.explanation);assert.ok(q.sourceUrl.startsWith('https://easylaw.go.kr/'));assert.equal(q.options.length,3);assert.equal(new Set(q.options).size,3);assert.ok(Number.isInteger(q.answer)&&q.answer>=0&&q.answer<3);}
 });
-test('every rights question can be drawn and answered, with +80 MC for correct and no deduction for wrong',()=>{
+test('every rights question can be drawn and answered, with +30 MC for correct and no deduction for wrong',()=>{
  for(const q of QUIZZES)for(const correct of [true,false]){
   let s=G.roll(game(),1);s.quizDeck=[q.id,...s.quizDeck.filter(id=>id!==q.id)];s=G.startQuiz(s);assert.equal(s.quiz,q.id);
-  s=G.answerQuiz(s,correct?q.answer:(q.answer+1)%3);assert.equal(s.feedback.correct,correct);assert.equal(s.players[0].coins,correct?1280:1200);assert.equal(s.players[0].knowledge,correct?1:0);assert.ok(G.isValidSave(G.closeFeedback(s)));
+  s=G.answerQuiz(s,correct?q.answer:(q.answer+1)%3);assert.equal(s.feedback.correct,correct);assert.equal(s.players[0].coins,correct?1230:1200);assert.equal(s.players[0].knowledge,correct?1:0);assert.ok(G.isValidSave(G.closeFeedback(s)));
  }
 });
 test('complete previous published banks resume using only rights questions and keep scores',()=>{

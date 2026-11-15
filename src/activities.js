@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=c3cfd19232f6';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=c3cfd19232f6';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=6db3d8f8c118';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=6db3d8f8c118';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -35,7 +35,7 @@ export function activityChanges(before,after){
   else if(previous&&next&&next.level>previous.level)add('upgrade','공연 프로젝트 완성',{actorId:next.player,workId:w.id,changes:[coin(next.player,-100)],text:`「${w.title}」 공연을 기획했습니다. 기본 이용료가 20 MC 높아집니다.`});
  }
  if(before.phase==='purchase-quiz'&&after.phase==='purchase-feedback')add('purchase-quiz-result',after.purchaseChallenge.correct?'음악 퀴즈 정답':'음악 퀴즈 오답',{correct:after.purchaseChallenge.correct,workId:after.purchaseChallenge.workId,changes:[],text:after.purchaseChallenge.correct?'음악 퀴즈를 맞혔습니다.':'음악 퀴즈를 틀렸습니다.'});
- if(before.phase==='quiz'&&after.phase==='feedback')add('quiz-result',after.feedback.correct?'배움퀴즈를 맞혔습니다!':'배움퀴즈를 틀렸습니다.',{correct:after.feedback.correct,changes:[coin(after.turn,after.feedback.correct?80:0)],text:after.feedback.correct?'배움퀴즈를 맞혔습니다.':'배움퀴즈를 틀렸습니다.'});
+ if(before.phase==='quiz'&&after.phase==='feedback')add('quiz-result',after.feedback.correct?'배움퀴즈를 맞혔습니다!':'배움퀴즈를 틀렸습니다.',{correct:after.feedback.correct,changes:[coin(after.turn,after.feedback.correct?30:0)],text:after.feedback.correct?'배움퀴즈를 맞혔습니다.':'배움퀴즈를 틀렸습니다.'});
  if(!before.trade&&after.trade){const t=after.trade;add('trade-offer','이용권 거래 제안',{actorId:t.from,otherId:t.to,workId:t.workId,amount:t.price,changes:[],text:`「${WORKS.find(w=>w.id===t.workId).title}」 이용권의 거래 가격 ${t.price} MC를 제안했습니다.`});}
  if(before.trade&&!after.trade&&!notices.some(n=>n.type==='trade-complete'))add('trade-cancelled','거래 거절 또는 취소',{actorId:before.trade.from,otherId:before.trade.to,workId:before.trade.workId,changes:[],text:'거래가 성사되지 않아 이용권과 코인은 이전되지 않았습니다.'});
  if(after.endReason?.type==='bankruptcy'&&before.endReason?.type!=='bankruptcy'){const id=after.endReason.playerId;add('bankruptcy','파산으로 게임 종료',{actorId:id,changes:[],text:`${after.players[id].name} 님의 보유 코인이 0 MC가 되어 2인 게임을 종료합니다. 최종 결과를 확인해 주세요.`});}

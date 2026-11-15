@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import {onlineRoomRequest} from '../lib/online-rooms.mjs';
+import {QUIZZES} from '../../src/data.js';
 import {purchaseQuizById} from '../../src/purchase-quizzes.js';
 function database(){
  const sqlite=new DatabaseSync(':memory:');sqlite.exec(readFileSync(new URL('../migrations/0003_online_rooms.sql',import.meta.url),'utf8'));
@@ -135,5 +136,15 @@ test('HTTPS bail payment persists across devices and authorizes one next-turn no
  await assert.rejects(act(db,host,'payBail'));assert.equal((await read(db,host)).state.players[0].coins,800);
  await act(db,host,'nextTurn');await act(db,guest,'roll');await act(db,guest,'nextTurn');
  const moved=await act(db,host,'roll');assert.equal(moved.state.players[0].position,11+moved.state.dice);assert.equal(moved.state.players[0].bailPaid,false);assert.equal(moved.state.lastPrisonRoll,null);
+ }finally{db.close();}
+});
+
+test('HTTPS learning quiz pays 30 MC once and shares the same amount with the room',async()=>{
+ const db=database();try{
+ const {host}=await setup(db);await act(db,host,'start');await act(db,host,'roll');
+ const shown=await act(db,host,'startQuiz'),before=shown.state.players[0].coins;
+ const answer=QUIZZES.find(q=>q.id===shown.state.quiz).answer,result=await act(db,host,'answerQuiz',[answer]);
+ assert.equal(result.state.players[0].coins,before+30);assert.equal(result.activities.at(-1).changes[0].amount,30);
+ await assert.rejects(act(db,host,'answerQuiz',[answer]));assert.equal((await read(db,host)).state.players[0].coins,before+30);
  }finally{db.close();}
 });

@@ -33,7 +33,7 @@ test('answering cancels the clock and finishing a quiz early preserves its resul
  const p=G.beginQuizTimer(purchase(),Date.now());const a=G.answerPurchaseQuiz(p,purchaseQuizById(p.purchaseChallenge.questionId).answer);
  assert.equal(a.quizDeadline,null);assert.equal(a.purchaseChallenge.correct,true);assert.equal(G.expireQuiz(a,Date.now()+20000),a);
  const q=G.beginQuizTimer(learning(),Date.now());const b=G.answerQuiz(q,QUIZZES.find(x=>x.id===q.quiz).answer);
- assert.equal(b.quizDeadline,null);assert.equal(b.players[0].coins,1280);assert.ok(G.isValidSave(b));
+ assert.equal(b.quizDeadline,null);assert.equal(b.players[0].coins,1230);assert.ok(G.isValidSave(b));
 });
 function room(){const service=new RoomService();const a=service.create('가온');service.join(a.code,'나래');const r=service.get(a.code);r.state=purchase();return {service,a,r};}
 test('host expires the quiz without a participant click, even after popup dismissal',async()=>{

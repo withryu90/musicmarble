@@ -154,17 +154,17 @@
     },
     "schubert-king": {
       "src": "./src/assets/audio/hints/originals/schubert-king.m4a",
-      "duration": 13.076,
+      "duration": 8.382666666666667,
       "original": true,
-      "originalFilename": "11 슈베르트 마왕.m4a",
-      "bytes": 223215,
-      "sha256": "5a3d86171bc6cca5ae63e93b845882bb8cd5c03de352dd847876a1bf45405686",
+      "originalFilename": "마왕.m4a",
+      "bytes": 140319,
+      "sha256": "d466e15c1732930651b9dbf8bc81cdc4d7b8142e3e84db2c4b7781be7ad5aa57",
       "artist": "사용자 제공 음원",
       "source": "./src/assets/audio/hints/originals/schubert-king.m4a",
       "sourceType": "user-provided",
       "section": "제공된 원본 음원 전체 감상",
       "edited": false,
-      "receivedAt": "2026-11-14",
+      "receivedAt": "2026-11-15",
       "rights": "게임에 적용하도록 사용자가 제공한 음원. 별도의 공개 라이선스는 지정되지 않았습니다."
     },
     "schubert-trout": {

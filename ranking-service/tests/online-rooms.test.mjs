@@ -174,3 +174,16 @@ test('prison arrival receipts persist and are restricted to the imprisoned parti
   assert.equal((await read(db,guest)).activities[0].actorSeen,true);
  }finally{db.close();}
 });
+
+test('shared roll schedules persist across separate participant polls and block premature follow-up actions',async()=>{
+ const db=database();try{
+  const {host,guest}=await setup(db);await act(db,host,'start');
+  const current=await read(db,host);
+  const rolled=await onlineRoomRequest(db,'action',{...host,action:'roll',synchronize:true,revision:current.revision});
+  const joined=await read(db,guest);assert.deepEqual(joined.rollPresentation,rolled.rollPresentation);
+  assert.equal(joined.rollPresentation.before.phase,'roll');assert.equal(joined.rollPresentation.dice,joined.state.dice);
+  assert.ok(joined.rollPresentation.finishAt>joined.serverNow);
+  await assert.rejects(act(db,host,'nextTurn'),/연출/);
+  assert.deepEqual((await read(db,host)).rollPresentation,rolled.rollPresentation);
+ }finally{db.close();}
+});

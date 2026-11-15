@@ -44,3 +44,12 @@ test('default fetch is bound to the browser global for Safari compatibility',asy
   const http=new HttpTransport();await http.request('create',{nickname:'브라우저 확인'});
  }finally{globalThis.fetch=original;}
 });
+
+test('server timestamps compensate for device clock differences at the request midpoint',async()=>{
+ const original=Date.now;let calls=0;Date.now=()=>calls++===0?1000:1400;
+ try{
+  const http=new HttpTransport({fetchFn:async()=>Response.json({code:'012345',serverNow:8200})});
+  const snapshot=await http.request('resume',{}, {code:'012345',token:'private'});
+  assert.equal(snapshot.serverTimeOffset,7000);
+ }finally{Date.now=original;}
+});

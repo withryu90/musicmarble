@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=a8ede83aad11';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=a8ede83aad11';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=235a9272d46d';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=235a9272d46d';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
@@ -59,6 +59,6 @@ export class ActivityInbox{
 // Keep later notices queued behind it, and release old turns/bots without an ack.
 export function visibleActivities(snapshot,playerId){
  const items=[...(snapshot.activities||[])].sort((a,b)=>a.id-b.id),s=snapshot.state;
- const blocked=items.findIndex(item=>item.actorFirst&&!item.actorSeen&&item.actorId!==playerId&&!s?.players[item.actorId]?.isBot&&item.actorId===s?.turn&&item.turnNumber===s?.turnNumber);
+ const blocked=items.findIndex(item=>item.actorFirst&&!item.synchronizedArrival&&!item.actorSeen&&item.actorId!==playerId&&!s?.players[item.actorId]?.isBot&&item.actorId===s?.turn&&item.turnNumber===s?.turnNumber);
  return blocked<0?items:items.slice(0,blocked);
 }

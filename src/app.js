@@ -1,35 +1,36 @@
-import {playerStatus} from './player-status.js?v=a8ede83aad11';
-import {createListeningPlayer} from './listening-player.js?v=a8ede83aad11';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=a8ede83aad11';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=a8ede83aad11';
-import {GameActions} from './game-actions.js?v=a8ede83aad11';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=a8ede83aad11';
-import {createMusicDirector} from './music-director.js?v=a8ede83aad11';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=a8ede83aad11';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=a8ede83aad11';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=a8ede83aad11';
-import {formatModalSentences} from './modal-sentences.js?v=a8ede83aad11';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a8ede83aad11';
-import {WORK_ARTWORK} from './work-artwork.js?v=a8ede83aad11';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=a8ede83aad11';
-import {RankingClient} from './ranking.js?v=a8ede83aad11';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a8ede83aad11';
-import {HandoffCountdown} from './handoff-countdown.js?v=a8ede83aad11';
-import {fitBoardTitles} from './board-type.js?v=a8ede83aad11';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=a8ede83aad11';
-import * as G from './engine.js?v=a8ede83aad11';
-import {ActivityInbox,visibleActivities} from './activities.js?v=a8ede83aad11';
-import {purchaseQuizById} from './purchase-quizzes.js?v=a8ede83aad11';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a8ede83aad11';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a8ede83aad11';
-import {diceCube} from './dice.js?v=a8ede83aad11';
-import {CHARACTER_BIOS} from './character-bios.js?v=a8ede83aad11';
-import {needsLandscape} from './orientation.js?v=a8ede83aad11';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=a8ede83aad11';
-import {GameTransport} from './game-transport.js?v=a8ede83aad11';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=a8ede83aad11';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=a8ede83aad11';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=a8ede83aad11';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=235a9272d46d';
+import {playerStatus} from './player-status.js?v=235a9272d46d';
+import {createListeningPlayer} from './listening-player.js?v=235a9272d46d';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=235a9272d46d';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=235a9272d46d';
+import {GameActions} from './game-actions.js?v=235a9272d46d';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=235a9272d46d';
+import {createMusicDirector} from './music-director.js?v=235a9272d46d';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=235a9272d46d';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=235a9272d46d';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=235a9272d46d';
+import {formatModalSentences} from './modal-sentences.js?v=235a9272d46d';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=235a9272d46d';
+import {WORK_ARTWORK} from './work-artwork.js?v=235a9272d46d';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=235a9272d46d';
+import {RankingClient} from './ranking.js?v=235a9272d46d';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=235a9272d46d';
+import {HandoffCountdown} from './handoff-countdown.js?v=235a9272d46d';
+import {fitBoardTitles} from './board-type.js?v=235a9272d46d';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=235a9272d46d';
+import * as G from './engine.js?v=235a9272d46d';
+import {ActivityInbox,visibleActivities} from './activities.js?v=235a9272d46d';
+import {purchaseQuizById} from './purchase-quizzes.js?v=235a9272d46d';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=235a9272d46d';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=235a9272d46d';
+import {diceCube} from './dice.js?v=235a9272d46d';
+import {CHARACTER_BIOS} from './character-bios.js?v=235a9272d46d';
+import {needsLandscape} from './orientation.js?v=235a9272d46d';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=235a9272d46d';
+import {GameTransport} from './game-transport.js?v=235a9272d46d';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=235a9272d46d';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=235a9272d46d';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=235a9272d46d';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -164,7 +165,7 @@ async function request(path,body){
 }
 
 function remember(){try{localStorage.setItem(key,JSON.stringify(session));}catch{notify('참가 정보를 저장하지 못했어요. 이 창을 유지해 주세요.');}}
-let dicePresentation=null;
+let dicePresentation=null,lastPresentedRoll=null;
 const activityInbox=new ActivityInbox();
 const prisonNoticeAcks=new Map();
 let activeActivity=null,deferredSnapshots=[],participantIntroPending=false;
@@ -188,67 +189,67 @@ function publishTyping(active){
 }
 setInterval(()=>{if(localTypingUntil&&localTypingUntil<=Date.now())publishTyping(false);updatePlayerStatuses();},500);
 
-function resetActivityFlow(){prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){lastPresentedRoll=null;prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function stopDicePresentation(){
  if(!dicePresentation)return;
- clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);
+ clearInterval(dicePresentation.ticker);clearTimeout(dicePresentation.timer);clearTimeout(dicePresentation.startTimer);
  dicePresentation.element.remove();dicePresentation=null;busy=false;
 }
-function startDicePresentation(player){
- void soundEffects.play('dice');
- const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');
+function startDicePresentation(player,plan,clockOffset=0){
+ const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');element.hidden=true;
  element.innerHTML=`<div class="dice-stage"><span class="eyebrow">MUSIC MARBLE</span><h2>${esc(player.name)}의 주사위</h2><div class="rolling-die">${diceCube(1)}</div><strong class="dice-result">${mobileGame?'주사위를 굴려요…':'주사위를 굴리고 있어요…'}</strong><p>어떤 명곡을 만나게 될까요?</p></div>`;
- document.body.append(element);busy=true;
- const presentation={element,playerId:player.id,started:performance.now(),next:null,result:null,updates:[],resultSnapshot:null,before:structuredClone(state),isBackwardRoll:state.phase==='backward-roll',moving:false,step:0,ticker:null,timer:null};dicePresentation=presentation;
- let face=1;presentation.ticker=setInterval(()=>{face=face%6+1;element.querySelector('.rolling-die').innerHTML=diceCube(face);},150);
+ document.body.append(element);busy=true;lastPresentedRoll=plan.id;
+ const p={element,playerId:player.id,plan,now:()=>Date.now()+clockOffset,next:null,result:null,updates:[],resultSnapshot:null,before:structuredClone(plan.before),isBackwardRoll:plan.before.phase==='backward-roll',moving:false,step:0,ticker:null,timer:null,startTimer:null};dicePresentation=p;
+ p.startTimer=setTimeout(()=>{
+  if(dicePresentation!==p)return;element.hidden=false;
+  if(p.now()<plan.resultAt){void soundEffects.play('dice');let face=1;p.ticker=setInterval(()=>{face=face%6+1;element.querySelector('.rolling-die').innerHTML=diceCube(face);},150);}
+ },Math.max(0,plan.startAt-p.now()));
 }
 function presentDiceResult(next){
  const p=dicePresentation;if(!p)return;
  if(!p.next||next.revision>p.next.revision){p.next=next;p.updates.push(next);}
- if(p.result!==null||!next.state||next.state.turn!==p.playerId||next.state.dice===null||next.state.phase==='roll')return;
- p.result=next.state.dice;p.resultSnapshot=next;
+ if(p.result!==null)return;
+ p.result=p.plan.dice;p.resultSnapshot=next;
  p.timer=setTimeout(()=>{
+  if(dicePresentation!==p)return;
   clearInterval(p.ticker);p.element.classList.add('dice-settled');
   p.element.querySelector('.rolling-die').innerHTML=diceCube(p.result);
   p.element.querySelector('.dice-result').textContent=`${p.result}${[1,3,6].includes(p.result)?'이':'가'} 나왔어요!`;
   p.element.querySelector('p').textContent=p.isBackwardRoll?`${p.result}칸 뒤로 이동합니다.`:next.state.endReason?.type==='laps'?`${next.state.endReason.moveSteps}칸 이동해 시대의 문에서 완주하면 게임이 종료됩니다.`:next.state.lastPrisonRoll&&!next.state.lastPrisonRoll.escaped?'탈출 실패 · 이번 차례는 감옥에 머뭅니다.':next.state.lastPrisonRoll?.escaped?'6! 탈출 성공 · 6칸 앞으로 이동합니다.':`${p.result}칸 앞으로 이동합니다.`;
   p.timer=setTimeout(()=>{
-   p.element.classList.add('dice-closing');
-   p.timer=setTimeout(()=>{
-    animateBoardMovement(p);
-   },600);
-  },2400);
- },Math.max(0,2200-(performance.now()-p.started)));
+   if(dicePresentation!==p)return;p.element.classList.add('dice-closing');
+   p.timer=setTimeout(()=>{if(dicePresentation===p)animateBoardMovement(p);},Math.max(0,p.plan.moveAt-p.now()));
+  },Math.max(0,p.plan.closeAt-p.now()));
+ },Math.max(0,p.plan.resultAt-p.now()));
 }
 function animateBoardMovement(p){
- p.element.remove();p.moving=true;tab='board';
- const travelSteps=p.resultSnapshot.state.endReason?.type==='laps'?p.resultSnapshot.state.endReason.moveSteps??p.result:p.result;p.totalSteps=travelSteps;
- const path=p.resultSnapshot.state.lastPrisonRoll&&!p.resultSnapshot.state.lastPrisonRoll.escaped?[]:(p.isBackwardRoll?backwardPath:movementPath)(p.before.players[p.playerId].position,travelSteps,BOARD.length);
- const forwardSteps=p.isBackwardRoll?0:path.length,backward=p.resultSnapshot.state.lastBackwardMove;
- if(!p.isBackwardRoll&&backward&&path.at(-1)===backward.from)path.push(...backwardPath(backward.from,backward.steps,BOARD.length));
- const transfer=p.resultSnapshot.state.lastPrisonTransfer;
- if(transfer&&path.at(-1)===transfer.from)path.push(transfer.to);
- let pathIndex=0;
- p.backward=p.isBackwardRoll;p.backwardStep=0;state=structuredClone(p.before);render();
- const movementTarget=boardView==='flat'?document.querySelector(`.cell[data-index="${state.players[p.playerId].position}"]`):document.querySelector('.board-scene');
- if(!mobileGame)movementTarget?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:boardView==='flat'?'nearest':'center',inline:'nearest'});
- if(!path.length){p.timer=setTimeout(()=>{const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);stopDicePresentation();commitSnapshot(result);pending.forEach(receive);},680);return;}
+ p.element.remove();p.moving=true;tab='board';p.totalSteps=p.resultSnapshot.state.endReason?.type==='laps'?p.resultSnapshot.state.endReason.moveSteps??p.result:p.result;
+ const path=p.plan.path,forwardSteps=p.isBackwardRoll?0:p.totalSteps,backward=p.resultSnapshot.state.lastBackwardMove;
+ let pathIndex=presentedSteps(p.plan,p.now());
+ p.backward=p.isBackwardRoll;p.backwardStep=0;state=structuredClone(p.before);
+ if(pathIndex){state.players[p.playerId].position=path[pathIndex-1];p.step=Math.min(pathIndex,p.totalSteps);}
+ render();
+ const finish=()=>{
+  if(dicePresentation!==p)return;
+  const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
+  stopDicePresentation();commitSnapshot(result);pending.forEach(receive);
+ };
  function advance(){
+  if(dicePresentation!==p)return;
   const previousPosition=state.players[p.playerId].position;
-  state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);p.backward=!!backward&&pathIndex>forwardSteps;p.backwardStep=pathIndex-forwardSteps;render();
+  pathIndex=Math.max(pathIndex+1,presentedSteps(p.plan,p.now()));pathIndex=Math.min(path.length,pathIndex);
+  state.players[p.playerId].position=path[pathIndex-1];p.step=Math.min(pathIndex,p.totalSteps);p.backward=p.isBackwardRoll||!!backward&&pathIndex>forwardSteps;p.backwardStep=p.isBackwardRoll?pathIndex:Math.max(0,pathIndex-forwardSteps);render();
   if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1,scroll:!mobileGame});
   else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1});});
-  if(pathIndex<path.length)p.timer=setTimeout(advance,720);
-  else p.timer=setTimeout(()=>{
-   const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
-   stopDicePresentation();commitSnapshot(result);pending.forEach(receive);
-
-  },680);
+  scheduleNext();
  }
- p.timer=setTimeout(advance,720);
+ function scheduleNext(){p.timer=setTimeout(pathIndex<path.length?advance:finish,Math.max(0,(pathIndex<path.length?p.plan.moveAt+(pathIndex+1)*ROLL_TIMING.step:p.plan.finishAt)-p.now()));}
+ scheduleNext();
 }
+
 function receive(next){
  if(!session?.code||next.code!==session.code)return;
+ if(!Number.isFinite(next.serverTimeOffset))next.serverTimeOffset=Number.isFinite(next.serverNow)?next.serverNow-Date.now():0;
  rememberRoomSnapshot(next);
  if(participantIntroPending&&snapshot?.state){if(next.revision>snapshot.revision&&!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);return;}
  if(snapshot&&next.revision<snapshot.revision)return;
@@ -259,10 +260,19 @@ function receive(next){
   }
   presentDiceResult(next);return;
  }
+ if(shouldPresentRoll(next,lastPresentedRoll,Date.now()+next.serverTimeOffset)){
+  activeActivity=null;activityInbox.pending=[];deferredSnapshots=[];
+  if(activityInbox.room!==next.code){activityInbox.reset();activityInbox.room=next.code;}
+  activityInbox.seen=Math.max(activityInbox.seen,next.rollPresentation.activityAfterId||0);
+  const d=$('#modal');if(d.open&&(d.dataset.auto==='true'||d.dataset.activity==='true'))d.close();
+  handoffCountdown.stop();lastPresentationProgressAt=Date.now();snapshot={...next,state:next.rollPresentation.before};state=structuredClone(next.rollPresentation.before);
+  startDicePresentation(state.players[next.rollPresentation.actorId],next.rollPresentation,next.serverTimeOffset);render();presentDiceResult(next);return;
+ }
  if(activeActivity||activityInbox.pending.length){if(!deferredSnapshots.some(s=>s.revision===next.revision))deferredSnapshots.push(next);deferredSnapshots.sort((a,b)=>a.revision-b.revision);return;}
  const before=snapshot?.state,after=next.state;
- if(['roll','backward-roll'].includes(before?.phase)&&after&&after.turn===before.turn&&after.turnNumber===before.turnNumber&&(['action','quiz','backward-roll','jailed'].includes(after.phase)||after.phase==='finished'&&['bankruptcy','laps'].includes(after.endReason?.type))&&after.dice!==null){
-  startDicePresentation(before.players[before.turn]);presentDiceResult(next);return;
+ if(!next.rollPresentation&&['roll','backward-roll'].includes(before?.phase)&&after&&after.turn===before.turn&&after.turnNumber===before.turnNumber&&(['action','quiz','backward-roll','jailed'].includes(after.phase)||after.phase==='finished'&&['bankruptcy','laps'].includes(after.endReason?.type))&&after.dice!==null){
+  const plan=createRollPresentation(before,after,`legacy:${next.revision}`,Date.now());
+  startDicePresentation(before.players[before.turn],plan);presentDiceResult(next);return;
  }
  commitSnapshot(next);
 }
@@ -386,6 +396,7 @@ function showActivity(item){
  activeActivity=item;
  const effect=activitySound(item);if(effect)void soundEffects.play(effect,`${session.code}:${effect==='prison'?`prison:${state.turnNumber}:${item.actorId}`:`event:${item.id}`}`);
  const actor=state.players[item.actorId],other=state.players[item.otherId];
+ if(item.type==='streaming-arrival'){streamingModal(item.appId);$('#modal').dataset.activity='true';return;}
  const footer=item.type==='backward-entry'&&item.actorId===state.turn&&state.phase==='backward-roll'&&myTurn()?`<button class="primary full" data-action="roll-backward">뒤로 이동할 주사위 굴리기 →</button>`:`<div class="activity-footer"><button class="primary full" data-action="activity-next">확인${activityInbox.pending.length?' · 다음 안내 →':'하고 계속하기 →'}</button></div>`;
  if(item.type==='bankruptcy'){
   showModal('파산 · 게임 종료',`<section class="bankruptcy-scene"><div class="bankruptcy-coins" aria-hidden="true"><span>MC</span><span>MC</span><span>MC</span></div><span class="bankruptcy-kicker">음악 투자의 마지막 순간</span><h2 class="bankruptcy-title">파산</h2><div class="bankruptcy-player">${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div><div class="bankruptcy-balance"><strong>0</strong><span>MC</span></div><p class="bankruptcy-message">뮤직코인이 모두 소진되었습니다.</p><p class="bankruptcy-detail">${esc(actor.name)} 님의 파산으로<br>2인 게임이 종료됩니다.</p></section><button class="primary full" data-action="activity-next">최종 결과 확인하기 →</button>`,'activity-modal bankruptcy-modal');
@@ -406,7 +417,7 @@ function showActivity(item){
   showModal(esc(item.title),`<div class="activity-hero">${purchaseResult?'':item.type==='backward-entry'?`<div class="activity-symbol backward-dice" aria-hidden="true">${diceCube(5)}</div>`:`<span class="activity-symbol" aria-hidden="true">${item.appId?streamingIcon(item.appId):symbols[item.type]||'♫'}</span>`}${characterSprite(actor)}<strong>${esc(actor.name)}</strong></div>${verdict}${purchaseResult||item.type==='quiz-result'?'':`<p class="activity-description">${item.type==='prison-entry'?prisonDescription():esc(item.text)}</p>`}${amount}${assignment}${ledger?`<div class="activity-ledger">${ledger}</div>`:''}${limited}${['prison-entry','prison-roll'].includes(item.type)&&item.actorId===state.turn?bailOffer():''}${footer}`,purchaseResult?'activity-modal quiz-result-notice':['prison-entry','prison-transfer'].includes(item.type)?'activity-modal prison-arrival-modal':'activity-modal');
  }
  $('#modal').dataset.activity='true';
- if(item.actorFirst&&item.actorId===session?.playerId&&!item.actorSeen){
+ if(item.actorFirst&&!item.synchronizedArrival&&item.actorId===session?.playerId&&!item.actorSeen){
   const who={...session};
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
    if(session?.code!==who.code||session?.token!==who.token)return;
@@ -443,7 +454,8 @@ async function syncRoom(){
   if(session?.code!==who.code||session?.token!==who.token)return;
   const reconnect=!connected||previousConnection!==peerTransport.connection;connected=true;rememberRoomSnapshot(next);
   const lagging=next.revision>snapshot.revision;
-  if(shouldRecoverPresentation({latestRevision:next.revision,presentedRevision:snapshot.revision,lastProgressAt:lastPresentationProgressAt,intro:participantIntroPending})){
+  if(shouldPresentRoll(next,lastPresentedRoll,next.serverNow??Date.now())){receive(next);}
+  else if(shouldRecoverPresentation({latestRevision:next.revision,presentedRevision:snapshot.revision,lastProgressAt:lastPresentationProgressAt,intro:participantIntroPending})){
    stopDicePresentation();handoffCountdown.stop();activeActivity=null;deferredSnapshots=[];
    if($('#modal').open)$('#modal').close();
    lastAuto='';lastHandoffKey=null;commitSnapshot(next);
@@ -813,7 +825,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(busy&&!mobileViewAction)return;
  if(a==='pay-bail'){handoffCountdown.stop();activeActivity=null;$('#modal').close();busy=true;try{await apply(G.payBail);}finally{busy=false;render();continueFlow();}return;}
  if(a==='streaming-open'){streamingModal();return;}
- if(['streaming-buy','streaming-install','streaming-skip'].includes(a)){const appId=el.dataset.app;$('#modal').close();await apply(a==='streaming-buy'?G.buyPlatform:a==='streaming-install'?G.installStreaming:G.skipStreaming,...(a==='streaming-install'?[appId]:[]));return;}
+ if(['streaming-buy','streaming-install','streaming-skip'].includes(a)){const appId=el.dataset.app;if(activeActivity?.type==='streaming-arrival')activeActivity=null;$('#modal').close();await apply(a==='streaming-buy'?G.buyPlatform:a==='streaming-install'?G.installStreaming:G.skipStreaming,...(a==='streaming-install'?[appId]:[]));return;}
  if(a==='handoff-next'){await passHandoff();return;}
  if(a==='handoff-open'){if(myTurn()&&canOfferTurnHandoff(state,session.playerId))turnHandoffModal();return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
@@ -839,9 +851,9 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
   if(a==='roll-backward'&&state.phase!=='backward-roll')return;
   if(activeActivity&&activeActivity.type!=='backward-entry')return;
   if(a==='roll-backward'){activeActivity=null;$('#modal').close();}
-  startDicePresentation(G.current(state));render();
-  try{receive(await request('action',{code:session.code,action:'roll',args:[],revision:snapshot.revision}));}
-  catch(error){const latest=dicePresentation?.next;stopDicePresentation();if(latest)commitSnapshot(latest);else render();notify(error.message);}
+  busy=true;render();
+  try{receive(await request('action',{code:session.code,action:'roll',args:[],synchronize:true,revision:snapshot.revision}));}
+  catch(error){const latest=dicePresentation?.next;stopDicePresentation();busy=false;if(latest)commitSnapshot(latest);else render();notify(error.message);}
  }
  if(a==='purchase-quiz'){closeModal();await apply(G.startPurchaseQuiz);}
  if(a==='purchase-quiz-open')purchaseQuizModal();

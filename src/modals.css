@@ -318,3 +318,6 @@ dialog#modal.concert-tickets-modal::backdrop{background:#10223999}
 #modal.concert-tickets-modal .concert-income{background:#fff4ddeb;color:#594522;border:1px solid #ddc493}
 #modal.concert-tickets-modal .concert-seat-guide{padding:7px 9px;border-radius:8px;background:#14263bdb;color:#f3e8d1}
 dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close"]:focus-visible svg{color:#fff3d8;filter:none}
+
+/* Scheduled room-wide dice overlays stay hidden until the shared start time. */
+.dice-overlay[hidden]{display:none!important}

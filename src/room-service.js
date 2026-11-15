@@ -1,9 +1,10 @@
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=a8ede83aad11';
-import {randomInt,randomToken} from './random.js?v=a8ede83aad11';
-import * as G from './engine.js?v=a8ede83aad11';
-import {botDecision,applyBotDecision} from './bots.js?v=a8ede83aad11';
-import {activityChanges} from './activities.js?v=a8ede83aad11';
-import {drawCharacterIds,characterById} from './characters.js?v=a8ede83aad11';
+import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=235a9272d46d';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=235a9272d46d';
+import {randomInt,randomToken} from './random.js?v=235a9272d46d';
+import * as G from './engine.js?v=235a9272d46d';
+import {botDecision,applyBotDecision} from './bots.js?v=235a9272d46d';
+import {activityChanges} from './activities.js?v=235a9272d46d';
+import {drawCharacterIds,characterById} from './characters.js?v=235a9272d46d';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
@@ -40,9 +41,11 @@ export class RoomService {
       const decision=botDecision(room.state,room.botMemory,this.random);
       if(!decision)return;
       room.botMemory=decision.memory;
+      const before=room.state;
       room.state=applyBotDecision(room.state,decision,randomInt(1,7));
+      if(decision.action==='roll'&&room.synchronizeRolls){room.rollPresentation=createRollPresentation(before,room.state,`${room.revision+1}:${before.turnNumber}:${before.phase}`);room.rollPresentation.activityAfterId=room.activitySeq||0;}
       this.broadcast(room);
-    },this.botDelay);
+    },Math.max(this.botDelay,(room.rollPresentation?.finishAt||0)-Date.now()+this.botDelay));
     timer.unref?.();this.botTimers.set(room.code,timer);
   }
   scheduleQuiz(room){
@@ -77,9 +80,9 @@ export class RoomService {
     room.updatedAt=now;const payload=this.chatPayload(room);room.chatListeners?.forEach(fn=>fn(payload));return payload;
   }
   subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn(this.chatPayload(room));return ()=>room.chatListeners.delete(fn);}
-  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,activities:room.activities||[]};}
-  broadcast(room){room.activities??=[];room.activitySeq??=0;for(const notice of activityChanges(room.publishedState,room.state))room.activities.push({...notice,turnNumber:room.state?.turnNumber,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
-  act(code,token,{action,args=[],revision}={}){
+  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,serverNow:Date.now(),rollPresentation:room.rollPresentation||null,activities:room.activities||[]};}
+  broadcast(room){room.activities??=[];room.activitySeq??=0;const changes=activityChanges(room.publishedState,room.state);if(!changes.length&&room.rollPresentation?.activityAfterId===room.activitySeq&&room.rollPresentation.turnNumber===room.state?.turnNumber){const arrival=rollArrivalNotice(room.state);if(arrival)changes.push(arrival);}for(const notice of changes)room.activities.push({...notice,synchronizedArrival:!!room.rollPresentation&&room.rollPresentation.turnNumber===room.state?.turnNumber,turnNumber:room.state?.turnNumber,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
+  act(code,token,{action,args=[],revision,synchronize=false}={}){
     const {room,member}=this.authenticate(code,token);
     // A presentation receipt is idempotent and independent of gameplay revisions.
     if(action==='acknowledgePrisonNotice'){
@@ -91,6 +94,7 @@ export class RoomService {
     if(room.state){const expired=G.expireQuiz(room.state);if(expired!==room.state){room.state=expired;this.broadcast(room);if(['answerQuiz','answerPurchaseQuiz','beginQuizTimer','expireQuiz'].includes(action))return this.snapshot(room);}}
     if(revision!==room.revision)throw Error('게임 상태가 갱신되었습니다. 화면을 확인하고 다시 시도해 주세요.');
     if(!Array.isArray(args))throw Error('잘못된 요청입니다.');
+    if(room.rollPresentation?.finishAt>Date.now()&&!['finishGame'].includes(action))throw Error('모든 참가자의 주사위와 이동 연출이 끝나면 진행할 수 있습니다.');
     if(action==='rerollCharacter'){
       const canSoloRedraw=room.mode==='solo'&&room.state?.round===1&&room.state.turn===member.id&&room.state.phase==='roll'&&room.state.dice===null;
       if(room.state&&!canSoloRedraw)throw Error('게임을 시작한 뒤에는 캐릭터를 바꿀 수 없습니다.');
@@ -118,6 +122,11 @@ export class RoomService {
         const allowed={payBail:G.payBail,pauseListeningHint:s=>G.pauseListeningHint(s),resumeListeningHint:s=>G.resumeListeningHint(s),buyListeningHint:s=>G.buyListeningHint(s),refundListeningHint:s=>G.refundListeningHint(s),beginQuizTimer:s=>G.beginQuizTimer(s),expireQuiz:s=>G.expireQuiz(s),buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
         if(!Object.hasOwn(allowed,action))throw Error('지원하지 않는 동작입니다.');
         room.state=allowed[action](state,...args);
+        if(action==='roll'&&(synchronize||room.synchronizeRolls)){
+          room.synchronizeRolls=true;
+          room.rollPresentation=createRollPresentation(state,room.state,`${room.revision+1}:${state.turnNumber}:${state.phase}`);
+          room.rollPresentation.activityAfterId=room.activitySeq||0;
+        }
       }
     }
     this.broadcast(room);return this.snapshot(room);

@@ -1,5 +1,5 @@
-import {RANKING_ORIGIN} from './ranking.js?v=a8ede83aad11';
-import {randomToken} from './random.js?v=a8ede83aad11';
+import {RANKING_ORIGIN} from './ranking.js?v=235a9272d46d';
+import {randomToken} from './random.js?v=235a9272d46d';
 // Carrier NATs cannot block a browser-to-browser channel that is no longer needed.
 export class HttpTransport{
  constructor({origin=RANKING_ORIGIN,fetchFn=globalThis.fetch.bind(globalThis),interval=1500,timeout=15000}={}){Object.assign(this,{origin,fetchFn,interval,timeout});this.listeners=new Set();this.generation=0;this.resumeReads=new Map();this.joinKeys=new Map();}
@@ -12,11 +12,13 @@ export class HttpTransport{
   const readKey=path==='resume'?`${data.code}:${data.token}`:null;
   if(readKey&&this.resumeReads.has(readKey))return this.resumeReads.get(readKey);
   const once=async()=>{
+   const sentAt=Date.now();
    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),this.timeout);
    try{
     const response=await this.fetchFn(`${this.origin}/api/game/${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),credentials:'omit',cache:'no-store',signal:controller.signal});
     const result=await response.json();
     if(!response.ok)throw Object.assign(Error(result.error||'게임 서버에 연결하지 못했어요.'),{status:response.status});
+    if(Number.isFinite(result.serverNow))result.serverTimeOffset=result.serverNow-(sentAt+Date.now())/2;
     return result;
    }catch(error){if(error.status)throw error;throw Error('게임 서버에 연결하지 못했어요. 연결을 확인하고 다시 시도해 주세요.');}
    finally{clearTimeout(timer);}

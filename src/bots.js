@@ -1,6 +1,6 @@
-import {BOARD,WORKS,QUIZZES} from './data.js?v=15af1a989850';
-import * as G from './engine.js?v=15af1a989850';
-import {purchaseQuizById} from './purchase-quizzes.js?v=15af1a989850';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=d75c48c8c5c3';
+import * as G from './engine.js?v=d75c48c8c5c3';
+import {purchaseQuizById} from './purchase-quizzes.js?v=d75c48c8c5c3';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
 export function botDecision(state,previous={},random=Math.random){
@@ -35,7 +35,7 @@ export function botDecision(state,previous={},random=Math.random){
     const apps=G.streamingOptions(state);return p.coins>=150&&random()<.7?decide('installStreaming',[apps[Math.floor(random()*apps.length)].id]):decide('skipStreaming');
   }
   if(cell.type==='work'&&!state.ownership[cell.id]){
-    if(state.purchaseChallenge?.correct===true&&!memory.buy&&p.coins>=cell.price){memory.buy=true;return decide('buy');}
+    if(state.purchaseChallenge?.correct===true&&!state.purchaseChallenge.declined&&!memory.buy&&p.coins>=cell.price){memory.buy=true;return decide('buy');}
     if(!state.purchaseChallenge&&!memory.purchase){memory.purchase=true;if(p.coins>=cell.price+100&&random()<.85)return decide('startPurchaseQuiz');}
   }
   if(!memory.upgrade){
@@ -43,7 +43,7 @@ export function botDecision(state,previous={},random=Math.random){
     const options=WORKS.filter(w=>G.canUpgrade(state,w.id));
     if(options.length&&p.coins>=350&&random()<.35)return decide('upgrade',[options[Math.floor(random()*options.length)].id]);
   }
-  if(!memory.quiz){memory.quiz=true;if(!state.quizUsed&&random()<.8)return decide('startQuiz');}
+  if(!memory.quiz){memory.quiz=true;if(G.canStartLearningQuiz(state)&&random()<.8)return decide('startQuiz');}
   return decide('nextTurn');
 }
 

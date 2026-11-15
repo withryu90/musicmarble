@@ -87,7 +87,7 @@ test('two friends survive rapid timer/answer races, timeout and repeated purchas
    const actor=n%2,s=room.state;
    assert.equal(s.turn,actor);assert.equal(s.phase,'roll');
    // A deterministic work arrival keeps this test focused on network ordering.
-   s.phase='action';s.dice=1;s.players[actor].position=1;s.purchaseChallenge=null;s.streamingHandled=true;delete s.ownership['bach-air'];
+   s.phase='action';s.quizUsed=false;s.dice=1;s.players[actor].position=1;s.purchaseChallenge=null;s.streamingHandled=true;delete s.ownership['bach-air'];
    peers[0].service.broadcast(room);await tick();
    const run=(action,args=[],shown=snapshots[actor])=>queues[actor].run({action,args},sessions[actor],shown);
    await run('startPurchaseQuiz');await tick();const shown=structuredClone(snapshots[actor]);
@@ -96,9 +96,11 @@ test('two friends survive rapid timer/answer races, timeout and repeated purchas
    assert.equal(room.state.phase,'purchase-feedback');assert.equal(room.state.purchaseChallenge.correct,true);
    const feedback=structuredClone(snapshots[actor]);
    await Promise.all([run('purchaseAndNext',[],feedback),run('purchaseAndNext',[],feedback)]);await tick();
+   for(const received of snapshots){assert.equal(received.state.turn,actor);assert.equal(received.state.phase,'action');}
+   await run('startQuiz');await tick();await run('answerQuiz',[0]);await tick();await run('closeFeedback');await tick();await run('nextTurn');await tick();
    for(const received of snapshots){assert.equal(received.state.turn,1-actor);assert.equal(received.state.phase,'roll');assert.equal(received.revision,room.revision);}
   }
-  const actor=room.state.turn;room.state.phase='action';room.state.quizUsed=false;peers[0].service.broadcast(room);await tick();
+  const actor=room.state.turn;room.state.players[actor].position=1;room.state.phase='action';room.state.quizUsed=false;peers[0].service.broadcast(room);await tick();
   await queues[actor].run({action:'startQuiz'},sessions[actor],snapshots[actor]);await tick();
   await queues[actor].run({action:'beginQuizTimer'},sessions[actor],snapshots[actor]);await tick();
   room.state.quizDeadline=Date.now()-1;

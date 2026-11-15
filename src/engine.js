@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=15af1a989850';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=15af1a989850';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=15af1a989850';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=15af1a989850';
-import {characterById,drawCharacterIds} from './characters.js?v=15af1a989850';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=15af1a989850';
+import {ROUND_OPTIONS} from './lobby-config.js?v=d75c48c8c5c3';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=d75c48c8c5c3';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=d75c48c8c5c3';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=d75c48c8c5c3';
+import {characterById,drawCharacterIds} from './characters.js?v=d75c48c8c5c3';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=d75c48c8c5c3';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -293,18 +293,18 @@ export function answerPurchaseQuiz(state,response){
 }
 export function closePurchaseFeedback(state){
  if(state.phase!=='purchase-feedback'||typeof state.purchaseChallenge?.correct!=='boolean')throw Error('음악 퀴즈 해설을 먼저 확인해 주세요.');
- const s=clone(state);ensureQuizHistory(s);s.phase='action';return s.purchaseChallenge.correct?s:nextTurn(s);
+ const s=clone(state);ensureQuizHistory(s);s.phase='action';return s;
 }
 export function buy(state){
   const s=clone(state),p=current(s),w=BOARD[p.position];
   if(s.phase!=='action'||w.type!=='work'||s.ownership[w.id])throw Error('구입할 수 있는 작품이 아닙니다.');
-  if(s.purchaseChallenge?.workId!==w.id||s.purchaseChallenge.correct!==true)throw Error('음악 퀴즈를 먼저 맞혀야 합니다.');
+  if(s.purchaseChallenge?.workId!==w.id||s.purchaseChallenge.correct!==true||s.purchaseChallenge.declined)throw Error('음악 퀴즈를 먼저 맞혀야 합니다.');
   if(p.coins<w.price)throw Error('뮤직코인이 부족합니다.');
   p.coins-=w.price;s.ownership[w.id]={player:p.id,level:0};s.purchased=true;log(s,`${p.name}: ${w.composer} 「${w.title}」 이용권 구입 (${w.price} MC)`);return checkBankruptcy(s);
 }
-// Production purchase commits the payment, ownership and turn advance atomically.
-export function purchaseAndNext(state){const s=buy(state.phase==='purchase-feedback'?closePurchaseFeedback(state):state);return s.phase==='finished'?s:nextTurn(s);}
-export function skipPurchase(state){if(state.phase!=='purchase-feedback'||state.purchaseChallenge?.correct!==true)throw Error('구입 선택을 확인해 주세요.');return nextTurn(closePurchaseFeedback(state));}
+// Keep the arrival turn open so learning can be offered after the purchase.
+export function purchaseAndNext(state){return buy(state.phase==='purchase-feedback'?closePurchaseFeedback(state):state);}
+export function skipPurchase(state){if(state.phase!=='purchase-feedback'||state.purchaseChallenge?.correct!==true)throw Error('구입 선택을 확인해 주세요.');const s=closePurchaseFeedback(state);s.purchaseChallenge.declined=true;return s;}
 export function concertWork(state){
   if(state.phase!=='action'||state.trade||state.purchased)return null;
   const p=current(state),w=BOARD[p.position],owner=state.ownership[w.id];
@@ -321,7 +321,8 @@ export function sell(state,id){
   if(s.phase!=='action'||!w||s.ownership[id]?.player!==p.id)throw Error('반납할 내 이용권을 선택해 주세요.');
   const amount=Math.floor((w.price+s.ownership[id].level*100)/2);p.coins+=amount;delete s.ownership[id];log(s,`${p.name}: 「${w.title}」 은행 반납, +${amount} MC`);return s;
 }
-export function startQuiz(state){if(state.phase!=='action'||state.quizUsed)throw Error('퀴즈는 차례마다 한 번 가능합니다.');const s=clone(state);openQuiz(s);return s;}
+export function canStartLearningQuiz(state){return state.phase==='action'&&!state.quizUsed&&!state.trade&&['work','streaming'].includes(BOARD[current(state).position].type);}
+export function startQuiz(state){if(!canStartLearningQuiz(state))throw Error('배움퀴즈는 작품 칸과 스트리밍 앱 인수 칸에서 차례마다 한 번 가능합니다.');const s=clone(state);openQuiz(s);return s;}
 export function answerQuiz(state,index){
   if(state.phase!=='quiz')throw Error('진행 중인 퀴즈가 없습니다.');
   const s=clone(state),q=QUIZZES.find(q=>q.id===s.quiz),p=current(s);
@@ -413,6 +414,7 @@ export function isValidSave(s){
     if(s.phase==='backward-roll'&&(BOARD[current(s).position].type!=='back-three'||s.lastBackwardMove||s.trade))return false;
     if(s.lastPrisonRoll){const r=s.lastPrisonRoll;if(!Number.isInteger(r.dice)||r.dice<1||r.dice>6||r.escaped!==(r.dice===6)||r.remaining!==current(s).skipTurns||r.remaining<0||r.remaining>=PRISON_ATTEMPTS||(!r.escaped&&s.phase!=='jailed'&&s.phase!=='finished'))return false;}
     if(s.purchaseChallenge?.hint){const h=s.purchaseChallenge.hint;if(!Number.isSafeInteger(h.until)||h.until<0||!Number.isInteger(h.remaining)||h.remaining<1||h.remaining>QUIZ_TIME_LIMIT||typeof h.refunded!=='boolean'||![1,2].includes(s.purchaseChallenge.hintAttempts))return false;if(h.paused!==undefined&&typeof h.paused!=='boolean'||h.audioRemainingMs!==undefined&&(!Number.isSafeInteger(h.audioRemainingMs)||h.audioRemainingMs<0)||h.paused&&(h.until!==0||!h.audioRemainingMs))return false;}
+    if(s.purchaseChallenge?.declined!==undefined&&typeof s.purchaseChallenge.declined!=='boolean')return false;
     if(s.purchaseChallenge){const c=s.purchaseChallenge,q=purchaseQuizById(c.questionId);if(!q||q.workId!==c.workId||c.workId!==BOARD[current(s).position].id||![null,true,false].includes(c.response)||![null,true,false].includes(c.correct))return false;if(c.timedOut===true?c.response!==null||c.correct!==false:c.response===null?c.correct!==null:c.correct!==(c.response===q.answer))return false;}
     if(['purchase-quiz','purchase-feedback'].includes(s.phase)&&(!s.purchaseChallenge||s.ownership[s.purchaseChallenge.workId]))return false;
     if(s.phase==='purchase-quiz'&&(s.purchaseChallenge.response!==null||s.purchaseChallenge.timedOut===true))return false;

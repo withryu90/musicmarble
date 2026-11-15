@@ -20,7 +20,7 @@ test('purchase timeout grants no buying right, deducts nothing and permits norma
  assert.equal(s.phase,'purchase-feedback');assert.equal(s.purchaseChallenge.timedOut,true);
  assert.equal(s.purchaseChallenge.correct,false);assert.equal(s.players[0].coins,1200);
  assert.ok(G.isValidSave(s));assert.throws(()=>G.purchaseAndNext(s));
- s=G.closePurchaseFeedback(s);assert.equal(s.turn,1);assert.equal(s.phase,'roll');
+ s=G.closePurchaseFeedback(s);assert.equal(s.turn,0);assert.equal(s.phase,'action');assert.equal(G.canStartLearningQuiz(s),true);
 });
 test('learning timeout records one incorrect attempt without reward or deduction',()=>{
  let s=G.beginQuizTimer(learning(),1000);s=G.expireQuiz(s,16000);

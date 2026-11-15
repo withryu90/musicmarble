@@ -5,7 +5,7 @@ import {BOARD,WORKS,QUIZZES} from '../src/data.js';
 import {purchaseQuizById} from '../src/purchase-quizzes.js';
 const game=()=>G.createGame({names:['A','B','C','D'],coins:1600});
 function purchase(s,work,player=0){const next=structuredClone(s);next.turn=player;next.phase='action';next.purchaseChallenge=null;next.players[player].position=BOARD.findIndex(c=>c.id===work);return G.startPurchaseQuiz(next,()=>0);}
-function learning(s,player=0){const next=structuredClone(s);next.turn=player;next.phase='action';next.purchaseChallenge=null;next.quiz=null;next.feedback=null;next.quizUsed=false;return G.startQuiz(next);}
+function learning(s,player=0){const next=structuredClone(s);next.turn=player;next.phase='action';next.purchaseChallenge=null;next.quiz=null;next.feedback=null;next.quizUsed=false;next.players[player].position=1;return G.startQuiz(next);}
 test('every player gets all five work questions before a repeat, even with a constant random source',()=>{
  for(const work of WORKS){let s=game();const seen=Array.from({length:4},()=>[]);
  for(let cycle=0;cycle<3;cycle++)for(let visit=0;visit<5;visit++)for(let p=0;p<4;p++){

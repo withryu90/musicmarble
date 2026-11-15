@@ -53,3 +53,9 @@ test('server timestamps compensate for device clock differences at the request m
   assert.equal(snapshot.serverTimeOffset,7000);
  }finally{Date.now=original;}
 });
+
+test('an evicted participant stops polling and receives the removal notice instead of reconnecting forever',async()=>{
+ let removed=0,calls=0;const http=new HttpTransport({interval:1,fetchFn:async()=>{calls++;return Response.json({error:'자동 퇴장되었습니다.'},{status:410});}});
+ const sub=http.subscribe({code:'012345',token:'private'},{onRemoved:()=>removed++});
+ for(let i=0;i<30&&!removed;i++)await tick();sub.close();const before=calls;await tick();assert.equal(removed,1);assert.equal(calls,before);
+});

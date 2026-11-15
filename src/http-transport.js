@@ -1,5 +1,5 @@
-import {RANKING_ORIGIN} from './ranking.js?v=05a12a28f72b';
-import {randomToken} from './random.js?v=05a12a28f72b';
+import {RANKING_ORIGIN} from './ranking.js?v=009637e72a9a';
+import {randomToken} from './random.js?v=009637e72a9a';
 // Carrier NATs cannot block a browser-to-browser channel that is no longer needed.
 export class HttpTransport{
  constructor({origin=RANKING_ORIGIN,fetchFn=globalThis.fetch.bind(globalThis),interval=1500,timeout=15000}={}){Object.assign(this,{origin,fetchFn,interval,timeout});this.listeners=new Set();this.generation=0;this.resumeReads=new Map();this.joinKeys=new Map();}
@@ -42,7 +42,7 @@ export class HttpTransport{
     const recovered=failures>0;failures=0;
     if(data.revision>revision||recovered){revision=data.revision;listener.onSnapshot?.(data);}
     if(data.chatSeq!==chatSeq){chatSeq=data.chatSeq;listener.onChat?.({code:data.code,messages:data.messages||[],typing:data.typing||{},chatSeq:data.chatSeq});}
-   }catch(error){if(active&&generation===this.generation){failures++;listener.onDisconnect?.(error.message);}}
+   }catch(error){if(active&&generation===this.generation){if(error.status===410){active=false;listener.onRemoved?.(error.message);}else{failures++;listener.onDisconnect?.(error.message);}}}
    finally{if(active&&generation===this.generation)timer=setTimeout(poll,Math.min(6000,this.interval*Math.max(1,failures)));}
   };
   const stop=()=>{active=false;clearTimeout(timer);this.listeners.delete(stop);};this.listeners.add(stop);void poll();return {close:stop};

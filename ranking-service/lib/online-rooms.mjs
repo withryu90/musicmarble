@@ -1,3 +1,4 @@
+import {recordDepartureGame} from './departure-ranking.mjs';
 import {RoomService} from '../../src/room-service.js';
 import {expireQuiz,migrateRetiredQuiz} from '../../src/engine.js';
 // Expire before the next 15-minute cleanup tick.
@@ -38,7 +39,8 @@ export async function onlineRoomRequest(db,path,body,now=Date.now(),attempt=0){
   if(previous)return sessionFor(room,previous);
   result=service.join(body.code,body.nickname,body.characterId);room.members[result.playerId].joinKey=body.requestId;result.transport='https';
  }else{
-  let member;try{member=service.authenticate(body.code,body.token).member;}catch{fail('참가 정보를 확인할 수 없습니다. 이전 게임 이어하기를 이용해 주세요.',403);}
+  let member;try{member=service.authenticate(body.code,body.token).member;}catch(error){if(error.status===410)fail(error.message,410);fail('참가 정보를 확인할 수 없습니다. 이전 게임 이어하기를 이용해 주세요.',403);}
+  service.updateConnections(room,member.id,now);
   if(path==='resume'){
    const expired=room.state?expireQuiz(room.state,now):null;
    if(expired&&expired!==room.state){room.state=expired;service.broadcast(room);}
@@ -48,6 +50,8 @@ export async function onlineRoomRequest(db,path,body,now=Date.now(),attempt=0){
   else if(path==='chat')result=service.chat(body.code,body.token,body.message);
   else fail('지원하지 않는 요청입니다.',404);
  }
+ try{await recordDepartureGame(db,room,now);}catch{room.rankingRecorded=false;}
+ if(result?.state)result.rankingRecorded=!!room.rankingRecorded;
  const payload=encode(room);
  if(payload!==row.payload){
   const updated=await db.prepare('UPDATE online_rooms SET payload = ?, version = version + 1, expires_at = ? WHERE code = ? AND version = ?').bind(payload,now+TTL,room.code,row.version).run();

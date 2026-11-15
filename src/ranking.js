@@ -29,14 +29,17 @@ export class RankingClient{
   try{const data=await this.request('top');if(!Array.isArray(data.entries)||data.entries.length>10||!data.entries.every(p=>typeof p.nickname==='string'&&p.nickname.length<=16&&Number.isSafeInteger(p.score)&&p.score>=0))throw Error('랭킹 응답을 확인하지 못했어요.');this.entries=data.entries.map((p,i)=>({...p,rank:i+1}));this.loaded=true;this.lastFetch=Date.now();}catch{this.error='랭킹을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';}finally{this.loading=false;this.onChange();}
  }
  observe(snapshot,session,score){
-  const state=snapshot?.state,id=snapshot?.gameId;if(!state||!id||session?.playerId!==0)return;
+  const state=snapshot?.state,id=snapshot?.gameId;if(!state||!id)return;
+  if(snapshot.rankingRecorded){const record=this.records[id];if(record){record.done=true;record.error='';this.save();}void this.refresh();return;}
+  if(state.players.some(p=>p.withdrawn)){const record=this.records[id];if(record){record.awaitServer=true;delete record.scores;this.save();}return;}
+  if(session?.playerId!==0)return;
   let record=this.records[id];if(!record){if(state.phase==='finished')return;const players=state.players.filter(p=>!p.isBot).map(p=>({id:p.id,name:p.name.normalize('NFC').trim()}));if(!players.length)return;record={gameId:id,secret:this.secret(),players,registered:false,done:false,createdAt:Date.now()};this.records[id]=record;}
   if(state.phase==='finished'&&!record.done)record.scores=record.players.map(p=>({id:p.id,score:score(state,state.players[p.id])}));
   this.save();if(!record.registered||record.scores&&!record.done)void this.flush(record);
  }
  async flush(record){
   if(!this.origin)return;
-  if(this.pending.has(record.gameId)||record.done||record.blocked)return;this.pending.add(record.gameId);
+  if(this.pending.has(record.gameId)||record.done||record.blocked||record.awaitServer)return;this.pending.add(record.gameId);
   try{if(!record.registered){await this.request('register',{gameId:record.gameId,secret:record.secret,players:record.players});record.registered=true;this.save();}if(record.scores){await this.request('submit',{gameId:record.gameId,scores:record.scores},record.secret);record.done=true;record.error='';this.save();void this.refresh(true);}}
   catch(error){record.blocked=error.status===409;record.error=record.blocked?error.message:'전체 랭킹 기록을 재시도할 예정이에요.';this.save();}finally{this.pending.delete(record.gameId);this.onChange();}
  }

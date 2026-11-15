@@ -187,3 +187,31 @@ test('shared roll schedules persist across separate participant polls and block 
   assert.deepEqual((await read(db,host)).rollPresentation,rolled.rollPresentation);
  }finally{db.close();}
 });
+
+test('a missing host is evicted from a four-player HTTPS room and the remaining host can continue and finish',async()=>{
+ const db=database();db.sqlite.exec(readFileSync(new URL('../migrations/0001_initial.sql',import.meta.url),'utf8'));db.batch=rows=>Promise.all(rows.map(row=>row.run()));
+ try{
+  const {host,guest}=await setup(db);const third=await onlineRoomRequest(db,'join',{code:host.code,nickname:'세번째',requestId:ticket(3)});await onlineRoomRequest(db,'join',{code:host.code,nickname:'네번째',requestId:ticket(4)});await act(db,host,'start');
+  const now=Date.now(),row=db.sqlite.prepare('SELECT payload FROM online_rooms WHERE code=?').get(host.code),room=JSON.parse(row.payload);
+  room.connectionTrackingAt=now-61000;room.members.forEach(m=>m.lastSeenAt=m.id===0?now-61000:now);
+  room.state.phase='quiz';room.state.quiz='q31';room.state.quizUsed=true;room.state.ownership['bach-air']={player:0,level:1};
+  db.sqlite.prepare('UPDATE online_rooms SET payload=? WHERE code=?').run(JSON.stringify(room),host.code);
+  let next=await read(db,guest);assert.equal(next.state.players[0].withdrawn,true);assert.equal(next.hostId,1);assert.equal(next.state.turn,1);assert.equal(next.state.phase,'roll');assert.equal(next.state.ownership['bach-air'],undefined);
+  await assert.rejects(read(db,host),e=>e.status===410);
+  assert.equal((await read(db,third)).state.turn,1);
+  next=await act(db,guest,'roll');assert.ok(next.state.dice>=1);
+  next=await act(db,guest,'finishGame');assert.equal(next.state.phase,'finished');assert.equal(next.rankingRecorded,true);
+  const scores=db.sqlite.prepare('SELECT player_id FROM ranking_scores ORDER BY player_id').all();assert.deepEqual(scores.map(r=>r.player_id),[1,2,3]);
+ }finally{db.close();}
+});
+
+test('a three-player HTTPS room continues with two and awards the last active player if another disconnects',async()=>{
+ const db=database();db.sqlite.exec(readFileSync(new URL('../migrations/0001_initial.sql',import.meta.url),'utf8'));db.batch=rows=>Promise.all(rows.map(row=>row.run()));
+ try{
+  const {host,guest}=await setup(db);await onlineRoomRequest(db,'join',{code:host.code,nickname:'세번째',requestId:ticket(3)});await act(db,host,'start');
+  const edit=ids=>{const row=db.sqlite.prepare('SELECT payload FROM online_rooms WHERE code=?').get(host.code),room=JSON.parse(row.payload),now=Date.now();room.connectionTrackingAt=now-61000;for(const m of room.members)m.lastSeenAt=ids.includes(m.id)?now-61000:now;db.sqlite.prepare('UPDATE online_rooms SET payload=? WHERE code=?').run(JSON.stringify(room),host.code);};
+  edit([2]);let next=await read(db,host);assert.equal(next.state.phase,'roll');assert.equal(next.state.players.filter(p=>!p.withdrawn).length,2);
+  edit([1]);next=await read(db,host);assert.equal(next.state.phase,'finished');assert.equal(next.state.endReason.type,'disconnect');assert.equal(next.rankingRecorded,true);assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS n FROM ranking_scores').get().n,1);
+  await assert.rejects(read(db,guest),e=>e.status===410);
+ }finally{db.close();}
+});

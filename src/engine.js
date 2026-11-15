@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=05a12a28f72b';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=05a12a28f72b';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=05a12a28f72b';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=05a12a28f72b';
-import {characterById,drawCharacterIds} from './characters.js?v=05a12a28f72b';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=05a12a28f72b';
+import {ROUND_OPTIONS} from './lobby-config.js?v=009637e72a9a';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=009637e72a9a';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=009637e72a9a';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=009637e72a9a';
+import {characterById,drawCharacterIds} from './characters.js?v=009637e72a9a';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=009637e72a9a';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -11,16 +11,17 @@ export const PRISON_ATTEMPTS=3;
 export const QUIZ_TIME_LIMIT=10000;
 export const COLORS=['#607f76','#bd795e','#7e78a5','#6c91ac','#b09a54'];
 export const current=s=>s.players[s.turn];
+export const activePlayers=s=>s.players.filter(p=>!p.withdrawn);
 // Old saves recorded only the first player's laps; retain that known progress.
 export const completedLaps=(s,p)=>p.laps??(p.id===0?s.leaderLaps??0:0);
 export const hasFinished=(s,p)=>completedLaps(s,p)>=s.maxRounds;
-export const allFinished=s=>s.players.every(p=>hasFinished(s,p));
-export const firstFinisher=s=>s.players.find(p=>hasFinished(s,p));
+export const allFinished=s=>activePlayers(s).every(p=>hasFinished(s,p));
+export const firstFinisher=s=>activePlayers(s).find(p=>hasFinished(s,p));
 export function nextPlayerIndex(s){
-  for(let step=1;step<=s.players.length;step++){const index=(s.turn+step)%s.players.length;if(!hasFinished(s,s.players[index]))return index;}
+  for(let step=1;step<=s.players.length;step++){const index=(s.turn+step)%s.players.length;if(!s.players[index].withdrawn&&!hasFinished(s,s.players[index]))return index;}
   return s.turn;
 }
-function updateProgress(s){s.leaderLaps=completedLaps(s,s.players[0]);s.round=Math.min(Math.min(...s.players.map(p=>completedLaps(s,p)))+1,s.maxRounds);}
+function updateProgress(s){s.leaderLaps=completedLaps(s,s.players[0]);s.round=Math.min(Math.min(...activePlayers(s).map(p=>completedLaps(s,p)))+1,s.maxRounds);}
 export const owned=(s,id)=>Number.isInteger(id)&&s.players[id]?WORKS.filter(w=>s.ownership[w.id]?.player===id):[];
 export function collection(s,work,player){
   const all=owned(s,player);
@@ -165,14 +166,14 @@ function resolveArrival(s,p,rng){
     if(!works.length){s.lastAssignment={from:p.id,skipped:true};log(s,`${p.name}: 저작권 양도 — 보유 작품이 없어 통과`);}
     else{
       const highest=Math.max(...works.map(w=>w.price)),candidates=works.filter(w=>w.price===highest);
-      const work=candidates[Math.floor(rng()*candidates.length)],recipients=s.players.filter(player=>player.id!==p.id),recipient=recipients[Math.floor(rng()*recipients.length)];
+      const work=candidates[Math.floor(rng()*candidates.length)],recipients=activePlayers(s).filter(player=>player.id!==p.id),recipient=recipients[Math.floor(rng()*recipients.length)];
       s.ownership[work.id].player=recipient.id;
       s.lastAssignment={from:p.id,to:recipient.id,workId:work.id,price:work.price,skipped:false};
       log(s,`${p.name} → ${recipient.name}: 최고가 작품 「${work.title}」 가상 저작재산권 무상 양도 (${work.price} MC 기준)`);
     }
   }else if(cell.type==='quiz'||cell.type==='copyright')openQuiz(s);
   else if(cell.type==='concert'){
-    const tickets=s.players.filter(guest=>guest.id!==p.id).map(guest=>{
+    const tickets=activePlayers(s).filter(guest=>guest.id!==p.id).map(guest=>{
       const seat=CONCERT_SEATS[Math.min(CONCERT_SEATS.length-1,Math.floor(rng()*CONCERT_SEATS.length))];
       const amount=-change(s,guest,-seat.price);p.coins+=amount;
       log(s,`${guest.name} → ${p.name}: 음악회 ${seat.name} 티켓비 ${amount} MC (정가 ${seat.price} MC)`);
@@ -337,10 +338,26 @@ export function nextTurn(state){
   }
   s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
 }
+// Keep seat IDs stable for saved assets, event journals and authenticated sessions.
+export function removeDisconnected(state,ids){
+ if(state.players.length<3||state.phase==='finished')return state;
+ const removed=ids.filter(id=>state.players[id]&&!state.players[id].withdrawn&&!state.players[id].isBot);if(!removed.length)return state;
+ const s=clone(state),lost=new Set(removed),wasCurrent=lost.has(s.turn),prisonRoll=s.lastPrisonRoll;
+ for(const id of removed){const p=s.players[id];p.withdrawn=true;p.coins=0;p.skipTurns=0;p.bailPaid=false;log(s,`${p.name}: 연결이 60초 이상 끊겨 자동 퇴장했습니다. 작품과 앱은 은행으로 반환됩니다.`);}
+ for(const [id,owner] of Object.entries(s.ownership))if(lost.has(owner.player))delete s.ownership[id];
+ for(const [id,owner] of Object.entries(s.platformOwners||{}))if(lost.has(owner))delete s.platformOwners[id];
+ for(const [id,apps] of Object.entries(s.streamingInstallations||{})){for(const [app,owner] of Object.entries(apps))if(lost.has(owner))delete apps[app];if(!Object.keys(apps).length)delete s.streamingInstallations[id];}
+ if(s.trade&&(lost.has(s.trade.from)||lost.has(s.trade.to)))s.trade=null;
+ s.lastRent=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.lastConcert=null;s.lastStreamingRevenue=[];s.concertWorkId=null;if(!wasCurrent)s.lastPrisonRoll=prisonRoll;
+ if(wasCurrent){s.turn=nextPlayerIndex(s);s.turnNumber=(s.turnNumber||0)+1;s.phase='roll';s.dice=null;s.quiz=null;s.feedback=null;s.quizDeadline=null;s.purchaseChallenge=null;s.trade=null;s.quizUsed=false;s.purchased=false;s.streamingHandled=false;}
+ const remaining=activePlayers(s);
+ if(remaining.length===1){s.turn=remaining[0].id;s.phase='finished';s.endReason={type:'disconnect',playerId:s.turn};s.quiz=null;s.feedback=null;s.quizDeadline=null;s.purchaseChallenge=null;s.trade=null;log(s,`${remaining[0].name}: 마지막 참가자로 게임을 마칩니다.`);}
+ updateProgress(s);return s;
+}
 export function finishGame(state){const s=clone(state);s.quizDeadline=null;s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
 export function proposeTrade(state,{workId,to,price}){
   const s=clone(state),p=current(s);
-  if(s.phase!=='action'||s.trade||s.ownership[workId]?.player!==p.id||!Number.isInteger(to)||!s.players[to]||to===p.id||!Number.isInteger(price)||price<1||price>10000)throw Error('거래할 작품, 상대 팀, 1–10,000 MC의 정수 가격을 확인해 주세요.');
+  if(s.phase!=='action'||s.trade||s.ownership[workId]?.player!==p.id||!Number.isInteger(to)||!s.players[to]||s.players[to].withdrawn||to===p.id||!Number.isInteger(price)||price<1||price>10000)throw Error('거래할 작품, 상대 팀, 1–10,000 MC의 정수 가격을 확인해 주세요.');
   if(s.players[to].coins<price)throw Error('상대 팀의 뮤직코인이 부족합니다.');
   s.trade={workId,from:p.id,to,price};return s;
 }
@@ -355,7 +372,8 @@ export function isValidSave(s){
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>MAX_PLAYERS)return false;
     if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','backward-roll','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
     if(!(ROUND_OPTIONS.includes(s.maxRounds)||[9,10,12].includes(s.maxRounds))||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
-    if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
+    if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps','disconnect'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='disconnect'&&(activePlayers(s).length!==1||current(s).withdrawn||reason.playerId!==s.turn))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
+    if(s.players.some(p=>p.withdrawn!==undefined&&typeof p.withdrawn!=='boolean')||s.phase!=='finished'&&current(s).withdrawn)return false;
     if(s.boardLayout!==undefined&&s.boardLayout!==2)return false;
     if(!validQuizHistory(s))return false;
     if(s.streamingHandled!==undefined&&typeof s.streamingHandled!=='boolean')return false;
@@ -386,7 +404,7 @@ export function isValidSave(s){
     if(s.concertWorkId!=null&&(!WORKS.some(w=>w.id===s.concertWorkId)||BOARD[current(s).position].id!==s.concertWorkId))return false;
     if(s.lastConcert!=null){
       const c=s.lastConcert;
-      if(c.hostId!==s.turn||BOARD[current(s).position].type!=='concert'||!Array.isArray(c.tickets)||c.tickets.length!==s.players.length-1||new Set(c.tickets.map(t=>t.playerId)).size!==c.tickets.length)return false;
+      if(c.hostId!==s.turn||BOARD[current(s).position].type!=='concert'||!Array.isArray(c.tickets)||c.tickets.length!==activePlayers(s).length-1||new Set(c.tickets.map(t=>t.playerId)).size!==c.tickets.length)return false;
       if(!c.tickets.every(t=>Number.isInteger(t.playerId)&&s.players[t.playerId]&&t.playerId!==c.hostId&&CONCERT_SEATS.some(seat=>seat.id===t.seatId&&seat.price===t.price)&&Number.isInteger(t.amount)&&t.amount>=0&&t.amount<=t.price)||c.total!==c.tickets.reduce((sum,t)=>sum+t.amount,0))return false;
     }
     if(s.lastBackwardMove){const m=s.lastBackwardMove;if(BOARD[m.from]?.type!=='back-three'||!Number.isInteger(m.steps)||m.steps<1||m.steps>6||m.to!==(m.from-m.steps+BOARD.length)%BOARD.length||BOARD[m.from].type!=='back-three')return false;}

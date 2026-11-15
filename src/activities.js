@@ -1,11 +1,12 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=05a12a28f72b';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=05a12a28f72b';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=009637e72a9a';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=009637e72a9a';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){
  if(!before||!after)return [];
  const notices=[],add=(type,title,fields={})=>notices.push({type,title,round:after.round,actorId:after.turn,...fields});
  const coin=(playerId,amount)=>({playerId,amount});
+ for(const p of after.players)if(p.withdrawn&&!before.players[p.id]?.withdrawn)add('player-left','참가자 자동 퇴장',{actorId:p.id,changes:[],text:`${p.name} 님의 연결이 60초 이상 끊겨 자동 퇴장했습니다. ${after.phase==='finished'?'마지막 참가자로 게임을 마칩니다.':'남은 참가자들은 계속 진행합니다.'}`});
  const rolled=['roll','backward-roll'].includes(before.phase)&&after.phase!=='roll'&&before.turn===after.turn&&before.turnNumber===after.turnNumber&&Number.isInteger(after.dice);
  if(rolled){
   const actor=after.turn;
@@ -30,7 +31,7 @@ export function activityChanges(before,after){
  for(const w of WORKS){
   const previous=before.ownership[w.id],next=after.ownership[w.id];
   if(!previous&&next)add('purchase','작품 이용권 구입',{actorId:next.player,workId:w.id,changes:[coin(next.player,-w.price)],text:`${w.composer} 「${w.title}」의 가상 이용권을 구입했습니다.`});
-  else if(previous&&!next){const amount=Math.floor((w.price+previous.level*100)/2);add('sale','이용권 은행 반납',{actorId:previous.player,workId:w.id,changes:[coin(previous.player,amount)],text:`「${w.title}」 이용권을 은행에 반납했습니다.`});}
+  else if(previous&&!next&&!after.players[previous.player].withdrawn){const amount=Math.floor((w.price+previous.level*100)/2);add('sale','이용권 은행 반납',{actorId:previous.player,workId:w.id,changes:[coin(previous.player,amount)],text:`「${w.title}」 이용권을 은행에 반납했습니다.`});}
   else if(previous&&next&&previous.player!==next.player){if(rolled&&after.lastAssignment?.workId===w.id)continue;const price=before.trade?.price??0;add('trade-complete','이용권 거래 성사',{actorId:next.player,otherId:previous.player,workId:w.id,changes:[coin(next.player,-price),coin(previous.player,price)],text:`「${w.title}」 이용권이 새로운 참가자에게 이전되었습니다.`});}
   else if(previous&&next&&next.level>previous.level)add('upgrade','공연 프로젝트 완성',{actorId:next.player,workId:w.id,changes:[coin(next.player,-100)],text:`「${w.title}」 공연을 기획했습니다. 기본 이용료가 20 MC 높아집니다.`});
  }

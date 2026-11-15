@@ -6,8 +6,8 @@ export function movementPath(start,steps,size){
 
 // Turns proceed in player-ID order. Once introduced, a token stays visible even at START.
 export function boardTokenVisible(state,player,movingPlayerId=null){
- return player.id===movingPlayerId||player.position!==0||(state.turnNumber??0)>player.id||
-  (state.turn===player.id&&state.phase!=='roll'&&state.dice!==null);
+ return !player.withdrawn&&(player.id===movingPlayerId||player.position!==0||(state.turnNumber??0)>player.id||
+  (state.turn===player.id&&state.phase!=='roll'&&state.dice!==null));
 }
 
 // Every upright figure stands on its tile, including START and all four edges.

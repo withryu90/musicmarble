@@ -1,10 +1,11 @@
-import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=05a12a28f72b';
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=05a12a28f72b';
-import {randomInt,randomToken} from './random.js?v=05a12a28f72b';
-import * as G from './engine.js?v=05a12a28f72b';
-import {botDecision,applyBotDecision} from './bots.js?v=05a12a28f72b';
-import {activityChanges} from './activities.js?v=05a12a28f72b';
-import {drawCharacterIds,characterById} from './characters.js?v=05a12a28f72b';
+import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=009637e72a9a';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=009637e72a9a';
+import {randomInt,randomToken} from './random.js?v=009637e72a9a';
+import * as G from './engine.js?v=009637e72a9a';
+import {botDecision,applyBotDecision} from './bots.js?v=009637e72a9a';
+import {activityChanges} from './activities.js?v=009637e72a9a';
+import {drawCharacterIds,characterById} from './characters.js?v=009637e72a9a';
+export const DISCONNECT_GRACE_MS=60000;
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
@@ -62,7 +63,21 @@ export class RoomService {
   }
   close(){for(const timer of this.quizTimers.values())clearTimeout(timer);this.quizTimers.clear();for(const timer of this.botTimers.values())clearTimeout(timer);this.botTimers.clear();}
   get(code){const normalized=String(code||'').trim().toUpperCase();const room=this.rooms.get(normalized);if(!room)throw Error('방을 찾을 수 없습니다. 코드를 확인해 주세요.');return room;}
-  authenticate(code,token){const room=this.get(code),member=room.members.find(m=>!m.isBot&&typeof token==='string'&&m.token===token);if(!member)throw Error('참가 정보를 확인할 수 없습니다. 같은 브라우저의 이어하기를 이용해 주세요.');return {room,member};}
+  updateConnections(room,playerId,now=Date.now()){
+    if(!room.state||room.state.phase==='finished'||room.mode==='solo'||room.state.players.length<3)return;
+    const humans=room.members.filter(m=>!m.isBot&&!room.state.players[m.id].withdrawn);
+    if(!room.connectionTrackingAt||humans.every(m=>now-(m.lastSeenAt||0)>DISCONNECT_GRACE_MS)){
+      room.connectionTrackingAt=now;for(const m of humans)m.lastSeenAt=now;
+    }
+    const caller=humans.find(m=>m.id===playerId);if(caller&&now-(caller.lastSeenAt||0)>=5000)caller.lastSeenAt=now;
+    const gone=humans.filter(m=>now-m.lastSeenAt>=DISCONNECT_GRACE_MS).map(m=>m.id);
+    if(!gone.length)return;
+    room.state=G.removeDisconnected(room.state,gone);room.rollPresentation=null;
+    if(room.state.players[room.hostId??0]?.withdrawn)room.hostId=G.activePlayers(room.state)[0]?.id??0;
+    this.broadcast(room);
+  }
+  resume(code,token,now=Date.now()){const {room,member}=this.authenticate(code,token);this.updateConnections(room,member.id,now);return {...this.snapshot(room),playerId:member.id};}
+  authenticate(code,token){const room=this.get(code),member=room.members.find(m=>!m.isBot&&typeof token==='string'&&m.token===token);if(!member)throw Error('참가 정보를 확인할 수 없습니다. 같은 브라우저의 이어하기를 이용해 주세요.');if(room.state?.players[member.id]?.withdrawn)throw Object.assign(Error('연결이 60초 이상 끊겨 이 게임에서 자동 퇴장되었습니다.'),{status:410});return {room,member};}
   chatPayload(room){return {code:room.code,messages:room.messages??[],typing:room.typing??{},chatSeq:room.chatSeq??0};}
   typing(code,token,active){
     const {room,member}=this.authenticate(code,token);
@@ -80,10 +95,11 @@ export class RoomService {
     room.updatedAt=now;const payload=this.chatPayload(room);room.chatListeners?.forEach(fn=>fn(payload));return payload;
   }
   subscribeChat(code,token,fn){const {room}=this.authenticate(code,token);room.chatListeners??=new Set();room.chatListeners.add(fn);fn(this.chatPayload(room));return ()=>room.chatListeners.delete(fn);}
-  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId})),state:room.state,revision:room.revision,serverNow:Date.now(),rollPresentation:room.rollPresentation||null,activities:room.activities||[]};}
+  snapshot(room){return {code:room.code,gameId:room.gameId||null,createdAt:room.createdAt||null,mode:room.mode||'multiplayer',config:room.config||roomConfig(),members:room.members.map(({id,name,isBot,characterId})=>({id,name,isBot:!!isBot,characterId,withdrawn:!!room.state?.players[id]?.withdrawn})),state:room.state,hostId:room.hostId??0,rankingRecorded:!!room.rankingRecorded,revision:room.revision,serverNow:Date.now(),rollPresentation:room.rollPresentation||null,activities:room.activities||[]};}
   broadcast(room){room.activities??=[];room.activitySeq??=0;const changes=activityChanges(room.publishedState,room.state);if(!changes.length&&room.rollPresentation?.activityAfterId===room.activitySeq&&room.rollPresentation.turnNumber===room.state?.turnNumber){const arrival=rollArrivalNotice(room.state);if(arrival)changes.push(arrival);}for(const notice of changes)room.activities.push({...notice,synchronizedArrival:!!room.rollPresentation&&room.rollPresentation.turnNumber===room.state?.turnNumber,turnNumber:room.state?.turnNumber,id:++room.activitySeq});room.activities=room.activities.slice(-200);room.publishedState=room.state?structuredClone(room.state):null;room.revision++;room.updatedAt=Date.now();const snapshot=this.snapshot(room);room.listeners.forEach(fn=>fn(snapshot));this.scheduleBot(room);this.scheduleQuiz(room);}
   act(code,token,{action,args=[],revision,synchronize=false}={}){
     const {room,member}=this.authenticate(code,token);
+    this.updateConnections(room,member.id);
     // A presentation receipt is idempotent and independent of gameplay revisions.
     if(action==='acknowledgePrisonNotice'){
       const notice=Array.isArray(args)&&room.activities?.find(n=>n.id===args[0]);
@@ -101,13 +117,13 @@ export class RoomService {
       member.characterId=drawCharacterIds(1,room.members.map(m=>m.characterId))[0];
       if(room.state){room.state=structuredClone(room.state);room.state.players[member.id].characterId=member.characterId;}
     }else if(action==='configure'){
-      if(member.id!==0)throw Error('방장만 수업 설정을 바꿀 수 있습니다.');
+      if(member.id!==(room.hostId??0))throw Error('방장만 수업 설정을 바꿀 수 있습니다.');
       if(room.state)throw Error('게임 시작 후 설정은 바꿀 수 없습니다.');
       room.config=roomConfig(args[0]||{},room.config||roomConfig());
     }else if(action==='start'){
-      if(member.id!==0)throw Error('방장만 게임을 시작할 수 있습니다.');
+      if(member.id!==(room.hostId??0))throw Error('방장만 게임을 시작할 수 있습니다.');
       if(room.state)throw Error('이미 시작된 게임입니다.');
-      const config=roomConfig(args[0]||{},room.config||roomConfig());room.config=config;room.state=G.createGame({names:room.members.map(m=>m.name),characterIds:room.members.map(m=>m.characterId),...config});
+      const config=roomConfig(args[0]||{},room.config||roomConfig());room.config=config;room.state=G.createGame({names:room.members.map(m=>m.name),characterIds:room.members.map(m=>m.characterId),...config});room.connectionTrackingAt=Date.now();for(const m of room.members)m.lastSeenAt=room.connectionTrackingAt;
     }else{
       const state=room.state;if(!state||state.phase==='finished')throw Error('진행 중인 게임이 없습니다.');
       if(action==='resolveTrade'){
@@ -115,7 +131,7 @@ export class RoomService {
         if(typeof args[0]!=='boolean')throw Error('수락 여부를 확인해 주세요.');
         room.state=G.resolveTrade(state,args[0]);
       }else if(action==='finishGame'){
-        if(member.id!==0)throw Error('방장만 게임을 종료할 수 있습니다.');room.state=G.finishGame(state);
+        if(member.id!==(room.hostId??0))throw Error('방장만 게임을 종료할 수 있습니다.');room.state=G.finishGame(state);
       }else{
         if(member.id!==state.turn)throw Error('지금은 다른 참가자의 차례입니다.');
         if(state.trade)throw Error('거래 응답을 먼저 기다려 주세요.');

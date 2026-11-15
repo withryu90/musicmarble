@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=2a723097e30c';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=2a723097e30c';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=2a723097e30c';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=2a723097e30c';
-import {characterById,drawCharacterIds} from './characters.js?v=2a723097e30c';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=2a723097e30c';
+import {ROUND_OPTIONS} from './lobby-config.js?v=b759f1fec88e';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=b759f1fec88e';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=b759f1fec88e';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=b759f1fec88e';
+import {characterById,drawCharacterIds} from './characters.js?v=b759f1fec88e';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=b759f1fec88e';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -59,10 +59,12 @@ export function migrateRetiredQuiz(state){
  const retired=new Set([...history,'q6','q7','q10','q26','q27','q28','q29','q30']);
  if(!Array.isArray(deck)||!deck.length||new Set(deck).size!==deck.length||!deck.every(id=>known.has(id)||retired.has(id)))return state;
  const historyCount=history.filter(id=>deck.includes(id)).length,activeCount=ids.filter(id=>deck.includes(id)).length;
- if(historyCount!==0&&historyCount!==history.length||activeCount!==0&&activeCount!==ids.length||historyCount===0&&activeCount!==ids.length)return state;
+ const previous=Array.from({length:10},(_,i)=>`q${i+31}`);
+ const previousBank=activeCount===previous.length&&previous.every(id=>deck.includes(id));
+ if(historyCount!==0&&historyCount!==history.length||activeCount!==0&&activeCount!==ids.length&&!previousBank||historyCount===0&&activeCount!==ids.length&&!previousBank)return state;
  if(deck.length===known.size&&deck.every(id=>known.has(id)))return state;
  const s=clone(state),cursor=s.quizCursor;
- s.quizDeck=activeCount?deck.filter(id=>known.has(id)):[...ids];
+ s.quizDeck=activeCount?[...deck.filter(id=>known.has(id)),...ids.filter(id=>!deck.includes(id))]:[...ids];
  if(Number.isInteger(cursor)&&cursor>=0)s.quizCursor=Math.floor(cursor/deck.length)*s.quizDeck.length+deck.slice(0,cursor%deck.length).filter(id=>known.has(id)).length;
  if(retired.has(s.quiz)){
   if(s.phase==='quiz'){s.quiz=s.quizDeck[s.quizCursor%s.quizDeck.length];s.quizCursor++;}

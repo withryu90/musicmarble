@@ -1,5 +1,5 @@
 import {RoomService} from '../../src/room-service.js';
-import {expireQuiz} from '../../src/engine.js';
+import {expireQuiz,migrateRetiredQuiz} from '../../src/engine.js';
 // Expire before the next 15-minute cleanup tick.
 const TTL=(24*60-15)*60*1000;
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
@@ -7,7 +7,7 @@ const sessionFor=(room,member)=>({code:room.code,playerId:member.id,token:member
 const encode=room=>JSON.stringify({...room,listeners:undefined,chatListeners:undefined,publishedState:undefined});
 function serviceFor(payload){
  const service=new RoomService({backgroundTimers:false});
- if(payload){const room=JSON.parse(payload);room.listeners=new Set();room.chatListeners=new Set();room.publishedState=room.state?structuredClone(room.state):null;service.rooms.set(room.code,room);}
+ if(payload){const room=JSON.parse(payload);if(room.state)room.state=migrateRetiredQuiz(room.state);room.listeners=new Set();room.chatListeners=new Set();room.publishedState=room.state?structuredClone(room.state):null;service.rooms.set(room.code,room);}
  return service;
 }
 const snapshot=(service,room)=>({...service.snapshot(room),...service.chatPayload(room)});

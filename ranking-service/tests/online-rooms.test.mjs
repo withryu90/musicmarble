@@ -148,3 +148,15 @@ test('HTTPS learning quiz pays 30 MC once and shares the same amount with the ro
  await assert.rejects(act(db,host,'answerQuiz',[answer]));assert.equal((await read(db,host)).state.players[0].coins,before+30);
  }finally{db.close();}
 });
+
+test('persisted ten-question rooms expand on resume without losing the active question or money',async()=>{
+ const db=database();try{
+  const {host,guest}=await setup(db);await act(db,host,'start');
+  const row=db.sqlite.prepare('SELECT payload FROM online_rooms WHERE code=?').get(host.code),room=JSON.parse(row.payload);
+  room.state.quizDeck=Array.from({length:10},(_,i)=>`q${i+31}`);room.state.quizCursor=1;
+  room.state.quiz='q31';room.state.phase='quiz';room.state.quizUsed=true;room.state.players[0].coins=1370;
+  db.sqlite.prepare('UPDATE online_rooms SET payload=? WHERE code=?').run(JSON.stringify(room),host.code);
+  const resumed=await read(db,host);assert.equal(resumed.state.quizDeck.length,30);assert.equal(resumed.state.quiz,'q31');assert.equal(resumed.state.players[0].coins,1370);
+  assert.equal((await read(db,guest)).state.quizDeck.length,30);
+ }finally{db.close();}
+});

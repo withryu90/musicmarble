@@ -18,8 +18,8 @@ test('every player gets all five work questions before a repeat, even with a con
 test('learning questions cover the full bank for each player despite uneven turn distribution',()=>{
  let s=game();const seen=Array.from({length:4},()=>[]);
  for(const p of [0,0,0,1,2,0,3,1,3,2,1,0,2,3,3,0,1,2]){s=learning(s,p);seen[p].push(s.quiz);}
- for(let p=0;p<4;p++)while(seen[p].length<30){s=learning(s,p);seen[p].push(s.quiz);assert.ok(G.isValidSave(s));}
- for(const ids of seen){for(let i=0;i<3;i++)assert.equal(new Set(ids.slice(i*10,i*10+10)).size,QUIZZES.length);for(let i=1;i<ids.length;i++)assert.notEqual(ids[i],ids[i-1]);}
+ for(let p=0;p<4;p++)while(seen[p].length<QUIZZES.length*3){s=learning(s,p);seen[p].push(s.quiz);assert.ok(G.isValidSave(s));}
+ for(const ids of seen){for(let i=0;i<3;i++)assert.equal(new Set(ids.slice(i*QUIZZES.length,(i+1)*QUIZZES.length)).size,QUIZZES.length);for(let i=1;i<ids.length;i++)assert.notEqual(ids[i],ids[i-1]);}
 });
 test('equally new questions prefer those other participants have not seen; each work keeps its own pool',()=>{
  let s=game();const ids=[];for(let p=0;p<4;p++){s=purchase(s,WORKS[0].id,p);ids.push(s.purchaseChallenge.questionId);}assert.equal(new Set(ids).size,4);

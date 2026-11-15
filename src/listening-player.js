@@ -1,4 +1,4 @@
-import {LISTENING_HINTS} from './listening-hints.js?v=2a723097e30c';
+import {LISTENING_HINTS} from './listening-hints.js?v=b759f1fec88e';
 export function createListeningPlayer({hints=LISTENING_HINTS,fetchFn=globalThis.fetch.bind(globalThis),createContext=()=>new (window.AudioContext||window.webkitAudioContext)(),onChange=()=>{},onStart=()=>{},onEnd=()=>{}}={}){
  let context=null,source=null,playing=null,finish=null;const cache=new Map();
  const ctx=()=>context||(context=createContext());

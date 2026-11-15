@@ -1,4 +1,4 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=2a723097e30c';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=b759f1fec88e';
 export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 세 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 세 번 모두 6이 나오지 않으면 그 세 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
@@ -71,16 +71,396 @@ export const EVENTS = [
   {"id":"music-event-24","category":"음악사·산업 변화 카드","period":"음악사·산업 변화 카드","title":"음악 출판 계약!","text":"음악 출판사와 유리한 계약을 체결하여 악보 판매 수익을 얻었습니다!","effect":"+100 MC","amount":100,"prompt":"음악 출판사는 작품이 연주자에게 전달되는 과정에서 어떤 역할을 할까요?"},
 ];
 export const QUIZZES = [
-  {"id":"q31","kind":"copyright","question":"음원 파일을 구입하면 그 곡의 저작권도 내 것이 될까요?","options":["구입한 사람이 작곡가가 된다","감상할 수 있는 이용 범위와 저작권 소유는 다르다","다른 사람에게 저작권을 자동으로 넘길 수 있다"],"answer":1,"explanation":"음원 구매는 보통 감상을 위한 이용입니다. 곡의 저작권을 넘겨받는 것과는 다르므로 공개 이용은 별도로 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q32","kind":"copyright","question":"내 블로그에서 누구나 원하는 때 음악을 듣게 하는 것과 관련 깊은 권리는?","options":["공중송신권","건물 소유권","악기 소유권"],"answer":0,"explanation":"온라인에서 사람들이 원하는 때 음악에 접근하게 하는 전송은 공중송신에 포함됩니다. 개인 감상과 공개 제공을 구별해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q33","kind":"copyright","question":"보호받는 음악을 영상에 넣고 작곡가 이름을 적으면 이용허락이 자동으로 생길까요?","options":["이름만 적으면 어떤 영상도 가능하다","조회 수가 적으면 허락이 생긴다","출처 표시만으로 이용허락을 대신할 수는 없다"],"answer":2,"explanation":"출처를 적는 것과 이용허락은 별개입니다. 허락이나 법에서 정한 예외 등 이용할 근거가 있는지 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q34","kind":"copyright","question":"광고 영상에 음악을 15초만 넣으면 언제나 자유롭게 쓸 수 있을까요?","options":["짧은 길이만으로 자유 이용이 보장되지는 않는다","15초까지는 모든 곡이 무료다","영상보다 음악이 짧으면 항상 가능하다"],"answer":0,"explanation":"짧게 사용해도 보호되는 음악의 이용일 수 있습니다. 몇 초라는 기준만으로 판단하지 말고 허락과 이용 조건을 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q35","kind":"copyright","question":"보호받는 곡을 직접 연주해 온라인에 공개할 때 알맞은 생각은?","options":["내 연주이면 원곡의 권리는 사라진다","내 녹음이라도 원곡을 공개 이용할 권리는 확인해야 한다","악보를 샀으면 모든 공개 이용이 가능하다"],"answer":1,"explanation":"직접 만든 녹음과 원래 곡의 권리는 구별됩니다. 자기 연주라도 원곡의 이용허락이나 적용되는 예외를 살펴야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q36","kind":"copyright","question":"음악 파일을 불특정 다수가 내려받는 공개 공유 폴더에 올리는 것은?","options":["언제나 가정 안에서의 감상과 같다","파일 이름을 바꾸면 사적 이용이다","개인 감상과 달리 공개 제공에 관한 권리를 확인해야 한다"],"answer":2,"explanation":"누구나 접근하는 공유 폴더는 개인·가정의 한정된 범위와 다릅니다. 단순히 개인 컴퓨터에서 올렸다는 이유로 사적 이용이 되지는 않습니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q37","kind":"copyright","question":"보호받는 곡을 공연하며 입장료를 받는다면, 수익을 기부해도 살펴야 할 것은?","options":["좋은 목적이면 저작권 검토가 필요 없다","공연 대가와 이용허락 등 법에서 정한 조건","기부하면 곡의 저작권이 소멸하는지"],"answer":1,"explanation":"기부 목적만으로 공연의 권리 문제가 없어지지는 않습니다. 입장료 등 대가가 있는지와 이용허락 등 적용 조건을 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q38","kind":"copyright","question":"저작자가 자신의 음악을 사람들 앞에서 연주하도록 할 권리는 무엇일까요?","options":["공연권","좌석 소유권","악기 대여권"],"answer":0,"explanation":"음악을 공연할 권리는 저작재산권의 하나입니다. 실제 공연에서는 이용허락이나 법에서 허용하는 예외 등 이용 근거를 살펴야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q39","kind":"copyright","question":"음악의 스타일을 참고하는 것과 관련해 알맞은 설명은?","options":["같은 장르이면 언제나 표절이다","같은 악기를 쓰면 언제나 침해다","스타일 자체와 구체적인 창작 표현의 이용은 구별한다"],"answer":2,"explanation":"장르나 스타일이 같다는 사실만으로 침해라고 단정할 수는 없습니다. 구체적인 창작 표현을 이용했는지 등을 구별해 살펴야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
-  {"id":"q40","kind":"copyright","question":"다른 사람이 만든 음반의 음악을 영상 배경음악으로 쓰려면 무엇을 구별해야 할까요?","options":["작사·작곡의 권리와 연주·녹음에 관한 권리","음반 표지의 색깔만","영상 파일 이름과 음악 파일 이름만"],"answer":0,"explanation":"원곡의 권리와 실연자·음반제작자의 권리는 서로 다를 수 있습니다. 영상에 쓰는 방식에 맞게 관련 권리와 허락 범위를 확인해야 합니다.","sourceUrl":"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},
+  {
+    "id": "q31",
+    "kind": "copyright",
+    "question": "음원 파일을 구입하면 그 곡의 저작권도 내 것이 될까요?",
+    "options": [
+      "곡의 저작재산권까지 함께 이전받는다",
+      "감상 이용 범위와 저작권 소유를 구별한다",
+      "음원을 공개할 권리까지 함께 이전받는다"
+    ],
+    "answer": 1,
+    "explanation": "음원 구매는 보통 감상을 위한 이용입니다. 곡의 저작권을 넘겨받는 것과는 다르므로 공개 이용은 별도로 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q32",
+    "kind": "copyright",
+    "question": "내 블로그에서 누구나 원하는 때 음악을 듣게 하는 것과 관련 깊은 권리는?",
+    "options": [
+      "공중송신권",
+      "복제권",
+      "배포권"
+    ],
+    "answer": 0,
+    "explanation": "온라인에서 사람들이 원하는 때 음악에 접근하게 하는 전송은 공중송신에 포함됩니다. 개인 감상과 공개 제공을 구별해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q33",
+    "kind": "copyright",
+    "question": "보호받는 음악을 영상에 넣고 작곡가 이름을 적으면 이용허락이 자동으로 생길까요?",
+    "options": [
+      "작곡가 표시를 이용허락의 근거로 삼는다",
+      "영상의 조회 수를 이용허락의 근거로 삼는다",
+      "출처 표시와 별도로 이용 근거를 확인한다"
+    ],
+    "answer": 2,
+    "explanation": "출처를 적는 것과 이용허락은 별개입니다. 허락이나 법에서 정한 예외 등 이용할 근거가 있는지 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q34",
+    "kind": "copyright",
+    "question": "광고 영상에 보호받는 음악을 15초 사용하려면 어떻게 판단할까요?",
+    "options": [
+      "사용 길이와 함께 이용허락·예외 조건을 살핀다",
+      "사용 시간이 짧으면 허락이 면제된다고 본다",
+      "음악의 비중이 작으면 허락이 면제된다고 본다"
+    ],
+    "answer": 0,
+    "explanation": "짧게 사용해도 보호되는 음악의 이용일 수 있습니다. 몇 초라는 기준만으로 판단하지 말고 허락과 이용 조건을 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q35",
+    "kind": "copyright",
+    "question": "보호받는 곡을 직접 연주해 온라인에 공개할 때 알맞은 생각은?",
+    "options": [
+      "직접 연주했으므로 원곡 이용허락을 대신한다",
+      "자신의 녹음과 별도로 원곡 이용 근거를 확인한다",
+      "악보 구입 영수증을 공개 이용허락으로 본다"
+    ],
+    "answer": 1,
+    "explanation": "직접 만든 녹음과 원래 곡의 권리는 구별됩니다. 자기 연주라도 원곡의 이용허락이나 적용되는 예외를 살펴야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q36",
+    "kind": "copyright",
+    "question": "음악 파일을 불특정 다수가 내려받는 공개 공유 폴더에 올리는 것은?",
+    "options": [
+      "개인 컴퓨터의 폴더이므로 사적 이용으로 본다",
+      "파일 소유자가 올렸으므로 재배포를 허용한다",
+      "공개 제공 방식에 맞는 이용 근거를 확인한다"
+    ],
+    "answer": 2,
+    "explanation": "누구나 접근하는 공유 폴더는 개인·가정의 한정된 범위와 다릅니다. 단순히 개인 컴퓨터에서 올렸다는 이유로 사적 이용이 되지는 않습니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q37",
+    "kind": "copyright",
+    "question": "보호받는 곡을 공연하며 입장료를 받는다면, 수익을 기부해도 살펴야 할 것은?",
+    "options": [
+      "기부 목적을 근거로 공연허락을 대신한다",
+      "입장료와 공연허락·예외 조건을 함께 살핀다",
+      "행사 종료 후 수익 정산을 공연허락으로 본다"
+    ],
+    "answer": 1,
+    "explanation": "기부 목적만으로 공연의 권리 문제가 없어지지는 않습니다. 입장료 등 대가가 있는지와 이용허락 등 적용 조건을 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q38",
+    "kind": "copyright",
+    "question": "저작자가 자신의 음악을 사람들 앞에서 연주하도록 할 권리는 무엇일까요?",
+    "options": [
+      "공연권",
+      "배포권",
+      "공중송신권"
+    ],
+    "answer": 0,
+    "explanation": "음악을 공연할 권리는 저작재산권의 하나입니다. 실제 공연에서는 이용허락이나 법에서 허용하는 예외 등 이용 근거를 살펴야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q39",
+    "kind": "copyright",
+    "question": "음악의 스타일을 참고하는 것과 관련해 알맞은 설명은?",
+    "options": [
+      "장르가 같다는 사실로 표절 여부를 판단한다",
+      "악기 구성이 같다는 사실로 침해 여부를 판단한다",
+      "스타일과 구체적인 창작 표현을 구별한다"
+    ],
+    "answer": 2,
+    "explanation": "장르나 스타일이 같다는 사실만으로 침해라고 단정할 수는 없습니다. 구체적인 창작 표현을 이용했는지 등을 구별해 살펴야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q40",
+    "kind": "copyright",
+    "question": "다른 사람이 만든 음반의 음악을 영상 배경음악으로 쓰려면 무엇을 구별해야 할까요?",
+    "options": [
+      "작사·작곡의 권리와 연주·녹음의 권리",
+      "음반 구매 계약과 음악 감상 구독 기간",
+      "영상 제작 비용과 음반의 판매 가격"
+    ],
+    "answer": 0,
+    "explanation": "원곡의 권리와 실연자·음반제작자의 권리는 서로 다를 수 있습니다. 영상에 쓰는 방식에 맞게 관련 권리와 허락 범위를 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q41",
+    "kind": "copyright",
+    "question": "직접 만든 창작곡의 저작권은 원칙적으로 언제 생길까요?",
+    "options": [
+      "저작권 등록을 마친 때",
+      "곡을 창작한 때",
+      "음원으로 발매한 때"
+    ],
+    "answer": 1,
+    "explanation": "저작권은 창작과 함께 발생합니다. 등록이나 발매가 권리 발생의 필수 절차는 아닙니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q42",
+    "kind": "copyright",
+    "question": "아직 발표하지 않은 창작곡의 공개 여부와 관련된 권리는?",
+    "options": [
+      "성명표시권",
+      "배포권",
+      "공표권"
+    ],
+    "answer": 2,
+    "explanation": "공표권은 저작물을 대중에게 처음 공개할지 결정하는 것과 관련된 저작인격권입니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q43",
+    "kind": "copyright",
+    "question": "작곡가가 실명 대신 예명으로 이름을 표시하려 할 때 관련된 권리는?",
+    "options": [
+      "성명표시권",
+      "공표권",
+      "공연권"
+    ],
+    "answer": 0,
+    "explanation": "성명표시권은 저작자 이름의 표시와 관련됩니다. 실명이나 예명 등 표시 방식을 정할 수 있습니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q44",
+    "kind": "copyright",
+    "question": "창작곡의 내용이나 제목을 함부로 바꾸지 않도록 하는 권리는?",
+    "options": [
+      "성명표시권",
+      "동일성유지권",
+      "공중송신권"
+    ],
+    "answer": 1,
+    "explanation": "동일성유지권은 저작물의 내용·형식·제호를 유지하는 것과 관련된 저작인격권입니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q45",
+    "kind": "copyright",
+    "question": "다음 중 저작인격권에 속하는 것은?",
+    "options": [
+      "복제권",
+      "배포권",
+      "공표권"
+    ],
+    "answer": 2,
+    "explanation": "공표권은 저작인격권이고, 복제권과 배포권은 저작재산권입니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q46",
+    "kind": "copyright",
+    "question": "다음 중 저작재산권에 속하는 것은?",
+    "options": [
+      "복제권",
+      "성명표시권",
+      "동일성유지권"
+    ],
+    "answer": 0,
+    "explanation": "복제권은 저작물을 녹음·복사 등으로 다시 제작하는 이용을 다루는 저작재산권입니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q47",
+    "kind": "copyright",
+    "question": "보호받는 악보를 스캔해 이미지 파일로 만드는 행위와 관련 깊은 권리는?",
+    "options": [
+      "공연권",
+      "복제권",
+      "대여권"
+    ],
+    "answer": 1,
+    "explanation": "악보를 스캔해 파일로 다시 만드는 것은 복제에 해당할 수 있습니다. 이용허락이나 적용되는 예외를 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q48",
+    "kind": "copyright",
+    "question": "보호받는 곡을 편곡해 새 버전으로 제작할 때 관련 깊은 권리는?",
+    "options": [
+      "배포권",
+      "성명표시권",
+      "2차적저작물작성권"
+    ],
+    "answer": 2,
+    "explanation": "원곡을 창작적으로 편곡하는 경우 원곡의 2차적저작물작성권 등을 살펴야 합니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q49",
+    "kind": "copyright",
+    "question": "작사를 한 사람과 작곡을 한 사람이 다르다면 어떻게 이해할까요?",
+    "options": [
+      "가사와 곡에 각 창작자의 권리가 있을 수 있다",
+      "음원을 먼저 발매한 사람이 두 권리를 가진다",
+      "대표로 이름을 올린 사람이 두 권리를 가진다"
+    ],
+    "answer": 0,
+    "explanation": "가사와 곡은 각 창작자가 권리를 가질 수 있습니다. 이용할 대상에 맞춰 권리 관계를 확인합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=1&cnpClsNo=2&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q50",
+    "kind": "copyright",
+    "question": "가수가 노래를 부른 실연에 관한 권리는 무엇으로 구별할까요?",
+    "options": [
+      "작사자의 저작권",
+      "저작인접권",
+      "작곡자의 저작권"
+    ],
+    "answer": 1,
+    "explanation": "실연자의 권리는 작사·작곡의 저작권과 구별되는 저작인접권으로 보호됩니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=1&cnpClsNo=2&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q51",
+    "kind": "copyright",
+    "question": "음반을 기획하고 녹음 제작을 책임진 음반제작자의 권리는?",
+    "options": [
+      "작곡가의 성명표시권",
+      "작사가의 공표권",
+      "저작인접권"
+    ],
+    "answer": 2,
+    "explanation": "음반제작자의 권리는 원곡 창작자의 저작권과 구별되는 저작인접권입니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=1&cnpClsNo=2&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q52",
+    "kind": "copyright",
+    "question": "작품 이용허락을 구하는 연락에 포함할 내용으로 가장 적절한 것은?",
+    "options": [
+      "사용 목적·방식·기간과 공개 범위",
+      "사용자의 감상 취향과 좋아하는 장르",
+      "행사 포스터의 색상과 관객의 연령"
+    ],
+    "answer": 0,
+    "explanation": "이용허락은 허락받은 방법과 조건에 맞춰 이용해야 하므로 구체적인 사용 계획을 설명하는 것이 좋습니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q53",
+    "kind": "copyright",
+    "question": "비영리 행사 영상에 쓰도록 허락받은 음악을 상품 광고에도 쓰려면?",
+    "options": [
+      "기존 허락의 유효기간을 새 광고부터 계산한다",
+      "광고 이용이 허락 범위에 포함되는지 확인한다",
+      "상품 이름을 영상 제목에 표시해 허락을 이어간다"
+    ],
+    "answer": 1,
+    "explanation": "기존 허락과 다른 목적으로 이용하려면 그 이용이 허락된 범위인지 확인해야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q54",
+    "kind": "copyright",
+    "question": "한 달간 사용하기로 허락받은 음악을 그 이후에도 이용하려면?",
+    "options": [
+      "원래의 허락 날짜를 표시하며 계속 이용한다",
+      "게시물 설명에 연장 사실을 적고 계속 이용한다",
+      "허락 기간을 연장하거나 새 이용 근거를 마련한다"
+    ],
+    "answer": 2,
+    "explanation": "허락된 기간을 넘기는 이용은 기존 조건에 포함되는지 확인하고 필요한 허락을 다시 받아야 합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q55",
+    "kind": "copyright",
+    "question": "학교 수업에 쓴 보호받는 음악을 누구나 보는 채널에도 올리려면?",
+    "options": [
+      "수업 이용과 공개 업로드의 조건을 따로 살핀다",
+      "수업 자료 표시를 달아 같은 조건으로 공개한다",
+      "수강생의 동의를 받아 음악 이용허락을 대신한다"
+    ],
+    "answer": 0,
+    "explanation": "수업 목적의 이용과 불특정 다수에게 공개하는 이용은 조건이 다를 수 있으므로 공개 이용 근거를 확인합니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"
+  },
+  {
+    "id": "q56",
+    "kind": "copyright",
+    "question": "친구가 만든 미발표 곡을 소개하고 싶을 때 먼저 할 일은?",
+    "options": [
+      "친구의 이름을 적어 먼저 게시한다",
+      "친구에게 공개 의사와 이용 범위를 확인한다",
+      "친구에게 게시 주소를 보낸 뒤 공개를 알린다"
+    ],
+    "answer": 1,
+    "explanation": "창작자의 공개 의사와 이용허락을 존중해야 합니다. 이름을 적는 것으로 공개 동의를 대신할 수는 없습니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q57",
+    "kind": "copyright",
+    "question": "저작재산권 양도와 이용허락의 차이로 알맞은 것은?",
+    "options": [
+      "양도는 감상 허용, 이용허락은 창작자 이름 변경이다",
+      "양도는 이용 기간 연장, 이용허락은 권리 소멸이다",
+      "양도는 권리 이전, 이용허락은 정한 범위의 사용 허용이다"
+    ],
+    "answer": 2,
+    "explanation": "저작재산권을 넘기는 것과 권리자의 허락을 받아 일정 범위에서 이용하는 것은 구별됩니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=1&cnpClsNo=2&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q58",
+    "kind": "copyright",
+    "question": "음악 이용 계약에서 원곡의 권리와 녹음의 권리를 따로 적는 까닭은?",
+    "options": [
+      "관련 권리자와 허락 범위가 다를 수 있기 때문이다",
+      "음악의 재생 속도가 계약마다 달라지기 때문이다",
+      "음악 파일의 확장자가 권리자를 정하기 때문이다"
+    ],
+    "answer": 0,
+    "explanation": "작사·작곡의 저작권과 실연·음반의 저작인접권은 구별되며 관련 권리자가 다를 수 있습니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=1&cnpClsNo=2&csmSeq=705&popMenu=ov"
+  },
+  {
+    "id": "q59",
+    "kind": "copyright",
+    "question": "공연 영상의 이용허락을 받을 때 편집 계획도 설명하면 좋은 이유는?",
+    "options": [
+      "영상의 해상도로 저작권자를 결정하기 위해",
+      "허락 범위와 작품 변경에 관한 조건을 확인하기 위해",
+      "편집 프로그램의 종류로 이용료를 면제받기 위해"
+    ],
+    "answer": 1,
+    "explanation": "사용 방식과 편집 내용을 미리 설명하면 이용허락 범위와 작품 변경에 관한 조건을 구체적으로 확인할 수 있습니다.",
+    "sourceUrl": "https://www.mcst.go.kr/site/s_policy/copyright/knowledge/know06.jsp?pCommPage=1"
+  },
+  {
+    "id": "q60",
+    "kind": "copyright",
+    "question": "음악 이용허락을 받았다는 사실을 기록해 두는 주된 이유는?",
+    "options": [
+      "음악의 저작자 이름을 이용자 이름으로 바꾸기 위해",
+      "다른 이용자에게 같은 허락을 자동으로 주기 위해",
+      "허락받은 이용 범위와 조건을 나중에 확인하기 위해"
+    ],
+    "answer": 2,
+    "explanation": "이용허락의 대상과 조건을 기록하면 실제 이용이 합의한 범위에 맞는지 확인하는 데 도움이 됩니다.",
+    "sourceUrl": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=705&popMenu=ov"
+  }
 ];
 export const SOURCES = [
   {label:'찾기쉬운 생활법령정보 · 음악저작권 침해의 유형',url:"https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=705&ccfNo=3&cciNo=1&cnpClsNo=1"},

@@ -231,3 +231,8 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 .game-shell[data-mobile="false"][data-tab="board"] .board-toolbar{position:relative;z-index:20;isolation:isolate}
 .game-shell[data-mobile="false"][data-tab="board"] .board-tools{position:relative;z-index:1;pointer-events:auto}
 .game-shell[data-mobile="false"][data-tab="board"] .board-area .board-summary{right:calc(var(--desktop-tools-width,300px) + 18px);pointer-events:none}
+
+/* Keep desktop zoom beside fullscreen in the main header. */
+.game-shell[data-mobile="false"] .header-actions .desktop-header-zoom{display:flex;align-items:center;gap:2px;flex:none;margin:0 2px}
+.game-shell[data-mobile="false"][data-tab="board"] .header-actions .desktop-header-zoom button{width:24px;min-width:24px;height:24px;min-height:24px;padding:0;line-height:1}
+.game-shell[data-mobile="false"][data-tab="board"] .header-actions .desktop-header-zoom [data-action="board-zoom-reset"]{width:40px;min-width:40px}

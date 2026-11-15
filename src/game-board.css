@@ -502,3 +502,6 @@
 
 /* Respond to the local roll tap before waiting for the shared server timeline. */
 .dice-overlay.dice-immediate:not(.dice-closing),.dice-immediate:not(.dice-closing) .dice-stage{animation:none}
+
+/* Dice is a visual announcement; menus remain clickable beneath it. */
+.dice-overlay{pointer-events:none}

@@ -15,7 +15,7 @@ test('purchase, project, sale and quiz notices describe exact public coin change
 });
 test('rent reports the payer, owner, actual amount and waived shortfall',()=>{
  const s=game();s.ownership['bach-air']={player:1,level:0};s.players[0].coins=10;
- const arrived=G.roll(s,1),n=activityChanges(s,arrived)[0];assert.equal(n.type,'rent');assert.equal(n.expected,30);assert.deepEqual(n.changes,[{playerId:0,amount:-10},{playerId:1,amount:10}]);
+ const arrived=G.roll(s,1),n=activityChanges(s,arrived)[0];assert.equal(n.type,'rent');assert.equal(n.expected,45);assert.deepEqual(n.changes,[{playerId:0,amount:-10},{playerId:1,amount:10}]);
 });
 test('passing start, history cards and concert ticket settlements are separate notices',()=>{
  const s=game();s.players[0].position=30;const arrived=G.roll(s,5),notices=activityChanges(s,arrived);

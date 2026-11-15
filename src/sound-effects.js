@@ -1,5 +1,5 @@
 // Original synthesized effects plus locally bundled, credited audio recordings.
-export const RECORDED_EFFECTS={concert:new URL('./assets/audio/concert-opening.m4a?v=04cb6442a3fb',import.meta.url).href,applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=04cb6442a3fb',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=04cb6442a3fb',import.meta.url).href};
+export const RECORDED_EFFECTS={concert:new URL('./assets/audio/concert-opening.m4a?v=842cfd056074',import.meta.url).href,applause:new URL('./assets/audio/crowd-cheers-applause.wav?v=842cfd056074',import.meta.url).href,prison:new URL('./assets/audio/beethoven-fate-prison.wav?v=842cfd056074',import.meta.url).href};
 export const EFFECTS=['dice','gain','loss','applause','prison','concert'];
 export function createSoundEffects({onPlaybackStart=()=>{},onPlaybackEnd=()=>{},createContext=()=>{const C=globalThis.AudioContext||globalThis.webkitAudioContext;return C?new C():null;},isVisible=()=>typeof document==='undefined'||!document.hidden,random=Math.random,fetchAudio=(...args)=>fetch(...args),configureSession=()=>{try{if(globalThis.navigator?.audioSession)globalThis.navigator.audioSession.type='playback';}catch{}}}={}){
  let context=null,enabled=true,generation=0,primed=false,playbackId=0;const nodes=new Set(),seen=new Set(),buffers=new Map();

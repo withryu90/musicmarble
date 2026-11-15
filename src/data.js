@@ -1,4 +1,4 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=04cb6442a3fb';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=842cfd056074';
 export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 세 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 세 번 모두 6이 나오지 않으면 그 세 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
@@ -9,34 +9,34 @@ export const ERAS = [
 const w=(id,composer,title,year,era,price,fee,note)=>({id,composer,title,year,era,price,fee,note,type:'work'});
 export const LEGACY_BOARD = [
   {id:'start',type:'start',title:'시대의 문',subtitle:'한 바퀴 +200 MC'},
-  w('bach-air','바흐','G선상의 아리아','약 1731','baroque',160,30,'관현악 모음곡 제3번의 아리아. 유려한 선율 아래 꾸준한 저음이 흐릅니다.'),
-  w('bach-brandenburg','바흐','브란덴부르크 협주곡','1721','baroque',180,35,'여섯 협주곡은 서로 다른 악기 편성으로 독주와 합주의 대화를 들려줍니다.'),
+  w('bach-air','바흐','G선상의 아리아','약 1731','baroque',160,45,'관현악 모음곡 제3번의 아리아. 유려한 선율 아래 꾸준한 저음이 흐릅니다.'),
+  w('bach-brandenburg','바흐','브란덴부르크 협주곡','1721','baroque',180,53,'여섯 협주곡은 서로 다른 악기 편성으로 독주와 합주의 대화를 들려줍니다.'),
   {id:'event-1',type:'event',title:'음악사 사건',subtitle:'역사의 한 장면'},
-  w('vivaldi-spring','비발디','사계: 봄','1725 출판','baroque',200,40,'새소리와 폭풍을 떠올리게 하는 바이올린 협주곡. 음악이 장면을 묘사합니다.'),
-  w('vivaldi-winter','비발디','사계: 겨울','1725 출판','baroque',200,40,'떨리는 듯한 리듬과 대비되는 느린 악장에서 겨울의 풍경을 상상해 보세요.'),
+  w('vivaldi-spring','비발디','사계: 봄','1725 출판','baroque',200,60,'새소리와 폭풍을 떠올리게 하는 바이올린 협주곡. 음악이 장면을 묘사합니다.'),
+  w('vivaldi-winter','비발디','사계: 겨울','1725 출판','baroque',200,60,'떨리는 듯한 리듬과 대비되는 느린 악장에서 겨울의 풍경을 상상해 보세요.'),
   // Keep this tile ID stable for saved games; its repertoire is now Rinaldo.
-  w('handel-water','헨델','울게 하소서','1711','baroque',210,40,'오페라 「리날도」 중 알미레나가 부르는 아리아. 애절한 선율로 슬픔과 자유를 향한 바람을 표현합니다.'),
+  w('handel-water','헨델','울게 하소서','1711','baroque',210,60,'오페라 「리날도」 중 알미레나가 부르는 아리아. 애절한 선율로 슬픔과 자유를 향한 바람을 표현합니다.'),
   {id:'back-three',type:'back-three',title:'뒤로가기',subtitle:'추가 주사위만큼 뒤로'},
-  w('mozart-serenade','모차르트','작은 밤의 음악','1787','classical',220,45,'아이네 클라이네 나흐트무지크. 명료한 선율과 균형 잡힌 구성이 돋보입니다.'),
-  w('mozart-flute','모차르트','마술피리','1791','classical',240,50,'대사와 노래가 함께하는 징슈필. 다양한 인물의 성격을 음악으로 표현합니다.'),
+  w('mozart-serenade','모차르트','작은 밤의 음악','1787','classical',220,68,'아이네 클라이네 나흐트무지크. 명료한 선율과 균형 잡힌 구성이 돋보입니다.'),
+  w('mozart-flute','모차르트','마술피리','1791','classical',240,75,'대사와 노래가 함께하는 징슈필. 다양한 인물의 성격을 음악으로 표현합니다.'),
   {id:'streaming-prison',type:'prison',title:'불법 스트리밍 감옥',subtitle:'6으로 탈출 · 기회 3번'},
-  w('beethoven-5','베토벤','교향곡 제5번','1808 초연','classical',280,55,'짧은 네 음의 동기가 작품 전체를 이끕니다. 베토벤은 고전과 낭만을 잇는 작곡가입니다.'),
-  w('beethoven-9','베토벤','교향곡 제9번','1824 초연','classical',300,60,'마지막 악장에 독창과 합창을 더해 교향곡의 표현 범위를 넓혔습니다.'),
-  w('haydn-surprise','하이든','놀람 교향곡','1791','classical',260,50,'교향곡 제94번. 조용한 선율 속 갑작스러운 강한 화음으로 재치 있는 대비를 들려줍니다.'),
+  w('beethoven-5','베토벤','교향곡 제5번','1808 초연','classical',280,83,'짧은 네 음의 동기가 작품 전체를 이끕니다. 베토벤은 고전과 낭만을 잇는 작곡가입니다.'),
+  w('beethoven-9','베토벤','교향곡 제9번','1824 초연','classical',300,90,'마지막 악장에 독창과 합창을 더해 교향곡의 표현 범위를 넓혔습니다.'),
+  w('haydn-surprise','하이든','놀람 교향곡','1791','classical',260,75,'교향곡 제94번. 조용한 선율 속 갑작스러운 강한 화음으로 재치 있는 대비를 들려줍니다.'),
   {id:'concert',type:'concert',title:'음악회 개최',subtitle:'좌석별 티켓비'},
-  w('schubert-king','슈베르트','마왕','1815','romantic',220,45,'한 명의 가수가 여러 인물을 표현하고, 피아노는 말발굽 같은 리듬으로 긴장을 만듭니다.'),
-  w('schubert-trout','슈베르트','송어 5중주','1819','romantic',240,50,'가곡 「송어」의 선율을 변주합니다. 익숙한 멜로디가 어떻게 바뀌는지 살펴보세요.'),
+  w('schubert-king','슈베르트','마왕','1815','romantic',220,68,'한 명의 가수가 여러 인물을 표현하고, 피아노는 말발굽 같은 리듬으로 긴장을 만듭니다.'),
+  w('schubert-trout','슈베르트','송어 5중주','1819','romantic',240,75,'가곡 「송어」의 선율을 변주합니다. 익숙한 멜로디가 어떻게 바뀌는지 살펴보세요.'),
   {id:'event-3',type:'event',title:'음악사 사건',subtitle:'새로운 청중'},
-  w('chopin-nocturne','쇼팽','녹턴 Op.9 No.2','1832 출판','romantic',260,50,'노래하는 듯한 오른손 선율과 반주가 어우러지는 피아노 소품입니다.'),
-  w('chopin-polonaises','쇼팽','영웅 폴로네즈','1842','romantic',280,55,'폴란드 춤 리듬에 강렬한 피아노 표현을 결합한 작품입니다.'),
-  w('brahms-hungarian-5','브람스','헝가리 무곡 제5번','1869 출판','romantic',280,55,'춤의 활력과 빠르기·셈여림의 변화를 느낄 수 있는 음악입니다.'),
+  w('chopin-nocturne','쇼팽','녹턴 Op.9 No.2','1832 출판','romantic',260,75,'노래하는 듯한 오른손 선율과 반주가 어우러지는 피아노 소품입니다.'),
+  w('chopin-polonaises','쇼팽','영웅 폴로네즈','1842','romantic',280,83,'폴란드 춤 리듬에 강렬한 피아노 표현을 결합한 작품입니다.'),
+  w('brahms-hungarian-5','브람스','헝가리 무곡 제5번','1869 출판','romantic',280,83,'춤의 활력과 빠르기·셈여림의 변화를 느낄 수 있는 음악입니다.'),
   {id:'go-to-prison',type:'go-to-prison',title:'감옥으로 가기',subtitle:'불법 스트리밍 감옥행'},
-  w('debussy-moon','드뷔시','달빛','1905 출판','modern',280,55,'베르가마스크 모음곡의 한 곡. 화성과 음색이 만드는 분위기에 귀 기울여 보세요.'),
-  w('ravel-bolero','라벨','볼레로','1928','modern',340,70,'반복되는 리듬과 선율 위에 악기의 음색이 더해지며 점점 강해지는 관현악곡입니다.'),
+  w('debussy-moon','드뷔시','달빛','1905 출판','modern',280,83,'베르가마스크 모음곡의 한 곡. 화성과 음색이 만드는 분위기에 귀 기울여 보세요.'),
+  w('ravel-bolero','라벨','볼레로','1928','modern',340,105,'반복되는 리듬과 선율 위에 악기의 음색이 더해지며 점점 강해지는 관현악곡입니다.'),
   {id:'copyright-transfer',type:'transfer',title:'저작권 양도',subtitle:'최고가 작품 양도'},
-  w('stravinsky-firebird','스트라빈스키','불새','1910 초연','modern',320,65,'러시아 설화를 바탕으로 한 발레 음악. 풍부한 관현악 음색이 특징입니다.'),
-  w('stravinsky-spring','스트라빈스키','봄의 제전','1913 초연','modern',340,70,'불규칙한 강세와 강렬한 리듬으로 새로운 음악의 가능성을 보여 주었습니다.'),
-  w('debussy-sea','드뷔시','바다','1905 초연','modern',300,60,'관현악의 다채로운 색채로 바다의 움직임과 빛을 표현합니다.'),
+  w('stravinsky-firebird','스트라빈스키','불새','1910 초연','modern',320,98,'러시아 설화를 바탕으로 한 발레 음악. 풍부한 관현악 음색이 특징입니다.'),
+  w('stravinsky-spring','스트라빈스키','봄의 제전','1913 초연','modern',340,105,'불규칙한 강세와 강렬한 리듬으로 새로운 음악의 가능성을 보여 주었습니다.'),
+  w('debussy-sea','드뷔시','바다','1905 초연','modern',300,90,'관현악의 다채로운 색채로 바다의 움직임과 빛을 표현합니다.'),
 ];
 export const BOARD=LEGACY_BOARD.flatMap((cell,index)=>{
  if((index+1)%7!==0)return [cell];

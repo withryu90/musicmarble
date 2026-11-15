@@ -10,7 +10,7 @@ test('buying a work never allows an immediate concert, but landing on it on a la
  assert.equal(G.concertWork(s),null);assert.equal(G.canUpgrade(s,'bach-air'),false);assert.throws(()=>G.upgrade(s,'bach-air'));
  s=G.nextTurn(s);s=G.nextTurn(G.roll(s,1));s.players[0].position=31;s=G.roll(s,2);
  assert.equal(G.concertWork(s).id,'bach-air');assert.equal(G.canUpgrade(s,'bach-air'),true);
- const before=s.players[0].coins;s=G.upgrade(s,'bach-air');assert.equal(s.players[0].coins,before-100);assert.equal(s.ownership['bach-air'].level,1);assert.equal(G.fee(s,WORKS.find(w=>w.id==='bach-air')),50);
+ const before=s.players[0].coins;s=G.upgrade(s,'bach-air');assert.equal(s.players[0].coins,before-100);assert.equal(s.ownership['bach-air'].level,1);assert.equal(G.fee(s,WORKS.find(w=>w.id==='bach-air')),65);
  assert.throws(()=>G.upgrade(s,'bach-air'));assert.ok(G.isValidSave(s));assert.equal(bought.ownership['bach-air'].level,0);
 });
 test('other owned tiles, insufficient coins, trades and unresolved quizzes cannot bypass the arrival rule',()=>{

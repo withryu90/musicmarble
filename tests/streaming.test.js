@@ -37,7 +37,7 @@ test('installation permits vacant works but cannot bypass licence, location, mon
 test('visitors including work owners pay the installer; self-visits cost nothing and transfers never mint money',()=>{
  const base=licensed();base.ownership['bach-air']={player:1,level:0};base.streamingInstallations['bach-air']={'youtube-music':0};
  for(let visitor=0;visitor<4;visitor++){
-  const next=landing(base,'bach-air',visitor),expected=base.players.map(p=>p.coins);if(visitor!==1){expected[visitor]-=30;expected[1]+=30;}if(visitor!==0){expected[visitor]-=30;expected[0]+=30;}
+  const next=landing(base,'bach-air',visitor),expected=base.players.map(p=>p.coins);if(visitor!==1){expected[visitor]-=45;expected[1]+=45;}if(visitor!==0){expected[visitor]-=30;expected[0]+=30;}
   assert.deepEqual(next.players.map(p=>p.coins),expected);assert.equal(next.players.reduce((a,p)=>a+p.coins,0),4800);assert.equal(next.lastStreamingRevenue.length,1);assert.ok(G.isValidSave(next));
   const after=G.skipStreaming({...next,streamingHandled:false,platformOwners:{...next.platformOwners,'apple-music':visitor}});assert.equal(after.players.reduce((a,p)=>a+p.coins,0),4800);
   assert.throws(()=>G.roll(next,1));
@@ -82,8 +82,8 @@ test('room actions enforce actor and revision checks; bots use the same optional
 
 test('streaming charges follow rent, respect insufficient balances, and can bankrupt a duel visitor',()=>{
  for(const count of [2,4]){
-  const s=game(count);s.platformOwners['youtube-music']=0;s.ownership['bach-air']={player:0,level:0};s.streamingInstallations['bach-air']={'youtube-music':0};s.players[1].coins=45;
-  const after=landing(s,'bach-air',1);assert.equal(after.lastRent.amount,30);assert.equal(after.lastStreamingRevenue[0].amount,15);assert.equal(after.players[1].coins,0);assert.equal(after.players[0].coins,1245);assert.equal(after.phase,count===2?'finished':'action');assert.ok(G.isValidSave(after));
+  const s=game(count);s.platformOwners['youtube-music']=0;s.ownership['bach-air']={player:0,level:0};s.streamingInstallations['bach-air']={'youtube-music':0};s.players[1].coins=60;
+  const after=landing(s,'bach-air',1);assert.equal(after.lastRent.amount,45);assert.equal(after.lastStreamingRevenue[0].amount,15);assert.equal(after.players[1].coins,0);assert.equal(after.players[0].coins,1260);assert.equal(after.phase,count===2?'finished':'action');assert.ok(G.isValidSave(after));
   const notice=activityChanges({...s,turn:1,players:s.players.map(p=>({...p,position:0}))},after).find(n=>n.type==='streaming-income');assert.ok(notice);assert.deepEqual(notice.changes,[{playerId:1,amount:-15},{playerId:0,amount:15}]);
  }
 });

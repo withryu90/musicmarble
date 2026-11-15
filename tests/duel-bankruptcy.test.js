@@ -12,7 +12,7 @@ test('two-player rent ends immediately at zero and transfers only the actual bal
 });
 test('a loss card can end a duel but a remaining positive balance does not',()=>{
  const s=duel();s.eventDeck.splice(s.eventDeck.indexOf(EVENTS.findIndex(e=>e.amount<0)),1);s.eventDeck.unshift(EVENTS.findIndex(e=>e.amount<0));s.players[0].coins=1;const next=G.roll(s,3);ended(next,0);assert.equal(next.eventCursor,1);assert.deepEqual(activityChanges(s,next).map(n=>n.type),['history-event','bankruptcy']);
- const safe=duel();safe.players[0].coins=31;safe.ownership['bach-air']={player:1,level:0};assert.equal(G.roll(safe,1).phase,'action');
+ const safe=duel();safe.players[0].coins=46;safe.ownership['bach-air']={player:1,level:0};assert.equal(G.roll(safe,1).phase,'action');
 });
 test('paying the last coins for a purchase records the work and finishes without advancing the turn',()=>{
  let s=duel();s.players[0].coins=160;s=qualifyPurchase(G.roll(s,1));const next=G.purchaseAndNext(s);ended(next,0);assert.equal(next.ownership['bach-air'].player,0);assert.equal(next.turn,0);assert.equal(next.turnNumber,0);assert.equal(next.purchaseChallenge,null);assert.deepEqual(activityChanges(s,next).map(n=>n.type),['purchase','bankruptcy']);

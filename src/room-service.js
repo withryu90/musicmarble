@@ -1,10 +1,10 @@
-import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=28a7deece9d0';
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=28a7deece9d0';
-import {randomInt,randomToken} from './random.js?v=28a7deece9d0';
-import * as G from './engine.js?v=28a7deece9d0';
-import {botDecision,applyBotDecision} from './bots.js?v=28a7deece9d0';
-import {activityChanges} from './activities.js?v=28a7deece9d0';
-import {drawCharacterIds,characterById} from './characters.js?v=28a7deece9d0';
+import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=256a7539c939';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=256a7539c939';
+import {randomInt,randomToken} from './random.js?v=256a7539c939';
+import * as G from './engine.js?v=256a7539c939';
+import {botDecision,applyBotDecision} from './bots.js?v=256a7539c939';
+import {activityChanges} from './activities.js?v=256a7539c939';
+import {drawCharacterIds,characterById} from './characters.js?v=256a7539c939';
 export const DISCONNECT_GRACE_MS=60000;
 const CODE_DIGITS='0123456789';
 export class RoomService {

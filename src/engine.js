@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=b759f1fec88e';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=b759f1fec88e';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=b759f1fec88e';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=b759f1fec88e';
-import {characterById,drawCharacterIds} from './characters.js?v=b759f1fec88e';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=b759f1fec88e';
+import {ROUND_OPTIONS} from './lobby-config.js?v=04cb6442a3fb';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=04cb6442a3fb';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=04cb6442a3fb';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=04cb6442a3fb';
+import {characterById,drawCharacterIds} from './characters.js?v=04cb6442a3fb';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=04cb6442a3fb';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -45,7 +45,7 @@ function checkBankruptcy(s){
 }
 function change(s,p,amount){const actual=Math.max(-p.coins,amount);p.coins+=actual;if(actual!==amount)log(s,`${p.name}: 잔액 한도에서 ${-actual} MC 지급. 수업 모드에서 부족액은 면제됩니다.`);return actual;}
 const shuffled=(items,rng)=>{const arr=[...items];for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
-export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=1200,characterIds}={},rng=Math.random){
+export function createGame({names=['초록 팀','오렌지 팀'],rounds=4,coins=1200,characterIds}={},rng=Math.random){
   if(!Array.isArray(names)||names.length<2||names.length>MAX_PLAYERS||!names.every(n=>typeof n==='string'&&n.trim().length>0&&n.length<=16))throw Error('2–4명의 이름을 입력해 주세요.');
   if(!ROUND_OPTIONS.includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);

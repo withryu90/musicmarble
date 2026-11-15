@@ -1,9 +1,9 @@
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=b759f1fec88e';
-import {randomInt,randomToken} from './random.js?v=b759f1fec88e';
-import * as G from './engine.js?v=b759f1fec88e';
-import {botDecision,applyBotDecision} from './bots.js?v=b759f1fec88e';
-import {activityChanges} from './activities.js?v=b759f1fec88e';
-import {drawCharacterIds,characterById} from './characters.js?v=b759f1fec88e';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=04cb6442a3fb';
+import {randomInt,randomToken} from './random.js?v=04cb6442a3fb';
+import * as G from './engine.js?v=04cb6442a3fb';
+import {botDecision,applyBotDecision} from './bots.js?v=04cb6442a3fb';
+import {activityChanges} from './activities.js?v=04cb6442a3fb';
+import {drawCharacterIds,characterById} from './characters.js?v=04cb6442a3fb';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}
@@ -12,7 +12,7 @@ export class RoomService {
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
   create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,gameId:randomToken(),createdAt:Date.now(),members:[],config:roomConfig(),state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}
   join(code,name,characterId){const room=this.get(code);if(room.state)throw Error('이미 시작한 게임입니다. 새 방을 만들거나 기존 참가자는 이어하기를 이용해 주세요.');if(room.members.length>=G.MAX_PLAYERS)throw Error('이 방은 정원 4명이 모두 찼습니다.');const nickname=this.nickname(name);if(room.members.some(m=>m.name===nickname))throw Error('방 안에서 다른 닉네임을 사용해 주세요.');const member={id:room.members.length,name:nickname,characterId:this.chooseCharacter(characterId,room.members.map(m=>m.characterId)),token:randomToken()};room.members.push(member);this.broadcast(room);return {code:room.code,token:member.token,playerId:member.id};}
-  createSolo(name,{botCount=3,rounds=8,coins=1200}={},characterId){
+  createSolo(name,{botCount=3,rounds=4,coins=1200}={},characterId){
     this.nickname(name);
     if(!Number.isInteger(botCount)||botCount<1||botCount>G.MAX_PLAYERS-1||!ROUND_OPTIONS.includes(rounds)||![1000,1200,1600].includes(coins))throw Error('봇 1–3명과 수업 설정을 확인해 주세요.');
     const session=this.create(name,characterId),room=this.get(session.code);

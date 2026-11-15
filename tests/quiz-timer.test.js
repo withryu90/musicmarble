@@ -6,12 +6,12 @@ import {purchaseQuizById} from '../src/purchase-quizzes.js';
 import {RoomService} from '../src/room-service.js';
 const purchase=()=>G.startPurchaseQuiz(G.roll(G.createGame({names:['가온','나래']}),1),()=>0);
 const learning=()=>G.startQuiz(G.roll(G.createGame({names:['가온','나래']}),1));
-test('both quiz clocks begin on presentation, last ten seconds and cannot restart',()=>{
+test('learning lasts fifteen seconds and purchase lasts ten; neither clock can restart',()=>{
  for(const make of [purchase,learning]){
   const pending=make();assert.equal(pending.quizDeadline,null);
-  const running=G.beginQuizTimer(pending,1000);assert.equal(running.quizDeadline,11000);
+  const duration=make===learning?15000:10000;const running=G.beginQuizTimer(pending,1000);assert.equal(running.quizDeadline,1000+duration);
   assert.equal(G.beginQuizTimer(running,6000),running);
-  assert.equal(G.expireQuiz(running,10999),running);
+  assert.equal(G.expireQuiz(running,999+duration),running);
   assert.ok(G.isValidSave(running));
  }
 });
@@ -23,7 +23,7 @@ test('purchase timeout grants no buying right, deducts nothing and permits norma
  s=G.closePurchaseFeedback(s);assert.equal(s.turn,1);assert.equal(s.phase,'roll');
 });
 test('learning timeout records one incorrect attempt without reward or deduction',()=>{
- let s=G.beginQuizTimer(learning(),1000);s=G.expireQuiz(s,11000);
+ let s=G.beginQuizTimer(learning(),1000);s=G.expireQuiz(s,16000);
  assert.equal(s.phase,'feedback');assert.deepEqual(s.feedback,{correct:false,index:-1,timedOut:true});
  assert.equal(s.players[0].attempts,1);assert.equal(s.players[0].knowledge,0);assert.equal(s.players[0].coins,1200);
  assert.equal(G.expireQuiz(s,12000),s);assert.ok(G.isValidSave(s));

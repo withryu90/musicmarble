@@ -1,5 +1,5 @@
-import {PeerTransport} from './peer-transport.js?v=c7972cfab0a1';
-import {HttpTransport} from './http-transport.js?v=c7972cfab0a1';
+import {PeerTransport} from './peer-transport.js?v=7477b3df707b';
+import {HttpTransport} from './http-transport.js?v=7477b3df707b';
 export class GameTransport{
  constructor({peer=new PeerTransport(),http=new HttpTransport()}={}){Object.assign(this,{peer,http});}
  get connection(){return this.peer.connection;}

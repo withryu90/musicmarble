@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=c7972cfab0a1';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=c7972cfab0a1';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=c7972cfab0a1';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=c7972cfab0a1';
-import {characterById,drawCharacterIds} from './characters.js?v=c7972cfab0a1';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=c7972cfab0a1';
+import {ROUND_OPTIONS} from './lobby-config.js?v=7477b3df707b';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=7477b3df707b';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=7477b3df707b';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=7477b3df707b';
+import {characterById,drawCharacterIds} from './characters.js?v=7477b3df707b';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=7477b3df707b';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -208,9 +208,9 @@ export function streamingOptions(s){
 }
 export const streamingOpportunity=s=>canBuyPlatform(s)||streamingOptions(s).length>0;
 export function buyPlatform(state){
- if(!canBuyPlatform(state))throw Error('도착한 스트리밍 앱 칸에서 아직 독점되지 않은 앱을 독점할 수 있습니다. (200 MC)');
+ if(!canBuyPlatform(state))throw Error('도착한 스트리밍 앱 칸에서 아직 인수되지 않은 앱을 인수할 수 있습니다. (200 MC)');
  const s=clone(state),p=current(s),c=BOARD[p.position];s.platformOwners??={};s.platformOwners[c.id]=p.id;p.coins-=STREAMING_RIGHTS_PRICE;s.streamingHandled=true;
- log(s,`${p.name}: ${streamingApp(c.id).name} 앱 독점, -${STREAMING_RIGHTS_PRICE} MC`);return checkBankruptcy(s);
+ log(s,`${p.name}: ${streamingApp(c.id).name} 앱 인수, -${STREAMING_RIGHTS_PRICE} MC`);return checkBankruptcy(s);
 }
 export function installStreaming(state,appId){
  if(!streamingOptions(state).some(app=>app.id===appId))throw Error('도착한 작품 칸에 내 앱의 자동 스트리밍을 설치해 주세요. (50 MC, 앱별 1회)');

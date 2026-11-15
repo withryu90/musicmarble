@@ -169,17 +169,17 @@
     },
     "schubert-trout": {
       "src": "./src/assets/audio/hints/originals/schubert-trout.m4a",
-      "duration": 6.334666666666666,
+      "duration": 11.284,
       "original": true,
-      "originalFilename": "12 슈베르트 송어 5중주.m4a",
-      "bytes": 120619,
-      "sha256": "49d9baa1885cbacbfbb202c048221d8007d10982df8a720ff9c6a73ff6682a17",
+      "originalFilename": "슈베르트 송어 5중주.m4a",
+      "bytes": 192076,
+      "sha256": "d0a85976b384b1a2b064024990b0be9d542c9645dc4616b9bba0a8769cf682a7",
       "artist": "사용자 제공 음원",
       "source": "./src/assets/audio/hints/originals/schubert-trout.m4a",
       "sourceType": "user-provided",
       "section": "제공된 원본 음원 전체 감상",
       "edited": false,
-      "receivedAt": "2026-11-14",
+      "receivedAt": "2026-11-15",
       "rights": "게임에 적용하도록 사용자가 제공한 음원. 별도의 공개 라이선스는 지정되지 않았습니다."
     },
     "chopin-nocturne": {

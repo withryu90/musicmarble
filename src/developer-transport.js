@@ -1,8 +1,8 @@
-import * as G from './engine.js?v=a25692d047e4';
-import {BOARD,WORKS,EVENTS} from './data.js?v=a25692d047e4';
-import {purchaseQuizById} from './purchase-quizzes.js?v=a25692d047e4';
-import {RoomService} from './room-service.js?v=a25692d047e4';
-import {createRollPresentation} from './roll-presentation.js?v=a25692d047e4';
+import * as G from './engine.js?v=a8ae45f8bebc';
+import {BOARD,WORKS,EVENTS} from './data.js?v=a8ae45f8bebc';
+import {purchaseQuizById} from './purchase-quizzes.js?v=a8ae45f8bebc';
+import {RoomService} from './room-service.js?v=a8ae45f8bebc';
+import {createRollPresentation} from './roll-presentation.js?v=a8ae45f8bebc';
 
 // This service exists only in this browser. No developer action is sent to a server.
 export class DeveloperTransport{
@@ -58,8 +58,9 @@ export class DeveloperTransport{
     if(kind==='music-correct'||kind==='music-wrong'){const answer=purchaseQuizById(s.purchaseChallenge.questionId).answer;s=G.answerPurchaseQuiz(s,kind==='music-correct'?answer:!answer);}
    }else if(kind==='gain'||kind==='loss'){
     const cursor=s.eventCursor%s.eventDeck.length,target=s.eventDeck.indexOf(EVENTS.findIndex(e=>kind==='gain'?e.amount>0:e.amount<0));[s.eventDeck[cursor],s.eventDeck[target]]=[s.eventDeck[target],s.eventDeck[cursor]];s=this.jump(s,BOARD.findIndex(c=>c.type==='event'));
-   }else if(kind==='prison'||kind==='concert'||kind==='streaming'||kind==='streaming-owned'||kind==='work-swap'){
+   }else if(kind==='prison'||kind==='concert'||kind==='streaming'||kind==='streaming-owned'||kind==='work-swap'||kind==='transfer'){
     if(kind==='work-swap'){s.ownership[WORKS[0].id]={player:s.turn,level:1};s.ownership[WORKS[1].id]={player:(s.turn+1)%s.players.length,level:0};}
+    if(kind==='transfer'){const highest=WORKS.reduce((a,b)=>a.price>=b.price?a:b);s.ownership[WORKS[0].id]={player:s.turn,level:0};s.ownership[highest.id]={player:s.turn,level:1};}
     if(kind==='streaming')delete s.platformOwners[BOARD.find(c=>c.type==='streaming').id];
     if(kind==='streaming-owned')s.platformOwners[BOARD.find(c=>c.type==='streaming').id]=(s.turn+1)%s.players.length;
     s=this.jump(s,BOARD.findIndex(c=>c.type===(kind==='streaming-owned'?'streaming':kind)));

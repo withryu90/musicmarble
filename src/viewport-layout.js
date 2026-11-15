@@ -1,4 +1,4 @@
-import {unzoomedViewportHeight} from './mobile-board.js?v=7477b3df707b';
+import {unzoomedViewportHeight} from './mobile-board.js?v=0ba77024cceb';
 // Keep the square/diamond proportions while sharing one viewport with controls and chat.
 export function viewportSceneSize(width,height,seatWidth,flat=false){
  const availableHeight=Math.max(1,height-8);

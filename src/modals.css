@@ -301,3 +301,20 @@ dialog#modal.prison-arrival-modal::backdrop{background:#08090bc4}
 #modal.prison-arrival-modal .bail-offer .primary{background:linear-gradient(180deg,#dbc592,#bda371);border-color:#e3cfa4;border-bottom-color:#8f784d;color:#201c14}
 #modal.prison-arrival-modal :is(button,a):focus-visible{outline-color:#e3cfa4}
 dialog#modal.prison-arrival-modal .modal-header .icon-button[data-action="close"]:focus-visible svg{color:#fff;filter:none}
+
+/* A softly lit concert hall sits behind the ticket cards, never their text. */
+dialog#modal.concert-tickets-modal{
+ background:linear-gradient(180deg,#11233a26,#12233bbf),url('./assets/concert-hall-stage.webp') center center/cover no-repeat;
+ color:#fff7e6;border-color:#d6bd8d;box-shadow:0 24px 80px #0c20366b;
+}
+dialog#modal.concert-tickets-modal::backdrop{background:#10223999}
+#modal.concert-tickets-modal .modal-header{background:#14283be8;border-color:#d6bd8d66}
+#modal.concert-tickets-modal .modal-header .eyebrow{color:#e7d6b3}
+#modal.concert-tickets-modal .modal-header .icon-button{color:#fff3d8;background:transparent}
+#modal.concert-tickets-modal :is(h2,.concert-host>strong,.concert-invitation){color:#fff7e6;text-shadow:0 1px 3px #091a2b}
+#modal.concert-tickets-modal .concert-host>span:first-child{color:#ead093}
+#modal.concert-tickets-modal .concert-ticket{color:#214f74;background:linear-gradient(110deg,#edf7fff2,#fffffff5);border-color:#d7e6efcc}
+#modal.concert-tickets-modal .concert-ticket.seat-vip{background:linear-gradient(110deg,#fff3d9f5,#fffaf0f5);border-color:#e6c989}
+#modal.concert-tickets-modal .concert-income{background:#fff4ddeb;color:#594522;border:1px solid #ddc493}
+#modal.concert-tickets-modal .concert-seat-guide{padding:7px 9px;border-radius:8px;background:#14263bdb;color:#f3e8d1}
+dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close"]:focus-visible svg{color:#fff3d8;filter:none}

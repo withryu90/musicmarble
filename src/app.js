@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=7cfe5526d1e6';
-import {createListeningPlayer} from './listening-player.js?v=7cfe5526d1e6';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=7cfe5526d1e6';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=7cfe5526d1e6';
-import {GameActions} from './game-actions.js?v=7cfe5526d1e6';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=7cfe5526d1e6';
-import {createMusicDirector} from './music-director.js?v=7cfe5526d1e6';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=7cfe5526d1e6';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=7cfe5526d1e6';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=7cfe5526d1e6';
-import {formatModalSentences} from './modal-sentences.js?v=7cfe5526d1e6';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=7cfe5526d1e6';
-import {WORK_ARTWORK} from './work-artwork.js?v=7cfe5526d1e6';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=7cfe5526d1e6';
-import {RankingClient} from './ranking.js?v=7cfe5526d1e6';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=7cfe5526d1e6';
-import {HandoffCountdown} from './handoff-countdown.js?v=7cfe5526d1e6';
-import {fitBoardTitles} from './board-type.js?v=7cfe5526d1e6';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=7cfe5526d1e6';
-import * as G from './engine.js?v=7cfe5526d1e6';
-import {ActivityInbox,visibleActivities} from './activities.js?v=7cfe5526d1e6';
-import {purchaseQuizById} from './purchase-quizzes.js?v=7cfe5526d1e6';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=7cfe5526d1e6';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=7cfe5526d1e6';
-import {diceCube} from './dice.js?v=7cfe5526d1e6';
-import {CHARACTER_BIOS} from './character-bios.js?v=7cfe5526d1e6';
-import {needsLandscape} from './orientation.js?v=7cfe5526d1e6';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=7cfe5526d1e6';
-import {GameTransport} from './game-transport.js?v=7cfe5526d1e6';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=7cfe5526d1e6';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=7cfe5526d1e6';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=7cfe5526d1e6';
+import {playerStatus} from './player-status.js?v=6f1f119901f6';
+import {createListeningPlayer} from './listening-player.js?v=6f1f119901f6';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=6f1f119901f6';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=6f1f119901f6';
+import {GameActions} from './game-actions.js?v=6f1f119901f6';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=6f1f119901f6';
+import {createMusicDirector} from './music-director.js?v=6f1f119901f6';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=6f1f119901f6';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=6f1f119901f6';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=6f1f119901f6';
+import {formatModalSentences} from './modal-sentences.js?v=6f1f119901f6';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=6f1f119901f6';
+import {WORK_ARTWORK} from './work-artwork.js?v=6f1f119901f6';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=6f1f119901f6';
+import {RankingClient} from './ranking.js?v=6f1f119901f6';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=6f1f119901f6';
+import {HandoffCountdown} from './handoff-countdown.js?v=6f1f119901f6';
+import {fitBoardTitles} from './board-type.js?v=6f1f119901f6';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=6f1f119901f6';
+import * as G from './engine.js?v=6f1f119901f6';
+import {ActivityInbox,visibleActivities} from './activities.js?v=6f1f119901f6';
+import {purchaseQuizById} from './purchase-quizzes.js?v=6f1f119901f6';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=6f1f119901f6';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=6f1f119901f6';
+import {diceCube} from './dice.js?v=6f1f119901f6';
+import {CHARACTER_BIOS} from './character-bios.js?v=6f1f119901f6';
+import {needsLandscape} from './orientation.js?v=6f1f119901f6';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=6f1f119901f6';
+import {GameTransport} from './game-transport.js?v=6f1f119901f6';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=6f1f119901f6';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=6f1f119901f6';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=6f1f119901f6';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -232,20 +232,20 @@ function animateBoardMovement(p){
  p.backward=p.isBackwardRoll;p.backwardStep=0;state=structuredClone(p.before);render();
  const movementTarget=boardView==='flat'?document.querySelector(`.cell[data-index="${state.players[p.playerId].position}"]`):document.querySelector('.board-scene');
  if(!mobileGame)movementTarget?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:boardView==='flat'?'nearest':'center',inline:'nearest'});
- if(!path.length){p.timer=setTimeout(()=>{const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);stopDicePresentation();commitSnapshot(result);pending.forEach(receive);},850);return;}
+ if(!path.length){p.timer=setTimeout(()=>{const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);stopDicePresentation();commitSnapshot(result);pending.forEach(receive);},680);return;}
  function advance(){
   const previousPosition=state.players[p.playerId].position;
   state.players[p.playerId].position=path[pathIndex++];p.step=Math.min(pathIndex,p.result);p.backward=!!backward&&pathIndex>forwardSteps;p.backwardStep=pathIndex-forwardSteps;render();
   if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1,scroll:!mobileGame});
   else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1});});
-  if(pathIndex<path.length)p.timer=setTimeout(advance,900);
+  if(pathIndex<path.length)p.timer=setTimeout(advance,720);
   else p.timer=setTimeout(()=>{
    const result=p.resultSnapshot,pending=p.updates.filter(update=>update.revision>result.revision);
    stopDicePresentation();commitSnapshot(result);pending.forEach(receive);
 
-  },850);
+  },680);
  }
- p.timer=setTimeout(advance,900);
+ p.timer=setTimeout(advance,720);
 }
 function receive(next){
  rememberRoomSnapshot(next);

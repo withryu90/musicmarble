@@ -10,7 +10,7 @@ test('the moving pawn follows the cell delta and stays visible without changing 
  let animation,scroll;const pawn={animate:(frames,options)=>(animation={frames,options})};
  const from={getBoundingClientRect:()=>({left:10,top:20})},to={querySelector:s=>s==='[data-player-id="2"]'?pawn:null,getBoundingClientRect:()=>({left:90,top:20}),scrollIntoView:options=>scroll=options};
  const board={querySelector:s=>s==='[data-index="0"]'?from:s==='[data-index="1"]'?to:null};
- animateFlatStep(board,0,1,2);assert.equal(animation.frames[0].transform,'translate(-80px, 0px)');assert.equal(animation.options.duration,650);assert.equal(scroll.inline,'nearest');
+ animateFlatStep(board,0,1,2);assert.equal(animation.frames[0].transform,'translate(-80px, 0px)');assert.equal(animation.options.duration,520);assert.equal(scroll.inline,'nearest');
  animation=null;animateFlatStep(board,0,1,2,{reducedMotion:true});assert.equal(animation,null);assert.equal(scroll.behavior,'auto');assert.equal(animateFlatStep(null,0,1,2),null);
 });
 
@@ -21,7 +21,7 @@ test('upright 3D pawns glide between projected tile centres instead of outside-e
  const scene={querySelector:selector=>selector.includes('board-pawn-group')?pawn:cells[Number(selector.match(/index="(\d+)"/)[1])]};
  animateProjectedStep(scene,0,1,2);
  assert.equal(animation.frames[0].transform,'translate(-55px, -40px)');
- assert.equal(animation.options.duration,650);
+ assert.equal(animation.options.duration,520);
  animation=null;animateProjectedStep(scene,0,1,2,{reducedMotion:true});assert.equal(animation,null);
  assert.equal(animateProjectedStep(null,0,1,2),null);
 });

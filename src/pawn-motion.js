@@ -8,7 +8,7 @@ export function animateFlatStep(board,fromIndex,toIndex,playerId,{reducedMotion=
  if(!from||!to||!pawn)return null;
  if(scroll)to.scrollIntoView({block:'nearest',inline:'nearest',behavior:reducedMotion?'auto':'smooth'});
  if(reducedMotion||fromIndex===toIndex||typeof pawn.animate!=='function')return null;
- return pawn.animate(flatStepFrames(from.getBoundingClientRect(),to.getBoundingClientRect(),scale),{duration:650,easing:'cubic-bezier(.22,.65,.3,1)'});
+ return pawn.animate(flatStepFrames(from.getBoundingClientRect(),to.getBoundingClientRect(),scale),{duration:520,easing:'cubic-bezier(.22,.65,.3,1)'});
 }
 
 // Projected cells already expose screen-space rectangles, so the portrait stays upright.
@@ -19,5 +19,5 @@ export function animateProjectedStep(scene,fromIndex,toIndex,playerId,{reducedMo
  if(!from||!to||typeof pawn?.animate!=='function')return null;
  const a=from.getBoundingClientRect(),b=to.getBoundingClientRect();
  const center=r=>({left:r.left+r.width/2,top:r.top+r.height/2});
- return pawn.animate(flatStepFrames(center(a),center(b),scale),{duration:650,easing:'cubic-bezier(.22,.65,.3,1)'});
+ return pawn.animate(flatStepFrames(center(a),center(b),scale),{duration:520,easing:'cubic-bezier(.22,.65,.3,1)'});
 }

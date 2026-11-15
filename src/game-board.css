@@ -505,3 +505,10 @@
 
 /* Dice is a visual announcement; menus remain clickable beneath it. */
 .dice-overlay{pointer-events:none}
+
+/* Multiple installations keep readable badges instead of halving a single slot. */
+.streaming-markers:not(.is-single){width:48%;gap:2px}
+.board-area.is-3d .board-label>.streaming-markers:not(.is-single){
+ left:calc(var(--label-width)*.1);top:calc(var(--label-height)*-.08);
+ width:calc(var(--label-width)*.34);gap:2px;
+}

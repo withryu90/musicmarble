@@ -1,6 +1,6 @@
-import {BOARD,WORKS,QUIZZES} from './data.js?v=4098a60a185d';
-import * as G from './engine.js?v=4098a60a185d';
-import {purchaseQuizById} from './purchase-quizzes.js?v=4098a60a185d';
+import {BOARD,WORKS,QUIZZES} from './data.js?v=2f23c10ac5a5';
+import * as G from './engine.js?v=2f23c10ac5a5';
+import {purchaseQuizById} from './purchase-quizzes.js?v=2f23c10ac5a5';
 
 // Small, bounded decisions; bots use exactly the same rules and balances as people.
 export function botDecision(state,previous={},random=Math.random){
@@ -30,6 +30,12 @@ export function botDecision(state,previous={},random=Math.random){
   if(state.phase==='feedback')return decide('closeFeedback');
   if(state.phase!=='action')return null;
   const cell=BOARD[p.position];
+  if(G.canSwapWorks(state)){
+   const mine=G.owned(state,p.id),others=WORKS.filter(w=>state.ownership[w.id]&&state.ownership[w.id].player!==p.id&&!state.players[state.ownership[w.id].player].withdrawn);
+   if(!mine.length||!others.length)return decide('skipWorkSwap');
+   const give=mine.reduce((a,b)=>a.price<b.price?a:b),take=others.reduce((a,b)=>a.price>b.price?a:b);
+   return decide('swapWorks',[{giveWorkId:give.id,takeWorkId:take.id}]);
+  }
   if(G.streamingOpportunity(state)){
     if(G.canBuyPlatform(state))return decide(p.coins>=300&&random()<.75?'buyPlatform':'skipStreaming');
     const apps=G.streamingOptions(state);return p.coins>=150&&random()<.7?decide('installStreaming',[apps[Math.floor(random()*apps.length)].id]):decide('skipStreaming');
@@ -50,7 +56,7 @@ export function botDecision(state,previous={},random=Math.random){
 export function applyBotDecision(state,decision,dice){
   if(!decision)return state;
   if(decision.action==='roll')return G.roll(state,dice);
-  const actions={payBail:G.payBail,buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
+  const actions={swapWorks:G.swapWorks,skipWorkSwap:G.skipWorkSwap,payBail:G.payBail,buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,buy:G.purchaseAndNext,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,resolveTrade:G.resolveTrade};
   if(!Object.hasOwn(actions,decision.action))throw Error('잘못된 봇 동작입니다.');
   return actions[decision.action](state,...decision.args);
 }

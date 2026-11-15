@@ -1,5 +1,5 @@
-import {movementPath,backwardPath} from './movement.js?v=4098a60a185d';
-import {BOARD} from './data.js?v=4098a60a185d';
+import {movementPath,backwardPath} from './movement.js?v=2f23c10ac5a5';
+import {BOARD} from './data.js?v=2f23c10ac5a5';
 export const ROLL_TIMING=Object.freeze({lead:2800,roll:2200,result:2400,close:600,step:720,arrival:680});
 export function rollPath(before,after){
  const actor=before.turn,dice=after.dice,backward=before.phase==='backward-roll';
@@ -24,6 +24,7 @@ export function shouldPresentRoll(snapshot,lastId,now){const p=snapshot?.rollPre
 export function rollArrivalNotice(state){
  const cell=BOARD[state.players[state.turn].position];
  if(cell.type==='work')return {type:'work-arrival',title:'작품에 도착했어요',actorId:state.turn,round:state.round,workId:cell.id,changes:[],text:`${cell.composer} 「${cell.title}」 · 구입가 ${cell.price} MC`};
+ if(cell.type==='work-swap')return {type:'work-swap-arrival',title:'작품 트레이드',actorId:state.turn,round:state.round,changes:[],text:'보드에서 원하는 상대 작품과 내 작품을 한 개씩 골라 맞바꿀 수 있어요.'};
  if(cell.type==='streaming')return {type:'streaming-arrival',title:'스트리밍 앱 인수',actorId:state.turn,round:state.round,appId:cell.id,changes:[],text:cell.subtitle};
  return null;
 }

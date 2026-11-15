@@ -10,9 +10,9 @@ import {botDecision,applyBotDecision} from '../src/bots.js';
 const game=(count=4)=>G.createGame({names:['A','B','C','D'].slice(0,count)});
 const landing=(s,id,actor=0)=>{s=structuredClone(s);s.turn=actor;s.phase='roll';s.players[actor].position=BOARD.findIndex(c=>c.id===id)-1;return G.roll(s,1);};
 const licensed=()=>{const s=game();s.platformOwners['youtube-music']=0;return s;};
-test('9x9 board places exactly one correctly named platform on each chronological edge',()=>{
- assert.equal(BOARD.length,32);assert.deepEqual(BOARD.filter(c=>c.type==='streaming').map(c=>[BOARD.indexOf(c),c.id,c.era]),STREAMING_APPS.map((a,i)=>[7+8*i,a.id,a.era]));
- for(const app of STREAMING_APPS){const s=landing(game(),app.id);assert.equal(G.canBuyPlatform(s),true);assert.equal(canOfferTurnHandoff(s,0),false);const next=G.buyPlatform(s);assert.equal(next.platformOwners[app.id],0);assert.equal(next.players[0].coins,1000);assert.ok(G.isValidSave(next));assert.equal(G.score(next,next.players[0]),1200);assert.throws(()=>G.buyPlatform(next));}
+test('9x9 board places three app tiles and one work-swap tile without changing board geometry',()=>{
+ assert.equal(BOARD.length,32);assert.deepEqual(BOARD.filter(c=>c.type==='streaming').map(c=>[BOARD.indexOf(c),c.id,c.era]),STREAMING_APPS.map((a,i)=>[7+8*i,a.id,a.era]).filter(a=>a[1]!=='spotify'));
+ for(const app of STREAMING_APPS.filter(a=>a.id!=='spotify')){const s=landing(game(),app.id);assert.equal(G.canBuyPlatform(s),true);assert.equal(canOfferTurnHandoff(s,0),false);const next=G.buyPlatform(s);assert.equal(next.platformOwners[app.id],0);assert.equal(next.players[0].coins,1000);assert.ok(G.isValidSave(next));assert.equal(G.score(next,next.players[0]),1200);assert.throws(()=>G.buyPlatform(next));}
 });
 test('platform purchase is optional, requires the current app tile and sufficient balance, and never charges a visitor',()=>{
  let s=landing(game(),'youtube-music');s=G.skipStreaming(s);assert.equal(s.players[0].coins,1200);assert.equal(s.platformOwners['youtube-music'],undefined);assert.equal(canOfferTurnHandoff(s,0),true);
@@ -50,7 +50,7 @@ test('different apps can coexist, one installation choice per visit; repeated sa
  const again=landing(revisited,'bach-air',0);assert.equal(G.streamingOptions(again).length,0);
 });
 test('platform and installation purchases obey the existing duel bankruptcy rule',()=>{
- let s=landing(game(2),'spotify');s.players[0].coins=200;s=G.buyPlatform(s);assert.equal(s.phase,'finished');assert.equal(s.endReason.playerId,0);assert.ok(G.isValidSave(s));
+ let s=landing(game(2),'apple-music');s.players[0].coins=200;s=G.buyPlatform(s);assert.equal(s.phase,'finished');assert.equal(s.endReason.playerId,0);assert.ok(G.isValidSave(s));
  s=game(2);s.platformOwners['melon']=0;s.ownership['bach-air']={player:0,level:1};s=landing(s,'bach-air');s.players[0].coins=50;s=G.installStreaming(s,'melon');assert.equal(s.phase,'finished');assert.ok(G.isValidSave(s));
 });
 test('structured purchase, installation and income notices are shared once and never repeat on confirmation',()=>{
@@ -77,7 +77,7 @@ test('room actions enforce actor and revision checks; bots use the same optional
   const a=service.create('A'),b=service.join(a.code,'B'),room=service.get(a.code);room.state=landing(game(2),'youtube-music');service.broadcast(room);const revision=room.revision;
   assert.throws(()=>service.act(b.code,b.token,{action:'buyPlatform',revision}));service.act(a.code,a.token,{action:'buyPlatform',revision});assert.equal(room.state.platformOwners['youtube-music'],0);assert.throws(()=>service.act(a.code,a.token,{action:'buyPlatform',revision}));
  }finally{service.close();}
- let s=landing(game(),'spotify');s.players[0].isBot=true;const decision=botDecision(s,{},()=>0);assert.equal(decision.action,'buyPlatform');s=applyBotDecision(s,decision);assert.equal(s.platformOwners.spotify,0);assert.ok(G.isValidSave(s));
+ let s=landing(game(),'apple-music');s.players[0].isBot=true;const decision=botDecision(s,{},()=>0);assert.equal(decision.action,'buyPlatform');s=applyBotDecision(s,decision);assert.equal(s.platformOwners['apple-music'],0);assert.ok(G.isValidSave(s));
 });
 
 test('streaming charges follow rent, respect insufficient balances, and can bankrupt a duel visitor',()=>{

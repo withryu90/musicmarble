@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=4098a60a185d';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=4098a60a185d';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=4098a60a185d';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=4098a60a185d';
-import {characterById,drawCharacterIds} from './characters.js?v=4098a60a185d';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=4098a60a185d';
+import {ROUND_OPTIONS} from './lobby-config.js?v=2f23c10ac5a5';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=2f23c10ac5a5';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=2f23c10ac5a5';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=2f23c10ac5a5';
+import {characterById,drawCharacterIds} from './characters.js?v=2f23c10ac5a5';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=2f23c10ac5a5';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -116,7 +116,7 @@ export function roll(state,dice,rng=Math.random){
   if(state.phase==='backward-roll')return rollBackward(state,dice,rng);
   if(state.phase!=='roll'||hasFinished(state,current(state)))throw Error('현재는 주사위를 굴릴 수 없습니다.');
   if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
-  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
+  const s=clone(state),p=current(s);s.dice=dice;s.phase='action';s.swapHandled=false;s.lastSwap=null;s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastSkipped=[];s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.lastBackwardMove=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
   if(p.bailPaid){p.bailPaid=false;log(s,`${p.name}: 보석금 납부 완료 — 일반 주사위로 감옥에서 출발`);}
   if((p.skipTurns??0)>0){
     if(BOARD[p.position].type!=='prison')throw Error('감옥 위치를 확인해 주세요.');
@@ -142,7 +142,7 @@ export function rollBackward(state,dice,rng=Math.random){
  if(state.phase!=='backward-roll'||BOARD[current(state).position].type!=='back-three')throw Error('뒤로가기 칸에서 추가 주사위를 굴려 주세요.');
  if(!Number.isInteger(dice)||dice<1||dice>6)throw Error('주사위 값은 1–6입니다.');
  const s=clone(state),p=current(s),from=p.position;s.dice=dice;s.phase='action';
- s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
+ s.swapHandled=false;s.lastSwap=null;s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastRent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.feedback=null;s.quizUsed=false;s.purchased=false;s.concertWorkId=null;s.purchaseChallenge=null;
  p.position=(from-dice+BOARD.length)%BOARD.length;s.lastBackwardMove={from,to:p.position,steps:dice};
  return resolveArrival(s,p,rng);
 }
@@ -197,7 +197,7 @@ function resolveArrival(s,p,rng){
 export function migrateBoardLayout(state){
  if(!state||state.boardLayout!==undefined||!Array.isArray(state.players)||!state.players.every(p=>Number.isInteger(p.position)&&LEGACY_BOARD[p.position]))return state;
  const s=clone(state),map=i=>BOARD.findIndex(c=>c.id===LEGACY_BOARD[i]?.id);
- s.players.forEach(p=>p.position=map(p.position));s.boardLayout=2;s.platformOwners={};s.streamingInstallations={};s.streamingHandled=false;s.lastStreamingRevenue=[];
+ s.players.forEach(p=>p.position=map(p.position));s.boardLayout=2;s.platformOwners={};s.streamingInstallations={};s.swapHandled=false;s.lastSwap=null;s.streamingHandled=false;s.lastStreamingRevenue=[];
  if(s.lastPrisonTransfer)s.lastPrisonTransfer={from:map(s.lastPrisonTransfer.from),to:map(s.lastPrisonTransfer.to)};
  // Completed visual paths belong to the former perimeter, and must not replay.
  s.lastBackwardMove=null;return s;
@@ -339,7 +339,7 @@ export function nextTurn(state){
     s.turn=nextPlayerIndex(s);
     s.phase='roll';
   }
-  s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
+  s.swapHandled=false;s.lastSwap=null;s.streamingHandled=false;s.lastStreamingRevenue=[];s.lastConcert=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.concertWorkId=null;s.purchaseChallenge=null;return s;
 }
 // Keep seat IDs stable for saved assets, event journals and authenticated sessions.
 export function removeDisconnected(state,ids){
@@ -352,12 +352,24 @@ export function removeDisconnected(state,ids){
  for(const [id,apps] of Object.entries(s.streamingInstallations||{})){for(const [app,owner] of Object.entries(apps))if(lost.has(owner))delete apps[app];if(!Object.keys(apps).length)delete s.streamingInstallations[id];}
  if(s.trade&&(lost.has(s.trade.from)||lost.has(s.trade.to)))s.trade=null;
  s.lastRent=null;s.lastEvent=null;s.lastAssignment=null;s.lastPrisonTransfer=null;s.lastPrisonRoll=null;s.lastBail=null;s.lastConcert=null;s.lastStreamingRevenue=[];s.concertWorkId=null;if(!wasCurrent)s.lastPrisonRoll=prisonRoll;
- if(wasCurrent){s.turn=nextPlayerIndex(s);s.turnNumber=(s.turnNumber||0)+1;s.phase='roll';s.dice=null;s.quiz=null;s.feedback=null;s.quizDeadline=null;s.purchaseChallenge=null;s.trade=null;s.quizUsed=false;s.purchased=false;s.streamingHandled=false;}
+ if(wasCurrent){s.turn=nextPlayerIndex(s);s.turnNumber=(s.turnNumber||0)+1;s.phase='roll';s.dice=null;s.quiz=null;s.feedback=null;s.quizDeadline=null;s.purchaseChallenge=null;s.trade=null;s.quizUsed=false;s.purchased=false;s.swapHandled=false;s.lastSwap=null;s.streamingHandled=false;}
  const remaining=activePlayers(s);
  if(remaining.length===1){s.turn=remaining[0].id;s.phase='finished';s.endReason={type:'disconnect',playerId:s.turn};s.quiz=null;s.feedback=null;s.quizDeadline=null;s.purchaseChallenge=null;s.trade=null;log(s,`${remaining[0].name}: 마지막 참가자로 게임을 마칩니다.`);}
  updateProgress(s);return s;
 }
 export function finishGame(state){const s=clone(state);s.quizDeadline=null;s.phase='finished';s.trade=null;log(s,'교사가 수업을 마쳤습니다. 현재 자산과 배움으로 결과를 기록합니다.');return s;}
+export function canSwapWorks(s){return s.phase==='action'&&!s.trade&&!s.swapHandled&&BOARD[current(s).position].type==='work-swap';}
+export function swapWorks(state,{giveWorkId,takeWorkId}={}){
+ if(!canSwapWorks(state))throw Error('작품 트레이드 칸에 도착한 본인 차례에 한 번 교환할 수 있어요.');
+ const give=state.ownership[giveWorkId],take=state.ownership[takeWorkId];
+ if(!WORKS.some(w=>w.id===giveWorkId)||!WORKS.some(w=>w.id===takeWorkId)||!give||give.player!==state.turn||!take||take.player===state.turn||state.players[take.player].withdrawn)throw Error('내 작품 한 개와 다른 참가자의 작품 한 개를 선택해 주세요.');
+ const s=clone(state),to=take.player;
+ s.ownership[giveWorkId].player=to;s.ownership[takeWorkId].player=s.turn;s.swapHandled=true;
+ s.lastSwap={from:s.turn,to,giveWorkId,takeWorkId};
+ log(s,`${current(s).name}: 「${WORKS.find(w=>w.id===giveWorkId).title}」 ↔ ${s.players[to].name}의 「${WORKS.find(w=>w.id===takeWorkId).title}」 작품 트레이드`);
+ return s;
+}
+export function skipWorkSwap(state){if(!canSwapWorks(state))throw Error('현재 작품 트레이드를 선택할 수 없어요.');const s=clone(state);s.swapHandled=true;return s;}
 export function proposeTrade(state,{workId,to,price}){
   const s=clone(state),p=current(s);
   if(s.phase!=='action'||s.trade||s.ownership[workId]?.player!==p.id||!Number.isInteger(to)||!s.players[to]||s.players[to].withdrawn||to===p.id||!Number.isInteger(price)||price<1||price>10000)throw Error('거래할 작품, 상대 팀, 1–10,000 MC의 정수 가격을 확인해 주세요.');
@@ -379,6 +391,8 @@ export function isValidSave(s){
     if(s.players.some(p=>p.withdrawn!==undefined&&typeof p.withdrawn!=='boolean')||s.phase!=='finished'&&current(s).withdrawn)return false;
     if(s.boardLayout!==undefined&&s.boardLayout!==2)return false;
     if(!validQuizHistory(s))return false;
+    if(s.swapHandled!==undefined&&typeof s.swapHandled!=='boolean')return false;
+    if(s.lastSwap){const t=s.lastSwap;if(!Number.isInteger(t.from)||!Number.isInteger(t.to)||!s.players[t.from]||!s.players[t.to]||t.from===t.to||t.giveWorkId===t.takeWorkId||![t.giveWorkId,t.takeWorkId].every(id=>WORKS.some(w=>w.id===id)))return false;}
     if(s.streamingHandled!==undefined&&typeof s.streamingHandled!=='boolean')return false;
     if(s.platformOwners!==undefined&&(!s.platformOwners||typeof s.platformOwners!=='object'||Array.isArray(s.platformOwners)||!Object.entries(s.platformOwners).every(([app,id])=>streamingApp(app)&&Number.isInteger(id)&&s.players[id])))return false;
     if(s.streamingInstallations!==undefined&&(!s.streamingInstallations||typeof s.streamingInstallations!=='object'||Array.isArray(s.streamingInstallations)||!Object.entries(s.streamingInstallations).every(([id,apps])=>WORKS.some(w=>w.id===id)&&apps&&typeof apps==='object'&&!Array.isArray(apps)&&Object.entries(apps).every(([app,owner])=>streamingApp(app)&&Number.isInteger(owner)&&s.players[owner]&&s.platformOwners?.[app]===owner))))return false;

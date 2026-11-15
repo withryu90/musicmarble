@@ -1,4 +1,4 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=4098a60a185d';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE} from './streaming.js?v=2f23c10ac5a5';
 export const PRISON_MESSAGE='당신은 불법 스트리밍을 통해 음악을 감상한 죄로, 감옥에 갇혔습니다. 다음 세 번의 자기 차례에 탈출 주사위를 굴릴 수 있습니다. 6이 나오면 즉시 탈출하여 6칸 이동합니다. 세 번 모두 6이 나오지 않으면 그 세 차례는 감옥에 머물고, 다음 자기 차례부터 정상 이동합니다.';
 export const ERAS = [
   {id:'baroque', name:'바로크', years:'약 1600–1750', color:'#9b7eaf', detail:'선율을 겹겹이 쌓고, 화려한 장식으로 감정을 표현한 시대'},
@@ -41,6 +41,7 @@ export const LEGACY_BOARD = [
 export const BOARD=LEGACY_BOARD.flatMap((cell,index)=>{
  if((index+1)%7!==0)return [cell];
  const app=STREAMING_APPS[Math.floor(index/7)];
+ if(app.id==='spotify')return [cell,{id:'work-swap',type:'work-swap',era:app.era,title:'작품 트레이드',subtitle:'작품 맞바꾸기'}];
  return [cell,{id:app.id,type:'streaming',era:app.era,title:'스트리밍 앱 인수',subtitle:app.name,price:STREAMING_RIGHTS_PRICE}];
 });
 export const WORKS = BOARD.filter(c=>c.type==='work');

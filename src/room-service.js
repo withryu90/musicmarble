@@ -1,10 +1,10 @@
-import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=4098a60a185d';
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=4098a60a185d';
-import {randomInt,randomToken} from './random.js?v=4098a60a185d';
-import * as G from './engine.js?v=4098a60a185d';
-import {botDecision,applyBotDecision} from './bots.js?v=4098a60a185d';
-import {activityChanges} from './activities.js?v=4098a60a185d';
-import {drawCharacterIds,characterById} from './characters.js?v=4098a60a185d';
+import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=2f23c10ac5a5';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=2f23c10ac5a5';
+import {randomInt,randomToken} from './random.js?v=2f23c10ac5a5';
+import * as G from './engine.js?v=2f23c10ac5a5';
+import {botDecision,applyBotDecision} from './bots.js?v=2f23c10ac5a5';
+import {activityChanges} from './activities.js?v=2f23c10ac5a5';
+import {drawCharacterIds,characterById} from './characters.js?v=2f23c10ac5a5';
 export const DISCONNECT_GRACE_MS=60000;
 const CODE_DIGITS='0123456789';
 export class RoomService {
@@ -135,7 +135,7 @@ export class RoomService {
       }else{
         if(member.id!==state.turn)throw Error('지금은 다른 참가자의 차례입니다.');
         if(state.trade)throw Error('거래 응답을 먼저 기다려 주세요.');
-        const allowed={payBail:G.payBail,pauseListeningHint:s=>G.pauseListeningHint(s),resumeListeningHint:s=>G.resumeListeningHint(s),buyListeningHint:s=>G.buyListeningHint(s),refundListeningHint:s=>G.refundListeningHint(s),beginQuizTimer:s=>G.beginQuizTimer(s),expireQuiz:s=>G.expireQuiz(s),buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
+        const allowed={swapWorks:G.swapWorks,skipWorkSwap:G.skipWorkSwap,payBail:G.payBail,pauseListeningHint:s=>G.pauseListeningHint(s),resumeListeningHint:s=>G.resumeListeningHint(s),buyListeningHint:s=>G.buyListeningHint(s),refundListeningHint:s=>G.refundListeningHint(s),beginQuizTimer:s=>G.beginQuizTimer(s),expireQuiz:s=>G.expireQuiz(s),buyPlatform:G.buyPlatform,installStreaming:G.installStreaming,skipStreaming:G.skipStreaming,roll:s=>G.roll(s,randomInt(1,7)),buy:G.purchaseAndNext,purchaseAndNext:G.purchaseAndNext,skipPurchase:G.skipPurchase,startPurchaseQuiz:G.startPurchaseQuiz,answerPurchaseQuiz:G.answerPurchaseQuiz,closePurchaseFeedback:G.closePurchaseFeedback,upgrade:G.upgrade,sell:G.sell,startQuiz:G.startQuiz,answerQuiz:G.answerQuiz,closeFeedback:G.closeFeedback,nextTurn:G.nextTurn,proposeTrade:G.proposeTrade};
         if(!Object.hasOwn(allowed,action))throw Error('지원하지 않는 동작입니다.');
         room.state=allowed[action](state,...args);
         if(action==='roll'&&(synchronize||room.synchronizeRolls)){

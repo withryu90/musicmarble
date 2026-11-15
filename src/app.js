@@ -1,36 +1,36 @@
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=235a9272d46d';
-import {playerStatus} from './player-status.js?v=235a9272d46d';
-import {createListeningPlayer} from './listening-player.js?v=235a9272d46d';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=235a9272d46d';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=235a9272d46d';
-import {GameActions} from './game-actions.js?v=235a9272d46d';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=235a9272d46d';
-import {createMusicDirector} from './music-director.js?v=235a9272d46d';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=235a9272d46d';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=235a9272d46d';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=235a9272d46d';
-import {formatModalSentences} from './modal-sentences.js?v=235a9272d46d';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=235a9272d46d';
-import {WORK_ARTWORK} from './work-artwork.js?v=235a9272d46d';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=235a9272d46d';
-import {RankingClient} from './ranking.js?v=235a9272d46d';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=235a9272d46d';
-import {HandoffCountdown} from './handoff-countdown.js?v=235a9272d46d';
-import {fitBoardTitles} from './board-type.js?v=235a9272d46d';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=235a9272d46d';
-import * as G from './engine.js?v=235a9272d46d';
-import {ActivityInbox,visibleActivities} from './activities.js?v=235a9272d46d';
-import {purchaseQuizById} from './purchase-quizzes.js?v=235a9272d46d';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=235a9272d46d';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=235a9272d46d';
-import {diceCube} from './dice.js?v=235a9272d46d';
-import {CHARACTER_BIOS} from './character-bios.js?v=235a9272d46d';
-import {needsLandscape} from './orientation.js?v=235a9272d46d';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=235a9272d46d';
-import {GameTransport} from './game-transport.js?v=235a9272d46d';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=235a9272d46d';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=235a9272d46d';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=235a9272d46d';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=9f3ef2e2b87b';
+import {playerStatus} from './player-status.js?v=9f3ef2e2b87b';
+import {createListeningPlayer} from './listening-player.js?v=9f3ef2e2b87b';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=9f3ef2e2b87b';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=9f3ef2e2b87b';
+import {GameActions} from './game-actions.js?v=9f3ef2e2b87b';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=9f3ef2e2b87b';
+import {createMusicDirector} from './music-director.js?v=9f3ef2e2b87b';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=9f3ef2e2b87b';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=9f3ef2e2b87b';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=9f3ef2e2b87b';
+import {formatModalSentences} from './modal-sentences.js?v=9f3ef2e2b87b';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=9f3ef2e2b87b';
+import {WORK_ARTWORK} from './work-artwork.js?v=9f3ef2e2b87b';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=9f3ef2e2b87b';
+import {RankingClient} from './ranking.js?v=9f3ef2e2b87b';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=9f3ef2e2b87b';
+import {HandoffCountdown} from './handoff-countdown.js?v=9f3ef2e2b87b';
+import {fitBoardTitles} from './board-type.js?v=9f3ef2e2b87b';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=9f3ef2e2b87b';
+import * as G from './engine.js?v=9f3ef2e2b87b';
+import {ActivityInbox,visibleActivities} from './activities.js?v=9f3ef2e2b87b';
+import {purchaseQuizById} from './purchase-quizzes.js?v=9f3ef2e2b87b';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9f3ef2e2b87b';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9f3ef2e2b87b';
+import {diceCube} from './dice.js?v=9f3ef2e2b87b';
+import {CHARACTER_BIOS} from './character-bios.js?v=9f3ef2e2b87b';
+import {needsLandscape} from './orientation.js?v=9f3ef2e2b87b';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=9f3ef2e2b87b';
+import {GameTransport} from './game-transport.js?v=9f3ef2e2b87b';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=9f3ef2e2b87b';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=9f3ef2e2b87b';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=9f3ef2e2b87b';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -852,7 +852,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
   if(activeActivity&&activeActivity.type!=='backward-entry')return;
   if(a==='roll-backward'){activeActivity=null;$('#modal').close();}
   busy=true;render();
-  try{receive(await request('action',{code:session.code,action:'roll',args:[],synchronize:true,revision:snapshot.revision}));}
+  try{const next=await request('action',{code:session.code,action:'roll',args:[],synchronize:true,revision:snapshot.revision});receive(next);if(!dicePresentation){busy=false;render();continueFlow();}}
   catch(error){const latest=dicePresentation?.next;stopDicePresentation();busy=false;if(latest)commitSnapshot(latest);else render();notify(error.message);}
  }
  if(a==='purchase-quiz'){closeModal();await apply(G.startPurchaseQuiz);}

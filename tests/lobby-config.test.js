@@ -24,15 +24,15 @@ test('only host can configure and invalid options do not corrupt the saved setti
  const service=new RoomService();try{
   const host=service.create('방장'),guest=service.join(host.code,'친구'),room=service.get(host.code);
   assert.throws(()=>service.act(guest.code,guest.token,{action:'configure',args:[{rounds:4}],revision:room.revision}));
-  for(const rounds of [0,11,12,1.5,'bad'])assert.throws(()=>service.act(host.code,host.token,{action:'configure',args:[{rounds}],revision:room.revision}));
+  for(const rounds of [0,9,10,11,12,1.5,'bad'])assert.throws(()=>service.act(host.code,host.token,{action:'configure',args:[{rounds}],revision:room.revision}));
   assert.deepEqual(room.config,{rounds:4,coins:1200});
-  for(const rounds of Array.from({length:10},(_,i)=>i+1))assert.equal(roomConfig({rounds}).rounds,rounds);
+  for(const rounds of Array.from({length:8},(_,i)=>i+1))assert.equal(roomConfig({rounds}).rounds,rounds);
  }finally{service.close();}
 });
 
 test('every selectable lap count survives shared-room start, solo start and reconnect',()=>{
  const service=new RoomService();try{
-  for(let rounds=1;rounds<=10;rounds++){
+  for(let rounds=1;rounds<=8;rounds++){
    const host=service.create('방장'),guest=service.join(host.code,'친구'),room=service.get(host.code);
    const act=(action,args=[])=>service.act(host.code,host.token,{action,args,revision:room.revision});
    act('configure',[{rounds}]);act('start');
@@ -51,4 +51,11 @@ test('new shared and solo games default to four laps and explicit choices stay u
   const solo=service.createSolo('혼자');assert.equal(service.get(solo.code).state.maxRounds,4);
   const custom=service.createSolo('선택',{rounds:8});assert.equal(service.get(custom.code).state.maxRounds,8);
  }finally{service.close();}
+});
+
+test('older nine, ten and twelve lap lobbies offer eight while running games retain their length',()=>{
+ for(const rounds of [9,10,12]){
+  assert.equal(new LobbyConfig().read({code:'123456',config:{rounds,coins:1200}}).rounds,8);
+  assert.throws(()=>roomConfig({rounds}));
+ }
 });

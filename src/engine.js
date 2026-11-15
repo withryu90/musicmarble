@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=6f1f119901f6';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=6f1f119901f6';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=6f1f119901f6';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=6f1f119901f6';
-import {characterById,drawCharacterIds} from './characters.js?v=6f1f119901f6';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=6f1f119901f6';
+import {ROUND_OPTIONS} from './lobby-config.js?v=3bd64ded11cc';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=3bd64ded11cc';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=3bd64ded11cc';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=3bd64ded11cc';
+import {characterById,drawCharacterIds} from './characters.js?v=3bd64ded11cc';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=3bd64ded11cc';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -354,7 +354,7 @@ export function isValidSave(s){
   try{
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>MAX_PLAYERS)return false;
     if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','backward-roll','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
-    if(!(ROUND_OPTIONS.includes(s.maxRounds)||s.maxRounds===12)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
+    if(!(ROUND_OPTIONS.includes(s.maxRounds)||[9,10,12].includes(s.maxRounds))||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
     if(s.boardLayout!==undefined&&s.boardLayout!==2)return false;
     if(!validQuizHistory(s))return false;

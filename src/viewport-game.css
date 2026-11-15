@@ -218,3 +218,11 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 
 /* Desktop active statuses stand apart from the blue waiting and typing badges. */
 .game-shell[data-mobile="false"] .board-player-turn:is([data-status-label="진행 중"],[data-status-label="퀴즈 중"]){background:#ffe0b2;border-color:#e5b878;color:#714514;font-weight:800}
+
+/* Desktop zoom uses the same proportional board camera and five-point controls. */
+.game-shell[data-mobile="false"][data-tab="board"] .board-area .board-scene{
+ transform:translate(-50%,-50%) translate(var(--board-pan-x,0px),var(--board-pan-y,0px)) scale(var(--board-zoom,1));transform-origin:center;touch-action:none;
+}
+.game-shell[data-mobile="false"][data-tab="board"] .board-tools .mobile-board-zoom{display:flex;align-items:center;gap:2px}
+.game-shell[data-mobile="false"][data-tab="board"] .mobile-board-zoom button{display:grid;place-items:center;min-width:28px;height:24px;padding:2px 5px;color:#245d82;background:#f1f8fc;border:1px solid #bad9eb;border-radius:6px;font-size:13px;line-height:1}
+.game-shell[data-mobile="false"][data-tab="board"] .mobile-board-zoom [data-action="board-zoom-reset"]{min-width:46px;font-size:11px}

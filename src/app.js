@@ -1,36 +1,36 @@
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=0086761c5b40';
-import {playerStatus} from './player-status.js?v=0086761c5b40';
-import {createListeningPlayer} from './listening-player.js?v=0086761c5b40';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=0086761c5b40';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=0086761c5b40';
-import {GameActions} from './game-actions.js?v=0086761c5b40';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=0086761c5b40';
-import {createMusicDirector} from './music-director.js?v=0086761c5b40';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=0086761c5b40';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=0086761c5b40';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=0086761c5b40';
-import {formatModalSentences} from './modal-sentences.js?v=0086761c5b40';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=0086761c5b40';
-import {WORK_ARTWORK} from './work-artwork.js?v=0086761c5b40';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=0086761c5b40';
-import {RankingClient} from './ranking.js?v=0086761c5b40';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=0086761c5b40';
-import {HandoffCountdown} from './handoff-countdown.js?v=0086761c5b40';
-import {fitBoardTitles} from './board-type.js?v=0086761c5b40';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=0086761c5b40';
-import * as G from './engine.js?v=0086761c5b40';
-import {ActivityInbox,visibleActivities} from './activities.js?v=0086761c5b40';
-import {purchaseQuizById} from './purchase-quizzes.js?v=0086761c5b40';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=0086761c5b40';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=0086761c5b40';
-import {diceCube} from './dice.js?v=0086761c5b40';
-import {CHARACTER_BIOS} from './character-bios.js?v=0086761c5b40';
-import {needsLandscape} from './orientation.js?v=0086761c5b40';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=0086761c5b40';
-import {GameTransport} from './game-transport.js?v=0086761c5b40';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=0086761c5b40';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=0086761c5b40';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=0086761c5b40';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll} from './roll-presentation.js?v=9ae361b2692b';
+import {playerStatus} from './player-status.js?v=9ae361b2692b';
+import {createListeningPlayer} from './listening-player.js?v=9ae361b2692b';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=9ae361b2692b';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=9ae361b2692b';
+import {GameActions} from './game-actions.js?v=9ae361b2692b';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=9ae361b2692b';
+import {createMusicDirector} from './music-director.js?v=9ae361b2692b';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=9ae361b2692b';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=9ae361b2692b';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=9ae361b2692b';
+import {formatModalSentences} from './modal-sentences.js?v=9ae361b2692b';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=9ae361b2692b';
+import {WORK_ARTWORK} from './work-artwork.js?v=9ae361b2692b';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=9ae361b2692b';
+import {RankingClient} from './ranking.js?v=9ae361b2692b';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=9ae361b2692b';
+import {HandoffCountdown} from './handoff-countdown.js?v=9ae361b2692b';
+import {fitBoardTitles} from './board-type.js?v=9ae361b2692b';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=9ae361b2692b';
+import * as G from './engine.js?v=9ae361b2692b';
+import {ActivityInbox,visibleActivities} from './activities.js?v=9ae361b2692b';
+import {purchaseQuizById} from './purchase-quizzes.js?v=9ae361b2692b';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=9ae361b2692b';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=9ae361b2692b';
+import {diceCube} from './dice.js?v=9ae361b2692b';
+import {CHARACTER_BIOS} from './character-bios.js?v=9ae361b2692b';
+import {needsLandscape} from './orientation.js?v=9ae361b2692b';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=9ae361b2692b';
+import {GameTransport} from './game-transport.js?v=9ae361b2692b';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=9ae361b2692b';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=9ae361b2692b';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=9ae361b2692b';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -54,8 +54,8 @@ const mobileGame=isMobileGameEnvironment(window,navigator);
 const webAppGame=mobileGame&&isInstalledWebApp(window);
 const mobileCamera=new MobileBoardCamera(({scale})=>{
  const button=$('[data-action="board-zoom-reset"]'),out=$('[data-action="board-zoom-out"]'),inside=$('[data-action="board-zoom-in"]');
- if(button)button.textContent=`${Math.round(scale*100)}%`;if(out)out.disabled=scale<=1;if(inside)inside.disabled=scale>=3;
-},webAppGame?1.2:1);
+ if(button)button.textContent=`${Math.round(scale*100)}%`;if(out)out.disabled=scale<=(mobileGame?1:.5);if(inside)inside.disabled=scale>=(mobileGame?3:2);
+},webAppGame?1.2:1,{minScale:mobileGame?1:.5,maxScale:mobileGame?3:2});
 let swapSelection=null,lastSwapPrompt='';
 let state=G.createGame(),tab='board',boardView=CSS.supports('container-type','inline-size')?'3d':'flat',filter='all',selected=null,busy=false,session=null,snapshot=null,connected=false,events=null,lastAuto='',revealCharacter=false;
 try{session=JSON.parse(localStorage.getItem(key)||'null');}catch{}
@@ -191,7 +191,7 @@ function publishTyping(active){
 }
 setInterval(()=>{if(localTypingUntil&&localTypingUntil<=Date.now())publishTyping(false);updatePlayerStatuses();},500);
 
-function resetActivityFlow(){lastPresentedRoll=null;prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';mobileCamera.reset();}handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
+function resetActivityFlow(){lastPresentedRoll=null;prisonNoticeAcks.clear();listeningPlayer.stop();latestRoomSnapshot=null;autoPurchaseKey=null;lastStreamingPrompt=null;lastAuto='';stopDicePresentation();if(mobileGame){boardView=CSS.supports('container-type','inline-size')?'3d':'flat';}mobileCamera.reset();handoffCountdown.stop();lastHandoffKey=null;participantIntroPending=false;activityInbox.reset();activeActivity=null;deferredSnapshots=[];}
 function clearPendingDice(){if(!pendingDice)return;clearInterval(pendingDice.ticker);pendingDice.element.remove();pendingDice=null;}
 function makeDiceOverlay(player){
  const element=document.createElement('div');element.className=`dice-overlay${mobileGame?' mobile-dice-overlay':''}`;element.setAttribute('role','status');element.setAttribute('aria-live','polite');
@@ -256,8 +256,8 @@ function animateBoardMovement(p){
   const previousPosition=state.players[p.playerId].position;
   pathIndex=Math.max(pathIndex+1,presentedSteps(p.plan,p.now()));pathIndex=Math.min(path.length,pathIndex);
   state.players[p.playerId].position=path[pathIndex-1];p.step=Math.min(pathIndex,p.totalSteps);p.backward=p.isBackwardRoll||!!backward&&pathIndex>forwardSteps;p.backwardStep=p.isBackwardRoll?pathIndex:Math.max(0,pathIndex-forwardSteps);render();
-  if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1,scroll:!mobileGame});
-  else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileGame?mobileCamera.state.scale:1});});
+  if(boardView==='flat')animateFlatStep(document.querySelector('.board'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileCamera.state.scale,scroll:!mobileGame});
+  else requestAnimationFrame(()=>{if(dicePresentation===p)animateProjectedStep(document.querySelector('.board-scene'),previousPosition,state.players[p.playerId].position,p.playerId,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,scale:mobileCamera.state.scale});});
   scheduleNext();
  }
  function scheduleNext(){p.timer=setTimeout(pathIndex<path.length?advance:finish,Math.max(0,(pathIndex<path.length?p.plan.moveAt+(pathIndex+1)*ROLL_TIMING.step:p.plan.finishAt)-p.now()));}
@@ -724,7 +724,7 @@ document.addEventListener('fullscreenchange',updateFullscreenButton);
 document.addEventListener('webkitfullscreenchange',updateFullscreenButton);
 window.addEventListener('resize',syncGameOrientation);
 let boardTypeFrame=null;
-function queueBoardTypeFit(){cancelAnimationFrame(boardTypeFrame);boardTypeFrame=requestAnimationFrame(()=>{fitViewportBoard(document);if(mobileGame)mobileCamera.apply();fitBoardTitles(document);});}
+function queueBoardTypeFit(){cancelAnimationFrame(boardTypeFrame);boardTypeFrame=requestAnimationFrame(()=>{fitViewportBoard(document);mobileCamera.apply();fitBoardTitles(document);});}
 window.addEventListener('resize',queueBoardTypeFit);
 window.visualViewport?.addEventListener('resize',queueBoardTypeFit);
 document.fonts?.ready.then(queueBoardTypeFit);
@@ -740,7 +740,7 @@ function render(){
  const chatFocused=document.activeElement?.id==='chat-input',selection=chatFocused?document.activeElement.selectionStart:null;
  const oldChat=$('#chat-messages'),chatScroll=oldChat&&oldChat.scrollHeight-oldChat.scrollTop-oldChat.clientHeight>=45?oldChat.scrollTop:null;
  const nav=[['board','게임 보드'],['collection','작품 컬렉션'],['learning','배움 노트']];
- $('#app').innerHTML=`${swapBoardGuide()}<div class="game-shell" data-tab="${tab}" data-mobile="${mobileGame}" data-web-app="${webAppGame}"><section class="orientation-guide" role="status" aria-label="가로 화면 안내"><div class="rotate-phone" aria-hidden="true">↻</div><h2>휴대폰을 가로로 돌려 주세요</h2><p>뮤직마블은 가로 화면에서 플레이해요.<br>보드와 주사위 버튼을 함께 보며 음악 여행을 떠나요!</p><small>화면이 바뀌지 않으면 휴대폰의 화면 회전 잠금을 해제해 주세요.</small></section><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><nav aria-label="주 메뉴"${mobileGame?' class="mobile-page-nav"':''}>${mobileGame?'<details class="mobile-page-menu"><summary aria-label="페이지 메뉴" title="게임 보드 · 작품 컬렉션 · 배움 노트"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></summary><div class="mobile-page-options">':''}${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}${mobileGame?'<button data-action="help">도움말</button><button data-action="history">기록</button></div></details>':''}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button fullscreen-button" data-action="fullscreen" aria-label="전체화면" title="전체화면 / 홈 화면 실행 안내"><svg class="header-control-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>${bgmButton()}${mobileGame?'':'<button class="icon-button" data-action="help" aria-label="게임 가이드">?</button>'}<button class="settings-button" data-action="settings" aria-label="수업 설정"><svg class="header-control-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-.6 2.4-2 .9-2.2-.7-2 3.4 1.7 1.7v2.6L2.2 15l2 3.4 2.2-.7 2 .9L9 21h4l.6-2.4 2-.9 2.2.7 2-3.4-1.7-1.7v-2.6L19.8 9l-2-3.4-2.2.7-2-.9L13 3Z" transform="translate(1 0)"/><circle cx="12" cy="12" r="3"/></svg><span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`완주 <b>${lapProgressText(G.current(state))}</b>`}</strong><small>${esc(G.current(state).name)} · 현재 주자 기준</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 4명 · ${session.playerId===(snapshot?.hostId??0)?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools">${mobileGame?`<div class="mobile-board-zoom" aria-label="보드 확대"><button data-action="board-zoom-out" aria-label="보드 축소">−</button><button data-action="board-zoom-reset" aria-label="보드 원래 크기">${Math.round(mobileCamera.state.scale*100)}%</button><button data-action="board-zoom-in" aria-label="보드 확대">＋</button></div>`:''}<button data-action="board-view" aria-label="${boardView==='3d'?'평면 보기':'입체 보기'}" aria-pressed="${boardView==='3d'}">${mobileGame?(boardView==='3d'?'평면':'입체'):(boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기')}</button>${mobileGame?'':'<button data-action="history">기록</button>'}${mobileGame?'':'<button data-action="help">진행 방법 ↗</button>'}</div></div>${board()}${chatPanel()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel():learning()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel()}</div></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
+ $('#app').innerHTML=`${swapBoardGuide()}<div class="game-shell" data-tab="${tab}" data-mobile="${mobileGame}" data-web-app="${webAppGame}"><section class="orientation-guide" role="status" aria-label="가로 화면 안내"><div class="rotate-phone" aria-hidden="true">↻</div><h2>휴대폰을 가로로 돌려 주세요</h2><p>뮤직마블은 가로 화면에서 플레이해요.<br>보드와 주사위 버튼을 함께 보며 음악 여행을 떠나요!</p><small>화면이 바뀌지 않으면 휴대폰의 화면 회전 잠금을 해제해 주세요.</small></section><header class="site-header"><a class="brand" href="#" data-action="home"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><nav aria-label="주 메뉴"${mobileGame?' class="mobile-page-nav"':''}>${mobileGame?'<details class="mobile-page-menu"><summary aria-label="페이지 메뉴" title="게임 보드 · 작품 컬렉션 · 배움 노트"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></summary><div class="mobile-page-options">':''}${nav.map(([id,title])=>`<button data-action="tab" data-tab="${id}" class="${tab===id?'active':''}" ${tab===id?'aria-current="page"':''}>${title}</button>`).join('')}${mobileGame?'<button data-action="help">도움말</button><button data-action="history">기록</button></div></details>':''}</nav><div class="header-actions"><span class="classroom-label"><span class="live-dot"></span>${snapshot.mode==='solo'?'봇과 혼자 플레이':'실시간 교실'}</span><button class="icon-button fullscreen-button" data-action="fullscreen" aria-label="전체화면" title="전체화면 / 홈 화면 실행 안내"><svg class="header-control-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>${bgmButton()}${mobileGame?'':'<button class="icon-button" data-action="help" aria-label="게임 가이드">?</button>'}<button class="settings-button" data-action="settings" aria-label="수업 설정"><svg class="header-control-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-.6 2.4-2 .9-2.2-.7-2 3.4 1.7 1.7v2.6L2.2 15l2 3.4 2.2-.7 2 .9L9 21h4l.6-2.4 2-.9 2.2.7 2-3.4-1.7-1.7v-2.6L19.8 9l-2-3.4-2.2.7-2-.9L13 3Z" transform="translate(1 0)"/><circle cx="12" cy="12" r="3"/></svg><span>수업 설정</span></button></div></header><main><div class="page-heading"><div><div class="eyebrow"><span class="tiny-note">♫</span> 음악을 만나는 새로운 여행</div>${tab!=='board'?`<h1>${tab==='collection'?'당신의 다음 명곡을 찾아보세요.':'음악을 넘어, 가치를 배우다.'}</h1>`:''}<p>${tab==='board'?'명곡의 가치를 발견하고, 권리를 배우는 음악사 보드게임':tab==='collection'?'작품 하나마다 새로운 이야기, 컬렉션 하나마다 깊어지는 배움.':'보드 위의 선택이 교실 속 질문으로 이어집니다.'}</p></div><div class="session-info"><span>CLASSROOM SESSION</span><strong>${state.phase==='finished'?'여행 완료':`완주 <b>${lapProgressText(G.current(state))}</b>`}</strong><small>${esc(G.current(state).name)} · 현재 주자 기준</small></div></div><div class="room-strip"><span><i class="live-dot"></i> ${connected?'실시간 연결됨':'재연결 중…'} · <b>${esc(state.players[session.playerId]?.name||'')}</b></span><button data-action="copy-code">방 코드 <strong>${session.code}</strong> ⧉</button><span>${snapshot.mode==='solo'?`나 + 봇 ${snapshot.members.length-1}명`:`${snapshot.members.length} / 4명 · ${session.playerId===(snapshot?.hostId??0)?'방장':'참가자'}`}</span></div><div class="game-layout"><div class="main-column">${tab==='board'?`<div class="board-toolbar"><div>${ERAS.map(e=>`<span><i style="background:${({baroque:'#199fc4',classical:'#8c70cb',romantic:'#ef9b42',modern:'#70b44d'})[e.id]}"></i>${e.name}</span>`).join('')}</div><div class="board-tools">${`<div class="mobile-board-zoom" aria-label="보드 확대 및 축소"><button data-action="board-zoom-out" aria-label="보드 축소">−</button><button data-action="board-zoom-reset" aria-label="보드 원래 크기">${Math.round(mobileCamera.state.scale*100)}%</button><button data-action="board-zoom-in" aria-label="보드 확대">＋</button></div>`}<button data-action="board-view" aria-label="${boardView==='3d'?'평면 보기':'입체 보기'}" aria-pressed="${boardView==='3d'}">${mobileGame?(boardView==='3d'?'평면':'입체'):(boardView==='3d'?'▦ 평면 보기':'◇ 입체 보기')}</button>${mobileGame?'':'<button data-action="history">기록</button>'}${mobileGame?'':'<button data-action="help">진행 방법 ↗</button>'}</div></div>${board()}${chatPanel()}<div class="board-caption"><span>✧ 같은 작곡가 2곡 → 이용료 ×1.5 · 같은 시대 4곡 → ×2</span><span>작품을 누르면 이야기가 열려요 ↗</span></div><section class="activity"><div class="section-heading"><h3>여행의 기록 <span>LIVE</span></h3><button data-action="history">전체 보기 ↗</button></div><div aria-live="polite">${state.log.slice(0,3).map(l=>`<p><span>R${String(l.round).padStart(2,'0')}</span>${esc(l.text)}</p>`).join('')}</div></section>`:tab==='collection'?collectionView()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel():learning()+`<div class="seat-turn-controls turn-aux-controls">${actionPanel()}</div>`+chatPanel()}</div></div></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span>음악의 역사 · 창작의 가치 · 함께하는 배움</span><button data-action="help">교실을 위한 플레이 가이드 ↗</button></footer></div>`;
  // Keep the right-side controls as independent DOM nodes during pawn frames.
  if(mobileHeader){
   $('.game-shell > .site-header')?.replaceWith(mobileHeader);
@@ -760,7 +760,7 @@ function render(){
   else if(tab!=='board')header.querySelector('.board-tools')?.remove();
  }
  updateFullscreenButton();
- if(mobileGame)mobileCamera.bind($('.board-scene'));
+ mobileCamera.bind($('.board-scene'));
  queueBoardTypeFit();
  if($('.is-flat .board-wrap'))$('.is-flat .board-wrap').scrollLeft=boardScrollLeft;
  const log=$('#chat-messages');if(log)log.scrollTop=chatScroll??log.scrollHeight;
@@ -881,7 +881,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  if(a==='leave'){events?.close();connected=false;snapshot=null;session=null;resetActivityFlow();$('#modal').close();render();return;}
 
  const mobileViewAction=mobileGame&&['board-zoom-in','board-zoom-out','board-zoom-reset','home','tab','filter','fullscreen','close','help','settings','history','export'].includes(a);
- if(busy&&!mobileViewAction)return;
+ if(busy&&!mobileViewAction&&!['board-zoom-in','board-zoom-out','board-zoom-reset'].includes(a))return;
  if(a==='pay-bail'){handoffCountdown.stop();activeActivity=null;$('#modal').close();busy=true;try{await apply(G.payBail);}finally{busy=false;render();continueFlow();}return;}
  if(a==='streaming-open'){streamingModal();return;}
  if(['streaming-buy','streaming-install','streaming-skip'].includes(a)){const appId=el.dataset.app;if(activeActivity?.type==='streaming-arrival')activeActivity=null;$('#modal').close();await apply(a==='streaming-buy'?G.buyPlatform:a==='streaming-install'?G.installStreaming:G.skipStreaming,...(a==='streaming-install'?[appId]:[]));return;}
@@ -898,9 +898,9 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  }
  if(a==='swap-skip'){swapSelection=null;$('#modal').close();await apply(G.skipWorkSwap);return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();$('#modal').close();await apply(G.startQuiz);return;}
- if(mobileGame&&a==='board-zoom-in'){mobileCamera.zoomStep(1);return;}
- if(mobileGame&&a==='board-zoom-out'){mobileCamera.zoomStep(-1);return;}
- if(mobileGame&&a==='board-zoom-reset'){mobileCamera.reset();return;}
+ if(a==='board-zoom-in'){mobileCamera.zoomStep(1);return;}
+ if(a==='board-zoom-out'){mobileCamera.zoomStep(-1);return;}
+ if(a==='board-zoom-reset'){mobileCamera.reset();return;}
  if(a==='tab'){tab=el.dataset.tab;render();}
  if(a==='filter'){filter=el.dataset.id;render();}
  if(a==='enter-board'){closeModal();if(navigator.maxTouchPoints>0||matchMedia('(any-pointer:coarse)').matches)void enterFullscreen(document,window);return;}

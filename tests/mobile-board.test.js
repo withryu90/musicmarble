@@ -77,3 +77,12 @@ test('zoom buttons move in exact five percentage point steps, including after pi
  for(let i=0;i<100;i++)camera.zoomStep(-1);assert.equal(camera.state.scale,1);
  const app=new MobileBoardCamera(()=>{},1.2);app.zoomStep(1);assert.equal(app.state.scale,1.25);app.zoomStep(-1);assert.equal(app.state.scale,1.2);
 });
+
+test('desktop camera supports fifty to two hundred percent in five-point steps without negative pan bounds',()=>{
+ const camera=new MobileBoardCamera(()=>{},1,{minScale:.5,maxScale:2});
+ camera.zoomStep(-1);assert.equal(camera.state.scale,.95);assert.equal(camera.state.x,0);
+ for(let i=0;i<30;i++)camera.zoomStep(-1);assert.equal(camera.state.scale,.5);
+ for(let i=0;i<50;i++)camera.zoomStep(1);assert.equal(camera.state.scale,2);
+ camera.reset();assert.equal(camera.state.scale,1);
+ assert.deepEqual(constrainedCamera({scale:.5,x:90,y:-90},200,150),{scale:.5,x:0,y:-0});
+});

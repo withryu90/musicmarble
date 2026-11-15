@@ -7,16 +7,16 @@ export function isMobileGameEnvironment(view=window,nav=navigator){
 }
 // Native pinch zoom changes the visual viewport, not the intended game layout.
 export function unzoomedViewportHeight(height,scale=1){return Math.round(height*Math.max(1,scale||1));}
-export function zoomAt(state,nextScale,point){
- const scale=Math.max(1,Math.min(3,nextScale)),ratio=scale/state.scale;
+export function zoomAt(state,nextScale,point,minScale=1,maxScale=3){
+ const scale=Math.max(minScale,Math.min(maxScale,nextScale)),ratio=scale/state.scale;
  return {scale,x:point.x-(point.x-state.x)*ratio,y:point.y-(point.y-state.y)*ratio};
 }
 export function constrainedCamera(state,width,height){
- const x=width*(state.scale-1)/2,y=height*(state.scale-1)/2;
+ const x=Math.max(0,width*(state.scale-1)/2),y=Math.max(0,height*(state.scale-1)/2);
  return {...state,x:Math.max(-x,Math.min(x,state.x)),y:Math.max(-y,Math.min(y,state.y))};
 }
 export class MobileBoardCamera{
- constructor(onChange=()=>{},defaultScale=1){this.defaultScale=Math.max(1,Math.min(3,defaultScale));this.state={scale:this.defaultScale,x:0,y:0};this.onChange=onChange;this.cleanup=()=>{};}
+ constructor(onChange=()=>{},defaultScale=1,{minScale=1,maxScale=3}={}){this.minScale=minScale;this.maxScale=maxScale;this.defaultScale=Math.max(minScale,Math.min(maxScale,defaultScale));this.state={scale:this.defaultScale,x:0,y:0};this.onChange=onChange;this.cleanup=()=>{};}
  bind(scene){
   this.cleanup();this.scene=scene;this.viewport=scene?.closest?.('.mobile-board-viewport');if(!scene)return;
   if(this.viewport){this.bindScrollable();return;}
@@ -33,7 +33,7 @@ export class MobileBoardCamera{
   const move=e=>{
    if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,point(e));
    if(pointers.size>=2&&gesture){
-    const p=pair(),next=zoomAt(gesture.start,gesture.start.scale*p.distance/gesture.distance,gesture.focus);
+    const p=pair(),next=zoomAt(gesture.start,gesture.start.scale*p.distance/gesture.distance,gesture.focus,this.minScale,this.maxScale);
     next.x+=p.mid.x-gesture.mid.x;next.y+=p.mid.y-gesture.mid.y;this.set(next);moved=true;e.preventDefault();
    }else if(origin&&this.state.scale>1){
     const dx=e.clientX-origin.point.x,dy=e.clientY-origin.point.y;
@@ -48,8 +48,8 @@ export class MobileBoardCamera{
   this.apply();
  }
  set(state){if(this.viewport){this.state=state;this.apply();return;}this.state=constrainedCamera(state,this.scene?.offsetWidth||1,this.scene?.offsetHeight||1);this.apply();}
- zoomStep(direction){const units=this.state.scale*20,next=(direction>0?Math.floor(units+1e-8)+1:Math.ceil(units-1e-8)-1)/20;this.set(zoomAt(this.state,next,{x:0,y:0}));}
- zoom(factor){this.set(zoomAt(this.state,this.state.scale*factor,{x:0,y:0}));}
+ zoomStep(direction){const units=this.state.scale*20,next=(direction>0?Math.floor(units+1e-8)+1:Math.ceil(units-1e-8)-1)/20;this.set(zoomAt(this.state,next,{x:0,y:0},this.minScale,this.maxScale));}
+ zoom(factor){this.set(zoomAt(this.state,this.state.scale*factor,{x:0,y:0},this.minScale,this.maxScale));}
  reset(){this.state={scale:this.defaultScale,x:0,y:0};this.apply();}
  apply(){
   if(this.viewport){this.applyScrollable();return;}
@@ -61,7 +61,7 @@ export class MobileBoardCamera{
   const pair=touches=>{const [a,b]=touches;const r=viewport.getBoundingClientRect();return {distance:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),point:{x:(a.clientX+b.clientX)/2-r.left-r.width/2,y:(a.clientY+b.clientY)/2-r.top-r.height/2}};};
   const down=()=>{moved=false;};
   const start=e=>{if(e.touches.length!==2)return;const p=pair(e.touches);gesture={...p,start:{...this.state}};moved=true;if(e.cancelable)e.preventDefault();};
-  const move=e=>{if(e.touches.length!==2||!gesture)return;const p=pair(e.touches),next=zoomAt(gesture.start,gesture.start.scale*p.distance/gesture.distance,gesture.point);next.x+=p.point.x-gesture.point.x;next.y+=p.point.y-gesture.point.y;this.set(next);moved=true;if(e.cancelable)e.preventDefault();};
+  const move=e=>{if(e.touches.length!==2||!gesture)return;const p=pair(e.touches),next=zoomAt(gesture.start,gesture.start.scale*p.distance/gesture.distance,gesture.point,this.minScale,this.maxScale);next.x+=p.point.x-gesture.point.x;next.y+=p.point.y-gesture.point.y;this.set(next);moved=true;if(e.cancelable)e.preventDefault();};
   const end=()=>{gesture=null;};
   const scroll=()=>{moved=true;this.state.x=(viewport.scrollWidth-viewport.clientWidth)/2-viewport.scrollLeft;this.state.y=(viewport.scrollHeight-viewport.clientHeight)/2-viewport.scrollTop;};
   const click=e=>{if(moved){e.preventDefault();e.stopPropagation();}};

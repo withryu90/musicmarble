@@ -1,5 +1,5 @@
-import {RANKING_ORIGIN} from './ranking.js?v=d97b71207f75';
-import {randomToken} from './random.js?v=d97b71207f75';
+import {RANKING_ORIGIN} from './ranking.js?v=bea48c9b5762';
+import {randomToken} from './random.js?v=bea48c9b5762';
 // Carrier NATs cannot block a browser-to-browser channel that is no longer needed.
 export class HttpTransport{
  constructor({origin=RANKING_ORIGIN,fetchFn=globalThis.fetch.bind(globalThis),interval=1500,timeout=15000}={}){Object.assign(this,{origin,fetchFn,interval,timeout});this.listeners=new Set();this.generation=0;this.resumeReads=new Map();this.joinKeys=new Map();}

@@ -12,7 +12,7 @@ test('solo creates one human and 1–3 unique randomly named bots without public
   assert.ok(room.members.slice(1).every(m=>!m.name.includes('봇')&&m.name.length<=16));assert.equal(room.members.length,4);assert.equal(new Set(room.members.map(m=>m.name)).size,4);assert.equal(room.mode,'solo');assert.equal(room.state.phase,'roll');assert.equal(room.state.players[0].isBot,false);assert.ok(room.state.players.slice(1).every(p=>p.isBot&&p.coins===1200));
   const publicData=service.snapshot(room);assert.ok(!JSON.stringify(publicData).includes(session.token));assert.ok(publicData.members.slice(1).every(m=>m.isBot&&!m.token));
   assert.throws(()=>service.authenticate(session.code,undefined));assert.throws(()=>service.join(session.code,'손님'));
-  assert.throws(()=>service.createSolo('나',{botCount:0}));assert.throws(()=>service.createSolo('나',{botCount:4}));assert.throws(()=>service.createSolo('나',{rounds:1}));
+  assert.throws(()=>service.createSolo('나',{botCount:0}));assert.throws(()=>service.createSolo('나',{botCount:4}));assert.throws(()=>service.createSolo('나',{rounds:11}));
   const two=service.createSolo('나',{botCount:1});assert.equal(service.get(two.code).state.players.length,2);
  }finally{service.close();}
 });

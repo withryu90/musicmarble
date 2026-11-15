@@ -34,8 +34,8 @@ test('crossing start counts personal laps and the round waits for every player',
   s=G.nextTurn(s);assert.equal(s.round,1);assert.equal(s.turn,1);assert.equal(s.phase,'roll');
  }
 });
-test('4, 8 and 12 laps end immediately at START with no final arrival quiz',()=>{
- for(const rounds of [4,8,12]){
+test('One through ten laps end immediately at START with no final arrival quiz',()=>{
+ for(const rounds of Array.from({length:10},(_,i)=>i+1)){
   let s=G.createGame({names:['A','B'],rounds});s.players[0].laps=rounds-1;s.players[0].position=31;
   s=G.roll(s,6);assert.equal(s.phase,'finished');assert.equal(s.players[0].position,0);assert.equal(s.players[0].laps,rounds);assert.equal(s.players[1].laps,0);assert.equal(s.round,rounds);assert.equal(s.endReason.moveSteps,1);assert.throws(()=>G.startQuiz(s));assert.throws(()=>G.nextTurn(s));assert.ok(G.isValidSave(s));
  }
@@ -45,4 +45,9 @@ test('learning quizzes award only coins; correct-answer records never add score'
  let s=G.startQuiz(G.roll(game(),1));const q=QUIZZES.find(q=>q.id===s.quiz);const initial=G.score(s,s.players[0]);s=G.answerQuiz(s,q.answer);
  assert.equal(G.score(s,s.players[0]),initial+30);assert.equal(s.players[0].coins,1230);
  const legacy=structuredClone(s);legacy.players[0].knowledge=20;assert.equal(G.score(legacy,legacy.players[0]),G.score(s,s.players[0]));
+});
+
+test('legacy twelve-lap saves remain resumable but new games require one to ten laps',()=>{
+ const legacy=G.createGame();legacy.maxRounds=12;assert.ok(G.isValidSave(legacy));
+ for(const rounds of [0,11,12,1.5,'4'])assert.throws(()=>G.createGame({rounds}));
 });

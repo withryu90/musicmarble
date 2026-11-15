@@ -1,6 +1,7 @@
+export const ROUND_OPTIONS=Object.freeze(Array.from({length:10},(_,i)=>i+1));
 export function roomConfig(value={},fallback={rounds:8,coins:1200}){
  const rounds=Number(value.rounds??fallback.rounds),coins=Number(value.coins??fallback.coins);
- if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('게임 길이와 시작 코인을 확인해 주세요.');
+ if(!ROUND_OPTIONS.includes(rounds)||![1000,1200,1600].includes(coins))throw Error('게임 길이와 시작 코인을 확인해 주세요.');
  return {rounds,coins};
 }
 // Keep an immediate draft while a setting update travels to the room host.

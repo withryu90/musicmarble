@@ -24,8 +24,22 @@ test('only host can configure and invalid options do not corrupt the saved setti
  const service=new RoomService();try{
   const host=service.create('방장'),guest=service.join(host.code,'친구'),room=service.get(host.code);
   assert.throws(()=>service.act(guest.code,guest.token,{action:'configure',args:[{rounds:4}],revision:room.revision}));
-  for(const rounds of [0,5,'bad'])assert.throws(()=>service.act(host.code,host.token,{action:'configure',args:[{rounds}],revision:room.revision}));
+  for(const rounds of [0,11,12,1.5,'bad'])assert.throws(()=>service.act(host.code,host.token,{action:'configure',args:[{rounds}],revision:room.revision}));
   assert.deepEqual(room.config,{rounds:8,coins:1200});
-  for(const rounds of [4,8,12])assert.equal(roomConfig({rounds}).rounds,rounds);
+  for(const rounds of Array.from({length:10},(_,i)=>i+1))assert.equal(roomConfig({rounds}).rounds,rounds);
+ }finally{service.close();}
+});
+
+test('every selectable lap count survives shared-room start, solo start and reconnect',()=>{
+ const service=new RoomService();try{
+  for(let rounds=1;rounds<=10;rounds++){
+   const host=service.create('방장'),guest=service.join(host.code,'친구'),room=service.get(host.code);
+   const act=(action,args=[])=>service.act(host.code,host.token,{action,args,revision:room.revision});
+   act('configure',[{rounds}]);act('start');
+   assert.equal(service.snapshot(room).state.maxRounds,rounds);
+   assert.equal(service.authenticate(guest.code,guest.token).room.state.maxRounds,rounds);
+   const solo=service.createSolo('혼자',{rounds,botCount:1});
+   assert.equal(service.get(solo.code).state.maxRounds,rounds);
+  }
  }finally{service.close();}
 });

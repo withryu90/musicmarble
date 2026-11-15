@@ -1,8 +1,9 @@
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=5dabf278aa53';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=5dabf278aa53';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=5dabf278aa53';
-import {characterById,drawCharacterIds} from './characters.js?v=5dabf278aa53';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=5dabf278aa53';
+import {ROUND_OPTIONS} from './lobby-config.js?v=2a723097e30c';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=2a723097e30c';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=2a723097e30c';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=2a723097e30c';
+import {characterById,drawCharacterIds} from './characters.js?v=2a723097e30c';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=2a723097e30c';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;
@@ -46,7 +47,7 @@ function change(s,p,amount){const actual=Math.max(-p.coins,amount);p.coins+=actu
 const shuffled=(items,rng)=>{const arr=[...items];for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
 export function createGame({names=['초록 팀','오렌지 팀'],rounds=8,coins=1200,characterIds}={},rng=Math.random){
   if(!Array.isArray(names)||names.length<2||names.length>MAX_PLAYERS||!names.every(n=>typeof n==='string'&&n.trim().length>0&&n.length<=16))throw Error('2–4명의 이름을 입력해 주세요.');
-  if(![4,8,12].includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
+  if(!ROUND_OPTIONS.includes(rounds)||![1000,1200,1600].includes(coins))throw Error('수업 설정이 올바르지 않습니다.');
   const assigned=characterIds??drawCharacterIds(names.length,[],rng);
   if(!Array.isArray(assigned)||assigned.length!==names.length||new Set(assigned).size!==names.length||!assigned.every(characterById))throw Error('중복되지 않는 캐릭터를 배정해 주세요.');
   return {version:VERSION,boardLayout:2,quizHistory:{},platformOwners:{},streamingInstallations:{},streamingHandled:false,lastStreamingRevenue:[],players:names.map((name,id)=>({id,name:name.trim(),characterId:assigned[id],color:COLORS[id],coins,position:0,laps:0,skipTurns:0,bailPaid:false,knowledge:0,attempts:0})),round:1,maxRounds:rounds,leaderLaps:0,turnNumber:0,turn:0,phase:'roll',endReason:null,ownership:{},dice:null,lastRent:null,lastEvent:null,lastAssignment:null,lastSkipped:[],lastPrisonTransfer:null,lastPrisonRoll:null,lastBackwardMove:null,lastConcert:null,quiz:null,feedback:null,quizUsed:false,purchased:false,concertWorkId:null,purchaseChallenge:null,trade:null,eventDeck:shuffled(EVENTS.map((_,i)=>i),rng),quizDeck:shuffled(QUIZZES.map(q=>q.id),rng),eventCursor:0,quizCursor:0,log:[{round:1,text:'음악사 여행을 시작합니다. 첫 팀이 주사위를 굴려 주세요.'}]};
@@ -351,7 +352,7 @@ export function isValidSave(s){
   try{
     if(s?.version!==VERSION||!Array.isArray(s.players)||s.players.length<2||s.players.length>MAX_PLAYERS)return false;
     if(!['roll','action','quiz','feedback','purchase-quiz','purchase-feedback','backward-roll','jailed','finished'].includes(s.phase)||!Number.isInteger(s.turn)||!s.players[s.turn])return false;
-    if(![4,8,12].includes(s.maxRounds)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
+    if(!(ROUND_OPTIONS.includes(s.maxRounds)||s.maxRounds===12)||!Number.isInteger(s.round)||s.round<1||s.round>s.maxRounds)return false;
     if(s.endReason!=null){const reason=s.endReason;if(s.phase!=='finished'||!Number.isInteger(reason.playerId)||!s.players[reason.playerId]||!['bankruptcy','laps'].includes(reason.type))return false;if(reason.type==='bankruptcy'&&(s.players.length!==2||s.players[reason.playerId].coins!==0))return false;if(reason.type==='laps'&&(!hasFinished(s,s.players[reason.playerId])||(reason.moveSteps!==undefined&&(!Number.isInteger(reason.moveSteps)||reason.moveSteps<1||reason.moveSteps>s.dice||reason.moveSteps>6||s.players[reason.playerId].position!==0))))return false;}
     if(s.boardLayout!==undefined&&s.boardLayout!==2)return false;
     if(!validQuizHistory(s))return false;

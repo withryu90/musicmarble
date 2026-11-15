@@ -321,3 +321,14 @@ dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close
 
 /* Scheduled room-wide dice overlays stay hidden until the shared start time. */
 .dice-overlay[hidden]{display:none!important}
+
+/* Compact side-by-side choices on desktop and phone return-home dialogs. */
+#modal.home-confirm-modal .home-confirm-description{text-align:center;line-height:1.7}
+#modal.home-confirm-modal .home-confirm-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+ width:100%;max-width:340px;margin:16px auto 4px;
+}
+#modal.home-confirm-modal .home-confirm-actions>button{
+ width:100%;min-width:0;min-height:38px;height:auto;margin:0;padding:8px 10px;
+ font-size:12px;line-height:1.4;text-align:center;word-break:keep-all;
+}

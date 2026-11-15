@@ -1,10 +1,10 @@
-import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=8e61fac21b67';
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=8e61fac21b67';
-import {randomInt,randomToken} from './random.js?v=8e61fac21b67';
-import * as G from './engine.js?v=8e61fac21b67';
-import {botDecision,applyBotDecision} from './bots.js?v=8e61fac21b67';
-import {activityChanges} from './activities.js?v=8e61fac21b67';
-import {drawCharacterIds,characterById} from './characters.js?v=8e61fac21b67';
+import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=05a12a28f72b';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=05a12a28f72b';
+import {randomInt,randomToken} from './random.js?v=05a12a28f72b';
+import * as G from './engine.js?v=05a12a28f72b';
+import {botDecision,applyBotDecision} from './bots.js?v=05a12a28f72b';
+import {activityChanges} from './activities.js?v=05a12a28f72b';
+import {drawCharacterIds,characterById} from './characters.js?v=05a12a28f72b';
 const CODE_DIGITS='0123456789';
 export class RoomService {
   constructor({botDelay=850,random=Math.random,backgroundTimers=true}={}){this.backgroundTimers=backgroundTimers;this.rooms=new Map();this.botDelay=botDelay;this.random=random;this.botTimers=new Map();this.quizTimers=new Map();}

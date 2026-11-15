@@ -1,35 +1,35 @@
-import {playerStatus} from './player-status.js?v=a3b502c46aad';
-import {createListeningPlayer} from './listening-player.js?v=a3b502c46aad';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=a3b502c46aad';
-import {LobbyConfig} from './lobby-config.js?v=a3b502c46aad';
-import {GameActions} from './game-actions.js?v=a3b502c46aad';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=a3b502c46aad';
-import {createMusicDirector} from './music-director.js?v=a3b502c46aad';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=a3b502c46aad';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=a3b502c46aad';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=a3b502c46aad';
-import {formatModalSentences} from './modal-sentences.js?v=a3b502c46aad';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=a3b502c46aad';
-import {WORK_ARTWORK} from './work-artwork.js?v=a3b502c46aad';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=a3b502c46aad';
-import {RankingClient} from './ranking.js?v=a3b502c46aad';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=a3b502c46aad';
-import {HandoffCountdown} from './handoff-countdown.js?v=a3b502c46aad';
-import {fitBoardTitles} from './board-type.js?v=a3b502c46aad';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=a3b502c46aad';
-import * as G from './engine.js?v=a3b502c46aad';
-import {ActivityInbox} from './activities.js?v=a3b502c46aad';
-import {purchaseQuizById} from './purchase-quizzes.js?v=a3b502c46aad';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=a3b502c46aad';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=a3b502c46aad';
-import {diceCube} from './dice.js?v=a3b502c46aad';
-import {CHARACTER_BIOS} from './character-bios.js?v=a3b502c46aad';
-import {needsLandscape} from './orientation.js?v=a3b502c46aad';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=a3b502c46aad';
-import {GameTransport} from './game-transport.js?v=a3b502c46aad';
-import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=a3b502c46aad';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=a3b502c46aad';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=a3b502c46aad';
+import {playerStatus} from './player-status.js?v=5ce1d3d1d651';
+import {createListeningPlayer} from './listening-player.js?v=5ce1d3d1d651';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=5ce1d3d1d651';
+import {LobbyConfig} from './lobby-config.js?v=5ce1d3d1d651';
+import {GameActions} from './game-actions.js?v=5ce1d3d1d651';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=5ce1d3d1d651';
+import {createMusicDirector} from './music-director.js?v=5ce1d3d1d651';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=5ce1d3d1d651';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation} from './turn-flow.js?v=5ce1d3d1d651';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=5ce1d3d1d651';
+import {formatModalSentences} from './modal-sentences.js?v=5ce1d3d1d651';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=5ce1d3d1d651';
+import {WORK_ARTWORK} from './work-artwork.js?v=5ce1d3d1d651';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=5ce1d3d1d651';
+import {RankingClient} from './ranking.js?v=5ce1d3d1d651';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=5ce1d3d1d651';
+import {HandoffCountdown} from './handoff-countdown.js?v=5ce1d3d1d651';
+import {fitBoardTitles} from './board-type.js?v=5ce1d3d1d651';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=5ce1d3d1d651';
+import * as G from './engine.js?v=5ce1d3d1d651';
+import {ActivityInbox} from './activities.js?v=5ce1d3d1d651';
+import {purchaseQuizById} from './purchase-quizzes.js?v=5ce1d3d1d651';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=5ce1d3d1d651';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=5ce1d3d1d651';
+import {diceCube} from './dice.js?v=5ce1d3d1d651';
+import {CHARACTER_BIOS} from './character-bios.js?v=5ce1d3d1d651';
+import {needsLandscape} from './orientation.js?v=5ce1d3d1d651';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=5ce1d3d1d651';
+import {GameTransport} from './game-transport.js?v=5ce1d3d1d651';
+import {enterFullscreen,toggleFullscreen,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=5ce1d3d1d651';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=5ce1d3d1d651';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=5ce1d3d1d651';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -741,7 +741,7 @@ function fullscreenGuide(){
  showModal('주소창 없이 게임하기',`<div class="fullscreen-instructions"><p>iPhone Safari는 일반 웹페이지에서 주소창과 탭을 완전히 숨기는 기능이 제한되어 있어요. 홈 화면에서 앱으로 열면 브라우저 창 없이 플레이할 수 있어요.</p><ol><li>게임을 시작하기 전에 Safari의 <b>공유</b> 버튼을 눌러요.</li><li><b>홈 화면에 추가</b>를 선택해요.</li><li><b>웹 앱으로 열기</b>가 보이면 켜고 추가해요.</li><li>홈 화면의 <b>뮤직마블</b> 아이콘으로 실행한 뒤 휴대폰을 가로로 돌려요.</li></ol><p>Android Chrome도 브라우저 메뉴의 <b>홈 화면에 추가 / 앱 설치</b>로 실행할 수 있어요.</p></div><button class="primary full" data-action="close">확인</button>`,'fullscreen-guide-modal');
 }
 function settingsModal(){showModal('실시간 수업 정보',`<div class="notice">누구든 먼저 ${state.maxRounds}바퀴를 완주하면 즉시 종료해요.<br>${state.players.map(p=>`${esc(p.name)}: ${G.completedLaps(state,p)} / ${state.maxRounds}바퀴${G.hasFinished(state,p)?' · 완주':''}`).join('<br>')}<br><br>공유 코드 <b>${session.code}</b>같은 사이트에 접속한 뒤 이 코드를 입력하면 같은 방에 참가합니다.</div><p class="muted">게임 시작 후 새 참가자는 들어올 수 없습니다. 새로고침하면 시작 화면이 나옵니다. 「이전 게임 이어하기」를 눌러 재접속할 수 있습니다. 새 공유 방의 진행 상태는 공용 서버에 보관됩니다. 같은 브라우저의 이어하기로 다시 접속할 수 있어요.</p><div class="settings-bottom"><button class="text-button" data-action="finish-confirm" ${state.phase==='finished'||session.playerId!==0?'disabled':''}>방장: 현재 수업 종료</button><button class="text-button" data-action="export">현재 결과 내려받기 ↗</button></div><button class="secondary full" data-action="copy-code">방 코드 복사</button><button class="text-button" data-action="leave-confirm">이 화면에서 나가기</button>`);}
-function results(){if(state.endReason?.type!=='bankruptcy')void soundEffects.play('applause',`finished:${snapshot?.gameId||session?.code}`);const ranking=[...state.players].sort((a,b)=>G.score(state,b)-G.score(state,a));showModal('여행 끝, 우리에게 남은 것',`${state.endReason?.type==='laps'?`<div class="notice"><strong>${esc(state.players[state.endReason.playerId].name)} 님이 가장 먼저 완주했어요!</strong><p>${state.maxRounds}바퀴를 완주하여 게임이 종료되었습니다.</p></div>`:''}${state.endReason?.type==='bankruptcy'?`<div class="notice bankruptcy-result-summary"><strong>${esc(state.players[state.endReason.playerId].name)} 님 파산 · 게임 종료</strong><p>보유 코인이 0 MC가 되어 2인 게임이 종료되었습니다.</p></div>`:''}<p class="muted">전체 완주 ${state.players.filter(p=>G.hasFinished(state,p)).length} / ${state.players.length}명 · ${state.round}라운드의 여정 · 동점은 공동 순위입니다. 점수는 게임 결과이며 음악적 능력을 평가하지 않습니다.</p><p id="ranking-save-status" class="ranking-save-status">${session?.playerId===0?esc(rankingClient.status(snapshot?.gameId)):'최종 점수는 방장 화면에서 전체 랭킹에 기록됩니다.'}</p><div class="results-list">${ranking.map(p=>{const rank=ranking.filter(x=>G.score(state,x)>G.score(state,p)).length+1;return `<div><span class="rank">${rank}</span>${characterSprite(p)}<div><strong>${esc(p.name)}</strong><small>코인 ${num(p.coins)} · 이용권 ${G.owned(state,p.id).length} · 퀴즈 ${p.knowledge}/${p.attempts}</small></div><b>${num(G.score(state,p))}<small>점</small></b></div>`;}).join('')}</div><p class="muted">총점 = 보유 코인 + 이용권 구입가 + 공연 기획비 + 앱 독점 비용·스트리밍 설치비</p><div class="discussion"><b>함께 돌아보기</b><p>① 가장 기억에 남는 작품과 그 이유는?<br>② 음악의 가격과 가치는 어떻게 다를까요?<br>③ 실제 음원 이용 전에 무엇을 확인할까요?</p></div><button class="primary full" data-action="export">학습 결과 내려받기 ↓</button><button class="text-button" data-action="settings">수업 정보 보기 →</button>`);}
+function results(){if(state.endReason?.type!=='bankruptcy')void soundEffects.play('applause',`finished:${snapshot?.gameId||session?.code}`);const ranking=[...state.players].sort((a,b)=>G.score(state,b)-G.score(state,a));showModal('게임 종료!',`<div class="results-list">${ranking.map(p=>{const rank=ranking.filter(x=>G.score(state,x)>G.score(state,p)).length+1;return `<div><span class="rank">${rank}</span>${characterSprite(p)}<div><strong>${esc(p.name)}</strong><small>코인 ${num(p.coins)} · 이용권 ${G.owned(state,p.id).length} · 퀴즈 ${p.knowledge}/${p.attempts}</small></div><b>${num(G.score(state,p))}<small>점</small></b></div>`;}).join('')}</div><p class="muted">총점 = 보유 코인 + 이용권 구입가 + 공연 기획비 + 앱 독점 비용·스트리밍 설치비</p><div class="discussion"><b>함께 돌아보기</b><p>① 가장 기억에 남는 작품과 그 이유는?<br>② 음악의 가격과 가치는 어떻게 다를까요?<br>③ 실제 음원 이용 전에 무엇을 확인할까요?</p></div><button class="primary full" data-action="export">학습 결과 내려받기 ↓</button><button class="text-button" data-action="settings">수업 정보 보기 →</button>`);}
 function exportResults(){const text=['뮤직마블 · 수업 결과',`기록 시각: ${new Date().toLocaleString('ko-KR')}`,`${state.round}/${state.maxRounds}라운드 · ${state.phase==='finished'?'종료':'진행 중'}`,`종료 조건: 누구든 먼저 ${state.maxRounds}바퀴 완주`,state.endReason?.type==='laps'?`종료 사유: ${state.players[state.endReason.playerId].name} 최초 ${state.maxRounds}바퀴 완주`:state.endReason?.type==='bankruptcy'?`종료 사유: ${state.players[state.endReason.playerId].name} 파산 (보유 코인 0 MC)`:'종료 사유: 완주 또는 수업 종료','총점 = 코인 + 이용권 원가 + 공연 기획비 + 앱 독점 비용·스트리밍 설치비','',...state.players.map(p=>`${p.name}: ${G.completedLaps(state,p)}/${state.maxRounds}바퀴 | ${G.score(state,p)}점 | ${p.coins} MC | 퀴즈 정답 ${p.knowledge}/${p.attempts}\n작품: ${G.owned(state,p.id).map(w=>`${w.composer} ${w.title}`).join(', ')||'없음'}`),'','돌아보기','1. 기억에 남는 작품과 이유:','2. 음악의 가격과 가치의 차이:','3. 실제 음원 이용 전에 확인할 것:','','여행 기록',...state.log.slice().reverse().map(l=>`R${l.round} ${l.text}`),'','게임 이용권은 실제 저작권이나 음원 이용허락이 아닙니다.'].join('\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='뮤직마블-수업결과.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function soloSetup(){
  const nickname=$('#entry-form input[name="nickname"]')?.value||'';

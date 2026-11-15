@@ -324,3 +324,7 @@
 }
 .game-shell[data-mobile="false"] .board-area.is-flat .cell.work .tile-copy .cell-top{font-size:12cqw}
 .game-shell[data-mobile="false"] .board-area.is-flat .cell.work .tile-copy .cell-price{font-size:11cqw}
+
+/* Hover must not reorder a tile under the separate projected hit layer.
+   Keep current-position and keyboard-focus outlines independent of the pointer. */
+.board-area:is(.is-flat,.is-3d) .board>.cell:hover:not(.pawn-moving-cell){z-index:auto}

@@ -1,5 +1,5 @@
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=3bd64ded11cc';
-import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=3bd64ded11cc';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE} from './streaming.js?v=c7972cfab0a1';
+import {BOARD,WORKS,PRISON_MESSAGE} from './data.js?v=c7972cfab0a1';
 
 // Public, structured notices for each atomic server action; never parse prose logs.
 export function activityChanges(before,after){

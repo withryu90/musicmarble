@@ -280,3 +280,24 @@ dialog#modal::backdrop{background:#164d7959}
 #modal .bail-offer{margin:12px 0;padding:12px;border:1px solid #b7d8ef;border-radius:12px;background:#eaf5ff;text-align:center}
 #modal .bail-offer>p{margin:0 0 9px;font-weight:800;color:#173e62}
 #modal .bail-offer>small{display:block;margin-top:8px;font-size:11px;line-height:1.5;color:#466b89}
+
+/* Prison arrivals deliberately depart from the shared light-blue palette. */
+dialog#modal.prison-arrival-modal{
+ --green:#727985;--muted:#c5c9d0;--line:#454b56;--cream:#202329;
+ color:#f1f2f5;background:linear-gradient(165deg,#252830,#101114 70%);
+ border-color:#565c68;box-shadow:0 24px 80px #0009;color-scheme:dark;
+}
+dialog#modal.prison-arrival-modal::backdrop{background:#08090bc4}
+#modal.prison-arrival-modal .modal-header{background:#17191e;border-color:#454b56}
+#modal.prison-arrival-modal :is(h2,h3,.activity-hero,.prison-emphasis){color:#fff}
+#modal.prison-arrival-modal :is(p,small,.muted){color:#d0d3da}
+#modal.prison-arrival-modal .eyebrow{color:#aeb5c2}
+#modal.prison-arrival-modal .modal-header .icon-button{color:#e5e7ec;background:transparent}
+#modal.prison-arrival-modal .activity-symbol{color:#e0e3ea;background:linear-gradient(145deg,#434853,#262a32);box-shadow:inset 0 0 0 1px #626a78}
+#modal.prison-arrival-modal .bail-offer{background:#24272e;border-color:#505763}
+#modal.prison-arrival-modal .bail-offer>p{color:#faf2d9}
+#modal.prison-arrival-modal .bail-offer>small{color:#c5c9d2}
+#modal.prison-arrival-modal .primary{background:linear-gradient(180deg,#555d6b,#373e49);border-color:#707a8b;border-bottom-color:#252b34;color:#fff;box-shadow:none}
+#modal.prison-arrival-modal .bail-offer .primary{background:linear-gradient(180deg,#dbc592,#bda371);border-color:#e3cfa4;border-bottom-color:#8f784d;color:#201c14}
+#modal.prison-arrival-modal :is(button,a):focus-visible{outline-color:#e3cfa4}
+dialog#modal.prison-arrival-modal .modal-header .icon-button[data-action="close"]:focus-visible svg{color:#fff;filter:none}

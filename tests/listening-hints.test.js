@@ -7,7 +7,7 @@ import {purchaseQuizById} from '../src/purchase-quizzes.js';
 import {BOARD,WORKS} from '../src/data.js';
 import {LISTENING_HINTS,listeningHintDurationMs} from '../src/listening-hints.js';
 import {RoomService} from '../src/room-service.js';
-const purchase=(id='bach-air')=>{const s=G.createGame({names:['가온','나래']});s.players[0].position=BOARD.findIndex(t=>t.id===id);s.phase='action';return G.startPurchaseQuiz(s,()=>0);};
+const purchase=(id='bach-air')=>{const s=G.createGame({coins:1200,names:['가온','나래']});s.players[0].position=BOARD.findIndex(t=>t.id===id);s.phase='action';return G.startPurchaseQuiz(s,()=>0);};
 test('paid hint charges once, retains purchase funds and preserves the remaining question time for the complete recording',()=>{
  const s=G.beginQuizTimer(purchase(),1000),next=G.buyListeningHint(s,4000);
  assert.equal(next.players[0].coins,1180);assert.equal(s.players[0].coins,1200);
@@ -17,7 +17,7 @@ test('paid hint charges once, retains purchase funds and preserves the remaining
  const future=G.buyListeningHint(G.beginQuizTimer(purchase()),Date.now());assert.equal(G.answerPurchaseQuiz(future,true).phase,'purchase-feedback');
  const poor=purchase();poor.players[0].coins=179;assert.equal(G.canBuyListeningHint(poor),false);assert.throws(()=>G.buyListeningHint(poor));
  poor.players[0].coins=180;assert.equal(G.canBuyListeningHint(poor),true);
- assert.throws(()=>G.buyListeningHint(s,11000));assert.equal(G.canBuyListeningHint(G.createGame({names:['A','B']})),false);
+ assert.throws(()=>G.buyListeningHint(s,11000));assert.equal(G.canBuyListeningHint(G.createGame({coins:1200,names:['A','B']})),false);
 });
 test('failed playback refunds once and allows only one retry without losing saved question time',()=>{
  const paid=G.buyListeningHint(G.beginQuizTimer(purchase(),1000),4000),refunded=G.refundListeningHint(paid,4100);

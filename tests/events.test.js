@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {EVENTS} from '../src/data.js';
 import * as G from '../src/engine.js';
-const game=()=>G.createGame({names:['A','B']});
+const game=()=>G.createGame({coins:1200,names:['A','B']});
 test('24 event cards have three groups of eight and the requested amounts',()=>{
  assert.equal(EVENTS.length,24);assert.equal(new Set(EVENTS.map(e=>e.title)).size,24);assert.equal(new Set(EVENTS.map(e=>e.id)).size,24);
  assert.deepEqual(EVENTS.map(e=>e.amount),[200,200,150,150,200,150,100,100,-200,-150,-100,-100,-150,-100,-100,-100,100,150,100,100,150,150,-100,100]);

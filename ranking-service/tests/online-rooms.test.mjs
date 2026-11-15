@@ -120,7 +120,7 @@ test('HTTPS player can answer the music quiz while the paid recording is still p
  const paid=await act(db,host,'buyListeningHint');assert.ok(paid.state.purchaseChallenge.hint.until>Date.now());
  await assert.rejects(act(db,guest,'answerPurchaseQuiz',[true]));
  const answer=purchaseQuizById(paid.state.purchaseChallenge.questionId).answer;
- const result=await act(db,host,'answerPurchaseQuiz',[answer]);assert.equal(result.state.purchaseChallenge.correct,true);assert.equal(result.state.phase,'purchase-feedback');assert.equal(result.state.players[0].coins,1180);
+ const result=await act(db,host,'answerPurchaseQuiz',[answer]);assert.equal(result.state.purchaseChallenge.correct,true);assert.equal(result.state.phase,'purchase-feedback');assert.equal(result.state.players[0].coins,1480);
  }finally{db.close();}
 });
 
@@ -131,9 +131,9 @@ test('HTTPS bail payment persists across devices and authorizes one next-turn no
  room.state.phase='jailed';room.state.players[0].position=11;room.state.players[0].skipTurns=3;
  db.sqlite.prepare('UPDATE online_rooms SET payload = ? WHERE code = ?').run(JSON.stringify(room),host.code);
  await assert.rejects(act(db,guest,'payBail'));
- const paid=await act(db,host,'payBail');assert.equal(paid.state.players[0].coins,800);assert.equal(paid.state.phase,'jailed');
+ const paid=await act(db,host,'payBail');assert.equal(paid.state.players[0].coins,1100);assert.equal(paid.state.phase,'jailed');
  const remote=await read(db,guest);assert.equal(remote.state.players[0].bailPaid,true);assert.equal(remote.activities.filter(a=>a.type==='bail-paid').length,1);
- await assert.rejects(act(db,host,'payBail'));assert.equal((await read(db,host)).state.players[0].coins,800);
+ await assert.rejects(act(db,host,'payBail'));assert.equal((await read(db,host)).state.players[0].coins,1100);
  await act(db,host,'nextTurn');await act(db,guest,'roll');await act(db,guest,'nextTurn');
  const moved=await act(db,host,'roll');assert.equal(moved.state.players[0].position,11+moved.state.dice);assert.equal(moved.state.players[0].bailPaid,false);assert.equal(moved.state.lastPrisonRoll,null);
  }finally{db.close();}

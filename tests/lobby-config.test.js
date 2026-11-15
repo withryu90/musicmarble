@@ -25,7 +25,7 @@ test('only host can configure and invalid options do not corrupt the saved setti
   const host=service.create('방장'),guest=service.join(host.code,'친구'),room=service.get(host.code);
   assert.throws(()=>service.act(guest.code,guest.token,{action:'configure',args:[{rounds:4}],revision:room.revision}));
   for(const rounds of [0,9,10,11,12,1.5,'bad'])assert.throws(()=>service.act(host.code,host.token,{action:'configure',args:[{rounds}],revision:room.revision}));
-  assert.deepEqual(room.config,{rounds:4,coins:1200});
+  assert.deepEqual(room.config,{rounds:4,coins:1500});
   for(const rounds of Array.from({length:8},(_,i)=>i+1))assert.equal(roomConfig({rounds}).rounds,rounds);
  }finally{service.close();}
 });
@@ -58,4 +58,14 @@ test('older nine, ten and twelve lap lobbies offer eight while running games ret
   assert.equal(new LobbyConfig().read({code:'123456',config:{rounds,coins:1200}}).rounds,8);
   assert.throws(()=>roomConfig({rounds}));
  }
+});
+
+test('new shared and solo games default to 1500 coins while legacy 1200 settings remain valid',()=>{
+ assert.equal(roomConfig().coins,1500);assert.equal(roomConfig({coins:1200}).coins,1200);
+ const service=new RoomService();try{
+  const a=service.create('기본방'),room=service.get(a.code);service.join(a.code,'친구');
+  assert.equal(room.config.coins,1500);service.act(a.code,a.token,{action:'start',revision:room.revision});
+  assert.ok(room.state.players.every(p=>p.coins===1500));
+  const solo=service.createSolo('혼자',{botCount:3});assert.ok(service.get(solo.code).state.players.every(p=>p.coins===1500));
+ }finally{service.close();}
 });

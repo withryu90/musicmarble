@@ -12,9 +12,9 @@ test('drawing characters never repeats a used or newly drawn ID',()=>{
  const first=drawCharacterIds(15,[],()=>.3);assert.equal(new Set(first).size,15);const next=drawCharacterIds(18,first,()=>.7);assert.equal(new Set([...first,...next]).size,33);assert.throws(()=>drawCharacterIds(19,first));assert.throws(()=>drawCharacterIds(-1));
 });
 test('new games reserve unique characters and reject unknown or duplicate selections',()=>{
- const names=['A','B','C','D'];for(let i=0;i<50;i++)assertUnique(G.createGame({names}).players);
- const ids=CHARACTERS.slice(0,4).map(c=>c.id);assert.deepEqual(G.createGame({names,characterIds:ids}).players.map(p=>p.characterId),ids);
- assert.throws(()=>G.createGame({names,characterIds:Array(4).fill('bach')}));assert.throws(()=>G.createGame({names,characterIds:['fake',...ids.slice(1)]}));assert.throws(()=>G.createGame({names,characterIds:ids.slice(1)}));
+ const names=['A','B','C','D'];for(let i=0;i<50;i++)assertUnique(G.createGame({coins:1200,names}).players);
+ const ids=CHARACTERS.slice(0,4).map(c=>c.id);assert.deepEqual(G.createGame({coins:1200,names,characterIds:ids}).players.map(p=>p.characterId),ids);
+ assert.throws(()=>G.createGame({coins:1200,names,characterIds:Array(4).fill('bach')}));assert.throws(()=>G.createGame({coins:1200,names,characterIds:['fake',...ids.slice(1)]}));assert.throws(()=>G.createGame({coins:1200,names,characterIds:ids.slice(1)}));
 });
 test('joining and repeated redraws reserve character slots atomically',()=>{
  const service=new RoomService();try{const sessions=[service.create('A')];for(const name of ['B','C','D'])sessions.push(service.join(sessions[0].code,name));const room=service.get(sessions[0].code);assertUnique(room.members);
@@ -31,7 +31,7 @@ test('a stale redraw request cannot overwrite another assignment',()=>{
 });
 test('solo mode shares a unique character pool with all three bots and allows redraw before rolling',()=>{
  const service=new RoomService();try{const a=service.createSolo('A',{botCount:3}),room=service.get(a.code);assertUnique(room.members);assertUnique(room.state.players);const bots=room.state.players.slice(1).map(p=>p.characterId),old=room.state.players[0].characterId;
-  service.act(a.code,a.token,{action:'rerollCharacter',revision:room.revision});assert.notEqual(room.state.players[0].characterId,old);assertUnique(room.state.players);assert.deepEqual(room.state.players.slice(1).map(p=>p.characterId),bots);assert.equal(room.state.players[0].coins,1200);
+  service.act(a.code,a.token,{action:'rerollCharacter',revision:room.revision});assert.notEqual(room.state.players[0].characterId,old);assertUnique(room.state.players);assert.deepEqual(room.state.players.slice(1).map(p=>p.characterId),bots);assert.equal(room.state.players[0].coins,1500);
   service.act(a.code,a.token,{action:'roll',revision:room.revision});assert.throws(()=>service.act(a.code,a.token,{action:'rerollCharacter',revision:room.revision}));
  }finally{service.close();}
 });
@@ -39,7 +39,7 @@ test('rooms reserve independently and public snapshots contain no credentials',(
  const service=new RoomService();try{const a=service.create('A'),b=service.create('B');const aa=service.get(a.code),bb=service.get(b.code);assert.equal(aa.members.length,1);assert.equal(bb.members.length,1);assert.ok(service.snapshot(aa).members[0].characterId);assert.ok(!JSON.stringify(service.snapshot(aa)).includes(a.token));assert.throws(()=>service.act(a.code,b.token,{action:'rerollCharacter',revision:aa.revision}));}finally{service.close();}
 });
 test('save validation rejects duplicate or unknown character IDs; legacy display stays stable',()=>{
- const s=G.createGame();assert.ok(G.isValidSave(s));s.players[1].characterId=s.players[0].characterId;assert.equal(G.isValidSave(s),false);s.players.forEach(p=>delete p.characterId);assert.ok(G.isValidSave(s));assert.notEqual(characterFor(s.players[0]).id,characterFor(s.players[1]).id);s.players[0].characterId='unknown';assert.equal(G.isValidSave(s),false);
+ const s=G.createGame({coins:1200});assert.ok(G.isValidSave(s));s.players[1].characterId=s.players[0].characterId;assert.equal(G.isValidSave(s),false);s.players.forEach(p=>delete p.characterId);assert.ok(G.isValidSave(s));assert.notEqual(characterFor(s.players[0]).id,characterFor(s.players[1]).id);s.players[0].characterId='unknown';assert.equal(G.isValidSave(s),false);
 });
 
 test('every portrait atlas exists and matches the 3 × 2 transparent sprite layout',async()=>{

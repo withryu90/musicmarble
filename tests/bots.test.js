@@ -9,7 +9,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function waitForHuman(service,session,room){return new Promise((resolve,reject)=>{let stop;const timeout=setTimeout(()=>{stop?.();reject(Error('Bots did not complete their turns'));},1500);stop=service.subscribe(session.code,session.token,s=>{if(s.state.turn===0&&s.state.turnNumber>=4){clearTimeout(timeout);queueMicrotask(()=>{stop();resolve(s);});}});});}
 test('solo creates one human and 1–3 unique randomly named bots without public credentials',()=>{
  const {service,session,room}=setup();try{
-  assert.ok(room.members.slice(1).every(m=>!m.name.includes('봇')&&m.name.length<=16));assert.equal(room.members.length,4);assert.equal(new Set(room.members.map(m=>m.name)).size,4);assert.equal(room.mode,'solo');assert.equal(room.state.phase,'roll');assert.equal(room.state.players[0].isBot,false);assert.ok(room.state.players.slice(1).every(p=>p.isBot&&p.coins===1200));
+  assert.ok(room.members.slice(1).every(m=>!m.name.includes('봇')&&m.name.length<=16));assert.equal(room.members.length,4);assert.equal(new Set(room.members.map(m=>m.name)).size,4);assert.equal(room.mode,'solo');assert.equal(room.state.phase,'roll');assert.equal(room.state.players[0].isBot,false);assert.ok(room.state.players.slice(1).every(p=>p.isBot&&p.coins===1500));
   const publicData=service.snapshot(room);assert.ok(!JSON.stringify(publicData).includes(session.token));assert.ok(publicData.members.slice(1).every(m=>m.isBot&&!m.token));
   assert.throws(()=>service.authenticate(session.code,undefined));assert.throws(()=>service.join(session.code,'손님'));
   assert.throws(()=>service.createSolo('나',{botCount:0}));assert.throws(()=>service.createSolo('나',{botCount:4}));assert.throws(()=>service.createSolo('나',{rounds:11}));
@@ -33,11 +33,11 @@ test('randomly declining purchase and optional quiz cannot loop forever',()=>{
  const {service,room}=setup();try{let s=room.state;s.turn=1;s=G.roll(s,1);const decision=botDecision(s,{},()=>.99);assert.equal(decision.action,'nextTurn');assert.equal(applyBotDecision(s,decision,1).turn,2);}finally{service.close();}
 });
 test('bot quizzes can be wrong and never grant extra rewards',()=>{
- const {service,room}=setup();try{let s=room.state;s.turn=1;s.players[1].position=0;s=G.startQuiz(G.roll(s,6));const d=botDecision(s,{},()=>.99);s=applyBotDecision(s,d,1);assert.equal(s.feedback.correct,false);assert.equal(s.players[1].coins,1200);assert.equal(s.players[1].attempts,1);}finally{service.close();}
+ const {service,room}=setup();try{let s=room.state;s.turn=1;s.players[1].position=0;s=G.startQuiz(G.roll(s,6));const d=botDecision(s,{},()=>.99);s=applyBotDecision(s,d,1);assert.equal(s.feedback.correct,false);assert.equal(s.players[1].coins,1500);assert.equal(s.players[1].attempts,1);}finally{service.close();}
 });
 test('bots accept reasonable trade offers and reject overpriced offers',()=>{
  const {service,room}=setup();try{let s=buyQualified(G.roll(room.state,1));
-  s=G.proposeTrade(s,{workId:'bach-air',to:1,price:160});let d=botDecision(s,{},()=>0);assert.deepEqual(d.args,[true]);let accepted=applyBotDecision(s,d,1);assert.equal(accepted.ownership['bach-air'].player,1);assert.equal(accepted.players[1].coins,1040);
+  s=G.proposeTrade(s,{workId:'bach-air',to:1,price:160});let d=botDecision(s,{},()=>0);assert.deepEqual(d.args,[true]);let accepted=applyBotDecision(s,d,1);assert.equal(accepted.ownership['bach-air'].player,1);assert.equal(accepted.players[1].coins,1340);
   s=G.resolveTrade(s,false);s=G.proposeTrade(s,{workId:'bach-air',to:1,price:1000});d=botDecision(s,{},()=>0);assert.deepEqual(d.args,[false]);assert.equal(applyBotDecision(s,d,1).ownership['bach-air'].player,0);
  }finally{service.close();}
 });
@@ -60,7 +60,7 @@ test('a bot trade response is automatic even during the human turn',async()=>{
   room.state=buyQualified(G.roll(room.state,1));
   const done=new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(Error('No response')),500);let stop;stop=service.subscribe(session.code,session.token,s=>{if(s.state.ownership['bach-air']?.player===1){clearTimeout(timeout);queueMicrotask(()=>{stop();resolve(s);});}});});
   service.act(session.code,session.token,{action:'proposeTrade',args:[{workId:'bach-air',to:1,price:150}],revision:room.revision});
-  const next=await done;assert.equal(next.state.turn,0);assert.equal(next.state.trade,null);assert.equal(next.state.players[1].coins,1050);
+  const next=await done;assert.equal(next.state.turn,0);assert.equal(next.state.trade,null);assert.equal(next.state.players[1].coins,1350);
  }finally{service.close();}
 });
 test('finishing a game clears scheduled bot progression',async()=>{

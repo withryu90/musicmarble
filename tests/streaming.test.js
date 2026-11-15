@@ -7,7 +7,7 @@ import {activityChanges,ActivityInbox} from '../src/activities.js';
 import {canOfferTurnHandoff} from '../src/turn-handoff.js';
 import {RoomService} from '../src/room-service.js';
 import {botDecision,applyBotDecision} from '../src/bots.js';
-const game=(count=4)=>G.createGame({names:['A','B','C','D'].slice(0,count)});
+const game=(count=4)=>G.createGame({coins:1200,names:['A','B','C','D'].slice(0,count)});
 const landing=(s,id,actor=0)=>{s=structuredClone(s);s.turn=actor;s.phase='roll';s.players[actor].position=BOARD.findIndex(c=>c.id===id)-1;return G.roll(s,1);};
 const licensed=()=>{const s=game();s.platformOwners['youtube-music']=0;return s;};
 test('9x9 board places three app tiles and one work-swap tile without changing board geometry',()=>{

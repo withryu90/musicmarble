@@ -5,7 +5,7 @@ import {BOARD,PRISON_MESSAGE} from '../src/data.js';
 import {activityChanges} from '../src/activities.js';
 import {RoomService} from '../server/rooms.js';
 import {botDecision,applyBotDecision} from '../server/bots.js';
-const game=()=>G.createGame({names:['A','B']});
+const game=()=>G.createGame({coins:1200,names:['A','B']});
 const arrive=(via=false)=>{const s=game();s.players[0].position=via?23:10;return G.roll(s,1);};
 const backToA=s=>{s=G.nextTurn(s);assert.equal(s.turn,1);s=G.roll(s,1);return G.nextTurn(s);};
 test('prison and go-to-prison preserve board size, arrive with three opportunities and show shared rules',()=>{

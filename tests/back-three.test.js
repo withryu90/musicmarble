@@ -5,7 +5,7 @@ import {BOARD} from '../src/data.js';
 import {activityChanges} from '../src/activities.js';
 import {movementPath,backwardPath} from '../src/movement.js';
 import {botDecision,applyBotDecision} from '../src/bots.js';
-const game=()=>G.createGame({names:['A','B']});
+const game=()=>G.createGame({coins:1200,names:['A','B']});
 const arrive=()=>{const s=game();s.players[0].position=7;return G.roll(s,1);};
 test('the backward tile waits for a second dice roll without advancing the turn',()=>{const s=arrive();assert.equal(BOARD[8].title,'뒤로가기');assert.equal(s.players[0].position,8);assert.equal(s.phase,'backward-roll');assert.equal(s.lastBackwardMove,null);assert.equal(s.turnNumber,0);assert.equal(s.players[0].coins,1200);assert.ok(G.isValidSave(s));assert.throws(()=>G.nextTurn(s));assert.throws(()=>G.startQuiz(s));assert.throws(()=>G.startPurchaseQuiz(s));});
 test('the extra dice independently controls every backward distance from one through six',()=>{

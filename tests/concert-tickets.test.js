@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import * as G from '../src/engine.js';
 import {BOARD,CONCERT_SEATS} from '../src/data.js';
 import {activityChanges,ActivityInbox} from '../src/activities.js';
-const game=(names=['개최자','관객1','관객2','관객3'])=>{const s=G.createGame({names});s.players[0].position=15;return s;};
+const game=(names=['개최자','관객1','관객2','관객3'])=>{const s=G.createGame({coins:1200,names});s.players[0].position=15;return s;};
 test('concert tile draws each attendee tier once and transfers coins to host without minting money',()=>{
  const before=game(),draws=[0,.5,.999999];let calls=0;
  const after=G.roll(before,1,()=>draws[calls++]);

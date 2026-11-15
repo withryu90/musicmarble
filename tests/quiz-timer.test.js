@@ -4,8 +4,8 @@ import * as G from '../src/engine.js';
 import {QUIZZES} from '../src/data.js';
 import {purchaseQuizById} from '../src/purchase-quizzes.js';
 import {RoomService} from '../src/room-service.js';
-const purchase=()=>G.startPurchaseQuiz(G.roll(G.createGame({names:['가온','나래']}),1),()=>0);
-const learning=()=>G.startQuiz(G.roll(G.createGame({names:['가온','나래']}),1));
+const purchase=()=>G.startPurchaseQuiz(G.roll(G.createGame({coins:1200,names:['가온','나래']}),1),()=>0);
+const learning=()=>G.startQuiz(G.roll(G.createGame({coins:1200,names:['가온','나래']}),1));
 test('learning lasts fifteen seconds and purchase lasts ten; neither clock can restart',()=>{
  for(const make of [purchase,learning]){
   const pending=make();assert.equal(pending.quizDeadline,null);

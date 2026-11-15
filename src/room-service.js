@@ -1,10 +1,10 @@
-import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=2f23c10ac5a5';
-import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=2f23c10ac5a5';
-import {randomInt,randomToken} from './random.js?v=2f23c10ac5a5';
-import * as G from './engine.js?v=2f23c10ac5a5';
-import {botDecision,applyBotDecision} from './bots.js?v=2f23c10ac5a5';
-import {activityChanges} from './activities.js?v=2f23c10ac5a5';
-import {drawCharacterIds,characterById} from './characters.js?v=2f23c10ac5a5';
+import {createRollPresentation,rollArrivalNotice} from './roll-presentation.js?v=33e90fe8a250';
+import {roomConfig,ROUND_OPTIONS} from './lobby-config.js?v=33e90fe8a250';
+import {randomInt,randomToken} from './random.js?v=33e90fe8a250';
+import * as G from './engine.js?v=33e90fe8a250';
+import {botDecision,applyBotDecision} from './bots.js?v=33e90fe8a250';
+import {activityChanges} from './activities.js?v=33e90fe8a250';
+import {drawCharacterIds,characterById} from './characters.js?v=33e90fe8a250';
 export const DISCONNECT_GRACE_MS=60000;
 const CODE_DIGITS='0123456789';
 export class RoomService {
@@ -14,9 +14,9 @@ export class RoomService {
   chooseCharacter(id,used=[]){if(!id)return drawCharacterIds(1,used)[0];if(!characterById(id))throw Error('캐릭터를 다시 선택해 주세요.');if(used.includes(id))throw Error('이미 다른 참가자가 선택한 캐릭터입니다. 다른 캐릭터를 골라 주세요.');return id;}
   create(name,characterId){this.nickname(name);this.chooseCharacter(characterId);if(this.rooms.size>=500)throw Error('현재 방이 많습니다. 잠시 후 다시 시도해 주세요.');const code=this.code(),room={code,gameId:randomToken(),createdAt:Date.now(),members:[],config:roomConfig(),state:null,revision:0,updatedAt:Date.now(),listeners:new Set()};this.rooms.set(code,room);return this.join(code,name,characterId);}
   join(code,name,characterId){const room=this.get(code);if(room.state)throw Error('이미 시작한 게임입니다. 새 방을 만들거나 기존 참가자는 이어하기를 이용해 주세요.');if(room.members.length>=G.MAX_PLAYERS)throw Error('이 방은 정원 4명이 모두 찼습니다.');const nickname=this.nickname(name);if(room.members.some(m=>m.name===nickname))throw Error('방 안에서 다른 닉네임을 사용해 주세요.');const member={id:room.members.length,name:nickname,characterId:this.chooseCharacter(characterId,room.members.map(m=>m.characterId)),token:randomToken()};room.members.push(member);this.broadcast(room);return {code:room.code,token:member.token,playerId:member.id};}
-  createSolo(name,{botCount=3,rounds=4,coins=1200}={},characterId){
+  createSolo(name,{botCount=3,rounds=4,coins=1500}={},characterId){
     this.nickname(name);
-    if(!Number.isInteger(botCount)||botCount<1||botCount>G.MAX_PLAYERS-1||!ROUND_OPTIONS.includes(rounds)||![1000,1200,1600].includes(coins))throw Error('봇 1–3명과 수업 설정을 확인해 주세요.');
+    if(!Number.isInteger(botCount)||botCount<1||botCount>G.MAX_PLAYERS-1||!ROUND_OPTIONS.includes(rounds)||![1000,1200,1500,1600].includes(coins))throw Error('봇 1–3명과 수업 설정을 확인해 주세요.');
     const session=this.create(name,characterId),room=this.get(session.code);
     room.mode='solo';
     const pool=['반짝이는 아르페지오','춤추는 알레그로','푸른 아다지오','설레는 크레셴도','달빛 소나타','노래하는 칸타빌레','꿈꾸는 안단테','따뜻한 레가토','경쾌한 스타카토','별빛 세레나데','빛나는 비브라토','산들바람 론도','다정한 돌체','은빛 카덴차','싱그러운 스케르초','용감한 포르테','고요한 피아니시모','낭만적인 루바토','자유로운 카프리치오','행복한 리타르단도'];

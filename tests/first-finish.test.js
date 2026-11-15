@@ -4,10 +4,10 @@ import * as G from '../src/engine.js';
 import {RankingClient} from '../src/ranking.js';
 import {activityChanges} from '../src/activities.js';
 import {movementPath} from '../src/movement.js';
-const game=()=>G.createGame({names:['A','B','C','D'],rounds:4});
+const game=()=>G.createGame({coins:1200,names:['A','B','C','D'],rounds:4});
 test('any seat can finish first in 2, 3 or 4 player games at every configured length',()=>{
  for(const count of [2,3,4])for(const rounds of Array.from({length:8},(_,i)=>i+1))for(let id=0;id<count;id++){
-  const initial=G.createGame({names:['A','B','C','D'].slice(0,count),rounds});initial.turn=id;initial.players[id].laps=rounds-1;initial.players[id].position=31;
+  const initial=G.createGame({coins:1200,names:['A','B','C','D'].slice(0,count),rounds});initial.turn=id;initial.players[id].laps=rounds-1;initial.players[id].position=31;
   const s=G.roll(initial,6);assert.equal(s.phase,'finished');assert.equal(s.endReason.playerId,id);assert.equal(s.endReason.type,'laps');assert.equal(s.players[id].position,0);assert.equal(s.players[id].coins,1400);assert.equal(s.endReason.moveSteps,1);assert.equal(s.players.filter(p=>G.hasFinished(s,p)).length,1);assert.ok(G.isValidSave(s));assert.equal(initial.phase,'roll');assert.throws(()=>G.nextTurn(s));
  }
 });

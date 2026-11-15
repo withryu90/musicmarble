@@ -4,7 +4,7 @@ import {QUIZZES} from '../src/data.js';
 import * as G from '../src/engine.js';
 const history=['q1','q2','q3','q4','q9',...Array.from({length:15},(_,i)=>`q${i+11}`)];
 const retired=['q6','q7','q10','q26','q27','q28','q29','q30'];
-const game=()=>G.createGame({names:['A','B']});
+const game=()=>G.createGame({coins:1200,names:['A','B']});
 test('learning bank contains thirty sourced copyright and creators-rights questions',()=>{
  assert.equal(QUIZZES.length,30);assert.equal(new Set(QUIZZES.map(q=>q.id)).size,30);assert.equal(new Set(QUIZZES.map(q=>q.question)).size,30);
  for(const q of QUIZZES){assert.equal(q.kind,'copyright');assert.ok(!history.includes(q.id)&&!retired.includes(q.id));assert.ok(q.question&&q.explanation);assert.ok(/^https:\/\/(easylaw.go.kr|www.mcst.go.kr)\//.test(q.sourceUrl));assert.equal(q.options.length,3);assert.equal(new Set(q.options).size,3);assert.ok(Number.isInteger(q.answer)&&q.answer>=0&&q.answer<3);}

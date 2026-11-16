@@ -142,3 +142,9 @@ dialog.entrance-help::backdrop{background:#164d7959}
 /* Lower the wordmark together, preserving spacing between all three lines. */
 .site-header .brand-copy{transform:translateY(4px)}
 .site-header .brand-title,.site-header .brand-tagline{transform:translateY(2px)}
+
+/* Anchor the mobile wordmark below the icon top, independent of text height. */
+@media(max-width:750px){
+ .lobby-header .brand{align-items:flex-start}
+ .lobby-header .brand-copy{margin-top:8px;transform:none}
+}

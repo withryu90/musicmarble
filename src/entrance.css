@@ -158,3 +158,6 @@ dialog.entrance-help::backdrop{background:#164d7959}
 
 /* Lower only the Korean title; preserve every other wordmark line and spacing. */
 .lobby-header .brand-title{transform:translateY(4px)}
+
+/* Keep the Korean wordmark crisp without the inherited white highlight. */
+.lobby-header .brand-title{text-shadow:none}

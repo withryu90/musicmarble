@@ -150,8 +150,8 @@ dialog.entrance-help::backdrop{background:#164d7959}
 .lobby-header .brand-copy small{margin:0;line-height:12px}
 @media(max-width:750px){
  .lobby-header .brand{align-items:flex-start}
- .lobby-header .brand-copy{height:46px;margin:0;transform:none;grid-template-rows:18px 10px 10px;align-content:center}
- .lobby-header .brand-title{justify-content:center;gap:0;letter-spacing:-.5px;line-height:18px;transform:none}
- .lobby-header .brand-tagline{top:-1px;margin:0;line-height:10px;transform:none}
- .lobby-header .brand-copy small{font-size:7.5px;margin:0;line-height:10px}
+ .lobby-header .brand-copy{height:46px;margin:0;transform:none;grid-template-rows:20px 11px 11px;align-content:center}
+ .lobby-header .brand-title{line-height:20px;transform:none}
+ .lobby-header .brand-tagline{top:0;margin:0;line-height:11px;transform:none}
+ .lobby-header .brand-copy small{margin:0;line-height:11px}
 }

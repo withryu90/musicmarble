@@ -143,8 +143,11 @@ dialog.entrance-help::backdrop{background:#164d7959}
 .site-header .brand-copy{transform:translateY(4px)}
 .site-header .brand-title,.site-header .brand-tagline{transform:translateY(2px)}
 
-/* Anchor the mobile wordmark below the icon top, independent of text height. */
+/* Keep all three mobile wordmark lines inside the adjacent 46px icon height. */
 @media(max-width:750px){
  .lobby-header .brand{align-items:flex-start}
- .lobby-header .brand-copy{margin-top:4px;transform:none}
+ .lobby-header .brand-copy{height:46px;margin:0;transform:none;grid-template-rows:22px 11px 11px;align-content:center}
+ .lobby-header .brand-title{line-height:22px;transform:none}
+ .lobby-header .brand-tagline{top:0;margin:0;line-height:11px;transform:none}
+ .lobby-header .brand-copy small{margin:0;line-height:11px}
 }

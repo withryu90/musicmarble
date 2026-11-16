@@ -157,4 +157,4 @@ dialog.entrance-help::backdrop{background:#164d7959}
 }
 
 /* Lower only the Korean title; preserve every other wordmark line and spacing. */
-.lobby-header .brand-title{transform:translateY(2px)}
+.lobby-header .brand-title{transform:translateY(4px)}

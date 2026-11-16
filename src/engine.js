@@ -1,9 +1,9 @@
-import {ROUND_OPTIONS} from './lobby-config.js?v=712ff47f9847';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=712ff47f9847';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=712ff47f9847';
-import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=712ff47f9847';
-import {characterById,drawCharacterIds} from './characters.js?v=712ff47f9847';
-import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=712ff47f9847';
+import {ROUND_OPTIONS} from './lobby-config.js?v=c198797cc19e';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE,listeningHintDurationMs} from './listening-hints.js?v=c198797cc19e';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp} from './streaming.js?v=c198797cc19e';
+import { BOARD, LEGACY_BOARD, WORKS, QUIZZES, EVENTS, CONCERT_SEATS } from './data.js?v=c198797cc19e';
+import {characterById,drawCharacterIds} from './characters.js?v=c198797cc19e';
+import {PURCHASE_QUIZZES,purchaseQuizById} from './purchase-quizzes.js?v=c198797cc19e';
 export const VERSION=2;
 export const MAX_PLAYERS=4;
 export const BAIL_AMOUNT=400;

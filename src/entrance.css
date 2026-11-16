@@ -133,8 +133,8 @@ dialog.entrance-help::backdrop{background:#164d7959}
 }
 
 /* Three-line brand lockup, with the slogan between the two names. */
-.site-header .brand-tagline{position:relative;top:-2px;display:block;width:0;min-width:100%;margin:0;font-size:10px;line-height:1.2;font-weight:600;letter-spacing:0;white-space:nowrap;text-align:center;color:#386f94;text-shadow:none}
-@media(max-width:750px){.lobby-header .brand-tagline{font-size:9px;margin-top:0}}
+.site-header .brand-tagline{position:relative;top:-2px;display:block;width:0;min-width:100%;margin:0;font-size:9px;line-height:1.2;font-weight:600;letter-spacing:0;white-space:nowrap;text-align:center;color:#386f94;text-shadow:none}
+@media(max-width:750px){.lobby-header .brand-tagline{font-size:8px;margin-top:0}}
 
 .lobby-header .brand-title{font-size:23px}
 @media(max-width:750px){.lobby-header .brand-title{font-size:19px}}
@@ -152,7 +152,7 @@ dialog.entrance-help::backdrop{background:#164d7959}
  .lobby-header .brand{align-items:flex-start}
  .lobby-header .brand-copy{height:46px;margin:0;transform:none;grid-template-rows:20px 11px 11px;align-content:center}
  .lobby-header .brand-title{line-height:20px;transform:none}
- .lobby-header .brand-tagline{top:0;margin:0;line-height:11px;transform:none}
+ .lobby-header .brand-tagline{top:-1px;margin:0;line-height:11px;transform:none}
  .lobby-header .brand-copy small{margin:0;line-height:11px}
 }
 

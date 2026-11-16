@@ -325,3 +325,5 @@ body.portrait-game{overflow:hidden}
  #modal .participant-intro-list{--intro-portrait-size:58px}
  #modal .participant-intro-card{gap:2px}
 }
+
+.orientation-guide .primary{min-height:44px;padding:10px 20px;border-radius:10px;background:#247cb4;color:#fff;font-size:14px}

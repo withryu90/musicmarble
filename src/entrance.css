@@ -136,18 +136,22 @@ dialog.entrance-help::backdrop{background:#164d7959}
 .site-header .brand-tagline{position:relative;top:-2px;display:block;width:0;min-width:100%;margin:0;font-size:10px;line-height:1.2;font-weight:600;letter-spacing:0;white-space:nowrap;text-align:center;color:#386f94;text-shadow:none}
 @media(max-width:750px){.lobby-header .brand-tagline{font-size:9px;margin-top:0}}
 
-.lobby-header .brand-title{font-size:25px}
-@media(max-width:750px){.lobby-header .brand-title{font-size:21px}}
+.lobby-header .brand-title{font-size:23px}
+@media(max-width:750px){.lobby-header .brand-title{font-size:19px}}
 
 /* Lower the wordmark together, preserving spacing between all three lines. */
 .site-header .brand-copy{transform:translateY(4px)}
 .site-header .brand-title,.site-header .brand-tagline{transform:translateY(2px)}
 
-/* Keep all three mobile wordmark lines inside the adjacent 46px icon height. */
+/* Keep the wordmark comfortably within the adjacent icon on desktop and mobile. */
+.lobby-header .brand-copy{height:55px;transform:none;grid-template-rows:24px 12px 12px;align-content:center}
+.lobby-header .brand-title{line-height:24px;transform:none}
+.lobby-header .brand-tagline{top:0;margin:0;line-height:12px;transform:none}
+.lobby-header .brand-copy small{margin:0;line-height:12px}
 @media(max-width:750px){
  .lobby-header .brand{align-items:flex-start}
- .lobby-header .brand-copy{height:46px;margin:0;transform:none;grid-template-rows:22px 11px 11px;align-content:center}
- .lobby-header .brand-title{line-height:22px;transform:none}
+ .lobby-header .brand-copy{height:46px;margin:0;transform:none;grid-template-rows:20px 11px 11px;align-content:center}
+ .lobby-header .brand-title{line-height:20px;transform:none}
  .lobby-header .brand-tagline{top:0;margin:0;line-height:11px;transform:none}
  .lobby-header .brand-copy small{margin:0;line-height:11px}
 }

@@ -337,3 +337,16 @@ body.portrait-game{overflow:hidden}
 .external-browser-guide p{margin-bottom:12px;font-size:13px;line-height:1.8}
 .external-browser-guide input{width:100%;min-height:40px;margin-bottom:10px;padding:8px;border:1px solid #c7dfec;border-radius:8px;font-size:13px;user-select:text;-webkit-user-select:text}
 .external-browser-guide small{display:block;margin-top:12px;color:#64819a;font-size:11px;line-height:1.7}
+
+/* Reserve the same badge, portrait and name rows for every mobile gallery card. */
+.character-gallery .gallery-bonus-slot{display:contents}
+@media(max-width:650px),(max-height:500px) and (orientation:landscape),(any-pointer:coarse){
+ #modal .character-gallery>button{
+  display:grid;grid-template-rows:14px 72px 34px;gap:5px;
+  align-content:start;align-items:center;justify-items:center;
+ }
+ #modal .character-gallery .gallery-bonus-slot{display:block;width:100%;height:14px;grid-row:1}
+ #modal .character-gallery .bonus-character-label{margin:0 auto;padding:0;font-size:9px;line-height:14px}
+ #modal .character-gallery>button .character-avatar{grid-row:2;width:72px;height:72px;margin:0;align-self:center}
+ #modal .character-gallery>button strong{grid-row:3;display:grid;place-items:center;align-self:stretch;margin:0;line-height:1.4}
+}

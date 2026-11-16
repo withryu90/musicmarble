@@ -146,5 +146,5 @@ dialog.entrance-help::backdrop{background:#164d7959}
 /* Anchor the mobile wordmark below the icon top, independent of text height. */
 @media(max-width:750px){
  .lobby-header .brand{align-items:flex-start}
- .lobby-header .brand-copy{margin-top:8px;transform:none}
+ .lobby-header .brand-copy{margin-top:4px;transform:none}
 }

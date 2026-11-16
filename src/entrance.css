@@ -111,7 +111,7 @@ dialog.entrance-help::backdrop{background:#164d7959}
 
 /* The English wordmark defines the width; spread the Korean title to its edges. */
 .site-header .brand-copy{display:inline-grid;grid-template-columns:auto;align-items:start}
-.site-header .brand-title{display:flex;justify-content:space-between;width:0;min-width:100%;line-height:1.2;letter-spacing:0;white-space:nowrap}
+.site-header .brand-title{display:flex;justify-content:space-between;width:0;min-width:100%;line-height:1.05;letter-spacing:0;white-space:nowrap}
 .site-header .brand-title>span{flex:0 0 auto}
 .site-header .brand-copy small{width:max-content;white-space:nowrap}
 .site-header .brand-copy .brand-english-end{letter-spacing:0}
@@ -133,5 +133,8 @@ dialog.entrance-help::backdrop{background:#164d7959}
 }
 
 /* Three-line brand lockup, with the slogan between the two names. */
-.site-header .brand-tagline{display:block;width:0;min-width:100%;margin:2px 0 0;font-size:10px;line-height:1.2;font-weight:600;letter-spacing:0;white-space:nowrap;text-align:center;color:#386f94;text-shadow:none}
-@media(max-width:750px){.lobby-header .brand-tagline{font-size:9px;margin-top:1px}}
+.site-header .brand-tagline{display:block;width:0;min-width:100%;margin:0;font-size:10px;line-height:1.2;font-weight:600;letter-spacing:0;white-space:nowrap;text-align:center;color:#386f94;text-shadow:none}
+@media(max-width:750px){.lobby-header .brand-tagline{font-size:9px;margin-top:0}}
+
+.lobby-header .brand-title{font-size:25px}
+@media(max-width:750px){.lobby-header .brand-title{font-size:21px}}

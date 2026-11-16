@@ -114,7 +114,7 @@ body.portrait-game{overflow:hidden}
  .game-shell .site-header{min-height:52px;flex-wrap:nowrap;padding:4px 14px;gap:12px}
  .game-shell .site-header .brand{gap:6px}
  .game-shell .site-header .brand-icon{width:32px;height:32px}
- .game-shell .site-header .brand-title{font-size:20px}
+ .game-shell .site-header .brand-title{font-size:19px}
  .game-shell .site-header .brand small{font-size:6px}
  .game-shell .site-header nav{order:0;width:auto;flex:1;justify-content:center}
  .game-shell .site-header nav button{font-size:11px;min-height:40px;padding:6px 10px}

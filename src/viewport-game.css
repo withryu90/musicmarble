@@ -2,7 +2,7 @@
 .game-shell[data-tab="board"]{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .game-shell[data-tab="board"] .site-header{height:44px;min-height:44px;padding:3px 12px;flex-wrap:nowrap;gap:12px;flex:none}
 .game-shell[data-tab="board"] .brand-icon{width:30px;height:30px}
-.game-shell[data-tab="board"] .brand-title{font-size:16px}
+.game-shell[data-tab="board"] .brand-title{font-size:15px}
 .game-shell[data-tab="board"] .brand-copy small{font-size:5px}
 .game-shell[data-tab="board"] .site-header nav{order:0;flex:1;width:auto;height:100%;gap:12px;justify-content:center}
 .game-shell[data-tab="board"] .site-header nav button{font-size:11px;padding:4px 8px;min-height:30px}
@@ -56,7 +56,7 @@
 @media(max-height:500px){
  .game-shell[data-tab="board"] .site-header{height:34px;min-height:34px;padding:1px 8px}
  .game-shell[data-tab="board"] .brand-icon{width:26px;height:26px}
- .game-shell[data-tab="board"] .brand-title{font-size:13px}
+ .game-shell[data-tab="board"] .brand-title{font-size:12px}
  .game-shell[data-tab="board"] .site-header nav{gap:4px}
  .game-shell[data-tab="board"] .site-header nav button{font-size:10px;padding:2px 5px;min-height:28px}
  .game-shell[data-tab="board"] .room-chat .chat-messages{height:36px;min-height:36px}
@@ -237,4 +237,4 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 .game-shell[data-mobile="false"][data-tab="board"] .header-actions .desktop-header-zoom button{width:24px;min-width:24px;height:24px;min-height:24px;padding:0;line-height:1}
 .game-shell[data-mobile="false"][data-tab="board"] .header-actions .desktop-header-zoom [data-action="board-zoom-reset"]{width:40px;min-width:40px}
 
-.game-shell[data-tab="board"] .site-header .brand-tagline{font-size:7px;line-height:1.15;margin-top:1px}
+.game-shell[data-tab="board"] .site-header .brand-tagline{font-size:7px;line-height:1.15;margin-top:0}

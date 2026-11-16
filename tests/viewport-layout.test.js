@@ -63,3 +63,14 @@ test('mobile game dialogs are 90% of the existing fitted size without cumulative
  assert.equal(panel(false,200).scale,1);assert.equal(panel(false,900).scale,1);
  assert.equal(panel(true,900).body.style.overflow,'auto');
 });
+
+test('installed app board fits the inset scroll viewport rather than the taller surrounding stage',async()=>{
+ const {fitViewportBoard}=await import('../src/viewport-layout.js');
+ const props={},viewport={clientWidth:530,clientHeight:290};
+ const surround={clientWidth:800,clientHeight:314};
+ const area={style:{setProperty:(k,v)=>props[k]=v},classList:{contains:()=>false},querySelector:s=>s==='.board-surround'?surround:s==='.mobile-board-viewport'?viewport:s==='.players-all'?{offsetWidth:250}:null,querySelectorAll:()=>[]};
+ const shell={dataset:{mobile:'true',webApp:'true'},style:{setProperty(){}},querySelector:s=>s==='.board-area'?area:null};
+ fitViewportBoard({defaultView:{innerHeight:390},querySelector:()=>shell});
+ assert.ok(parseFloat(props['--viewport-scene-height'])<=viewport.clientHeight-4);
+ assert.ok(parseFloat(props['--viewport-scene-width'])<=viewport.clientWidth);
+});

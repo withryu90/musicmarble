@@ -395,3 +395,7 @@ dialog#modal.mobile-music-modal{
 
 /* Match the extra 10% reduction used by all mobile game dialogs. */
 .mobile-dice-overlay .dice-stage-scale{transform:scale(.9);transform-origin:center;max-width:100%}
+
+/* Leave room for the board base in installed apps and raise the participant group. */
+.game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] .mobile-board-viewport{bottom:24px}
+.game-shell[data-mobile="true"][data-web-app="true"][data-tab="board"] .board-area .players-all{padding-bottom:24px}

@@ -23,3 +23,12 @@ test('embedded browsers release the guide when device orientation is landscape d
  assert.equal(needsLandscapeInWindow(portrait,false),false);
  assert.equal(needsLandscapeInWindow(portrait,true,false),false);
 });
+
+test('Instagram and Naver embedded browsers get an early external-browser notice',async()=>{
+ const {embeddedBrowserName}=await import('../src/orientation.js');
+ assert.equal(embeddedBrowserName('Mozilla/5.0 (iPhone) Instagram 350.0'),'인스타그램');
+ assert.equal(embeddedBrowserName('Mozilla/5.0 Android NAVER(inapp; blog; 1.0)'),'네이버');
+ assert.equal(embeddedBrowserName('Mozilla/5.0 Version/18.0 Mobile Safari/605.1.15'),'');
+ assert.equal(embeddedBrowserName('Mozilla/5.0 Chrome/132.0.0.0 Mobile Safari/537.36'),'');
+ assert.equal(embeddedBrowserName(),'');
+});

@@ -12,3 +12,9 @@ export function needsLandscapeInWindow(view,playing,touchDevice=true){
   (typeof view.orientation==='number'&&Number.isFinite(angle)&&Math.abs(angle)%180===90);
  return !landscape&&needsLandscape(view.innerWidth,view.innerHeight,playing,touchDevice);
 }
+
+export function embeddedBrowserName(userAgent=''){
+ if(/Instagram/i.test(userAgent))return '인스타그램';
+ if(/NAVER/i.test(userAgent))return '네이버';
+ return '';
+}

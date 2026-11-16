@@ -31,3 +31,15 @@ test("installed app layout excludes ordinary browser fullscreen",()=>{
  assert.equal(isInstalledWebApp({...browser,matchMedia:q=>({matches:q==='(display-mode: standalone)'})}),true);
  assert.equal(isInstalledWebApp({...browser,matchMedia:q=>({matches:q==='(display-mode: fullscreen)'})}),false);
 });
+
+test('landscape requests enter fullscreen before locking and safely handle webview restrictions',async()=>{
+ const {requestLandscape}=await import('../src/fullscreen.js');const calls=[];
+ const doc={documentElement:{requestFullscreen:async()=>calls.push('fullscreen')}};
+ const win={...browser,innerWidth:390,innerHeight:844,screen:{orientation:{lock:async mode=>calls.push(mode)}}};
+ assert.equal(await requestLandscape(doc,win),'requested');assert.deepEqual(calls,['fullscreen','landscape']);
+ assert.equal(await requestLandscape(doc,{...win,innerWidth:844,innerHeight:390}),'landscape');assert.equal(calls.length,2);
+ assert.equal(await requestLandscape(doc,{...win,screen:{}}),'unsupported');
+ assert.equal(await requestLandscape({documentElement:{}},win),'unsupported');
+ assert.equal(await requestLandscape(doc,{...win,screen:{orientation:{lock:async()=>{throw Error('WebView denied');}}}}),'blocked');
+ assert.equal(await requestLandscape({documentElement:{requestFullscreen:async()=>{throw Error('fullscreen denied');}}},win),'blocked');
+});

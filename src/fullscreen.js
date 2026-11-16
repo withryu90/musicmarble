@@ -17,3 +17,13 @@ export async function toggleFullscreen(doc,win){
  }
  return enterFullscreen(doc,win);
 }
+
+// Request native landscape only on a user gesture; unsupported webviews stay usable.
+export async function requestLandscape(doc,win){
+ if(win.innerWidth>win.innerHeight)return 'landscape';
+ const orientation=win.screen?.orientation;
+ if(typeof orientation?.lock!=='function')return 'unsupported';
+ const fullscreen=await enterFullscreen(doc,win);
+ if(fullscreen==='blocked'||fullscreen==='unsupported')return fullscreen;
+ try{await orientation.lock('landscape');return 'requested';}catch{return 'blocked';}
+}

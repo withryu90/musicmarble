@@ -327,3 +327,13 @@ body.portrait-game{overflow:hidden}
 }
 
 .orientation-guide .primary{min-height:44px;padding:10px 20px;border-radius:10px;background:#247cb4;color:#fff;font-size:14px}
+
+.orientation-guide{overflow-y:auto}
+.orientation-guide .secondary{min-height:40px;padding:9px 15px;border:1px solid #a6c9df;border-radius:9px;background:#fff;color:#285e83}
+.orientation-guide .text-button{padding:8px 12px;font-size:12px;color:#446d89}
+.embedded-browser-notice{margin:12px 0;padding:11px 12px;border:1px solid #c6dce9;border-radius:10px;background:#f0f8fc;color:#315e7d;font-size:12px;line-height:1.6}
+.embedded-browser-notice p{margin:4px 0;font-size:11px}
+.embedded-browser-notice button{padding:5px 0;color:#236c9c;font-weight:700;font-size:12px}
+.external-browser-guide p{margin-bottom:12px;font-size:13px;line-height:1.8}
+.external-browser-guide input{width:100%;min-height:40px;margin-bottom:10px;padding:8px;border:1px solid #c7dfec;border-radius:8px;font-size:13px;user-select:text;-webkit-user-select:text}
+.external-browser-guide small{display:block;margin-top:12px;color:#64819a;font-size:11px;line-height:1.7}

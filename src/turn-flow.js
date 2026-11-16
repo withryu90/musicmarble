@@ -13,5 +13,5 @@ export function shouldRecoverPresentation({latestRevision,presentedRevision,last
 }
 
 // Viewing menus never mutates the shared turn; allow it on every screen size.
-const VIEW_ACTIONS=new Set(['close','home','leave','tab','filter','fullscreen','help','settings','history','export','board-view','board-zoom-in','board-zoom-out','board-zoom-reset','my-character','character-gallery','character-bio','copy-code','orientation-continue']);
+const VIEW_ACTIONS=new Set(['close','home','leave','tab','filter','fullscreen','help','settings','history','export','board-view','board-zoom-in','board-zoom-out','board-zoom-reset','my-character','character-gallery','character-bio','copy-code','orientation-continue','orientation-landscape','browser-guide','copy-game-link']);
 export const canUseDuringProgress=action=>VIEW_ACTIONS.has(action);

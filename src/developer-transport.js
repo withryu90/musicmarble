@@ -1,8 +1,8 @@
-import * as G from './engine.js?v=a3c1f4a4d8b8';
-import {BOARD,WORKS,EVENTS} from './data.js?v=a3c1f4a4d8b8';
-import {purchaseQuizById} from './purchase-quizzes.js?v=a3c1f4a4d8b8';
-import {RoomService} from './room-service.js?v=a3c1f4a4d8b8';
-import {createRollPresentation} from './roll-presentation.js?v=a3c1f4a4d8b8';
+import * as G from './engine.js?v=c8f6c9dde8cc';
+import {BOARD,WORKS,EVENTS} from './data.js?v=c8f6c9dde8cc';
+import {purchaseQuizById} from './purchase-quizzes.js?v=c8f6c9dde8cc';
+import {RoomService} from './room-service.js?v=c8f6c9dde8cc';
+import {createRollPresentation} from './roll-presentation.js?v=c8f6c9dde8cc';
 
 // This service exists only in this browser. No developer action is sent to a server.
 export class DeveloperTransport{

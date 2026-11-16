@@ -1,5 +1,5 @@
-import {movementPath,backwardPath} from './movement.js?v=a3c1f4a4d8b8';
-import {BOARD} from './data.js?v=a3c1f4a4d8b8';
+import {movementPath,backwardPath} from './movement.js?v=c8f6c9dde8cc';
+import {BOARD} from './data.js?v=c8f6c9dde8cc';
 export const ROLL_TIMING=Object.freeze({lead:1200,roll:1000,result:1600,close:400,step:720,arrival:680});
 export function rollPath(before,after){
  const actor=before.turn,dice=after.dice,backward=before.phase==='backward-roll';

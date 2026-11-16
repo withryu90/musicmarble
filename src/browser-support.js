@@ -18,7 +18,7 @@
   }
   var script = document.createElement('script');
   script.type = 'module';
-  script.src = './src/app.js?v=a3c1f4a4d8b8';
+  script.src = './src/app.js?v=c8f6c9dde8cc';
   script.onerror = function () {
     document.getElementById('app').innerHTML = '<main class="browser-support-notice" role="alert"><h1>게임을 불러오지 못했어요.</h1><p>연결을 확인한 뒤 새로고침해 주세요.</p></main>';
   };

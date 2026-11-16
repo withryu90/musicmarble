@@ -14,6 +14,7 @@ export function needsLandscapeInWindow(view,playing,touchDevice=true){
 }
 
 export function embeddedBrowserName(userAgent=''){
+ if(/KAKAOTALK/i.test(userAgent))return '카카오톡';
  if(/Instagram/i.test(userAgent))return '인스타그램';
  if(/NAVER/i.test(userAgent))return '네이버';
  return '';

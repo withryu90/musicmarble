@@ -261,7 +261,7 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
  height:30px;grid-template-rows:16px 8px 6px;align-content:center;transform:none;
 }
 .game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-title{line-height:16px;transform:none}
-.game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-tagline{top:0;line-height:8px;transform:none}
+.game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-tagline{top:-1px;line-height:8px;transform:none}
 .game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-copy small{line-height:6px;margin:0}
 @media(max-height:500px){
  .game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-copy{height:26px;grid-template-rows:14px 7px 5px}

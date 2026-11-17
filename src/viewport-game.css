@@ -276,3 +276,13 @@ dialog#modal .modal-header .icon-button[data-action="close"]:focus-visible svg{c
 @media(max-width:480px){
  .game-shell[data-mobile="false"][data-tab="board"] .site-header>.header-actions{gap:2px}
 }
+
+/* Give the desktop wordmark a fixed icon frame with inset text on both edges. */
+.game-shell[data-mobile="false"][data-tab="board"] .site-header>.brand{
+ display:grid;grid-template-columns:34px max-content;align-items:center;height:34px;
+}
+.game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-icon{width:34px;height:34px}
+@media(max-height:500px){
+ .game-shell[data-mobile="false"][data-tab="board"] .site-header>.brand{grid-template-columns:30px max-content;height:30px}
+ .game-shell[data-mobile="false"][data-tab="board"] .site-header .brand-icon{width:30px;height:30px}
+}

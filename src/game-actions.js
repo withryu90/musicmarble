@@ -1,4 +1,4 @@
-import {turnPromptKey} from './turn-flow.js?v=7e4a5cbb0abf';
+import {turnPromptKey} from './turn-flow.js?v=5d57b86fa755';
 // Presentation can lag behind the room. Send one intent at a time, against the
 // latest revision, and never replay an intent after its turn/question has changed.
 export class GameActions{

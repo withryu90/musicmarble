@@ -1,4 +1,4 @@
-import {LISTENING_HINTS} from './listening-hints.js?v=7e4a5cbb0abf';
+import {LISTENING_HINTS} from './listening-hints.js?v=5d57b86fa755';
 // Derive the end envelope from the original timeline, including after pause/resume.
 export function listeningFadeEnvelope(duration,offset=0,volume=1){
  const fade=Math.min(1.5,duration*.3),remaining=duration-offset;

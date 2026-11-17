@@ -1,37 +1,39 @@
-import {ConcertNoticeWindow,CONCERT_NOTICE_MS} from './concert-notice.js?v=1734341e1558';
-import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll,rollSnapshotMatches} from './roll-presentation.js?v=1734341e1558';
-import {playerStatus} from './player-status.js?v=1734341e1558';
-import {createListeningPlayer} from './listening-player.js?v=1734341e1558';
-import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=1734341e1558';
-import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=1734341e1558';
-import {GameActions} from './game-actions.js?v=1734341e1558';
-import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=1734341e1558';
-import {createMusicDirector} from './music-director.js?v=1734341e1558';
-import {installMobileScrollLock} from './mobile-scroll-lock.js?v=1734341e1558';
-import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation,canUseDuringProgress} from './turn-flow.js?v=1734341e1558';
-import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=1734341e1558';
-import {formatModalSentences} from './modal-sentences.js?v=1734341e1558';
-import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=1734341e1558';
-import {WORK_ARTWORK} from './work-artwork.js?v=1734341e1558';
-import {createSoundEffects,activitySound} from './sound-effects.js?v=1734341e1558';
-import {RankingClient} from './ranking.js?v=1734341e1558';
-import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=1734341e1558';
-import {HandoffCountdown} from './handoff-countdown.js?v=1734341e1558';
-import {fitBoardTitles} from './board-type.js?v=1734341e1558';
-import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=1734341e1558';
-import * as G from './engine.js?v=1734341e1558';
-import {ActivityInbox,visibleActivities,backwardEntryApplies} from './activities.js?v=1734341e1558';
-import {purchaseQuizById} from './purchase-quizzes.js?v=1734341e1558';
-import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=1734341e1558';
-import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=1734341e1558';
-import {diceCube} from './dice.js?v=1734341e1558';
-import {CHARACTER_BIOS} from './character-bios.js?v=1734341e1558';
-import {needsLandscapeInWindow,embeddedBrowserName} from './orientation.js?v=1734341e1558';
-import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=1734341e1558';
-import {GameTransport} from './game-transport.js?v=1734341e1558';
-import {enterFullscreen,toggleFullscreen,requestLandscape,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=1734341e1558';
-import {canOfferTurnHandoff} from './turn-handoff.js?v=1734341e1558';
-import {CHARACTERS,characterFor,characterById} from './characters.js?v=1734341e1558';
+import {trackVisit} from './visit-tracking.js?v=4333cc27a4be';
+import {ConcertNoticeWindow,CONCERT_NOTICE_MS} from './concert-notice.js?v=4333cc27a4be';
+import {ROLL_TIMING,createRollPresentation,presentedSteps,shouldPresentRoll,rollSnapshotMatches} from './roll-presentation.js?v=4333cc27a4be';
+import {playerStatus} from './player-status.js?v=4333cc27a4be';
+import {createListeningPlayer} from './listening-player.js?v=4333cc27a4be';
+import {LISTENING_HINTS,LISTENING_HINT_PRICE} from './listening-hints.js?v=4333cc27a4be';
+import {LobbyConfig,ROUND_OPTIONS} from './lobby-config.js?v=4333cc27a4be';
+import {GameActions} from './game-actions.js?v=4333cc27a4be';
+import {STREAMING_APPS,STREAMING_RIGHTS_PRICE,STREAMING_INSTALL_PRICE,STREAMING_REVENUE,streamingApp,streamingIcon} from './streaming.js?v=4333cc27a4be';
+import {createMusicDirector} from './music-director.js?v=4333cc27a4be';
+import {installMobileScrollLock} from './mobile-scroll-lock.js?v=4333cc27a4be';
+import {shouldDrainTurnUpdates,turnPromptKey,shouldRecoverPresentation,canUseDuringProgress} from './turn-flow.js?v=4333cc27a4be';
+import {isMobileGameEnvironment,MobileBoardCamera} from './mobile-board.js?v=4333cc27a4be';
+import {formatModalSentences} from './modal-sentences.js?v=4333cc27a4be';
+import {fitViewportBoard,fitViewportDialog} from './viewport-layout.js?v=4333cc27a4be';
+import {WORK_ARTWORK} from './work-artwork.js?v=4333cc27a4be';
+import {createSoundEffects,activitySound} from './sound-effects.js?v=4333cc27a4be';
+import {RankingClient} from './ranking.js?v=4333cc27a4be';
+import {animateFlatStep,animateProjectedStep} from './pawn-motion.js?v=4333cc27a4be';
+import {HandoffCountdown} from './handoff-countdown.js?v=4333cc27a4be';
+import {fitBoardTitles} from './board-type.js?v=4333cc27a4be';
+import {BOARD,WORKS,ERAS,QUIZZES,SOURCES,PRISON_MESSAGE,CONCERT_SEATS} from './data.js?v=4333cc27a4be';
+import * as G from './engine.js?v=4333cc27a4be';
+import {ActivityInbox,visibleActivities,backwardEntryApplies} from './activities.js?v=4333cc27a4be';
+import {purchaseQuizById} from './purchase-quizzes.js?v=4333cc27a4be';
+import {BOARD_SIDE,boardCoordinates,ownershipDirection} from './board-layout.js?v=4333cc27a4be';
+import {movementPath,boardTokenVisible,boardTokenAnchor,backwardPath} from './movement.js?v=4333cc27a4be';
+import {diceCube} from './dice.js?v=4333cc27a4be';
+import {CHARACTER_BIOS} from './character-bios.js?v=4333cc27a4be';
+import {needsLandscapeInWindow,embeddedBrowserName} from './orientation.js?v=4333cc27a4be';
+import {createBgm,BGM_SOURCE,GAME_BGM_SOURCE} from './bgm.js?v=4333cc27a4be';
+import {GameTransport} from './game-transport.js?v=4333cc27a4be';
+import {enterFullscreen,toggleFullscreen,requestLandscape,isStandalone,isFullscreen,isInstalledWebApp} from './fullscreen.js?v=4333cc27a4be';
+import {canOfferTurnHandoff} from './turn-handoff.js?v=4333cc27a4be';
+import {CHARACTERS,characterFor,characterById} from './characters.js?v=4333cc27a4be';
+trackVisit();
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brandMark = `<svg role="img" aria-label="주사위·음표·동전이 담긴 뮤직마블 아이콘" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
   <rect width="80" height="80" rx="23" fill="#234B40"/>
@@ -1004,6 +1006,7 @@ async function handleClick(e){const el=e.target.closest('[data-action]');if(!el)
  }
  if(a==='swap-skip'){swapSelection=null;$('#modal').close();await apply(G.skipWorkSwap);return;}
  if(a==='handoff-quiz'){handoffCountdown.stop();if(activeActivity?.type==='streaming-arrival')activeActivity=null;$('#modal').close();await apply(G.startQuiz);return;}
+ if(a==='visit-privacy'){showModal('접속 정보 처리 안내',`<p>서비스 운영 및 이용 현황 확인을 위해 페이지를 열 때 접속 시간, IP 주소, IP 기반의 대략적인 국가·지역·도시, 기기·앱·브라우저 종류, 유입 도메인을 Cloudflare 서버에 기록합니다.</p><p>기록은 관리자만 조회하며 30일 후 자동 삭제합니다. 닉네임·방 코드·게임 답안과 연결하지 않으며 통계용 쿠키나 위치 권한을 사용하지 않습니다.</p><button class="primary full" data-action="close">확인</button>`);return;}
  if(a==='browser-guide'){externalBrowserGuide();return;}
  if(a==='copy-game-link'){
   try{await navigator.clipboard.writeText(location.origin+location.pathname);notify('게임 링크를 복사했어요. Safari 또는 Chrome에 붙여 넣어 주세요.');}
@@ -1082,7 +1085,7 @@ function tradeModal(){const t=state.trade;if(!t)return;const receiver=session.pl
 const lobbyConfig=new LobbyConfig();
 function renderLobby(){
  const joined=!!snapshot,config=joined?lobbyConfig.read(snapshot):null;
- $('#app').innerHTML=`<div class="lobby-scene"><div class="sky-notes" aria-hidden="true"><span>♫</span><span>♪</span><span>✦</span><span>♬</span></div><header class="site-header lobby-header"><a class="brand" href="#"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><span class="brand-tagline">명곡을 소유하라!</span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><div class="lobby-header-actions">${bgmButton()}<button class="icon-button" data-action="ranking-jump" aria-label="전체 랭킹 보기" title="전체 랭킹 보기">🏆</button><button class="icon-button" data-action="help" aria-label="진행 방법">?</button></div></header><main class="lobby"><section class="lobby-story"><div class="eyebrow adventure-badge">서양음악사 속으로 떠나는 보드게임 모험</div><h1><span class="hero-lead">시간을 여행하는 음악 투자자,</span> <span class="lobby-slogan">명곡을 소유하라!</span></h1><p><strong>명곡의 가치를 발견하고, 창작의 권리를 배우는</strong><br>새로운 <strong>보드게임, 뮤직마블!</strong></p><figure class="adventure-art"><img src="./src/assets/music-world-adventure-cutout.png" alt="하이든, 모차르트, 베토벤 캐릭터가 주사위와 뮤직코인이 떠 있는 음악 보드 위에서 함께하는 모험" width="1536" height="1024" fetchpriority="high" /></figure><div class="lobby-features"><span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><path d="M9.5 10h5l1 7h1.5v2H7v-2h1.5zM6 20h12v2H6z"/></svg></i><b>최대 4명 함께</b></span><span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/><g fill="currentColor"><circle cx="8" cy="8" r="1.5"/><circle cx="16" cy="8" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></g></svg></i><b>코드로 만나는 친구들</b></span></div></section><section class="lobby-card">${joined?`<span class="eyebrow">OUR CLASSROOM</span><h2>여행 친구를 기다려요.</h2><p>같은 사이트 주소와 아래 코드를 공유하세요.</p><button class="room-code" data-action="copy-code" aria-label="방 코드 복사">${snapshot.code}<small>클릭해서 복사 ⧉</small></button><div class="lobby-member-heading"><span>참가자 ${snapshot.members.length} / 4명</span><span>${connected?'● 실시간 연결됨':'◌ 연결 중…'}</span></div><div class="lobby-members">${snapshot.members.map(m=>`<div>${characterSprite(m)}<strong>${esc(m.name)}<em class="member-character-name">${esc(characterFor(m).name)}</em></strong><small>${m.id===0?'방장':m.id===session.playerId?'나':''}</small></div>`).join('')}${Array.from({length:G.MAX_PLAYERS-snapshot.members.length},()=>'<div class="empty-member">＋ 친구를 기다리고 있어요</div>').join('')}</div><div class="lobby-character-assignment"><span>내 캐릭터 <b>${esc(characterFor(snapshot.members[session.playerId]).name)}</b></span><button data-action="redraw-character" ${!connected?'disabled':''}>다시 뽑기 ↻</button></div>${session.playerId===(snapshot?.hostId??0)?`<form id="start-form"><div class="form-row"><label>게임 길이<select name="rounds">${ROUND_OPTIONS.map(n=>`<option value="${n}" ${config.rounds===n?'selected':''}>${n}바퀴 · 먼저 완주하면 종료</option>`).join('')}</select></label><label>시작 코인<select name="coins">${(config.coins===1200?[1000,1200,1500,1600]:[1000,1500,1600]).map(n=>`<option value="${n}" ${config.coins===n?'selected':''}>${num(n)} MC</option>`).join('')}</select></label></div><button class="primary full" type="submit" ${snapshot.members.length<2||!connected?'disabled':''}>${snapshot.members.length<2?'2명 이상 모이면 시작할 수 있어요':'모두 모였어요, 게임 시작 →'}</button></form>`:`<div class="notice">방장이 게임을 시작하면 같은 보드로 이동해요.<br>게임 길이 ${snapshot.config?.rounds??4}라운드 · 시작 ${num(snapshot.config?.coins??1200)} MC</div>`}<button class="text-button" data-action="leave-confirm">이 화면에서 나가기</button>`:`<span class="eyebrow">LET’S PLAY TOGETHER</span><h2>어떤 여행을 시작할까요?</h2><p>닉네임과 캐릭터를 정하고 음악 여행을 시작하세요.</p>${embeddedBrowserNotice()}<form id="entry-form"><label>나의 닉네임<input name="nickname" placeholder="예: 선율 탐험가" maxlength="16" autocomplete="nickname" required /></label>${characterPicker()}<button class="primary full" type="submit" name="intent" value="create">새 게임방 만들기 ＋</button><div class="or-divider"><span>공유받은 코드가 있나요?</span></div><label>공유 코드<input name="code" type="text" inputmode="numeric" placeholder="숫자 6자리 공유 코드" maxlength="6" autocomplete="off" class="code-input" /></label><button class="secondary full" type="submit" name="intent" value="join">코드로 게임 참가하기 →</button></form><div class="solo-divider"><span>혼자서도 즐길 수 있어요</span></div><button class="solo-button full" data-action="solo">봇과 혼자 플레이하기 <span>→</span></button><button class="text-button" data-action="resume">이 브라우저의 이전 게임 이어하기 ↗</button><button class="text-button" data-action="character-gallery">음악사 캐릭터 ${CHARACTERS.length}종 둘러보기 ↗</button>${developerAvailable?'<button class="secondary full developer-entry" data-action="developer-start">🛠 개발자 테스트 시작 · 랭킹 미반영</button>':''}<div class="entry-note">캐릭터 ${CHARACTERS.length}종 · 직접 선택 또는 랜덤 · 방 안 중복 없음<br>최대 4명 · 각자 기기로 접속 · 코드별 독립 게임<br>서로 다른 모바일 데이터·Wi-Fi에서도 함께 접속할 수 있어요.</div>`}</section></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span class="footer-copyright">© 2026 Developed by 충남교육청 교사 유지영</span><span class="footer-tagline">음악을 배우는 가장 즐거운 한 바퀴</span></footer></div>`;
+ $('#app').innerHTML=`<div class="lobby-scene"><div class="sky-notes" aria-hidden="true"><span>♫</span><span>♪</span><span>✦</span><span>♬</span></div><header class="site-header lobby-header"><a class="brand" href="#"><span class="brand-icon">${brandMark}</span><div class="brand-copy"><span class="brand-title"><span>뮤</span><span>직</span><span>마</span><span>블</span></span><span class="brand-tagline">명곡을 소유하라!</span><small>MUSIC MARBL<span class="brand-english-end">E</span></small></div></a><div class="lobby-header-actions">${bgmButton()}<button class="icon-button" data-action="ranking-jump" aria-label="전체 랭킹 보기" title="전체 랭킹 보기">🏆</button><button class="icon-button" data-action="help" aria-label="진행 방법">?</button></div></header><main class="lobby"><section class="lobby-story"><div class="eyebrow adventure-badge">서양음악사 속으로 떠나는 보드게임 모험</div><h1><span class="hero-lead">시간을 여행하는 음악 투자자,</span> <span class="lobby-slogan">명곡을 소유하라!</span></h1><p><strong>명곡의 가치를 발견하고, 창작의 권리를 배우는</strong><br>새로운 <strong>보드게임, 뮤직마블!</strong></p><figure class="adventure-art"><img src="./src/assets/music-world-adventure-cutout.png" alt="하이든, 모차르트, 베토벤 캐릭터가 주사위와 뮤직코인이 떠 있는 음악 보드 위에서 함께하는 모험" width="1536" height="1024" fetchpriority="high" /></figure><div class="lobby-features"><span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><path d="M9.5 10h5l1 7h1.5v2H7v-2h1.5zM6 20h12v2H6z"/></svg></i><b>최대 4명 함께</b></span><span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/><g fill="currentColor"><circle cx="8" cy="8" r="1.5"/><circle cx="16" cy="8" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></g></svg></i><b>코드로 만나는 친구들</b></span></div></section><section class="lobby-card">${joined?`<span class="eyebrow">OUR CLASSROOM</span><h2>여행 친구를 기다려요.</h2><p>같은 사이트 주소와 아래 코드를 공유하세요.</p><button class="room-code" data-action="copy-code" aria-label="방 코드 복사">${snapshot.code}<small>클릭해서 복사 ⧉</small></button><div class="lobby-member-heading"><span>참가자 ${snapshot.members.length} / 4명</span><span>${connected?'● 실시간 연결됨':'◌ 연결 중…'}</span></div><div class="lobby-members">${snapshot.members.map(m=>`<div>${characterSprite(m)}<strong>${esc(m.name)}<em class="member-character-name">${esc(characterFor(m).name)}</em></strong><small>${m.id===0?'방장':m.id===session.playerId?'나':''}</small></div>`).join('')}${Array.from({length:G.MAX_PLAYERS-snapshot.members.length},()=>'<div class="empty-member">＋ 친구를 기다리고 있어요</div>').join('')}</div><div class="lobby-character-assignment"><span>내 캐릭터 <b>${esc(characterFor(snapshot.members[session.playerId]).name)}</b></span><button data-action="redraw-character" ${!connected?'disabled':''}>다시 뽑기 ↻</button></div>${session.playerId===(snapshot?.hostId??0)?`<form id="start-form"><div class="form-row"><label>게임 길이<select name="rounds">${ROUND_OPTIONS.map(n=>`<option value="${n}" ${config.rounds===n?'selected':''}>${n}바퀴 · 먼저 완주하면 종료</option>`).join('')}</select></label><label>시작 코인<select name="coins">${(config.coins===1200?[1000,1200,1500,1600]:[1000,1500,1600]).map(n=>`<option value="${n}" ${config.coins===n?'selected':''}>${num(n)} MC</option>`).join('')}</select></label></div><button class="primary full" type="submit" ${snapshot.members.length<2||!connected?'disabled':''}>${snapshot.members.length<2?'2명 이상 모이면 시작할 수 있어요':'모두 모였어요, 게임 시작 →'}</button></form>`:`<div class="notice">방장이 게임을 시작하면 같은 보드로 이동해요.<br>게임 길이 ${snapshot.config?.rounds??4}라운드 · 시작 ${num(snapshot.config?.coins??1200)} MC</div>`}<button class="text-button" data-action="leave-confirm">이 화면에서 나가기</button>`:`<span class="eyebrow">LET’S PLAY TOGETHER</span><h2>어떤 여행을 시작할까요?</h2><p>닉네임과 캐릭터를 정하고 음악 여행을 시작하세요.</p>${embeddedBrowserNotice()}<form id="entry-form"><label>나의 닉네임<input name="nickname" placeholder="예: 선율 탐험가" maxlength="16" autocomplete="nickname" required /></label>${characterPicker()}<button class="primary full" type="submit" name="intent" value="create">새 게임방 만들기 ＋</button><div class="or-divider"><span>공유받은 코드가 있나요?</span></div><label>공유 코드<input name="code" type="text" inputmode="numeric" placeholder="숫자 6자리 공유 코드" maxlength="6" autocomplete="off" class="code-input" /></label><button class="secondary full" type="submit" name="intent" value="join">코드로 게임 참가하기 →</button></form><div class="solo-divider"><span>혼자서도 즐길 수 있어요</span></div><button class="solo-button full" data-action="solo">봇과 혼자 플레이하기 <span>→</span></button><button class="text-button" data-action="resume">이 브라우저의 이전 게임 이어하기 ↗</button><button class="text-button" data-action="character-gallery">음악사 캐릭터 ${CHARACTERS.length}종 둘러보기 ↗</button>${developerAvailable?'<button class="secondary full developer-entry" data-action="developer-start">🛠 개발자 테스트 시작 · 랭킹 미반영</button>':''}<div class="entry-note">캐릭터 ${CHARACTERS.length}종 · 직접 선택 또는 랜덤 · 방 안 중복 없음<br>최대 4명 · 각자 기기로 접속 · 코드별 독립 게임<br>서로 다른 모바일 데이터·Wi-Fi에서도 함께 접속할 수 있어요.</div>`}</section></main><footer><span class="footer-brand">♫ MUSIC MARBLE</span><span class="footer-copyright">© 2026 Developed by 충남교육청 교사 유지영<br><button class="privacy-link" data-action="visit-privacy">접속 정보 처리 안내</button></span><span class="footer-tagline">음악을 배우는 가장 즐거운 한 바퀴</span></footer></div>`;
  startBackgroundMusic();void rankingClient.refresh();
 }
 $('#app').addEventListener('change',e=>{

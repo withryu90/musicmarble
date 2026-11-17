@@ -161,3 +161,5 @@ dialog.entrance-help::backdrop{background:#164d7959}
 
 /* Keep the Korean wordmark crisp without the inherited white highlight. */
 .lobby-header .brand-title{text-shadow:none}
+
+.lobby-scene footer .privacy-link{padding:2px 0;color:#527e94;font-size:9px;text-decoration:underline;text-underline-offset:2px}

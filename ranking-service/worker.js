@@ -1,3 +1,5 @@
+import {adminPage} from './admin/page.mjs';
+import {authorized,recordVisit,visitStatistics,pruneVisits} from './lib/visits.mjs';
 import {onlineRoomRequest} from './lib/online-rooms.mjs';
 import {registerGame,submitGame,topRanking,nicknameAvailability} from './lib/ranking-core.mjs';
 const ALLOWED_ORIGINS=new Set(['https://withryu90.github.io']);
@@ -9,9 +11,21 @@ export default {async fetch(request,env){
  if(!originAllowed(origin))return json({error:'허용되지 않은 접속입니다.'},403);
  if(request.method==='OPTIONS')return new Response(null,{status:204,headers});
  const path=new URL(request.url).pathname;
+ if(path==='/admin/visits'&&request.method==='GET'){
+  const nonce=crypto.randomUUID().replaceAll('-','');
+  return new Response(adminPage(nonce),{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff','X-Frame-Options':'DENY','Content-Security-Policy':`default-src 'none'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'self'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'`}});
+ }
  if(path==='/'&&request.method==='GET')return json({service:'뮤직마블 전체 랭킹',game:'https://withryu90.github.io/musicmarble/'});
  if(!env.DB)return json({error:'점수 저장소를 준비하고 있습니다.'},503);
  try{
+  if(path==='/api/visits'&&request.method==='POST'){
+   const content=await request.text();if(content.length>512)return json({error:'요청이 너무 큽니다.'},413);
+   return json(await recordVisit(env.DB,request,JSON.parse(content),env));
+  }
+  if(path==='/api/admin/visits'&&request.method==='GET'){
+   if(!await authorized(request,env.VISITS_ADMIN_TOKEN))return json({error:'관리자 확인이 필요합니다.'},401);
+   return json(await visitStatistics(env.DB,new URL(request.url).searchParams.get('days')));
+  }
   if(path.startsWith('/api/game/')&&request.method==='POST'){
    const content=await request.text();if(content.length>8192)return json({error:'요청이 너무 큽니다.'},413);
    return json(await onlineRoomRequest(env.DB,path.slice('/api/game/'.length),JSON.parse(content)));
@@ -25,4 +39,5 @@ export default {async fetch(request,env){
  }catch(error){return json({error:error.status?error.message:request.method==='GET'?'랭킹을 불러오지 못했습니다.':error.message},error.status||400);}
 },async scheduled(event,env,context){
  context.waitUntil(env.DB.prepare('DELETE FROM online_rooms WHERE expires_at <= ?').bind(Date.now()).run());
+ context.waitUntil(pruneVisits(env.DB));
 }};

@@ -354,3 +354,5 @@ dialog#modal.concert-tickets-modal .modal-header .icon-button[data-action="close
 
 .game-shell .header-actions .developer-mode-button{display:grid;place-items:center;padding:0;line-height:1;text-align:center;flex-shrink:0}
 .game-shell .developer-mode-button .developer-tool-icon{display:grid;place-items:center;width:18px;height:18px;margin:0;padding:0;font-size:16px;line-height:1;pointer-events:none}
+
+#modal .privacy-confirm{margin-top:16px}

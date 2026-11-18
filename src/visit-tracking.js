@@ -1,4 +1,4 @@
-import {RANKING_ORIGIN} from './ranking.js?v=0fca5cd2b60a';
+import {RANKING_ORIGIN} from './ranking.js?v=3e16a89b069f';
 export function visitPayload(view){
  const url=new URL(view.location.href);
  if(url.hostname!=='withryu90.github.io'||!url.pathname.startsWith('/musicmarble/')||url.searchParams.has('dev'))return null;
